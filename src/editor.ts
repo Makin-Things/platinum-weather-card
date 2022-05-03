@@ -3,18 +3,18 @@ import { LitElement, html, TemplateResult, css, CSSResultGroup } from 'lit';
 import { HomeAssistant, fireEvent, LovelaceCardEditor } from 'custom-card-helpers';
 
 import { ScopedRegistryHost } from '@lit-labs/scoped-registry-mixin';
-import { BoilerplateCardConfig } from './types';
+import { WeatherCardConfig } from './types';
 import { customElement, property, state } from 'lit/decorators';
 import { formfieldDefinition } from '../elements/formfield';
 import { selectDefinition } from '../elements/select';
 import { switchDefinition } from '../elements/switch';
 import { textfieldDefinition } from '../elements/textfield';
 
-@customElement('boilerplate-card-editor')
-export class BoilerplateCardEditor extends ScopedRegistryHost(LitElement) implements LovelaceCardEditor {
+@customElement('weather-card-editor')
+export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements LovelaceCardEditor {
   @property({ attribute: false }) public hass?: HomeAssistant;
 
-  @state() private _config?: BoilerplateCardConfig;
+  @state() private _config?: WeatherCardConfig;
 
   @state() private _helpers?: any;
 
@@ -27,7 +27,7 @@ export class BoilerplateCardEditor extends ScopedRegistryHost(LitElement) implem
     ...formfieldDefinition,
   };
 
-  public setConfig(config: BoilerplateCardConfig): void {
+  public setConfig(config: WeatherCardConfig): void {
     this._config = config;
 
     this.loadCardHelpers();
@@ -66,38 +66,22 @@ export class BoilerplateCardEditor extends ScopedRegistryHost(LitElement) implem
     const entities = Object.keys(this.hass.states);
 
     return html`
-      <mwc-select
-        naturalMenuWidth
-        fixedMenuPosition
-        label="Entity (Required)"
-        .configValue=${'entity'}
-        .value=${this._entity}
-        @selected=${this._valueChanged}
-        @closed=${(ev) => ev.stopPropagation()}
-      >
+      <mwc-select naturalMenuWidth fixedMenuPosition label="Entity (Required)" .configValue=${'entity'} .value=${this._entity}
+        @selected=${this._valueChanged} @closed=${(ev)=> ev.stopPropagation()}
+        >
         ${entities.map((entity) => {
-          return html`<mwc-list-item .value=${entity}>${entity}</mwc-list-item>`;
-        })}
+    return html`<mwc-list-item .value=${entity}>${entity}</mwc-list-item>`;
+    })}
       </mwc-select>
-      <mwc-textfield
-        label="Name (Optional)"
-        .value=${this._name}
-        .configValue=${'name'}
-        @input=${this._valueChanged}
-      ></mwc-textfield>
-      <mwc-formfield .label=${`Toggle warning ${this._show_warning ? 'off' : 'on'}`}>
-        <mwc-switch
-          .checked=${this._show_warning !== false}
-          .configValue=${'show_warning'}
-          @change=${this._valueChanged}
-        ></mwc-switch>
+      <mwc-textfield label="Name (Optional)" .value=${this._name} .configValue=${'name'} @input=${this._valueChanged}>
+      </mwc-textfield>
+      <mwc-formfield .label=${`Toggle warning ${this._show_warning ? 'off' : 'on' }`}>
+        <mwc-switch .checked=${this._show_warning !==false} .configValue=${'show_warning'} @change=${this._valueChanged}>
+        </mwc-switch>
       </mwc-formfield>
-      <mwc-formfield .label=${`Toggle error ${this._show_error ? 'off' : 'on'}`}>
-        <mwc-switch
-          .checked=${this._show_error !== false}
-          .configValue=${'show_error'}
-          @change=${this._valueChanged}
-        ></mwc-switch>
+      <mwc-formfield .label=${`Toggle error ${this._show_error ? 'off' : 'on' }`}>
+        <mwc-switch .checked=${this._show_error !==false} .configValue=${'show_error'} @change=${this._valueChanged}>
+        </mwc-switch>
       </mwc-formfield>
     `;
   }

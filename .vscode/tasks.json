@@ -7,6 +7,14 @@
 			"problemMatcher": [],
 			"label": "npm: start",
 			"detail": "rollup -c --watch"
+		},
+		{
+			"type": "npm",
+			"script": "build",
+			"group": "build",
+			"problemMatcher": [],
+			"label": "npm: build",
+			"detail": "npm run lint && npm run rollup"
 		}
 	]
 }
