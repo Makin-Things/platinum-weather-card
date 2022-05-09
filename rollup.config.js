@@ -43,6 +43,8 @@ export default [
     output: {
       dir: 'dist',
       format: 'es',
+      inlineDynamicImports: true,
+//      file: 'dist/weahter-card.js',
     },
     plugins: [...plugins],
   },

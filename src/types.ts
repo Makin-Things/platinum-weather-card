@@ -15,6 +15,9 @@ export interface WeatherCardConfig extends LovelaceCardConfig {
   show_error?: boolean;
   test_gui?: boolean;
   entity?: string;
+  entity_temperature?: string;
+  entity_apparent_temp?: string;
+  entity_pressure?: string;
   tap_action?: ActionConfig;
   hold_action?: ActionConfig;
   double_tap_action?: ActionConfig;
