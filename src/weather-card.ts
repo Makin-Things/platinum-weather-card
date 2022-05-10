@@ -73,7 +73,7 @@ export class WeatherCard extends LitElement {
       return false;
     }
 
-    const oldHass = changedProps.get("hass");
+    const oldHass = changedProps.get("hass") as HomeAssistant || undefined;
 
     if (
       !oldHass ||
