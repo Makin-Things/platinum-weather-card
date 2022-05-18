@@ -3,7 +3,7 @@
   "name": "Weather Card Development",
   "image": "ludeeus/container:monster",
   "context": "..",
-  "appPort": ["5004:5000", "9123:8123"],
+  "appPort": ["5123:5000", "9123:8123"],
   "postCreateCommand": "npm install",
   "runArgs": [
     "-v",

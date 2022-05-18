@@ -148,6 +148,7 @@ export class WeatherCard extends LitElement {
             <div class="currentTemps">${currentTemp}${apparentTemp}</div>
           </div>
           <div class="current-text">${currentText}</div>
+          <div><p>This is where slots go</p></div>
         </div>
     </ha-card>
     `;
@@ -180,96 +181,66 @@ export class WeatherCard extends LitElement {
   }
 
   get weatherIcon(): string {
-    const iconStyle = (this.config.old_icon === "hybrid") ? `hybrid` : (this.config.old_icon === "false") ? `false` : `true`;
-    const sunny_icon = (iconStyle === "true") ? `${this.dayOrNight}` : (iconStyle === "hybrid") ? `sunny-${this.dayOrNight}` : `sunny-${this.dayOrNight}`;
-    const clear_icon = (iconStyle === "true") ? `${this.dayOrNight}` : (iconStyle === "hybrid") ? `sunny-${this.dayOrNight}` : `clear-${this.dayOrNight}`;
-    const mostly_sunny_icon = (iconStyle === "true") ? `fair-${this.dayOrNight}` : (iconStyle === "hybrid") ? `fair-${this.dayOrNight}` : `fair-${this.dayOrNight}`;
-    const partly_cloudy_icon = (iconStyle === "true") ? `cloudy-${this.dayOrNight}-3` : (iconStyle === "hybrid") ? `cloudy-${this.dayOrNight}-3` : `partly-cloudy-${this.dayOrNight}`;
-    const cloudy_icon = (iconStyle === "true") ? `cloudy-original` : (iconStyle === "hybrid") ? `cloudy-original` : `cloudy`;
-    const hazy_icon = (iconStyle === "true") ? `cloudy-${this.dayOrNight}-1` : (iconStyle === "hybrid") ? `haze` : `haze`;
-    const frost_icon = (iconStyle === "true") ? `cloudy-${this.dayOrNight}-1` : (iconStyle === "hybrid") ? `cloudy-${this.dayOrNight}-1` : `cloudy-${this.dayOrNight}-1`;
-    const light_rain_icon = (iconStyle === "true") ? `rainy-1` : (iconStyle === "hybrid") ? `rainy-1-${this.dayOrNight}` : `rainy-1-${this.dayOrNight}`;
-    const windy_icon = (iconStyle === "true") ? `cloudy-original` : (iconStyle === "hybrid") ? `wind` : `wind`;
-    const fog_icon = (iconStyle === "true") ? `cloudy-original` : (iconStyle === "hybrid") ? `fog` : `fog`;
-    const showers_icon = (iconStyle === "true") ? `rainy-1` : (iconStyle === "hybrid") ? `rainy-1-${this.dayOrNight}` : `rainy-1-${this.dayOrNight}`;
-    const rain_icon = (iconStyle === "true") ? `rainy-5` : (iconStyle === "hybrid") ? `rainy-5` : `rain`;
-    const dust_icon = (iconStyle === "true") ? `cloudy-${this.dayOrNight}-1` : (iconStyle === "hybrid") ? `haze` : `haze`;
-    const snow_icon = (iconStyle === "true") ? `snowy-6` : (iconStyle === "hybrid") ? `snowy-6` : `snow`;
-    const snow_rain_icon = (iconStyle === "true") ? `snowy-6` : (iconStyle === "hybrid") ? `rain-and-snow-mix` : `rain-and-snow-mix`;
-    const storm_icon = (iconStyle === "true") ? `scattered-thunderstorms` : (iconStyle === "hybrid") ? `scattered-thunderstorms` : `scattered-thunderstorms`;
-    const light_showers_icon = (iconStyle === "true") ? `rainy-2` : (iconStyle === "hybrid") ? `rainy-2` : `rainy-2`;
-    const heavy_showers_icon = (iconStyle === "true") ? `rainy-6` : (iconStyle === "hybrid") ? `rainy-6` : `rainy-6`;
-    const cyclone_icon = (iconStyle === "true") ? `tornado` : (iconStyle === "hybrid") ? `tornado` : `tornado`;
-    const clear_day_icon = (iconStyle === "true") ? `day` : (iconStyle === "hybrid") ? `day` : `clear-day`;
-    const clear_night_icon = (iconStyle === "true") ? `night` : (iconStyle === "hybrid") ? `night` : `clear-night`;
-    const sleet_icon = (iconStyle === "true") ? `rainy-2` : (iconStyle === "hybrid") ? `rain-and-sleet-mix` : `rain-and-sleet-mix`;
-    const partly_cloudy_day_icon = (iconStyle === "true") ? `cloudy-day-3` : (iconStyle === "hybrid") ? `cloudy-day-3` : `partly-cloudy-day`;
-    const partly_cloudy_night_icon = (iconStyle === "true") ? `cloudy-night-3` : (iconStyle === "hybrid") ? `cloudy-night-3` : `partly-cloudy-night`;
-    const hail_icon = (iconStyle === "true") ? `rainy-7` : (iconStyle === "hybrid") ? `rainy-7` : `rainy-7`;
-    const lightning_icon = (iconStyle === "true") ? `thunder` : (iconStyle === "hybrid") ? `thunder` : `thunder`;
-    const windy_variant_icon = (iconStyle === "true") ? `cloudy-${this.dayOrNight}-3` : (iconStyle === "hybrid") ? `cloudy-${this.dayOrNight}-3` : `cloudy-${this.dayOrNight}-3`;
-
     switch (this.currentConditions) {
-      case 'sunny': return sunny_icon;
-      case 'clear': return clear_icon;
-      case 'mostly-sunny': return mostly_sunny_icon;
-      case 'partly-cloudy': return partly_cloudy_icon;
-      case 'mostly_sunny': return mostly_sunny_icon;
-      case 'partly_cloudy': return partly_cloudy_icon;
-      case 'partlycloudy': return partly_cloudy_icon;
-      case 'cloudy': return cloudy_icon;
-      case 'hazy': return hazy_icon;
-      case 'hazey': return hazy_icon;
-      case 'haze': return hazy_icon;
-      case 'frost': return frost_icon;
-      case 'light-rain': return light_rain_icon;
-      case 'light_rain': return light_rain_icon;
-      case 'wind': return windy_icon;
-      case 'windy': return windy_icon;
-      case 'fog': return fog_icon;
-      case 'foggy': return fog_icon;
-      case 'showers': return showers_icon;
-      case 'shower': return showers_icon;
-      case 'rain': return rain_icon;
-      case 'rainy': return rain_icon;
-      case 'dust': return dust_icon;
-      case 'dusty': return dust_icon;
-      case 'snow': return snow_icon;
-      case 'snowy': return snow_icon;
-      case 'snowy-rainy': return snow_rain_icon;
-      case 'snowy_rainy': return snow_rain_icon;
-      case 'snowyrainy': return snow_rain_icon;
-      case 'storm': return storm_icon;
-      case 'stormy': return storm_icon;
-      case 'light-showers': return light_showers_icon;
-      case 'light-shower': return light_showers_icon;
-      case 'heavy-showers': return heavy_showers_icon;
-      case 'heavy-shower': return heavy_showers_icon;
-      case 'light_showers': return light_showers_icon;
-      case 'light_shower': return light_showers_icon;
-      case 'heavy_showers': return heavy_showers_icon;
-      case 'heavy_shower': return heavy_showers_icon;
-      case 'pouring': return heavy_showers_icon;
-      case 'tropical-cyclone': return cyclone_icon;
-      case 'tropical_cyclone': return cyclone_icon;
-      case 'tropicalcyclone': return cyclone_icon;
-      case 'clear-day': return clear_day_icon;
-      case 'clear-night': return clear_night_icon;
-      case 'clear_day': return clear_day_icon;
-      case 'clear_night': return clear_night_icon;
-      case 'sleet': return sleet_icon;
-      case 'partly-cloudy-day': return partly_cloudy_day_icon;
-      case 'partly-cloudy-night': return partly_cloudy_night_icon;
-      case 'partly_cloudy_day': return partly_cloudy_day_icon;
-      case 'partly_cloudy_night': return partly_cloudy_night_icon;
-      case 'hail': return hail_icon;
-      case 'lightning': return lightning_icon;
-      case 'lightning-rainy': return lightning_icon;
-      case 'lightning_rainy': return lightning_icon;
-      case 'thunderstorm': return lightning_icon;
-      case 'windy-variant': return windy_variant_icon;
-      case 'windy_variant': return windy_variant_icon;
-      case 'exceptional': return '!!';
+      case 'sunny': return this.iconSunny;
+      case 'clear': return this.iconClear;
+      case 'mostly-sunny':
+      case 'mostly_sunny': return this.iconMostlySunny;
+      case 'partly-cloudy':
+      case 'partly_cloudy':
+      case 'partlycloudy': return this.iconPartlyCloudy;
+      case 'cloudy': return this.iconCloudy;
+      case 'hazy':
+      case 'hazey':
+      case 'haze': return this.iconHazy;
+      case 'frost': return this.iconFrost;
+      case 'light-rain':
+      case 'light_rain': return this.iconLightRain;
+      case 'wind':
+      case 'windy': return this.iconWindy;
+      case 'fog':
+      case 'foggy': return this.iconFog;
+      case 'showers':
+      case 'shower': return this.iconShowers;
+      case 'rain':
+      case 'rainy': return this.iconRain;
+      case 'dust':
+      case 'dusty': return this.iconDust;
+      case 'snow':
+      case 'snowy': return this.iconSnow;
+      case 'snowy-rainy':
+      case 'snowy_rainy':
+      case 'snowyrainy': return this.iconSnowRain;
+      case 'storm':
+      case 'stormy': return this.iconStorm;
+      case 'light-showers':
+      case 'light-shower':
+      case 'light_showers':
+      case 'light_shower': return this.iconLightShowers;
+      case 'heavy-showers':
+      case 'heavy-shower':
+      case 'heavy_showers':
+      case 'heavy_shower':
+      case 'pouring': return this.iconHeavyShowers;
+      case 'tropical-cyclone':
+      case 'tropical_cyclone':
+      case 'tropicalcyclone': return this.iconCyclone;
+      case 'clear-day':
+      case 'clear_day': return this.iconClearDay;
+      case 'clear-night':
+      case 'clear_night': return this.iconClearNight;
+      case 'sleet': return this.iconSleet;
+      case 'partly-cloudy-day':
+      case 'partly_cloudy_day': return this.iconPartlyCloudyDay;
+      case 'partly-cloudy-night':
+      case 'partly_cloudy_night': return this.iconPartlyCloudyNight;
+      case 'hail': return this.iconHail;
+      case 'lightning':
+      case 'lightning-rainy':
+      case 'lightning_rainy':
+      case 'thunderstorm': return this.iconLightning;
+      case 'windy-variant':
+      case 'windy_variant': return this.iconWindyVariant;
     }
     return 'unknown';
   }
@@ -277,6 +248,146 @@ export class WeatherCard extends LitElement {
   get dayOrNight(): string {
     const transformDayNight = { "below_horizon": "night", "above_horizon": "day", };
     return this.config.entity_sun && this.hass.states[this.config.entity_sun] !== undefined ? transformDayNight[this.hass.states[this.config.entity_sun].state] : 'day';
+  }
+
+  get iconStyle(): string {
+    return (this.config.old_icon === "hybrid") ? `hybrid` : (this.config.old_icon === "false") ? `false` : `true`;
+  }
+
+  get iconSunny(): string {
+    const iconStyle = this.iconStyle;
+    return (iconStyle === "true") ? `${this.dayOrNight}` : (iconStyle === "hybrid") ? `sunny-${this.dayOrNight}` : `sunny-${this.dayOrNight}`;
+  }
+
+  get iconClear(): string {
+    const iconStyle = this.iconStyle;
+    return (iconStyle === "true") ? `${this.dayOrNight}` : (iconStyle === "hybrid") ? `sunny-${this.dayOrNight}` : `clear-${this.dayOrNight}`;
+  }
+
+  get iconMostlySunny(): string {
+    const iconStyle = this.iconStyle;
+    return (iconStyle === "true") ? `fair-${this.dayOrNight}` : (iconStyle === "hybrid") ? `fair-${this.dayOrNight}` : `fair-${this.dayOrNight}`;
+  }
+
+  get iconPartlyCloudy(): string {
+    const iconStyle = this.iconStyle;
+    return (iconStyle === "true") ? `cloudy-${this.dayOrNight}-3` : (iconStyle === "hybrid") ? `cloudy-${this.dayOrNight}-3` : `partly-cloudy-${this.dayOrNight}`;
+  }
+
+  get iconCloudy(): string {
+    const iconStyle = this.iconStyle;
+    return (iconStyle === "true") ? `cloudy-original` : (iconStyle === "hybrid") ? `cloudy-original` : `cloudy`;
+  }
+
+  get iconHazy(): string {
+    const iconStyle = this.iconStyle;
+    return (iconStyle === "true") ? `cloudy-${this.dayOrNight}-1` : (iconStyle === "hybrid") ? `haze` : `haze`;
+  }
+
+  get iconFrost(): string {
+    const iconStyle = this.iconStyle;
+    return (iconStyle === "true") ? `cloudy-${this.dayOrNight}-1` : (iconStyle === "hybrid") ? `cloudy-${this.dayOrNight}-1` : `cloudy-${this.dayOrNight}-1`;
+  }
+
+  get iconLightRain(): string {
+    const iconStyle = this.iconStyle;
+    return (iconStyle === "true") ? `rainy-1` : (iconStyle === "hybrid") ? `rainy-1-${this.dayOrNight}` : `rainy-1-${this.dayOrNight}`;
+  }
+
+  get iconWindy(): string {
+    const iconStyle = this.iconStyle;
+    return (iconStyle === "true") ? `cloudy-original` : (iconStyle === "hybrid") ? `wind` : `wind`;
+  }
+
+  get iconFog(): string {
+    const iconStyle = this.iconStyle;
+    return (iconStyle === "true") ? `cloudy-original` : (iconStyle === "hybrid") ? `fog` : `fog`;
+  }
+
+  get iconShowers(): string {
+    const iconStyle = this.iconStyle;
+    return (iconStyle === "true") ? `rainy-1` : (iconStyle === "hybrid") ? `rainy-1-${this.dayOrNight}` : `rainy-1-${this.dayOrNight}`;
+  }
+
+  get iconRain(): string {
+    const iconStyle = this.iconStyle;
+    return (iconStyle === "true") ? `rainy-5` : (iconStyle === "hybrid") ? `rainy-5` : `rain`;
+  }
+
+  get iconDust(): string {
+    const iconStyle = this.iconStyle;
+    return (iconStyle === "true") ? `cloudy-${this.dayOrNight}-1` : (iconStyle === "hybrid") ? `haze` : `haze`;
+  }
+
+  get iconSnow(): string {
+    const iconStyle = this.iconStyle;
+    return (iconStyle === "true") ? `snowy-6` : (iconStyle === "hybrid") ? `snowy-6` : `snow`;
+  }
+
+  get iconSnowRain(): string {
+    const iconStyle = this.iconStyle;
+    return (iconStyle === "true") ? `snowy-6` : (iconStyle === "hybrid") ? `rain-and-snow-mix` : `rain-and-snow-mix`;
+  }
+
+  get iconStorm(): string {
+    const iconStyle = this.iconStyle;
+    return (iconStyle === "true") ? `scattered-thunderstorms` : (iconStyle === "hybrid") ? `scattered-thunderstorms` : `scattered-thunderstorms`;
+  }
+
+  get iconLightShowers(): string {
+    const iconStyle = this.iconStyle;
+    return (iconStyle === "true") ? `rainy-2` : (iconStyle === "hybrid") ? `rainy-2` : `rainy-2`;
+  }
+
+  get iconHeavyShowers(): string {
+    const iconStyle = this.iconStyle;
+    return (iconStyle === "true") ? `rainy-6` : (iconStyle === "hybrid") ? `rainy-6` : `rainy-6`;
+  }
+
+
+  get iconCyclone(): string {
+    const iconStyle = this.iconStyle;
+    return (iconStyle === "true") ? `tornado` : (iconStyle === "hybrid") ? `tornado` : `tornado`;
+  }
+
+  get iconClearDay(): string {
+    const iconStyle = this.iconStyle;
+    return (iconStyle === "true") ? `day` : (iconStyle === "hybrid") ? `day` : `clear-day`;
+  }
+
+  get iconClearNight(): string {
+    const iconStyle = this.iconStyle;
+    return (iconStyle === "true") ? `night` : (iconStyle === "hybrid") ? `night` : `clear-night`;
+  }
+
+  get iconSleet(): string {
+    const iconStyle = this.iconStyle;
+    return (iconStyle === "true") ? `rainy-2` : (iconStyle === "hybrid") ? `rain-and-sleet-mix` : `rain-and-sleet-mix`;
+  }
+
+  get iconPartlyCloudyDay(): string {
+    const iconStyle = this.iconStyle;
+    return (iconStyle === "true") ? `cloudy-day-3` : (iconStyle === "hybrid") ? `cloudy-day-3` : `partly-cloudy-day`;
+  }
+
+  get iconPartlyCloudyNight(): string {
+    const iconStyle = this.iconStyle;
+    return (iconStyle === "true") ? `cloudy-night-3` : (iconStyle === "hybrid") ? `cloudy-night-3` : `partly-cloudy-night`;
+  }
+
+  get iconHail(): string {
+    const iconStyle = this.iconStyle;
+    return (iconStyle === "true") ? `rainy-7` : (iconStyle === "hybrid") ? `rainy-7` : `rainy-7`;
+  }
+
+  get iconLightning(): string {
+    const iconStyle = this.iconStyle;
+    return (iconStyle === "true") ? `thunder` : (iconStyle === "hybrid") ? `thunder` : `thunder`;
+  }
+
+  get iconWindyVariant(): string {
+    const iconStyle = this.iconStyle;
+    return (iconStyle === "true") ? `cloudy-${this.dayOrNight}-3` : (iconStyle === "hybrid") ? `cloudy-${this.dayOrNight}-3` : `cloudy-${this.dayOrNight}-3`;
   }
 
   getUOM(measure: string): string {
