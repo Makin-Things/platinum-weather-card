@@ -196,7 +196,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
           name="entity_temperature" label="Entity Current Temperature (required)" allow-custom-entity
           @value-changed=${this._valueChangedPicker}>
         </ha-entity-picker>
-        <ha-entity-picker .hass=${this.hass} .configValue=${'entity_apparent_temps'} .value=${this._entity_apparent_temp}
+        <ha-entity-picker .hass=${this.hass} .configValue=${'entity_apparent_temp'} .value=${this._entity_apparent_temp}
           name="entity_apparent_temp" label="Entity Apparent Temperature (required)" allow-custom-entity
           @value-changed=${this._valueChangedPicker}>
         </ha-entity-picker>
@@ -210,13 +210,13 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
         </ha-entity-picker>
         <div class="side-by-side">
           <ha-select label="Slot Left 1 (optional)" .configValue=${'slot_l1'} .value=${this._slot_l1}
-            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
+            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
             fixedMenuPosition
             naturalMenuWidth>
             ${slotValues}
           </ha-select>
           <ha-select label="Slot Right 1 (optional)" .configValue=${'slot_r1'} .value=${this._slot_r1}
-            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
+            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
             fixedMenuPosition
             naturalMenuWidth>
             ${slotValues}
@@ -224,13 +224,13 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
         </div>
         <div class="side-by-side">
           <ha-select label="Slot Left 2 (optional)" .configValue=${'slot_l2'} .value=${this._slot_l2}
-            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
+            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
             fixedMenuPosition
             naturalMenuWidth>
             ${slotValues}
           </ha-select>
           <ha-select label="Slot Right 2 (optional)" .configValue=${'slot_r2'} .value=${this._slot_r2}
-            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
+            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
             fixedMenuPosition
             naturalMenuWidth>
             ${slotValues}
@@ -238,13 +238,13 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
         </div>
         <div class="side-by-side">
           <ha-select label="Slot Left 3 (optional)" .configValue=${'slot_l3'} .value=${this._slot_l3}
-            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
+            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
             fixedMenuPosition
             naturalMenuWidth>
             ${slotValues}
           </ha-select>
           <ha-select label="Slot Right 3 (optional)" .configValue=${'slot_r3'} .value=${this._slot_r3}
-            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
+            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
             fixedMenuPosition
             naturalMenuWidth>
             ${slotValues}
@@ -252,13 +252,13 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
         </div>
         <div class="side-by-side">
           <ha-select label="Slot Left 4 (optional)" .configValue=${'slot_l4'} .value=${this._slot_l4}
-            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
+            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
             fixedMenuPosition
             naturalMenuWidth>
             ${slotValues}
           </ha-select>
           <ha-select label="Slot Right 4 (optional)" .configValue=${'slot_r4'} .value=${this._slot_r4}
-            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
+            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
             fixedMenuPosition
             naturalMenuWidth>
             ${slotValues}
@@ -266,25 +266,25 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
         </div>
         <div class="side-by-side">
           <ha-select label="Slot Left 5 (optional)" .configValue=${'slot_l5'} .value=${this._slot_l5}
-            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
+            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
             fixedMenuPosition
             naturalMenuWidth>
             ${slotValues}
           </ha-select>
           <ha-select label="Slot Right 5 (optional)" .configValue=${'slot_r5'} .value=${this._slot_r5}
-            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
+            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
             fixedMenuPosition
             naturalMenuWidth>
             ${slotValues}
           </ha-select>
         </div>
         <br>
-        <mwc-formfield .label=${`Toggle warning ${this._show_warning ? 'off' : 'on' }`}>
-          <mwc-switch .checked=${this._show_warning !== false} .configValue=${'show_warning'} @change=${this._valueChanged}>
+        <mwc-formfield .label=${`Toggle warning ${this._show_warning ? 'off' : 'on'}`}>
+          <mwc-switch .checked=${this._show_warning !==false} .configValue=${'show_warning'} @change=${this._valueChanged}>
           </mwc-switch>
         </mwc-formfield>
-        <mwc-formfield .label=${`Toggle error ${this._show_error ? 'off' : 'on'}`}>
-          <mwc-switch .checked=${this._show_error !== false} .configValue=${'show_error'} @change=${this._valueChanged}>
+        <mwc-formfield .label=${`Toggle error ${this._show_error ? 'off' : 'on' }`}>
+          <mwc-switch .checked=${this._show_error !==false} .configValue=${'show_error'} @change=${this._valueChanged}>
           </mwc-switch>
         </mwc-formfield>
         `;
@@ -310,10 +310,14 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
       return;
     }
     if (target.configValue) {
-      this._config = {
-        ...this._config,
-        [target.configValue]: target.value,
-      };
+      if (target.value) {
+        this._config = {
+          ...this._config,
+          [target.configValue]: target.value,
+        };
+      } else {
+        delete this._config[target.configValue];
+      }
     }
     fireEvent(this, 'config-changed', { config: this._config });
   }

@@ -1062,7 +1062,7 @@ function(e){return class extends e{createRenderRoot(){const e=this.constructor,{
           name="entity_temperature" label="Entity Current Temperature (required)" allow-custom-entity
           @value-changed=${this._valueChangedPicker}>
         </ha-entity-picker>
-        <ha-entity-picker .hass=${this.hass} .configValue=${"entity_apparent_temps"} .value=${this._entity_apparent_temp}
+        <ha-entity-picker .hass=${this.hass} .configValue=${"entity_apparent_temp"} .value=${this._entity_apparent_temp}
           name="entity_apparent_temp" label="Entity Apparent Temperature (required)" allow-custom-entity
           @value-changed=${this._valueChangedPicker}>
         </ha-entity-picker>
@@ -1153,7 +1153,7 @@ function(e){return class extends e{createRenderRoot(){const e=this.constructor,{
           <mwc-switch .checked=${!1!==this._show_error} .configValue=${"show_error"} @change=${this._valueChanged}>
           </mwc-switch>
         </mwc-formfield>
-        `}_initialize(){void 0!==this.hass&&void 0!==this._config&&void 0!==this._helpers&&(this._initialized=!0)}async loadCardHelpers(){this._helpers=await window.loadCardHelpers()}_valueChangedPicker(e){if(!this._config||!this.hass)return;const t=e.target;this[`_${t.configValue}`]!==t.value&&(t.configValue&&(this._config=Object.assign(Object.assign({},this._config),{[t.configValue]:t.value})),xe(this,"config-changed",{config:this._config}))}_valueChanged(e){if(!this._config||!this.hass)return;const t=e.target;if(this[`_${t.configValue}`]!==t.value){if(t.configValue)if(""===t.value){const e=Object.assign({},this._config);delete e[t.configValue],this._config=e}else this._config=Object.assign(Object.assign({},this._config),{[t.configValue]:void 0!==t.checked?t.checked:t.value});xe(this,"config-changed",{config:this._config})}}};In.elementDefinitions=Object.assign(Object.assign(Object.assign(Object.assign({"ha-card":customElements.get("ha-card")},En),Ji),an),Ke),In.styles=c`
+        `}_initialize(){void 0!==this.hass&&void 0!==this._config&&void 0!==this._helpers&&(this._initialized=!0)}async loadCardHelpers(){this._helpers=await window.loadCardHelpers()}_valueChangedPicker(e){if(!this._config||!this.hass)return;const t=e.target;this[`_${t.configValue}`]!==t.value&&(t.configValue&&(t.value?this._config=Object.assign(Object.assign({},this._config),{[t.configValue]:t.value}):delete this._config[t.configValue]),xe(this,"config-changed",{config:this._config}))}_valueChanged(e){if(!this._config||!this.hass)return;const t=e.target;if(this[`_${t.configValue}`]!==t.value){if(t.configValue)if(""===t.value){const e=Object.assign({},this._config);delete e[t.configValue],this._config=e}else this._config=Object.assign(Object.assign({},this._config),{[t.configValue]:void 0!==t.checked?t.checked:t.value});xe(this,"config-changed",{config:this._config})}}};In.elementDefinitions=Object.assign(Object.assign(Object.assign(Object.assign({"ha-card":customElements.get("ha-card")},En),Ji),an),Ke),In.styles=c`
     mwc-select,
     mwc-textfield {
       margin-bottom: 16px;
