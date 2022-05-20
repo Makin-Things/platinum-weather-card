@@ -2,18 +2,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { LitElement, html, TemplateResult, css, PropertyValues, CSSResult, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators';
-import {
-  HomeAssistant,
-  hasConfigOrEntityChanged,
-  hasAction,
-  ActionHandlerEvent,
-  handleAction,
-  LovelaceCardEditor,
-  getLovelace,
-} from 'custom-card-helpers'; // This is a community maintained npm module with common helper functions/types. https://github.com/custom-cards/custom-card-helpers
+import { HomeAssistant, hasConfigOrEntityChanged, LovelaceCardEditor, getLovelace } from 'custom-card-helpers';
 
 import type { WeatherCardConfig } from './types';
-import { actionHandler } from './action-handler-directive';
 import { CARD_VERSION } from './const';
 import { localize } from './localize/localize';
 
@@ -49,6 +40,8 @@ export class WeatherCard extends LitElement {
   @property({ attribute: false }) public hass!: HomeAssistant;
 
   @state() private config!: WeatherCardConfig;
+
+  private _error = '';
 
   // https://lit.dev/docs/components/properties/#accessors-custom
   public setConfig(config: WeatherCardConfig): void {
@@ -86,9 +79,7 @@ export class WeatherCard extends LitElement {
     for (const entity of [this.config.entity_temperature as string, this.config.entity_apparent_temp as string, this.config.entity_current_conditions as string, this.config.entity_current_text as string]) {
       // console.info(`entity: %s`, entity);
       // console.info(`oh state: %s`, JSON.stringify(oldHass.states[entity], null, 2));
-      if (
-        oldHass.states[entity] !== this.hass.states[entity]
-      ) {
+      if (oldHass.states[entity] !== this.hass.states[entity]) {
         console.info(`update: %s=%s`, entity, this.hass.states[entity].state);
         return true;
       }
@@ -97,10 +88,23 @@ export class WeatherCard extends LitElement {
     return hasConfigOrEntityChanged(this, changedProps, false);
   }
 
+  public async performUpdate(): Promise<void> {
+    this._error = '';
+    Object.keys(this.config).forEach(key => {
+      if (key.match(/^entity_/) !== null) {
+        if (this.hass.states[this.config[key]] === undefined) {
+          this._error += `'${key}=${this.config[key]}' not found`;
+        }
+      }
+    })
+    super.performUpdate();
+  }
+
   // https://lit.dev/docs/components/rendering/
   protected render(): TemplateResult | void {
     console.info(`Weather: render`);
-    // TODO Check for stateObj or other necessary things and render a warning if missing
+    if (this._error !== '') return this._showConfigWarning(this._error);
+
     if (this.config.show_warning) {
       return this._showWarning(localize('common.show_warning'));
     }
@@ -127,21 +131,13 @@ export class WeatherCard extends LitElement {
       </div>
     `;
 
-    const currentText = this.hass.states[this.config.entity_current_text].state ?? '---';
+    const currentText = this.config.entity_current_text !== undefined ? this.hass.states[this.config.entity_current_text].state ?? '---' : '---';
 
     return html`
       <style>
         ${this.styles}
       </style>
-      <ha-card class="card"
-        @action=${this._handleAction}
-        .actionHandler=${actionHandler({
-      hasHold: hasAction(this.config.hold_action),
-      hasDoubleClick: hasAction(this.config.double_tap_action),
-    })}
-        tabindex="0"
-        .label=${`Weather: ${this.config.entity || 'No Entity Defined'}`}
-      >
+      <ha-card class="card">
         <div class="content">
           <div class="top-row">
             <div class="top-left">${biggerIcon}</div>
@@ -150,7 +146,7 @@ export class WeatherCard extends LitElement {
           <div class="current-text">${currentText}</div>
           <div><p>This is where slots go</p></div>
         </div>
-    </ha-card>
+      </ha-card>
     `;
   }
 
@@ -411,10 +407,18 @@ export class WeatherCard extends LitElement {
     }
   }
 
-  private _handleAction(ev: ActionHandlerEvent): void {
-    if (this.hass && this.config && ev.detail.action) {
-      handleAction(this, this.hass, this.config, ev.detail.action);
-    }
+  private _showConfigWarning(warning: string): TemplateResult {
+    // const errorCard = <LovelaceCard>document.createElement('hui-error-card');
+    // eslint-disable-next-line no-console
+    console.log(warning);
+    return html`
+      <hui-warning>
+        <div>
+          ERROR:<br />
+          ${warning}
+        </div>
+      </hui-warning>
+    `;
   }
 
   private _showWarning(warning: string): TemplateResult {

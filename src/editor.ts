@@ -42,12 +42,64 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     return true;
   }
 
-  get _name(): string {
-    return this._config?.name || '';
+  get _card_title(): string {
+    return this._config?.card_title || '';
+  }
+
+  get _entity_temperature(): string {
+    return this._config?.entity_temperature || '';
+  }
+
+  get _entity_apparent_temp(): string {
+    return this._config?.entity_apparent_temp || '';
   }
 
   get _entity_current_conditions(): string {
     return this._config?.entity_current_conditions || '';
+  }
+
+  get _entity_current_text(): string {
+    return this._config?.entity_current_text || '';
+  }
+
+  get _slot_l1(): string {
+    return this._config?.slot_l1 || '';
+  }
+
+  get _slot_l2(): string {
+    return this._config?.slot_l2 || '';
+  }
+
+  get _slot_l3(): string {
+    return this._config?.slot_l3 || '';
+  }
+
+  get _slot_l4(): string {
+    return this._config?.slot_l4 || '';
+  }
+
+  get _slot_l5(): string {
+    return this._config?.slot_l5 || '';
+  }
+
+  get _slot_r1(): string {
+    return this._config?.slot_r1 || '';
+  }
+
+  get _slot_r2(): string {
+    return this._config?.slot_r2 || '';
+  }
+
+  get _slot_r3(): string {
+    return this._config?.slot_r3 || '';
+  }
+
+  get _slot_r4(): string {
+    return this._config?.slot_r4 || '';
+  }
+
+  get _slot_r5(): string {
+    return this._config?.slot_r5 || '';
   }
 
   get _show_warning(): boolean {
@@ -60,6 +112,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
 
   protected async firstUpdated(): Promise<void> {
     this.loadEntityPicker();
+    this.loadSelect();
   }
 
   async loadEntityPicker() {
@@ -84,19 +137,149 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     registry.define("ha-entity-picker", haEntityPicker);
   }
 
+  async loadSelect() {
+    // Get the local customElement registry
+    const registry = (this.shadowRoot as any)?.customElements;
+    if (!registry) return;
+
+    // Check if the element we want is already defined in the local scope
+    if (registry.get("ha-select")) return;
+
+    // Load in ha-select
+    // This part will differ for every element you want
+    const ch = await (window as any).loadCardHelpers();
+    const c = await ch.createCardElement({ type: "entities", entities: [] });
+    await c.constructor.getConfigElement();
+
+    // Since ha-elements are not using scopedRegistry we can get a reference to
+    // the newly loaded element from the global customElement registry...
+    const haSelect = window.customElements.get("ha-select");
+
+    // ... and use that reference to register the same element in the local registry
+    registry.define("ha-select", haSelect);
+  }
+
   protected render(): TemplateResult | void {
     if (!this.hass || !this._helpers) {
       return html``;
     }
 
+    const slotValues = html`<mwc-list-item></mwc-list-item>
+<mwc-list-item value="daytime_high">daytime_high</mwc-list-item>
+<mwc-list-item value="daytime_low">daytime_low</mwc-list-item>
+<mwc-list-item value="temp_next">temp_next</mwc-list-item>
+<mwc-list-item value="temp_following">temp_following</mwc-list-item>
+<mwc-list-item value="wind">wind</mwc-list-item>
+<mwc-list-item value="wind_kt">wind_kt</mwc-list-item>
+<mwc-list-item value="visibility">visibility</mwc-list-item>
+<mwc-list-item value="sun_next">sun_next</mwc-list-item>
+<mwc-list-item value="sun_following">sun_following</mwc-list-item>
+<mwc-list-item value="pop">pop</mwc-list-item>
+<mwc-list-item value="popforecast">popforecast</mwc-list-item>
+<mwc-list-item value="humidity">humidity</mwc-list-item>
+<mwc-list-item value="pressure">pressure</mwc-list-item>
+<mwc-list-item value="uv_summary">uv_summary</mwc-list-item>
+<mwc-list-item value="fire_summary">fire_summary</mwc-list-item>
+<mwc-list-item value="possible_today">possible_today</mwc-list-item>
+<mwc-list-item value="possible_tomorrow">possible_tomorrow</mwc-list-item>
+<mwc-list-item value="rainfall">rainfall</mwc-list-item>
+<mwc-list-item value="custom1">custom1</mwc-list-item>
+<mwc-list-item value="custom2">custom2</mwc-list-item>
+<mwc-list-item value="empty">empty</mwc-list-item>
+<mwc-list-item value="remove">remove</mwc-list-item>`;
+
     return html`
-        <ha-entity-picker .hass=${this.hass} .configValue=${'entity_current_conditions'}
-          .value=${this._entity_current_conditions} name="entity" label="Entity Current Conditions (Required)" hideClearIcon
-          allowCustomEntity @value-changed=${this._valueChangedString}>
-        </ha-entity-picker>
-        <mwc-textfield label="Name (Optional)" .value=${this._name} .configValue=${'name'} @input=${this._valueChangedString}>
+        <mwc-textfield label="Card Title (optional)" .value=${this._card_title} .configValue=${'card_title'}
+          @input=${this._valueChanged}>
         </mwc-textfield>
-        <mwc-formfield .label=${`Toggle warning ${this._show_warning ? 'off' : 'on'}`}>
+        <ha-entity-picker .hass=${this.hass} .configValue=${'entity_temperature'} .value=${this._entity_temperature}
+          name="entity_temperature" label="Entity Current Temperature (required)" allow-custom-entity
+          @value-changed=${this._valueChangedPicker}>
+        </ha-entity-picker>
+        <ha-entity-picker .hass=${this.hass} .configValue=${'entity_apparent_temps'} .value=${this._entity_apparent_temp}
+          name="entity_apparent_temp" label="Entity Apparent Temperature (required)" allow-custom-entity
+          @value-changed=${this._valueChangedPicker}>
+        </ha-entity-picker>
+        <ha-entity-picker .hass=${this.hass} .configValue=${'entity_current_conditions'}
+          .value=${this._entity_current_conditions} name="entity_current_condition" label="Entity Current Conditions (required)"
+          allow-custom-entity @value-changed=${this._valueChangedPicker}>
+        </ha-entity-picker>
+        <ha-entity-picker .hass=${this.hass} .configValue=${'entity_current_text'} .value=${this._entity_current_text}
+          name="entity_current_text" label="Entity Current Text (required)" allow-custom-entity
+          @value-changed=${this._valueChangedPicker}>
+        </ha-entity-picker>
+        <div class="side-by-side">
+          <ha-select label="Slot Left 1 (optional)" .configValue=${'slot_l1'} .value=${this._slot_l1}
+            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
+            fixedMenuPosition
+            naturalMenuWidth>
+            ${slotValues}
+          </ha-select>
+          <ha-select label="Slot Right 1 (optional)" .configValue=${'slot_r1'} .value=${this._slot_r1}
+            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
+            fixedMenuPosition
+            naturalMenuWidth>
+            ${slotValues}
+          </ha-select>
+        </div>
+        <div class="side-by-side">
+          <ha-select label="Slot Left 2 (optional)" .configValue=${'slot_l2'} .value=${this._slot_l2}
+            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
+            fixedMenuPosition
+            naturalMenuWidth>
+            ${slotValues}
+          </ha-select>
+          <ha-select label="Slot Right 2 (optional)" .configValue=${'slot_r2'} .value=${this._slot_r2}
+            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
+            fixedMenuPosition
+            naturalMenuWidth>
+            ${slotValues}
+          </ha-select>
+        </div>
+        <div class="side-by-side">
+          <ha-select label="Slot Left 3 (optional)" .configValue=${'slot_l3'} .value=${this._slot_l3}
+            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
+            fixedMenuPosition
+            naturalMenuWidth>
+            ${slotValues}
+          </ha-select>
+          <ha-select label="Slot Right 3 (optional)" .configValue=${'slot_r3'} .value=${this._slot_r3}
+            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
+            fixedMenuPosition
+            naturalMenuWidth>
+            ${slotValues}
+          </ha-select>
+        </div>
+        <div class="side-by-side">
+          <ha-select label="Slot Left 4 (optional)" .configValue=${'slot_l4'} .value=${this._slot_l4}
+            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
+            fixedMenuPosition
+            naturalMenuWidth>
+            ${slotValues}
+          </ha-select>
+          <ha-select label="Slot Right 4 (optional)" .configValue=${'slot_r4'} .value=${this._slot_r4}
+            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
+            fixedMenuPosition
+            naturalMenuWidth>
+            ${slotValues}
+          </ha-select>
+        </div>
+        <div class="side-by-side">
+          <ha-select label="Slot Left 5 (optional)" .configValue=${'slot_l5'} .value=${this._slot_l5}
+            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
+            fixedMenuPosition
+            naturalMenuWidth>
+            ${slotValues}
+          </ha-select>
+          <ha-select label="Slot Right 5 (optional)" .configValue=${'slot_r5'} .value=${this._slot_r5}
+            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
+            fixedMenuPosition
+            naturalMenuWidth>
+            ${slotValues}
+          </ha-select>
+        </div>
+        <br>
+        <mwc-formfield .label=${`Toggle warning ${this._show_warning ? 'off' : 'on' }`}>
           <mwc-switch .checked=${this._show_warning !== false} .configValue=${'show_warning'} @change=${this._valueChanged}>
           </mwc-switch>
         </mwc-formfield>
@@ -116,6 +299,23 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
 
   private async loadCardHelpers(): Promise<void> {
     this._helpers = await (window as any).loadCardHelpers();
+  }
+
+  private _valueChangedPicker(ev): void {
+    if (!this._config || !this.hass) {
+      return;
+    }
+    const target = ev.target;
+    if (this[`_${target.configValue}`] === target.value) {
+      return;
+    }
+    if (target.configValue) {
+      this._config = {
+        ...this._config,
+        [target.configValue]: target.value,
+      };
+    }
+    fireEvent(this, 'config-changed', { config: this._config });
   }
 
   private _valueChanged(ev): void {
@@ -141,15 +341,15 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     fireEvent(this, 'config-changed', { config: this._config });
   }
 
-  private _valueChangedString(ev: CustomEvent): void {
-    const config = ev.detail.value;
+  // private _valueChangedString(ev: CustomEvent): void {
+  //   const config = ev.detail.value;
 
-    if (config.icon_height && !config.icon_height.endsWith("px")) {
-      config.icon_height += "px";
-    }
+  //   if (config.icon_height && !config.icon_height.endsWith("px")) {
+  //     config.icon_height += "px";
+  //   }
 
-    fireEvent(this, "config-changed", { config });
-  }
+  //   fireEvent(this, "config-changed", { config });
+  // }
 
   static styles: CSSResultGroup = css`
     mwc-select,
@@ -162,6 +362,39 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     }
     mwc-switch {
       --mdc-theme-secondary: var(--switch-checked-color);
+    }
+    .option {
+      padding: 4px 0px;
+      cursor: pointer;
+    }
+    .row {
+      display: flex;
+      margin-bottom: -14px;
+      pointer-events: none;
+    }
+    .title {
+      padding-left: 16px;
+      margin-top: -6px;
+      pointer-events: none;
+    }
+    .secondary {
+      padding-left: 40px;
+      color: var(--secondary-text-color);
+      pointer-events: none;
+    }
+    .values {
+      padding-left: 16px;
+      background: var(--secondary-background-color);
+    }
+    ha-switch {
+      padding: 16px 6px;
+    }
+    .side-by-side {
+      display: flex;
+    }
+    .side-by-side > * {
+      flex: 1;
+      padding-right: 4px;
     }
   `;
 }
