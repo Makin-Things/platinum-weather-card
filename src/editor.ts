@@ -102,6 +102,208 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     return this._config?.slot_r5 || '';
   }
 
+  get _entity_daytime_high(): string {
+    return this._config?.entity_daytime_high || '';
+  }
+
+  get _entity_daytime_low(): string {
+    return this._config?.entity_daytime_low || '';
+  }
+
+  get _entity_temp_next(): string {
+    return this._config?.entity_temp_next || '';
+  }
+
+  get _entity_temp_next_label(): string {
+    return this._config?.entity_temp_next_label || '';
+  }
+
+  get _entity_temp_following(): string {
+    return this._config?.entity_temp_following || '';
+  }
+
+  get _entity_temp_following_label(): string {
+    return this._config?.entity_temp_following_label || '';
+  }
+
+  get _entity_wind_bearing(): string {
+    return this._config?.entity_wind_bearing || '';
+  }
+
+  get _entity_wind_speed(): string {
+    return this._config?.entity_wind_speed || '';
+  }
+
+  get _entity_wind_gust(): string {
+    return this._config?.entity_wind_gust || '';
+  }
+
+  get _entity_wind_speed_kt(): string {
+    return this._config?.entity_wind_speed_kt || '';
+  }
+
+  get _entity_wind_gust_kt(): string {
+    return this._config?.entity_wind_gust_kt || '';
+  }
+
+  get _entity_visibility(): string {
+    return this._config?.entity_visibility || '';
+  }
+
+  get _entity_sun(): string {
+    return this._config?.entity_sun || '';
+  }
+
+  get _optional_entities(): TemplateResult {
+    const entities = new Set();
+    for (const slot of
+      [
+        this._config?.slot_l1 || 'daytime_high' as string,
+        this._config?.slot_l2 || 'daytime_low' as string,
+        this._config?.slot_l3 || 'wind' as string,
+        this._config?.slot_l4 || 'pressure' as string,
+        this._config?.slot_l5 || 'sun_next' as string,
+        this._config?.slot_r1 || 'pop' as string,
+        this._config?.slot_r2 || 'humidity' as string,
+        this._config?.slot_r3 || 'uv_summary' as string,
+        this._config?.slot_r4 || 'fire_summary' as string,
+        this._config?.slot_r5 || 'sun_following' as string
+      ]) {
+      switch (slot) {
+        case 'daytime_high':
+          entities.add('entity_daytime_high');
+          break;
+        case 'daytime_low':
+          entities.add('entity_daytime_low');
+          break;
+        case 'temp_next':
+          entities.add('entity_temp_next').add('entity_temp_next_label');
+          break;
+        case 'temp_following':
+          entities.add('entity_temp_following').add('entity_temp_following_label');
+          break;
+        case 'wind':
+          entities.add('entity_wind_bearing').add('entity_wind_speed').add('entity_wind_gust');
+          break;
+        case 'wind_kt':
+          entities.add('entity_wind_bearing').add('entity_wind_speed_kt').add('entity_wind_gust_kt');
+          break;
+        case 'visibility':
+          entities.add('entity_wind_visibility');
+          break;
+        case 'sun_next':
+          entities.add('entity_sun');
+          break;
+        case 'sun_following':
+          entities.add('entity_sun');
+          break;
+        case 'pop':
+          break;
+        case 'popforecast':
+          break;
+        case 'humidity':
+          break;
+        case 'pressure':
+          break;
+        case 'uv_summary':
+          break;
+        case 'fire_summary':
+          break;
+        case 'possible_today':
+          break;
+        case 'possible_tomorrow':
+          break;
+        case 'rainfall':
+          break;
+        case 'custom1':
+          break;
+        case 'custom2':
+          break;
+      }
+    }
+
+    const entity_daytime_high = entities.has("entity_daytime_high") ?
+      html`<ha-entity-picker .hass=${this.hass} .configValue=${'entity_daytime_high'} .value=${this._entity_daytime_high}
+  name="entity_daytime_high" label="Entity Daytime High (optional)" allow-custom-entity
+  @value-changed=${this._valueChangedPicker}></ha-entity-picker>` : '';
+
+    const entity_daytime_low = entities.has("entity_daytime_low") ?
+      html`<ha-entity-picker .hass=${this.hass} .configValue=${'entity_daytime_low'} .value=${this._entity_daytime_low}
+  name="entity_daytime_low" label="Entity Daytime Low (optional)" allow-custom-entity
+  @value-changed=${this._valueChangedPicker}></ha-entity-picker>` : '';
+
+    const entity_temp_next = entities.has("entity_temp_next") ?
+      html`<ha-entity-picker .hass=${this.hass} .configValue=${'entity_temp_next'} .value=${this._entity_temp_next}
+  name="entity_temp_next" label="Entity Temp Next (optional)" allow-custom-entity
+  @value-changed=${this._valueChangedPicker}></ha-entity-picker>` : '';
+
+    const entity_temp_next_label = entities.has("entity_temp_next_label") ?
+      html`<ha-entity-picker .hass=${this.hass} .configValue=${'entity_temp_next_label'} .value=${this._entity_temp_next_label}
+  name="entity_temp_next_label" label="Entity Temp Next Label (optional)" allow-custom-entity
+  @value-changed=${this._valueChangedPicker}></ha-entity-picker>` : '';
+
+    const entity_temp_following = entities.has("entity_temp_following") ?
+      html`<ha-entity-picker .hass=${this.hass} .configValue=${'entity_temp_following'} .value=${this._entity_temp_following}
+  name="entity_temp_following" label="Entity Temp Following (optional)" allow-custom-entity
+  @value-changed=${this._valueChangedPicker}></ha-entity-picker>` : '';
+
+    const entity_temp_following_label = entities.has("entity_temp_following_label") ?
+      html`<ha-entity-picker .hass=${this.hass} .configValue=${'entity_temp_following_label'}
+  .value=${this._entity_temp_following_label} name="entity_temp_following_label"
+  label="Entity Temp Following Label (optional)" allow-custom-entity @value-changed=${this._valueChangedPicker}>
+</ha-entity-picker>` : '';
+
+    const entity_wind_bearing = entities.has("entity_wind_bearing") ?
+      html`<ha-entity-picker .hass=${this.hass} .configValue=${'entity_wind_bearing'} .value=${this._entity_wind_bearing}
+  name="entity_wind_bearing" label="Entity Wind Bearing (optional)" allow-custom-entity
+  @value-changed=${this._valueChangedPicker}></ha-entity-picker>` : '';
+
+    const entity_wind_speed = entities.has("entity_wind_speed") ?
+      html`<ha-entity-picker .hass=${this.hass} .configValue=${'entity_wind_speed'} .value=${this._entity_wind_speed}
+  name="entity_wind_speed" label="Entity Wind Speed (optional)" allow-custom-entity
+  @value-changed=${this._valueChangedPicker}></ha-entity-picker>` : '';
+
+    const entity_wind_gust = entities.has("entity_wind_gust") ?
+      html`<ha-entity-picker .hass=${this.hass} .configValue=${'entity_wind_gust'} .value=${this._entity_wind_gust}
+  name="entity_wind_gust" label="Entity Wind Gust (optional)" allow-custom-entity
+  @value-changed=${this._valueChangedPicker}></ha-entity-picker>` : '';
+
+    const entity_wind_speed_kt = entities.has("entity_wind_speed_kt") ?
+      html`<ha-entity-picker .hass=${this.hass} .configValue=${'entity_wind_speed_kt'} .value=${this._entity_wind_speed_kt}
+  name="entity_wind_speed_kt" label="Entity Wind Speed Kt (optional)" allow-custom-entity
+  @value-changed=${this._valueChangedPicker}></ha-entity-picker>` : '';
+
+    const entity_wind_gust_kt = entities.has("entity_wind_gust_kt") ?
+      html`<ha-entity-picker .hass=${this.hass} .configValue=${'entity_wind_gust_kt'} .value=${this._entity_wind_gust_kt}
+  name="entity_wind_gust_kt" label="Entity Wind Gust Kt (optional)" allow-custom-entity
+  @value-changed=${this._valueChangedPicker}></ha-entity-picker>` : '';
+
+    const entity_visibility = entities.has("entity_visibility") ?
+      html`<ha-entity-picker .hass=${this.hass} .configValue=${'entity_visibility'} .value=${this._entity_visibility}
+  name="entity_visibility" label="Entity Visibility (optional)" allow-custom-entity
+  @value-changed=${this._valueChangedPicker}></ha-entity-picker>` : '';
+
+    const entity_sun = entities.has("entity_sun") ?
+      html`<ha-entity-picker .hass=${this.hass} .configValue=${'entity_sun'} .value=${this._entity_sun} name="entity_sun"
+  label="Entity Sun (optional)" allow-custom-entity @value-changed=${this._valueChangedPicker}></ha-entity-picker>` : '';
+
+
+    return html`
+      ${entity_daytime_high}
+      ${entity_daytime_low}
+      ${entity_temp_next}
+      ${entity_temp_next_label}
+      ${entity_temp_following}
+      ${entity_temp_following_label}
+      ${entity_wind_bearing}
+      ${entity_wind_speed}
+      ${entity_wind_gust}
+      ${entity_wind_speed_kt}
+      ${entity_wind_gust_kt}
+      ${entity_visibility}
+      ${entity_sun}`;
+  }
+
   get _show_warning(): boolean {
     return this._config?.show_warning || false;
   }
@@ -278,6 +480,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
             ${slotValues}
           </ha-select>
         </div>
+        ${this._optional_entities}
         <br>
         <mwc-formfield .label=${`Toggle warning ${this._show_warning ? 'off' : 'on'}`}>
           <mwc-switch .checked=${this._show_warning !==false} .configValue=${'show_warning'} @change=${this._valueChanged}>

@@ -410,7 +410,6 @@ export class WeatherCard extends LitElement {
   private _showConfigWarning(warnings: string[]): TemplateResult {
     // const errorCard = <LovelaceCard>document.createElement('hui-error-card');
     // eslint-disable-next-line no-console
-    console.log(warnings);
     return html`
       <hui-warning>
         <div>Weather Card</div>
