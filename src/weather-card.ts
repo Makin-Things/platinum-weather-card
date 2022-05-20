@@ -41,7 +41,7 @@ export class WeatherCard extends LitElement {
 
   @state() private config!: WeatherCardConfig;
 
-  private _error = '';
+  private _error: string[] = [];
 
   // https://lit.dev/docs/components/properties/#accessors-custom
   public setConfig(config: WeatherCardConfig): void {
@@ -89,11 +89,11 @@ export class WeatherCard extends LitElement {
   }
 
   public async performUpdate(): Promise<void> {
-    this._error = '';
+    this._error = [];
     Object.keys(this.config).forEach(key => {
       if (key.match(/^entity_/) !== null) {
         if (this.hass.states[this.config[key]] === undefined) {
-          this._error += `'${key}=${this.config[key]}' not found`;
+          this._error.push(`'${key}=${this.config[key]}' not found`);
         }
       }
     })
@@ -103,7 +103,7 @@ export class WeatherCard extends LitElement {
   // https://lit.dev/docs/components/rendering/
   protected render(): TemplateResult | void {
     console.info(`Weather: render`);
-    if (this._error !== '') return this._showConfigWarning(this._error);
+    if (this._error.length !== 0) return this._showConfigWarning(this._error);
 
     if (this.config.show_warning) {
       return this._showWarning(localize('common.show_warning'));
@@ -407,16 +407,14 @@ export class WeatherCard extends LitElement {
     }
   }
 
-  private _showConfigWarning(warning: string): TemplateResult {
+  private _showConfigWarning(warnings: string[]): TemplateResult {
     // const errorCard = <LovelaceCard>document.createElement('hui-error-card');
     // eslint-disable-next-line no-console
-    console.log(warning);
+    console.log(warnings);
     return html`
       <hui-warning>
-        <div>
-          ERROR:<br />
-          ${warning}
-        </div>
+        <div>Weather Card</div>
+        ${warnings.map(warning => html`<div>${warning}</div>`)}
       </hui-warning>
     `;
   }
