@@ -126,13 +126,24 @@ export class WeatherCard extends LitElement {
 
     const apparentTemp = html`
       <div class="apparent-temp">
-        <div class="apparent">${this.localeTextfeelsLike} <span id="apparent-temp-text">${this.apparentTemperature}</span>
+        <div class="apparent">${this.localeTextfeelsLike} <span
+            id="apparent-temp-text">${this.currentApparentTemperature}</span>
         </div>
         <div class="apparentc"> ${this.getUOM('temperature')}</div>
       </div>
     `;
 
     const currentText = this.config.entity_current_text !== undefined ? this.hass.states[this.config.entity_current_text].state ?? '---' : '---';
+
+    var slot_section = (this.config.use_old_column_format === true) ? html`<ul class="variations-ugly">
+  <li>${this.getSlot().l1}${this.getSlot().l2}${this.getSlot().l3}${this.getSlot().l4}${this.getSlot().l5}</li>
+  <li>${this.getSlot().r1}${this.getSlot().r2}${this.getSlot().r3}${this.getSlot().r4}${this.getSlot().r5}</li>
+</ul>` : html`<ul class="variations">
+  <li class="slotlist">
+    ${this.getSlot().l1}${this.getSlot().l2}${this.getSlot().l3}${this.getSlot().l4}${this.getSlot().l5}</li>
+  <li class="slotlist">
+    ${this.getSlot().r1}${this.getSlot().r2}${this.getSlot().r3}${this.getSlot().r4}${this.getSlot().r5}</li>
+</ul>`;
 
     return html`
       <style>
@@ -145,19 +156,433 @@ export class WeatherCard extends LitElement {
             <div class="currentTemps">${currentTemp}${apparentTemp}</div>
           </div>
           <div class="current-text">${currentText}</div>
-          <div><p>This is where slots go</p></div>
+          <div>${slot_section}</div>
         </div>
       </ha-card>
     `;
   }
 
+  // slots - returns the value to be displyed in a specific current condition slot
+  getSlot(): { l1: any, l2: any, l3: any, l4: any, l5: any, r1: any, r2: any, r3: any, r4: any, r5: any } {
+    return {
+      'l1': this.slotValue('l1', this.config.slot_l1),
+      'l2': this.slotValue('l2', this.config.slot_l2),
+      'l3': this.slotValue('l3', this.config.slot_l3),
+      'l4': this.slotValue('l4', this.config.slot_l4),
+      'l5': this.slotValue('l5', this.config.slot_l5),
+      'r1': this.slotValue('r1', this.config.slot_r1),
+      'r2': this.slotValue('r2', this.config.slot_r2),
+      'r3': this.slotValue('r3', this.config.slot_r3),
+      'r4': this.slotValue('r4', this.config.slot_r4),
+      'r5': this.slotValue('r5', this.config.slot_r5),
+    }
+  }
+
+  // slots - calculates the specific slot value
+  slotValue(slot: string, value: string | undefined): TemplateResult {
+    console.info('slotValue called');
+    switch (value) {
+      case 'pop': return this.slotPop;
+      case 'popforecast': return this.slotPopForecast;
+      case 'possible_today': return this.slotPossibleToday;
+      case 'possible_tomorrow': return this.slotPossibleTomorrow;
+      case 'rainfall': return this.slotRainfall;
+      case 'humidity': return this.slotHumidity;
+      case 'pressure': return this.slotPressure;
+      case 'daytime_high': return this.slotDaytimeHigh;
+      case 'daytime_low': return this.slotDaytimeLow;
+      case 'temp_next': return this.slotTempNext;
+      case 'temp_following': return this.slotTempFollowing;
+      case 'uv_summary': return this.slotUvSummary;
+      case 'fire_summary': return this.slotFireSummary;
+      case 'wind': return this.slotWind;
+      case 'wind_kt': return this.slotWindKt;
+      case 'visibility': return this.slotVisibility;
+      case 'sun_next': return this.slotSunNext;
+      case 'sun_following': return this.slotSunFollowing;
+      case 'custom1': return this.slotCustom1;
+      case 'custom2': return this.slotCustom2;
+      case 'empty': return html`&nbsp;`;
+      case 'remove': return html``;
+    }
+
+    // If no value can be matched pass back a default for the slot
+    switch (slot) {
+      case 'l1': return this.slotDaytimeHigh;
+      case 'l2': return this.slotDaytimeLow;
+      case 'l3': return this.slotWind;
+      case 'l4': return this.slotPressure;
+      case 'l5': return this.slotSunNext;
+      case 'r1': return this.slotPop;
+      case 'r2': return this.slotHumidity;
+      case 'r3': return this.slotUvSummary;
+      case 'r4': return this.slotFireSummary;
+      case 'r5': return this.slotSunFollowing;
+    }
+    return html`&nbsp;`;
+  }
+
+  // getters that return the html for an individual slot
+  get slotPop(): TemplateResult {
+    try {
+      var intensity = this.config.entity_pop_intensity && !this.config.entity_pop_intensity_rate ? html`<span id="intensity-text"> -
+  ${(Number(this.hass.states[this.config.entity_pop_intensity].state)).toLocaleString()}</span><span
+  class="unit">${this.getUOM('precipitation')}</span>` : this.config.entity_pop_intensity_rate && !this.config.entity_pop_intensity ? html`<span id="intensity-text"> -
+  ${(Number(this.hass.states[this.config.entity_pop_intensity_rate].state)).toLocaleString()}</span><span
+  class="unit">${this.getUOM('intensity')}</span>` : ` Config Error`;
+      if (this.config.alt_pop) {
+        return html`<li><span class="ha-icon">
+    <ha-icon icon="mdi:weather-rainy"></ha-icon>
+  </span><span id="alt-pop">${this.hass.states[this.config.alt_pop].state}</span></li>`;
+      } else {
+        return this.config.entity_pop ? html`<li><span class="ha-icon">
+    <ha-icon icon="mdi:weather-rainy"></ha-icon>
+  </span><span id="pop-text">${this.hass.states[this.config.entity_pop] !== undefined ?
+    Math.round(Number(this.hass.states[this.config.entity_pop].state)) : "Config Error"}</span><span
+    class="unit">%</span><span>${intensity}</span></li>` : html``;
+      }
+    } catch (e) {
+      return html`<li><span class="ha-icon">
+    <ha-icon icon="mdi:weather-rainy"></ha-icon>
+  </span><span id="pop-text">Config Error</span></li>`;
+    }
+  }
+
+  get slotPopForecast(): TemplateResult {
+    try {
+      if (this.config.alt_pop) {
+        return html`<li><span class="ha-icon">
+    <ha-icon icon="mdi:weather-rainy"></ha-icon>
+  </span><span id="alt-pop">${this.hass.states[this.config.alt_pop].state}</span></li>`;
+      } else {
+        return this.config.entity_pop && this.config.entity_possible_today ? html`<li><span class="ha-icon">
+    <ha-icon icon="mdi:weather-rainy"></ha-icon>
+  </span><span id="pop-text">${Math.round(Number(this.hass.states[this.config.entity_pop].state))}</span><span
+    class="unit">%</span><span> - <span
+      id="pop-text-today">${this.hass.states[this.config.entity_possible_today].state}</span></span><span
+    class="unit">${this.getUOM('precipitation')}</span></li>` : html``;
+      }
+    } catch (e) {
+      return html`<li><span class="ha-icon">
+    <ha-icon icon="mdi:weather-rainy"></ha-icon>
+  </span><span id="pop-text">Config Error</span></li>`;
+    }
+  }
+
+  get slotPossibleToday(): TemplateResult {
+    try {
+      return this.config.entity_possible_today ? html`<li><span class="ha-icon">
+    <ha-icon icon="mdi:weather-rainy"></ha-icon>
+  </span>${this.localeTextposToday} <span
+    id="possible_today-text">${this.hass.states[this.config.entity_possible_today].state}</span><span
+    class="unit">${this.getUOM('precipitation')}</span></li>` : html``;
+    } catch (e) {
+      return html`<li><span class="ha-icon">
+    <ha-icon icon="mdi:weather-rainy"></ha-icon>
+  </span><span id="possible_today-text">Config Error</span></li>`;
+    }
+  }
+
+  get slotPossibleTomorrow(): TemplateResult {
+    try {
+      return this.config.entity_pos_1 ? html`<li><span class="ha-icon">
+    <ha-icon icon="mdi:weather-rainy"></ha-icon>
+  </span>${this.localeTextposTomorrow} <span
+    id="possible_tomorrow-text">${this.hass.states[this.config.entity_pos_1].state}</span><span
+    class="unit">${this.getUOM('precipitation')}</span></li>` : html``;
+    } catch (e) {
+      return html`<li><span class="ha-icon">
+    <ha-icon icon="mdi:weather-rainy"></ha-icon>
+  </span><span id="possible_tomorrow-text">Config Error</span></li>`;
+    }
+  }
+
+  get slotRainfall(): TemplateResult {
+    try {
+      return this.config.entity_rainfall ? html`<li><span class="ha-icon">
+    <ha-icon icon="mdi:weather-rainy"></ha-icon>
+  </span><span id="rainfall-text">${this.hass.states[this.config.entity_rainfall].state}</span><span
+    class="unit">${this.getUOM('precipitation')}</span></li>` : html``;
+    } catch (e) {
+      return html`<li><span class="ha-icon">
+    <ha-icon icon="mdi:weather-rainy"></ha-icon>
+  </span><span id="rainfall-text">Config Error</span></li>`;
+    }
+  }
+
+  get slotHumidity(): TemplateResult {
+    try {
+      if (this.config.alt_humidity) {
+        return html`<li><span class="ha-icon">
+    <ha-icon icon="mdi:water-percent"></ha-icon>
+  </span><span id="alt-humidity">${this.hass.states[this.config.alt_humidity].state}</span></li>`;
+      } else {
+        return this.config.entity_humidity ? html`<li><span class="ha-icon">
+    <ha-icon icon="mdi:water-percent"></ha-icon>
+  </span><span id="humidity-text">${this.currentHumidity}</span><span class="unit">%</span></li>` : html``;
+      }
+    } catch (e) {
+      return html`<li><span class="ha-icon">
+    <ha-icon icon="mdi:water-percent"></ha-icon>
+  </span><span id="humidity-text">Config Error</span></li>`;
+    }
+  }
+
+  get slotPressure(): TemplateResult {
+    try {
+      if (this.config.alt_pressure) {
+        return html`<li><span class="ha-icon">
+    <ha-icon icon="mdi:gauge"></ha-icon>
+  </span><span id="alt-pressure">${this.hass.states[this.config.alt_pressure].state}</span></li>`;
+      } else {
+        return this.config.entity_pressure ? html`<li><span class="ha-icon">
+    <ha-icon icon="mdi:gauge"></ha-icon>
+  </span><span id="pressure-text">${this.currentPressure}</span><span class="unit">${this.config.pressure_units ?
+    this.config.pressure_units : this.getUOM('air_pressure')}</span></li>` : html``;
+      }
+    } catch (e) {
+      return html`<li><span class="ha-icon">
+    <ha-icon icon="mdi:gauge"></ha-icon>
+  </span><span id="pressure-text">Config Error</span></li>`;
+    }
+  }
+
+  get slotDaytimeHigh(): TemplateResult {
+    try {
+      if (this.config.alt_daytime_high) {
+        return html`<li><span class="ha-icon">
+    <ha-icon icon="mdi:thermometer-high"></ha-icon>
+  </span><span id="alt-daytime-high">${this.hass.states[this.config.alt_daytime_high].state}</span></li>`;
+      } else {
+        return this.config.entity_daytime_high && this.config.show_decimals_today ? html`<li><span class="ha-icon">
+    <ha-icon icon="mdi:thermometer-high"></ha-icon>
+  </span>${this.localeTextmaxToday} <span
+    id="daytime-high-text">${(Number(this.hass.states[this.config.entity_daytime_high].state)).toLocaleString(undefined,
+    { minimumFractionDigits: 1, maximumFractionDigits: 1 })}</span><span>${this.getUOM('temperature')}</span></li>` : this.config.entity_daytime_high && !this.config.show_decimals_today ? html`<li><span class="ha-icon">
+    <ha-icon icon="mdi:thermometer-high"></ha-icon>
+  </span>${this.localeTextmaxToday} <span
+    id="daytime-high-text">${(Number(this.hass.states[this.config.entity_daytime_high].state).toFixed(0)).toLocaleString()}</span><span>${this.getUOM('temperature')}</span>
+</li>` : html``;
+      }
+    } catch (e) {
+      return html`<li><span class="ha-icon">
+    <ha-icon icon="mdi:thermometer-high"></ha-icon>
+  </span><span id="daytime-high-text">Config Error</span></li>`;
+    }
+  }
+
+  get slotDaytimeLow(): TemplateResult {
+    try {
+      if (this.config.alt_daytime_low) {
+        return html`<li><span class="ha-icon">
+    <ha-icon icon="mdi:thermometer-low"></ha-icon>
+  </span><span id="alt-daytime-low">${this.hass.states[this.config.alt_daytime_low].state}</span></li>`;
+      } else {
+        return this.config.entity_daytime_low && this.config.show_decimals_today ? html`<li><span class="ha-icon">
+    <ha-icon icon="mdi:thermometer-low"></ha-icon>
+  </span>${this.localeTextminToday} <span
+    id="daytime-low-text">${(Number(this.hass.states[this.config.entity_daytime_low].state)).toLocaleString(undefined,
+    { minimumFractionDigits: 1, maximumFractionDigits: 1 })}</span><span>${this.getUOM('temperature')}</span></li>` : this.config.entity_daytime_low && !this.config.show_decimals_today ? html`<li><span class="ha-icon">
+    <ha-icon icon="mdi:thermometer-low"></ha-icon>
+  </span>${this.localeTextminToday} <span
+    id="daytime-low-text">${(Number(this.hass.states[this.config.entity_daytime_low].state).toFixed(0)).toLocaleString()}</span><span>
+    ${this.getUOM('temperature')}</span></li>` : html``;
+      }
+    } catch (e) {
+      return html`<li><span class="ha-icon">
+    <ha-icon icon="mdi:thermometer-low"></ha-icon>
+  </span><span id="daytime-low-text">Config Error</span></li>`;
+    }
+  }
+
+  get slotTempNext(): TemplateResult {
+    try {
+      return this.config.entity_temp_next && this.config.entity_temp_next_label ? html`<li><span class="ha-icon">
+    <ha-icon id="temp-next-icon" icon="${this.tempNextIcon}"></ha-icon>
+  </span><span id="temp-next-text">${this.tempNextText}</span><span>${this.getUOM('temperature')}</span></li>` : html``;
+    } catch (e) {
+      return html`<li><span class="ha-icon">
+    <ha-icon icon="mdi:thermometer"></ha-icon>
+  </span><span id="temp-next-text">Config Error</span></li>`;
+    }
+  }
+
+  get tempNextIcon(): string {
+    return this.hass.states[this.config.entity_temp_next_label].state.includes("Min") ? "mdi:thermometer-low" : "mdi:thermometer-high";
+  }
+
+  get tempNextText(): TemplateResult {
+    return this.config.entity_temp_next && this.config.entity_temp_next_label ? html`${this.hass.states[this.config.entity_temp_next_label].state} ${this.hass.states[this.config.entity_temp_next].state}` : html``;
+  }
+
+  get slotTempFollowing(): TemplateResult {
+    try {
+      return this.config.entity_temp_following && this.config.entity_temp_following_label ? html`<li><span class="ha-icon">
+    <ha-icon id="temp-following-icon" icon="${this.tempFollowingIcon}"></ha-icon>
+  </span><span id="temp-following-text">${this.tempFollowingText}</span><span>${this.getUOM('temperature')}</span></li>` : html``;
+    } catch (e) {
+      return html`<li><span class="ha-icon">
+    <ha-icon icon="mdi:thermometer"></ha-icon>
+  </span><span id="temp-following-text">Config Error</span></li>`;
+    }
+  }
+
+  get tempFollowingIcon(): string {
+    return this.hass.states[this.config.entity_temp_following_label].state.includes("Min") ? "mdi:thermometer-low" : "mdi:thermometer-high";
+  }
+
+  get tempFollowingText(): TemplateResult {
+    return this.config.entity_temp_following && this.config.entity_temp_following_label ? html`${this.hass.states[this.config.entity_temp_following_label].state}
+${this.hass.states[this.config.entity_temp_following].state}` : html``;
+  }
+
+  get slotUvSummary(): TemplateResult {
+    try {
+      return this.config.entity_uv_alert_summary ? html`<li><span class="ha-icon">
+    <ha-icon icon="mdi:weather-sunny"></ha-icon>
+  </span>${this.localeTextuvRating} <span
+    id="daytime-uv-text">${this.hass.states[this.config.entity_uv_alert_summary].state}</span></li>` : html``;
+    } catch (e) {
+      return html`<li><span class="ha-icon">
+    <ha-icon icon="mdi:weather-sunny"></ha-icon>
+  </span><span id="daytime-uv-text">Config Error</span></li>`;
+    }
+  }
+
+  get slotFireSummary(): TemplateResult {
+    try {
+      return this.config.entity_fire_danger_summary ? html`<li><span class="ha-icon">
+    <ha-icon icon="mdi:fire"></ha-icon>
+  </span>${this.localeTextfireDanger} <span
+    id="daytime-firedanger-text">${this.hass.states[this.config.entity_fire_danger_summary].state !== 'unknown' ?
+    this.hass.states[this.config.entity_fire_danger_summary].state : 'N/A'}</span></li>` : html``;
+    } catch (e) {
+      return html`<li><span class="ha-icon">
+    <ha-icon icon="mdi:fire"></ha-icon>
+  </span><span id="daytime-firedanger-text">Config Error</span></li>`;
+    }
+  }
+
+  get slotWind(): TemplateResult {
+    try {
+      var windBearing = this.config.entity_wind_bearing ? html`<span id="wind-bearing-text">${this.currentWindBearing}</span>` : ``;
+      var beaufortRating = this.config.entity_wind_speed ? html`<span id="beaufort-text">${this.currentBeaufort}</span>` : ``;
+      return this.config.alt_wind ? html`<li><span class="ha-icon">
+    <ha-icon icon="mdi:weather-windy"></ha-icon>
+  </span><span id="alt-wind">${this.hass.states[this.config.alt_wind].state}</span></li>` : this.config.entity_wind_bearing && this.config.entity_wind_speed && this.config.entity_wind_gust ? html`<li><span class="ha-icon">
+    <ha-icon icon="mdi:weather-windy"></ha-icon>
+  </span><span>${beaufortRating}</span><span>${windBearing}</span><span id="wind-speed-text">
+    ${this.currentWindSpeed}</span><span class="unit">${this.getUOM('length')}/h</span><span id="wind-gust-text"> (Gust
+    ${this.currentWindGust}</span><span class="unit">${this.getUOM('length')}/h)</span></li>` : this.config.entity_wind_bearing && this.config.entity_wind_speed ? html`<li><span class="ha-icon">
+    <ha-icon icon="mdi:weather-windy"></ha-icon>
+  </span><span>${beaufortRating}</span><span>${windBearing}</span><span id="wind-speed-text">
+    ${this.currentWindSpeed}</span><span class="unit"> ${this.getUOM('length')}/h</span></li>` : html``;
+    } catch (e) {
+      return html`<li><span class="ha-icon">
+    <ha-icon icon="mdi:weather-windy"></ha-icon>
+  </span><span id="wind-error-text">Config Error</span></li>`;
+    }
+  }
+
+  get slotWindKt(): TemplateResult {
+    try {
+      var windBearing = this.config.entity_wind_bearing ? html`<span id="wind-bearing-kt-text">${this.currentWindBearing}</span>` : ``;
+      var beaufortRatingKt = this.config.entity_wind_speed_kt ? html`<span id="beaufort-kt-text">${this.currentBeaufortkt}</span>` : ``;
+      return this.config.entity_wind_bearing && this.config.entity_wind_speed_kt && this.config.entity_wind_gust_kt ? html`<li><span class="ha-icon">
+    <ha-icon icon="mdi:weather-windy"></ha-icon>
+  </span><span>${beaufortRatingKt}</span><span>${windBearing}</span><span id="wind-speed-kt-text">
+    ${this.currentWindSpeedKt}</span><span class="unit">kt</span><span id="wind-gust-kt-text"> (Gust
+    ${this.currentWindGustKt}</span><span class="unit">kt)</span></li>` : this.config.entity_wind_bearing && this.config.entity_wind_speed_kt ? html`<li><span class="ha-icon">
+    <ha-icon icon="mdi:weather-windy"></ha-icon>
+  </span><span>${beaufortRatingKt}</span><span>${windBearing}</span><span
+    id="wind-speed-kt-text">${this.currentWindSpeedKt}</span><span class="unit">kt</span></li>` : html``;
+    } catch (e) {
+      return html`<li><span class="ha-icon">
+    <ha-icon icon="mdi:weather-windy"></ha-icon>
+  </span><span id="wind-error-text">Config Error</span></li>`;
+    }
+  }
+
+  get slotVisibility(): TemplateResult {
+    try {
+      return this.config.alt_visibility ? html`<li><span class="ha-icon">
+    <ha-icon icon="mdi:weather-fog"></ha-icon>
+  </span><span id="alt-visibility">${this.hass.states[this.config.alt_visibility].state}</span></li>` : this.config.entity_visibility ? html`<li><span class="ha-icon">
+    <ha-icon icon="mdi:weather-fog"></ha-icon>
+  </span><span id="visibility-text">${this.currentVisibility}</span><span class="unit"> ${this.getUOM('length')}</span>
+</li>` : html``;
+    } catch (e) {
+      return html`<li><span class="ha-icon">
+    <ha-icon icon="mdi:weather-fog"></ha-icon>
+  </span><span id="visibility-text">Config Error</span></li>`;
+    }
+  }
+
+  get slotSunNext(): TemplateResult {
+    try {
+      if (this.config.alt_sun_next) {
+        return html`<li><span id="alt-sun-next">${this.hass.states[this.config.alt_sun_next].state}</span></li>`;
+      } else {
+        return this.config.entity_sun ? this.sunSet.next : html``;
+      }
+    } catch (e) {
+      return html`<li><span class="ha-icon">
+    <ha-icon icon="mdi:weather-sunset"></ha-icon>
+  </span><span id="sun-next-text">Config Error</span></li>`;
+    }
+  }
+
+  get slotSunFollowing(): TemplateResult {
+    try {
+      if (this.config.alt_sun_following) {
+        return html`<li><span id="alt-sun-following">${this.hass.states[this.config.alt_sun_following].state}</span></li>`;
+      } else {
+        return this.config.entity_sun ? this.sunSet.following : html``;
+      }
+    } catch (e) {
+      return html`<li><span class="ha-icon">
+    <ha-icon icon="mdi:weather-sunset"></ha-icon>
+  </span><span id="sun-following-text">Config Error</span></li>`;
+    }
+  }
+
+  get slotCustom1(): TemplateResult {
+    try {
+      var icon = this.config.custom1_icon ? this.config.custom1_icon : 'mdi:help-box';
+      var value = this.config.custom1_value ? this.hass.states[this.config.custom1_value].state : 'unknown';
+      var unit = this.config.custom1_units ? this.config.custom1_units : '';
+      return html`<li><span class="ha-icon">
+    <ha-icon icon=${icon}></ha-icon>
+  </span><span id="custom-1-text">${value}</span><span class="unit">${unit}</span></li>`;
+    } catch (e) {
+      return html`<li><span class="ha-icon">
+    <ha-icon icon="mdi:help-box"></ha-icon>
+  </span><span id="custom-1-text">Config Error</span></li>`;
+    }
+  }
+
+  get slotCustom2(): TemplateResult {
+    try {
+      var icon = this.config.custom2_icon ? this.config.custom2_icon : 'mdi:help-box';
+      var value = this.config.custom2_value ? this.hass.states[this.config.custom2_value].state : 'unknown';
+      var unit = this.config.custom2_units ? this.config.custom2_units : '';
+      return html`<li><span class="ha-icon">
+    <ha-icon icon=${icon}></ha-icon>
+  </span><span id="custom-2-text">${value}</span><span class="unit">${unit}</span></li>`;
+    } catch (e) {
+      return html`<li><span class="ha-icon">
+    <ha-icon icon="mdi:help-box"></ha-icon>
+  </span><span id="custom-2-text">Config Error</span></li>`;
+    }
+  }
+
+  // getters that return the value to be shown
   get currentConditions(): string {
     const entity = this.config.entity_current_conditions;
     return entity && this.hass.states[entity]
       ? this.hass.states[entity].state
       : '---';
   }
-
 
   get currentTemperature(): string {
     const entity = this.config.entity_temperature;
@@ -168,7 +593,7 @@ export class WeatherCard extends LitElement {
       : '---';
   }
 
-  get apparentTemperature(): string {
+  get currentApparentTemperature(): string {
     const entity = this.config.entity_apparent_temp;
     return entity && this.hass.states[entity]
       ? this.config.show_decimals !== true
@@ -177,6 +602,223 @@ export class WeatherCard extends LitElement {
       : '---';
   }
 
+  get currentHumidity(): string {
+    const entity = this.config.entity_humidity;
+    return entity && this.hass.states[entity]
+      ? (Number(this.hass.states[entity].state)).toLocaleString() : '---';
+  }
+
+  get currentPressure(): string {
+    const entity = this.config.entity_pressure;
+    var places = this.config.show_decimals_pressure ? Math.max(Math.min(this.config.show_decimals_pressure, 3), 0) : 0;
+    return entity && this.hass.states[entity]
+      ? (Number(this.hass.states[entity].state)).toLocaleString(undefined, { minimumFractionDigits: places, maximumFractionDigits: places }) : '---';
+  }
+
+  get currentVisibility(): string {
+    const entity = this.config.entity_visibility;
+    return entity && this.hass.states[entity]
+      ? (Number(this.hass.states[entity].state)).toLocaleString() : '---';
+  }
+
+  get currentWindBearing(): string {
+    const entity = this.config.entity_wind_bearing;
+    return entity && this.hass.states[entity]
+      ? isNaN(Number(this.hass.states[entity].state)) ? this.hass.states[entity].state : this.windDirections[(Math.round((Number(this.hass.states[entity].state) / 360) * 16))] : '---';
+  }
+
+  get currentWindSpeed(): string {
+    const entity = this.config.entity_wind_speed;
+    return entity && this.hass.states[entity]
+      ? Math.round(Number(this.hass.states[entity].state)).toLocaleString() : '---';
+  }
+
+  get currentWindGust(): string {
+    const entity = this.config.entity_wind_gust;
+    return entity && this.hass.states[entity]
+      ? Math.round(Number(this.hass.states[entity].state)).toLocaleString() : '---';
+  }
+
+  get currentWindSpeedKt(): string {
+    const entity = this.config.entity_wind_speed_kt;
+    return entity && this.hass.states[entity]
+      ? Math.round(Number(this.hass.states[entity].state)).toLocaleString() : '---';
+  }
+
+  get currentWindGustKt(): string {
+    const entity = this.config.entity_wind_gust_kt;
+    return entity && this.hass.states[entity]
+      ? Math.round(Number(this.hass.states[entity].state)).toLocaleString() : '---';
+  }
+
+  get currentBeaufort() {
+    return this.config.show_beaufort ? html`Bft: ${this.beaufortWind} -` : ``;
+  }
+
+  get currentBeaufortkt() {
+    return this.config.show_beaufort ? html`Bft: ${this.beaufortWindKt} -` : ``;
+  }
+
+  // windDirections - returns set of possible wind directions by specified language
+  get windDirections(): string[] {
+    const windDirections_en = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW', 'N'];
+    const windDirections_fr = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSO', 'SO', 'OSO', 'O', 'ONO', 'NO', 'NNO', 'N'];
+    const windDirections_de = ['N', 'NNO', 'NO', 'ONO', 'O', 'OSO', 'SO', 'SSO', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW', 'N'];
+    const windDirections_nl = ['N', 'NNO', 'NO', 'ONO', 'O', 'OZO', 'ZO', 'ZZO', 'Z', 'ZZW', 'ZW', 'WZW', 'W', 'WNW', 'NW', 'NNW', 'N'];
+    const windDirections_he = ['צפון', 'צ-צ-מז', 'צפון מזרח', 'מז-צ-מז', 'מזרח', 'מז-ד-מז', 'דרום מזרח', 'ד-ד-מז', 'דרום', 'ד-ד-מע', 'דרום מערב', 'מע-ד-מע', 'מערב', 'מע-צ-מע', 'צפון מערב', 'צ-צ-מע', 'צפון'];
+    const windDirections_da = ['N', 'NNØ', 'NØ', 'ØNØ', 'Ø', 'ØSØ', 'SØ', 'SSØ', 'S', 'SSV', 'SV', 'VSV', 'V', 'VNV', 'NV', 'NNV', 'N'];
+    const windDirections_ru = ['С', 'ССВ', 'СВ', 'ВСВ', 'В', 'ВЮВ', 'ЮВ', 'ЮЮВ', 'Ю', 'ЮЮЗ', 'ЮЗ', 'ЗЮЗ', 'З', 'ЗСЗ', 'СЗ', 'ССЗ', 'С'];
+
+    switch (this.config.locale) {
+      case "it":
+      case "fr":
+        return windDirections_fr;
+      case "de":
+        return windDirections_de;
+      case "nl":
+        return windDirections_nl;
+      case "he":
+        return windDirections_he;
+      case "ru":
+        return windDirections_ru;
+      case "da":
+        return windDirections_da;
+      default:
+        return windDirections_en;
+    }
+  }
+
+  // beaufortWind - returns the wind speed on the beaufort scale
+  // reference https://en.wikipedia.org/wiki/Beaufort_scale
+  get beaufortWind(): string {
+    const entity = this.config.entity_wind_speed;
+    if (entity && this.hass.states[entity] && !isNaN(Number(this.hass.states[entity].state))) {
+      const value = Number(this.hass.states[entity].state);
+      switch (this.hass.states[entity].attributes.unit_of_measurement) {
+        case 'mph':
+          if (value >= 73) return '12';
+          if (value >= 64) return '11';
+          if (value >= 55) return '10';
+          if (value >= 47) return '9';
+          if (value >= 39) return '8';
+          if (value >= 32) return '7';
+          if (value >= 25) return '6';
+          if (value >= 19) return '5';
+          if (value >= 13) return '4';
+          if (value >= 8) return '3';
+          if (value >= 4) return '2';
+          if (value >= 1) return '1';
+          return '0';
+        case 'm/s':
+          if (value >= 32.7) return '12';
+          if (value >= 28.5) return '11';
+          if (value >= 24.5) return '10';
+          if (value >= 20.8) return '9';
+          if (value >= 17.2) return '8';
+          if (value >= 13.9) return '7';
+          if (value >= 10.8) return '6';
+          if (value >= 8) return '5';
+          if (value >= 5.5) return '4';
+          if (value >= 3.4) return '3';
+          if (value >= 1.6) return '2';
+          if (value >= 0.5) return '1';
+          return '0';
+        default: // Assume km/h
+          if (value >= 118) return '12';
+          if (value >= 103) return '11';
+          if (value >= 89) return '10';
+          if (value >= 75) return '9';
+          if (value >= 62) return '8';
+          if (value >= 50) return '7';
+          if (value >= 39) return '6';
+          if (value >= 29) return '5';
+          if (value >= 20) return '4';
+          if (value >= 12) return '3';
+          if (value >= 6) return '2';
+          if (value >= 2) return '1';
+          return '0';
+      }
+    }
+    return '---';
+  }
+
+  get beaufortWindKt(): string {
+    const entity = this.config.entity_wind_speed_kt;
+    if (entity && this.hass.states[entity] && !isNaN(Number(this.hass.states[entity].state))) {
+      const value = Number(this.hass.states[entity].state);
+      {
+        if (value >= 64) return '12';
+        if (value >= 56) return '11';
+        if (value >= 48) return '10';
+        if (value >= 41) return '9';
+        if (value >= 34) return '8';
+        if (value >= 28) return '7';
+        if (value >= 22) return '6';
+        if (value >= 17) return '5';
+        if (value >= 11) return '4';
+        if (value >= 7) return '3';
+        if (value >= 4) return '2';
+        if (value >= 1) return '1';
+        return '0';
+      }
+    }
+    return '---';
+  }
+
+  // SunSetAndRise: returns set and rise information
+  get sunSet(): { next: TemplateResult, following: TemplateResult, nextText: string, followingText: string, nextIcon: string, followingIcon: string } {
+    var nextSunSet: string;
+    var nextSunRise: string;
+    nextSunSet = new Date(this.hass.states[this.config.entity_sun].attributes.next_setting).toLocaleTimeString(this.config.locale, { hour: 'numeric', minute: '2-digit', hour12: this.is12Hour });
+    nextSunRise = new Date(this.hass.states[this.config.entity_sun].attributes.next_rising).toLocaleTimeString(this.config.locale, { hour: 'numeric', minute: '2-digit', hour12: this.is12Hour });
+    var nextDate = new Date();
+    nextDate.setDate(nextDate.getDate() + 1);
+    if (this.hass.states[this.config.entity_sun].state == "above_horizon") {
+      nextSunRise = nextDate.toLocaleDateString(this.config.locale, { weekday: 'short' }) + " " + nextSunRise;
+      return {
+        'next': html`<li><span class="ha-icon">
+    <ha-icon id="sun-next-icon" icon="mdi:weather-sunset-down"></ha-icon>
+  </span><span id="sun-next-text">${nextSunSet}</span></li>`,
+        'following': html`<li><span class="ha-icon">
+    <ha-icon id="sun-following-icon" icon="mdi:weather-sunset-up"></ha-icon>
+  </span><span id="sun-following-text">${nextSunRise}</span></li>`,
+        'nextText': nextSunSet,
+        'followingText': nextSunRise,
+        'nextIcon': "mdi:weather-sunset-down",
+        'followingIcon': "mdi:weather-sunset-up",
+      };
+    } else {
+      if (new Date().getDate() != new Date(this.hass.states[this.config.entity_sun].attributes.next_rising).getDate()) {
+        nextSunRise = nextDate.toLocaleDateString(this.config.locale, { weekday: 'short' }) + " " + nextSunRise;
+        nextSunSet = nextDate.toLocaleDateString(this.config.locale, { weekday: 'short' }) + " " + nextSunSet;
+      }
+      return {
+        'next': html`<li><span class="ha-icon">
+    <ha-icon id="sun-next-icon" icon="mdi:weather-sunset-up"></ha-icon>
+  </span><span id="sun-next-text">${nextSunRise}</span></li>`,
+        'following': html`<li><span class="ha-icon">
+    <ha-icon id="sun-following-icon" icon="mdi:weather-sunset-down"></ha-icon>
+  </span><span id="sun-following-text">${nextSunSet}</span></li>`,
+        'nextText': nextSunRise,
+        'followingText': nextSunSet,
+        'nextIcon': "mdi:weather-sunset-up",
+        'followingIcon': "mdi:weather-sunset-down",
+      };
+    }
+  }
+
+  // is12Hour - returns true if 12 hour clock or false if 24
+  get is12Hour(): boolean {
+    var hourFormat = this.config.time_format ? this.config.time_format : 12
+    switch (hourFormat) {
+      case 24:
+        return false;
+      default:
+        return true;
+    }
+  }
+
+  // get the icon that matches the current conditions
   get weatherIcon(): string {
     switch (this.currentConditions) {
       case 'sunny': return this.iconSunny;
@@ -566,7 +1208,7 @@ export class WeatherCard extends LitElement {
     const currentTextAlignment = this.config.current_text_alignment || "center";
     // var largeIconTopMargin = this.config.large_icon_top_margin || "-3.2em";
     // var largeIconLeftPos = this.config.large_icon_left_pos || "0px";
-    // var currentDataTopMargin = this.config.current_data_top_margin ? this.config.current_data_top_margin : this.config.show_separator ? "1em" : "10em";
+    // var currentDataTopMargin = this.config.current_data_top_margin ? this.config.current_data_top_margin : this.config.show_separator ? "1em" : "10em"; //TODO - check if really needed, was using in variations
     // var separatorTopMargin = this.config.separator_top_margin || "6em";
     // var summaryTopPadding = this.config.summary_top_padding || "2em";
     // var summaryFontSize = this.config.summary_font_size || "0.8em";
@@ -651,6 +1293,35 @@ export class WeatherCard extends LitElement {
         padding-top: 0.5em;
         padding-bottom: 0.2em;
       }
-    `;
+      .variations {
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: space-between;
+        font-weight: 300;
+        color: var(--primary-text-color);
+        list-style: none;
+        padding: 0.2em;
+      }
+      .slotlist {
+        flex-grow: 1;
+      }
+      .variations-ugly {
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: space-between;
+        font-weight: 300;
+        color: var(--primary-text-color);
+        list-style: none;
+        padding: 0.2em;
+      }
+      .ha-icon {
+        height: 18px;
+        margin-right: 5px;
+        color: var(--paper-item-icon-color);
+      }
+      .unit {
+        font-size: 0.8em;
+      }
+      `;
   }
 }

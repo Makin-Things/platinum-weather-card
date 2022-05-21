@@ -25,5 +25,12 @@ export interface WeatherCardConfig extends LovelaceCardConfig {
   slot_r3?: string;
   slot_r4?: string;
   slot_r5?: string;
+  entity_humidity?: string;
   entity_pressure?: string;
+  entity_visibility?: string;
+  entity_wind_bearing?: string;
+  entity_wind_speed?: string;
+  entity_wind_gust?: string;
+  entity_wind_speed_kt?: string;
+  entity_wind_gust_kt?: string;
 }
