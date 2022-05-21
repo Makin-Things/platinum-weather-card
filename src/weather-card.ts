@@ -182,7 +182,7 @@ export class WeatherCard extends LitElement {
   slotValue(slot: string, value: string | undefined): TemplateResult {
     console.info('slotValue called');
     switch (value) {
-      case 'pop': return this.slotPop;
+      case 'pop': return this.slotPopForecast;
       case 'popforecast': return this.slotPopForecast;
       case 'possible_today': return this.slotPossibleToday;
       case 'possible_tomorrow': return this.slotPossibleTomorrow;
@@ -238,7 +238,7 @@ export class WeatherCard extends LitElement {
         return this.config.entity_pop ? html`<li><span class="ha-icon">
     <ha-icon icon="mdi:weather-rainy"></ha-icon>
   </span><span id="pop-text">${this.hass.states[this.config.entity_pop] !== undefined ?
-    Math.round(Number(this.hass.states[this.config.entity_pop].state)) : "Config Error"}</span><span
+            Math.round(Number(this.hass.states[this.config.entity_pop].state)) : "Config Error"}</span><span
     class="unit">%</span><span>${intensity}</span></li>` : html``;
       }
     } catch (e) {
@@ -338,7 +338,7 @@ export class WeatherCard extends LitElement {
         return this.config.entity_pressure ? html`<li><span class="ha-icon">
     <ha-icon icon="mdi:gauge"></ha-icon>
   </span><span id="pressure-text">${this.currentPressure}</span><span class="unit">${this.config.pressure_units ?
-    this.config.pressure_units : this.getUOM('air_pressure')}</span></li>` : html``;
+            this.config.pressure_units : this.getUOM('air_pressure')}</span></li>` : html``;
       }
     } catch (e) {
       return html`<li><span class="ha-icon">
@@ -354,14 +354,27 @@ export class WeatherCard extends LitElement {
     <ha-icon icon="mdi:thermometer-high"></ha-icon>
   </span><span id="alt-daytime-high">${this.hass.states[this.config.alt_daytime_high].state}</span></li>`;
       } else {
-        return this.config.entity_daytime_high && this.config.show_decimals_today ? html`<li><span class="ha-icon">
-    <ha-icon icon="mdi:thermometer-high"></ha-icon>
-  </span>${this.localeTextmaxToday} <span
-    id="daytime-high-text">${(Number(this.hass.states[this.config.entity_daytime_high].state)).toLocaleString(undefined,
-    { minimumFractionDigits: 1, maximumFractionDigits: 1 })}</span><span>${this.getUOM('temperature')}</span></li>` : this.config.entity_daytime_high && !this.config.show_decimals_today ? html`<li><span class="ha-icon">
-    <ha-icon icon="mdi:thermometer-high"></ha-icon>
-  </span>${this.localeTextmaxToday} <span
-    id="daytime-high-text">${(Number(this.hass.states[this.config.entity_daytime_high].state).toFixed(0)).toLocaleString()}</span><span>${this.getUOM('temperature')}</span>
+        return this.config.entity_daytime_high && this.config.show_decimals_today ? html`<li>
+  <div class="slot">
+    <div class="slot-icon">
+      <ha-icon icon="mdi:thermometer-high"></ha-icon>
+    </div>
+    <div class="slot-text">${this.localeTextmaxToday}&nbsp;</div>
+    <div class="slot-text" id="daytime-high-text">
+      ${(Number(this.hass.states[this.config.entity_daytime_high].state)).toLocaleString(undefined,
+            { minimumFractionDigits: 1, maximumFractionDigits: 1 })}</div>
+    <div class="unitc">${this.getUOM('temperature')}</div>
+  </div>
+</li>` : this.config.entity_daytime_high && !this.config.show_decimals_today ? html`<li>
+  <div class="slot">
+    <div class="slot-icon">
+      <ha-icon icon="mdi:thermometer-high"></ha-icon>
+    </div>
+    <div class="slot-text">${this.localeTextmaxToday}&nbsp;</div>
+    <div class="slot-text" id="daytime-high-text">
+      ${(Number(this.hass.states[this.config.entity_daytime_high].state).toFixed(0)).toLocaleString()}</div>
+    <div class="unitc">${this.getUOM('temperature')}</div>
+  </div>
 </li>` : html``;
       }
     } catch (e) {
@@ -378,15 +391,28 @@ export class WeatherCard extends LitElement {
     <ha-icon icon="mdi:thermometer-low"></ha-icon>
   </span><span id="alt-daytime-low">${this.hass.states[this.config.alt_daytime_low].state}</span></li>`;
       } else {
-        return this.config.entity_daytime_low && this.config.show_decimals_today ? html`<li><span class="ha-icon">
-    <ha-icon icon="mdi:thermometer-low"></ha-icon>
-  </span>${this.localeTextminToday} <span
-    id="daytime-low-text">${(Number(this.hass.states[this.config.entity_daytime_low].state)).toLocaleString(undefined,
-    { minimumFractionDigits: 1, maximumFractionDigits: 1 })}</span><span>${this.getUOM('temperature')}</span></li>` : this.config.entity_daytime_low && !this.config.show_decimals_today ? html`<li><span class="ha-icon">
-    <ha-icon icon="mdi:thermometer-low"></ha-icon>
-  </span>${this.localeTextminToday} <span
-    id="daytime-low-text">${(Number(this.hass.states[this.config.entity_daytime_low].state).toFixed(0)).toLocaleString()}</span><span>
-    ${this.getUOM('temperature')}</span></li>` : html``;
+        return this.config.entity_daytime_low && this.config.show_decimals_today ? html`<li>
+  <div class="slot">
+    <div class="slot-icon">
+      <ha-icon icon="mdi:thermometer-low"></ha-icon>
+    </div>
+    <div class="slot-text">${this.localeTextminToday}&nbsp;</div>
+    <div class="slot-text" id="daytime-low-text">
+      ${(Number(this.hass.states[this.config.entity_daytime_low].state)).toLocaleString(undefined,
+        { minimumFractionDigits: 1, maximumFractionDigits: 1 })}</div>
+    <div class="unitc">${this.getUOM('temperature')}</div>
+  </div>
+</li>` : this.config.entity_daytime_low && !this.config.show_decimals_today ? html`<li>
+  <div class="slot">
+    <div class="slot-icon">
+      <ha-icon icon="mdi:thermometer-low"></ha-icon>
+    </div>
+    <div class="slot-text">${this.localeTextminToday}&nbsp;</div>
+    <div class="slot-text" id="daytime-low-text">
+      ${(Number(this.hass.states[this.config.entity_daytime_low].state).toFixed(0)).toLocaleString()}</div>
+    <div class="unitc">${this.getUOM('temperature')}</div>
+  </div>
+</li>` : html``;
       }
     } catch (e) {
       return html`<li><span class="ha-icon">
@@ -397,9 +423,10 @@ export class WeatherCard extends LitElement {
 
   get slotTempNext(): TemplateResult {
     try {
-      return this.config.entity_temp_next && this.config.entity_temp_next_label ? html`<li><span class="ha-icon">
+      return this.config.entity_temp_next && this.config.entity_temp_next_label ? html`<li><div class="slot"><div class="slot-icon">
     <ha-icon id="temp-next-icon" icon="${this.tempNextIcon}"></ha-icon>
-  </span><span id="temp-next-text">${this.tempNextText}</span><span>${this.getUOM('temperature')}</span></li>` : html``;
+  </div><div class="slot-text" id="temp-next-text">${this.tempNextText}</div><div class="unitc">${this.getUOM('temperature')}</div>
+  </div></li>` : html``;
     } catch (e) {
       return html`<li><span class="ha-icon">
     <ha-icon icon="mdi:thermometer"></ha-icon>
@@ -417,9 +444,10 @@ export class WeatherCard extends LitElement {
 
   get slotTempFollowing(): TemplateResult {
     try {
-      return this.config.entity_temp_following && this.config.entity_temp_following_label ? html`<li><span class="ha-icon">
+      return this.config.entity_temp_following && this.config.entity_temp_following_label ? html`<li><div class="slot"><div class="slot-icon">
     <ha-icon id="temp-following-icon" icon="${this.tempFollowingIcon}"></ha-icon>
-  </span><span id="temp-following-text">${this.tempFollowingText}</span><span>${this.getUOM('temperature')}</span></li>` : html``;
+  </div><div class="slot-text" id="temp-following-text">${this.tempFollowingText}</div><div
+    class="unitc">${this.getUOM('temperature')}</div></div></li>` : html``;
     } catch (e) {
       return html`<li><span class="ha-icon">
     <ha-icon icon="mdi:thermometer"></ha-icon>
@@ -455,7 +483,7 @@ ${this.hass.states[this.config.entity_temp_following].state}` : html``;
     <ha-icon icon="mdi:fire"></ha-icon>
   </span>${this.localeTextfireDanger} <span
     id="daytime-firedanger-text">${this.hass.states[this.config.entity_fire_danger_summary].state !== 'unknown' ?
-    this.hass.states[this.config.entity_fire_danger_summary].state : 'N/A'}</span></li>` : html``;
+          this.hass.states[this.config.entity_fire_danger_summary].state : 'N/A'}</span></li>` : html``;
     } catch (e) {
       return html`<li><span class="ha-icon">
     <ha-icon icon="mdi:fire"></ha-icon>
@@ -1321,6 +1349,28 @@ ${this.hass.states[this.config.entity_temp_following].state}` : html``;
       }
       .unit {
         font-size: 0.8em;
+      }
+      .slot {
+        display: table-row;
+      }
+      .slot-icon {
+        display: table-cell;
+        position: relative;
+        height: 18px;
+        padding-right: 5px;
+        color: var(--paper-item-icon-color);
+      }
+      .slot-text {
+        display: table-cell;
+        position: relative;
+      }
+      .unitc {
+        display: table-cell;
+        position: relative;
+        vertical-align: top;
+        font-size: 0.75em;
+        line-height: 80%;
+        padding-top: 7px;
       }
       `;
   }
