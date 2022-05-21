@@ -126,7 +126,8 @@ export class WeatherCard extends LitElement {
 
     const apparentTemp = html`
       <div class="apparent-temp">
-        <div class="apparent">Feels like <span id="apparent-temp-text">${this.apparentTemperature}</span></div>
+        <div class="apparent">${this.localeTextfeelsLike} <span id="apparent-temp-text">${this.apparentTemperature}</span>
+        </div>
         <div class="apparentc"> ${this.getUOM('temperature')}</div>
       </div>
     `;
@@ -384,6 +385,111 @@ export class WeatherCard extends LitElement {
   get iconWindyVariant(): string {
     const iconStyle = this.iconStyle;
     return (iconStyle === "true") ? `cloudy-${this.dayOrNight}-3` : (iconStyle === "hybrid") ? `cloudy-${this.dayOrNight}-3` : `cloudy-${this.dayOrNight}-3`;
+  }
+
+  get localeTextfeelsLike(): string {
+    switch (this.config.locale) {
+      case 'it': return "Percepito";
+      case 'fr': return "Ressenti";
+      case 'de': return "Gefühlt";
+      case 'nl': return "Voelt als";
+      case 'pl': return "Odczuwalne";
+      case 'he': return "מרגיש כמו";
+      case 'da': return "Føles som";
+      case 'ru': return "Ощущается как";
+      case 'ua': return "Відчувається як";
+      default: return "Feels like";
+    }
+  }
+
+  get localeTextmaxToday(): string {
+    switch (this.config.locale) {
+      case 'it': return "Max oggi";
+      case 'fr': return "Max aujourd'hui";
+      case 'de': return "Max heute";
+      case 'nl': return "Max vandaag";
+      case 'pl': return "Najwyższa dziś";
+      case 'he': return "מקסימלי היום";
+      case 'da': return "Højeste i dag";
+      case 'ru': return "Макс сегодня";
+      case 'ua': return "Макс сьогодні";
+      default: return "Today's High";
+    }
+  }
+
+  get localeTextminToday(): string {
+    switch (this.config.locale) {
+      case 'it': return "Min oggi";
+      case 'fr': return "Min aujourd'hui";
+      case 'de': return "Min heute";
+      case 'nl': return "Min vandaag";
+      case 'pl': return "Najniższa dziś";
+      case 'he': return "דקות היום";
+      case 'da': return "Laveste i dag";
+      case 'ru': return "мин сегодня";
+      case 'ua': return "Мін сьогодні";
+      default: return "Today's Low";
+    }
+  }
+
+  get localeTextposToday(): string {
+    switch (this.config.locale) {
+      case 'it': return "Previsione";
+      case 'fr': return "Prévoir";
+      case 'de': return "Vorhersage";
+      case 'nl': return "Prognose";
+      case 'pl': return "Prognoza";
+      case 'he': return "תַחֲזִית";
+      case 'da': return "Vejrudsigt";
+      case 'ru': return "Прогноз";
+      case 'ua': return "Прогноз";
+      default: return "Forecast";
+    }
+  }
+
+  get localeTextposTomorrow(): string {
+    switch (this.config.locale) {
+      case 'it': return "Prev per domani";
+      case 'fr': return "Prév demain";
+      case 'de': return "Prog morgen";
+      case 'nl': return "Prog morgen";
+      case 'pl': return "Prog jutro";
+      case 'he': return "תחזית מחר";
+      case 'da': return "Prog i morgen";
+      case 'ru': return "Прогноз на завтра";
+      case 'ua': return "Прогноз на завтра";
+      default: return "Fore Tom";
+    }
+  }
+
+  get localeTextuvRating(): string {
+    switch (this.config.locale) {
+      case 'it': return "UV";
+      case 'fr': return "UV";
+      case 'de': return "UV";
+      case 'nl': return "UV";
+      case 'pl': return "UV";
+      case 'he': return "UV";
+      case 'da': return "UV";
+      case 'ru': return "УФ";
+      case 'ua': return "УФ";
+      default: return "UV";
+    }
+  }
+
+  get localeTextfireDanger(): string {
+    switch (this.config.locale) {
+      case 'it': return "Fuoco";
+      case 'fr': return "Feu";
+      case 'de': return "Feuer";
+      case 'nl': return "Brand";
+      case 'pl': return "Ogień";
+      case 'he': return "אֵשׁ";
+      case 'da': return "Brand";
+      case 'ru': return "Огонь";
+      case 'ua': return "Вогонь";
+      default: return "Fire";
+    }
   }
 
   getUOM(measure: string): string {
