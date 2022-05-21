@@ -761,6 +761,8 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     }
     .side-by-side > * {
       flex: 1;
+    }
+    .side-by-side :not(:last-child) {
       padding-right: 4px;
     }
   `;

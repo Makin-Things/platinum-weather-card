@@ -1279,6 +1279,8 @@ function(e){return class extends e{createRenderRoot(){const e=this.constructor,{
     }
     .side-by-side > * {
       flex: 1;
+    }
+    .side-by-side :not(:last-child) {
       padding-right: 4px;
     }
   `,n([de({attribute:!1})],In.prototype,"hass",void 0),n([le()],In.prototype,"_config",void 0),n([le()],In.prototype,"_helpers",void 0),In=n([re("weather-card-editor")],In);var Cn=Object.freeze({__proto__:null,get WeatherCardEditor(){return In}});export{Ce as WeatherCard};
