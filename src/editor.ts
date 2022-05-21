@@ -186,6 +186,30 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     return this._config?.entity_rainfall || '';
   }
 
+  get _custom1_value(): string {
+    return this._config?.custom1_value || '';
+  }
+
+  get _custom1_icon(): string {
+    return this._config?.custom1_icon || '';
+  }
+
+  get _custom1_units(): string {
+    return this._config?.custom1_units || '';
+  }
+
+  get _custom2_value(): string {
+    return this._config?.custom2_value || '';
+  }
+
+  get _custom2_icon(): string {
+    return this._config?.custom2_icon || '';
+  }
+
+  get _custom2_units(): string {
+    return this._config?.custom2_units || '';
+  }
+
   get _optional_entities(): TemplateResult {
     const entities = new Set();
     for (const slot of
@@ -255,8 +279,10 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
           entities.add('entity_rainfall');
           break;
         case 'custom1':
+          entities.add('custom1');
           break;
         case 'custom2':
+          entities.add('custom2');
           break;
       }
     }
@@ -366,6 +392,30 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
   name="entity_rainfall" label="Todays Rain (optional)" allow-custom-entity @value-changed=${this._valueChangedPicker}>
 </ha-entity-picker>` : '';
 
+    const entity_custom1 = entities.has("custom1") ?
+      html`<ha-entity-picker .hass=${this.hass} .configValue=${'custom1_value'} .value=${this._custom1_value} name="custom1_value"
+  label="Custom 1 Value (optional)" allow-custom-entity @value-changed=${this._valueChangedPicker}>
+</ha-entity-picker>
+<div class="side-by-side">
+  <ha-icon-picker .hass=${this.hass} .configValue=${'custom1_icon'} .value=${this._custom1_icon} name="custom1_icon"
+    label="Custom 1 Icon (optional)" @value-changed=${this._valueChanged}></ha-icon-picker>
+  <mwc-textfield label="Custom 1 Units (optional)" .value=${this._custom1_units} .configValue=${'custom1_units'}
+    @input=${this._valueChanged}>
+  </mwc-textfield>
+</div>` : '';
+
+    const entity_custom2 = entities.has("custom2") ?
+      html`<ha-entity-picker .hass=${this.hass} .configValue=${'custom2_value'} .value=${this._custom2_value} name="custom2_value"
+  label="Custom 2 Value (optional)" allow-custom-entity @value-changed=${this._valueChangedPicker}>
+</ha-entity-picker>
+<div class="side-by-side">
+  <ha-icon-picker .hass=${this.hass} .configValue=${'custom2_icon'} .value=${this._custom2_icon} name="custom2_icon"
+    label="Custom 2 Icon (optional)" @value-changed=${this._valueChanged}></ha-icon-picker>
+  <mwc-textfield label="Custom 2 Units (optional)" .value=${this._custom2_units} .configValue=${'custom2_units'}
+    @input=${this._valueChanged}>
+  </mwc-textfield>
+</div>` : '';
+
     return html`
       ${entity_daytime_high}
       ${entity_daytime_low}
@@ -387,7 +437,9 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
       ${entity_pressure}
       ${entity_uv_summary}
       ${entity_fire_summary}
-      ${entity_rainfall}`;
+      ${entity_rainfall}
+      ${entity_custom1}
+      ${entity_custom2}`;
   }
 
   get _show_warning(): boolean {
@@ -401,6 +453,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
   protected async firstUpdated(): Promise<void> {
     this.loadEntityPicker();
     this.loadSelect();
+    this.loadIconPicker();
   }
 
   async loadEntityPicker() {
@@ -414,7 +467,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     // Load in ha-entity-picker
     // This part will differ for every element you want
     const ch = await (window as any).loadCardHelpers();
-    const c = await ch.createCardElement({ type: "entities", entities: [] });
+    const c = await ch.createCardElement({ type: "button", button: [] });
     await c.constructor.getConfigElement();
 
     // Since ha-elements are not using scopedRegistry we can get a reference to
@@ -436,7 +489,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     // Load in ha-select
     // This part will differ for every element you want
     const ch = await (window as any).loadCardHelpers();
-    const c = await ch.createCardElement({ type: "entities", entities: [] });
+    const c = await ch.createCardElement({ type: "button", button: [] });
     await c.constructor.getConfigElement();
 
     // Since ha-elements are not using scopedRegistry we can get a reference to
@@ -445,6 +498,28 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
 
     // ... and use that reference to register the same element in the local registry
     registry.define("ha-select", haSelect);
+  }
+
+  async loadIconPicker() {
+    // Get the local customElement registry
+    const registry = (this.shadowRoot as any)?.customElements;
+    if (!registry) return;
+
+    // Check if the element we want is already defined in the local scope
+    if (registry.get("ha-icon-picker")) return;
+
+    // Load in ha-icon-picker
+    // This part will differ for every element you want
+    const ch = await (window as any).loadCardHelpers();
+    const c = await ch.createCardElement({ type: "button", button: [] });
+    await c.constructor.getConfigElement();
+
+    // Since ha-elements are not using scopedRegistry we can get a reference to
+    // the newly loaded element from the global customElement registry...
+    const haIconPicker = window.customElements.get("ha-icon-picker");
+
+    // ... and use that reference to register the same element in the local registry
+    registry.define("ha-icon-picker", haIconPicker);
   }
 
   protected render(): TemplateResult | void {
@@ -498,13 +573,13 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
         </ha-entity-picker>
         <div class="side-by-side">
           <ha-select label="Slot Left 1 (optional)" .configValue=${'slot_l1'} .value=${this._slot_l1}
-            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
+            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
             fixedMenuPosition
             naturalMenuWidth>
             ${slotValues}
           </ha-select>
           <ha-select label="Slot Right 1 (optional)" .configValue=${'slot_r1'} .value=${this._slot_r1}
-            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
+            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
             fixedMenuPosition
             naturalMenuWidth>
             ${slotValues}
@@ -512,13 +587,13 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
         </div>
         <div class="side-by-side">
           <ha-select label="Slot Left 2 (optional)" .configValue=${'slot_l2'} .value=${this._slot_l2}
-            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
+            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
             fixedMenuPosition
             naturalMenuWidth>
             ${slotValues}
           </ha-select>
           <ha-select label="Slot Right 2 (optional)" .configValue=${'slot_r2'} .value=${this._slot_r2}
-            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
+            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
             fixedMenuPosition
             naturalMenuWidth>
             ${slotValues}
@@ -526,13 +601,13 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
         </div>
         <div class="side-by-side">
           <ha-select label="Slot Left 3 (optional)" .configValue=${'slot_l3'} .value=${this._slot_l3}
-            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
+            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
             fixedMenuPosition
             naturalMenuWidth>
             ${slotValues}
           </ha-select>
           <ha-select label="Slot Right 3 (optional)" .configValue=${'slot_r3'} .value=${this._slot_r3}
-            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
+            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
             fixedMenuPosition
             naturalMenuWidth>
             ${slotValues}
@@ -540,13 +615,13 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
         </div>
         <div class="side-by-side">
           <ha-select label="Slot Left 4 (optional)" .configValue=${'slot_l4'} .value=${this._slot_l4}
-            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
+            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
             fixedMenuPosition
             naturalMenuWidth>
             ${slotValues}
           </ha-select>
           <ha-select label="Slot Right 4 (optional)" .configValue=${'slot_r4'} .value=${this._slot_r4}
-            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
+            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
             fixedMenuPosition
             naturalMenuWidth>
             ${slotValues}
@@ -554,13 +629,13 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
         </div>
         <div class="side-by-side">
           <ha-select label="Slot Left 5 (optional)" .configValue=${'slot_l5'} .value=${this._slot_l5}
-            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
+            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
             fixedMenuPosition
             naturalMenuWidth>
             ${slotValues}
           </ha-select>
           <ha-select label="Slot Right 5 (optional)" .configValue=${'slot_r5'} .value=${this._slot_r5}
-            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
+            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
             fixedMenuPosition
             naturalMenuWidth>
             ${slotValues}
@@ -568,12 +643,12 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
         </div>
         ${this._optional_entities}
         <br>
-        <mwc-formfield .label=${`Toggle warning ${this._show_warning ? 'off' : 'on' }`}>
-          <mwc-switch .checked=${this._show_warning !== false} .configValue=${'show_warning'} @change=${this._valueChanged}>
+        <mwc-formfield .label=${`Toggle warning ${this._show_warning ? 'off' : 'on'}`}>
+          <mwc-switch .checked=${this._show_warning !==false} .configValue=${'show_warning'} @change=${this._valueChanged}>
           </mwc-switch>
         </mwc-formfield>
-        <mwc-formfield .label=${`Toggle error ${this._show_error ? 'off' : 'on'}`}>
-          <mwc-switch .checked=${this._show_error !== false} .configValue=${'show_error'} @change=${this._valueChanged}>
+        <mwc-formfield .label=${`Toggle error ${this._show_error ? 'off' : 'on' }`}>
+          <mwc-switch .checked=${this._show_error !==false} .configValue=${'show_error'} @change=${this._valueChanged}>
           </mwc-switch>
         </mwc-formfield>
         `;
@@ -647,7 +722,6 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
   static styles: CSSResultGroup = css`
     mwc-select,
     mwc-textfield {
-      margin-bottom: 16px;
       display: block;
     }
     mwc-formfield {
