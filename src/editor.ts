@@ -82,6 +82,10 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     return this._config?.slot_l5 || '';
   }
 
+  get _slot_l6(): string {
+    return this._config?.slot_l6 || '';
+  }
+
   get _slot_r1(): string {
     return this._config?.slot_r1 || '';
   }
@@ -100,6 +104,10 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
 
   get _slot_r5(): string {
     return this._config?.slot_r5 || '';
+  }
+
+  get _slot_r6(): string {
+    return this._config?.slot_r6 || '';
   }
 
   get _entity_daytime_high(): string {
@@ -635,6 +643,20 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
             ${slotValues}
           </ha-select>
           <ha-select label="Slot Right 5 (optional)" .configValue=${'slot_r5'} .value=${this._slot_r5}
+            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
+            fixedMenuPosition
+            naturalMenuWidth>
+            ${slotValues}
+          </ha-select>
+        </div>
+        <div class="side-by-side">
+          <ha-select label="Slot Left 6 (optional)" .configValue=${'slot_l6'} .value=${this._slot_l6}
+            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
+            fixedMenuPosition
+            naturalMenuWidth>
+            ${slotValues}
+          </ha-select>
+          <ha-select label="Slot Right 6 (optional)" .configValue=${'slot_r6'} .value=${this._slot_r6}
             @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
             fixedMenuPosition
             naturalMenuWidth>
