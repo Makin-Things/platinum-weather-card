@@ -82,12 +82,20 @@ function ft(t,e,i){let n,o=t;return"object"==typeof t?(o=t.slot,n=t):n={flatten:
     `,r=void 0!==this.config.entity_current_text&&null!==(t=this.hass.states[this.config.entity_current_text].state)&&void 0!==t?t:"---";var s=!0===this.config.use_old_column_format?P`<ul class="variations-ugly">
   <li>${this.getSlot().l1}${this.getSlot().l2}${this.getSlot().l3}${this.getSlot().l4}${this.getSlot().l5}</li>
   <li>${this.getSlot().r1}${this.getSlot().r2}${this.getSlot().r3}${this.getSlot().r4}${this.getSlot().r5}</li>
-</ul>`:P`<ul class="variations">
-  <li class="slotlist">
-    ${this.getSlot().l1}${this.getSlot().l2}${this.getSlot().l3}${this.getSlot().l4}${this.getSlot().l5}</li>
-  <li class="slotlist">
-    ${this.getSlot().r1}${this.getSlot().r2}${this.getSlot().r3}${this.getSlot().r4}${this.getSlot().r5}</li>
-</ul>`;return P`
+</ul>`:P`<div>
+    <ul class="variations">
+      <li class="slot-list-item-1">
+      <ul class="slot-list">
+        ${this.getSlot().l1}${this.getSlot().l2}${this.getSlot().l3}${this.getSlot().l4}${this.getSlot().l5}
+      </ul>
+      </li>
+      <li>
+      <ul class="slot-list">
+        ${this.getSlot().r1}${this.getSlot().r2}${this.getSlot().r3}${this.getSlot().r4}${this.getSlot().r5}
+      </ul>
+      </li>
+    </ul>
+  </div>`;return P`
       <style>
         ${this.styles}
       </style>
@@ -354,14 +362,17 @@ ${this.hass.states[this.config.entity_temp_following].state}`:P``}get slotUvSumm
       .variations {
         display: flex;
         flex-flow: row wrap;
-        justify-content: space-between;
         font-weight: 300;
         color: var(--primary-text-color);
         list-style: none;
         padding: 0.2em;
       }
-      .slotlist {
-        flex-grow: 1;
+      .slot-list-item-1 {
+        min-width:50%;
+      }
+      .slot-list {
+        list-style: none;
+        padding: 0;
       }
       .variations-ugly {
         display: flex;

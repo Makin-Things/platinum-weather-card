@@ -14,6 +14,11 @@ export default {
   output: {
     dir: './dist',
     format: 'es',
+    inlineDynamicImports: true,
+  },
+  watch: {
+    include: './src/**',
+    clearScreen: false,
   },
   plugins: [
     resolve(),
