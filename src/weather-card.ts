@@ -133,6 +133,8 @@ export class WeatherCard extends LitElement {
       </div>
     `;
 
+    var separator = this.config.show_separator === true ? html`<hr class=line>` : ``;
+
     const currentText = this.config.entity_current_text !== undefined ? this.hass.states[this.config.entity_current_text].state ?? '---' : '---';
 
     var slot_section = (this.config.use_old_column_format === true) ? html`
@@ -172,6 +174,7 @@ export class WeatherCard extends LitElement {
             <div class="currentTemps">${currentTemp}${apparentTemp}</div>
           </div>
           <div class="current-text">${currentText}</div>
+          ${separator}
           <div>${slot_section}</div>
         </div>
       </ha-card>
@@ -1327,6 +1330,12 @@ ${this.hass.states[this.config.entity_temp_following].state}` : html``;
         color: var(--primary-text-color);
         position: relative;
         line-height: 80%;
+      }
+      .line {
+        margin-left: 0.5em;
+        margin-right: 0.5em;
+        margin-top : 4px;
+        margin-bottom: -6px;
       }
       .current-text {
         font-size: ${unsafeCSS(currentTextFontSize)};

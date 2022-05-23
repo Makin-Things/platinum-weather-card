@@ -79,23 +79,31 @@ function ft(t,e,i){let n,o=t;return"object"==typeof t?(o=t.slot,n=t):n={flatten:
         </div>
         <div class="apparentc"> ${this.getUOM("temperature")}</div>
       </div>
-    `,r=void 0!==this.config.entity_current_text&&null!==(t=this.hass.states[this.config.entity_current_text].state)&&void 0!==t?t:"---";var s=!0===this.config.use_old_column_format?P`<div><ul class="variations-ugly">
-  <li><ul class="slot-list">${this.getSlot().l1}${this.getSlot().l2}${this.getSlot().l3}${this.getSlot().l4}${this.getSlot().l5}</ul></li>
-  <li><ul class="slot-list">${this.getSlot().r1}${this.getSlot().r2}${this.getSlot().r3}${this.getSlot().r4}${this.getSlot().r5}</ul></li>
-</ul></div>`:P`<div>
-    <ul class="variations">
-      <li class="slot-list-item-1">
-      <ul class="slot-list">
-        ${this.getSlot().l1}${this.getSlot().l2}${this.getSlot().l3}${this.getSlot().l4}${this.getSlot().l5}
-      </ul>
-      </li>
-      <li>
-      <ul class="slot-list">
-        ${this.getSlot().r1}${this.getSlot().r2}${this.getSlot().r3}${this.getSlot().r4}${this.getSlot().r5}
-      </ul>
-      </li>
-    </ul>
-  </div>`;return P`
+    `;var r=!0===this.config.show_separator?P`<hr class=line>`:"";const s=void 0!==this.config.entity_current_text&&null!==(t=this.hass.states[this.config.entity_current_text].state)&&void 0!==t?t:"---";var d=!0===this.config.use_old_column_format?P`
+      <div>
+        <ul class="variations-ugly">
+          <li>
+            <ul class="slot-list">${this.getSlot().l1}${this.getSlot().l2}${this.getSlot().l3}${this.getSlot().l4}${this.getSlot().l5}</ul>
+          </li>
+          <li>
+            <ul class="slot-list">${this.getSlot().r1}${this.getSlot().r2}${this.getSlot().r3}${this.getSlot().r4}${this.getSlot().r5}</ul>
+          </li>
+        </ul>
+      </div>`:P`
+      <div>
+        <ul class="variations">
+          <li class="slot-list-item-1">
+            <ul class="slot-list">
+              ${this.getSlot().l1}${this.getSlot().l2}${this.getSlot().l3}${this.getSlot().l4}${this.getSlot().l5}
+            </ul>
+          </li>
+          <li>
+            <ul class="slot-list">
+              ${this.getSlot().r1}${this.getSlot().r2}${this.getSlot().r3}${this.getSlot().r4}${this.getSlot().r5}
+            </ul>
+          </li>
+        </ul>
+      </div>`;return P`
       <style>
         ${this.styles}
       </style>
@@ -105,8 +113,9 @@ function ft(t,e,i){let n,o=t;return"object"==typeof t?(o=t.slot,n=t):n={flatten:
             <div class="top-left">${n}</div>
             <div class="currentTemps">${o}${a}</div>
           </div>
-          <div class="current-text">${r}</div>
-          <div>${s}</div>
+          <div class="current-text">${s}</div>
+          ${r}
+          <div>${d}</div>
         </div>
       </ha-card>
     `}getSlot(){return{l1:this.slotValue("l1",this.config.slot_l1),l2:this.slotValue("l2",this.config.slot_l2),l3:this.slotValue("l3",this.config.slot_l3),l4:this.slotValue("l4",this.config.slot_l4),l5:this.slotValue("l5",this.config.slot_l5),r1:this.slotValue("r1",this.config.slot_r1),r2:this.slotValue("r2",this.config.slot_r2),r3:this.slotValue("r3",this.config.slot_r3),r4:this.slotValue("r4",this.config.slot_r4),r5:this.slotValue("r5",this.config.slot_r5)}}slotValue(t,e){switch(console.info("slotValue called"),e){case"pop":case"popforecast":return this.slotPopForecast;case"possible_today":return this.slotPossibleToday;case"possible_tomorrow":return this.slotPossibleTomorrow;case"rainfall":return this.slotRainfall;case"humidity":return this.slotHumidity;case"pressure":return this.slotPressure;case"daytime_high":return this.slotDaytimeHigh;case"daytime_low":return this.slotDaytimeLow;case"temp_next":return this.slotTempNext;case"temp_following":return this.slotTempFollowing;case"uv_summary":return this.slotUvSummary;case"fire_summary":return this.slotFireSummary;case"wind":return this.slotWind;case"wind_kt":return this.slotWindKt;case"visibility":return this.slotVisibility;case"sun_next":return this.slotSunNext;case"sun_following":return this.slotSunFollowing;case"custom1":return this.slotCustom1;case"custom2":return this.slotCustom2;case"empty":return P`&nbsp;`;case"remove":return P``}switch(t){case"l1":return this.slotDaytimeHigh;case"l2":return this.slotDaytimeLow;case"l3":return this.slotWind;case"l4":return this.slotPressure;case"l5":return this.slotSunNext;case"r1":return this.slotPop;case"r2":return this.slotHumidity;case"r3":return this.slotUvSummary;case"r4":return this.slotFireSummary;case"r5":return this.slotSunFollowing}return P`&nbsp;`}get slotPop(){try{var t=this.config.entity_pop_intensity&&!this.config.entity_pop_intensity_rate?P`<span id="intensity-text"> -
@@ -349,6 +358,12 @@ ${this.hass.states[this.config.entity_temp_following].state}`:P``}get slotUvSumm
         color: var(--primary-text-color);
         position: relative;
         line-height: 80%;
+      }
+      .line {
+        margin-left: 0.5em;
+        margin-right: 0.5em;
+        margin-top : 4px;
+        margin-bottom: -6px;
       }
       .current-text {
         font-size: ${l(i)};
