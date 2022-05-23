@@ -699,11 +699,11 @@ ${this.hass.states[this.config.entity_temp_following].state}` : html``;
   }
 
   get currentBeaufort() {
-    return this.config.show_beaufort ? html`Bft: ${this.beaufortWind} -` : ``;
+    return this.config.show_beaufort == true ? html`Bft: ${this.beaufortWind} - ` : ``;
   }
 
   get currentBeaufortkt() {
-    return this.config.show_beaufort ? html`Bft: ${this.beaufortWindKt} -` : ``;
+    return this.config.show_beaufort === true ? html`Bft: ${this.beaufortWindKt} - ` : ``;
   }
 
   // windDirections - returns set of possible wind directions by specified language
@@ -816,8 +816,13 @@ ${this.hass.states[this.config.entity_temp_following].state}` : html``;
   get sunSet(): { next: TemplateResult, following: TemplateResult, nextText: string, followingText: string, nextIcon: string, followingIcon: string } {
     var nextSunSet: string;
     var nextSunRise: string;
-    nextSunSet = new Date(this.hass.states[this.config.entity_sun].attributes.next_setting).toLocaleTimeString(this.config.locale, { hour: 'numeric', minute: '2-digit', hour12: this.is12Hour });
-    nextSunRise = new Date(this.hass.states[this.config.entity_sun].attributes.next_rising).toLocaleTimeString(this.config.locale, { hour: 'numeric', minute: '2-digit', hour12: this.is12Hour });
+    if (this.is12Hour) {
+      nextSunSet = new Date(this.hass.states[this.config.entity_sun].attributes.next_setting).toLocaleTimeString(this.config.locale, { hour: 'numeric', minute: '2-digit', hour12: true }).replace(" am","am").replace(" pm","pm");
+      nextSunRise = new Date(this.hass.states[this.config.entity_sun].attributes.next_rising).toLocaleTimeString(this.config.locale, { hour: 'numeric', minute: '2-digit', hour12: true }).replace(" am","am").replace(" pm","pm");
+    } else {
+      nextSunSet = new Date(this.hass.states[this.config.entity_sun].attributes.next_setting).toLocaleTimeString(this.config.locale, { hour: '2-digit', minute: '2-digit', hour12: false });
+      nextSunRise = new Date(this.hass.states[this.config.entity_sun].attributes.next_rising).toLocaleTimeString(this.config.locale, { hour: '2-digit', minute: '2-digit', hour12: false });
+    }
     var nextDate = new Date();
     nextDate.setDate(nextDate.getDate() + 1);
     if (this.hass.states[this.config.entity_sun].state == "above_horizon") {
