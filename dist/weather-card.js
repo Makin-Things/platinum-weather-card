@@ -113,8 +113,8 @@ function ft(t,e,i){let n,o=t;return"object"==typeof t?(o=t.slot,n=t):n={flatten:
             <div class="top-left">${n}</div>
             <div class="currentTemps">${o}${a}</div>
           </div>
-          <div class="current-text">${s}</div>
           ${r}
+          <div class="current-text">${s}</div>
           <div>${d}</div>
         </div>
       </ha-card>
@@ -362,8 +362,8 @@ ${this.hass.states[this.config.entity_temp_following].state}`:P``}get slotUvSumm
       .line {
         margin-left: 0.5em;
         margin-right: 0.5em;
-        margin-top : 4px;
-        margin-bottom: -6px;
+        margin-top : -12px;
+        margin-bottom: 10px;
       }
       .current-text {
         font-size: ${l(i)};
@@ -371,7 +371,6 @@ ${this.hass.states[this.config.entity_temp_following].state}`:P``}get slotUvSumm
         overflow: hidden;
         white-space: nowrap;
         text-align: ${l(n)};
-        padding-top: 0.5em;
         padding-bottom: 0.2em;
       }
       .variations {
