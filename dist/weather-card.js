@@ -79,10 +79,10 @@ function ft(t,e,i){let n,o=t;return"object"==typeof t?(o=t.slot,n=t):n={flatten:
         </div>
         <div class="apparentc"> ${this.getUOM("temperature")}</div>
       </div>
-    `,r=void 0!==this.config.entity_current_text&&null!==(t=this.hass.states[this.config.entity_current_text].state)&&void 0!==t?t:"---";var s=!0===this.config.use_old_column_format?P`<ul class="variations-ugly">
-  <li>${this.getSlot().l1}${this.getSlot().l2}${this.getSlot().l3}${this.getSlot().l4}${this.getSlot().l5}</li>
-  <li>${this.getSlot().r1}${this.getSlot().r2}${this.getSlot().r3}${this.getSlot().r4}${this.getSlot().r5}</li>
-</ul>`:P`<div>
+    `,r=void 0!==this.config.entity_current_text&&null!==(t=this.hass.states[this.config.entity_current_text].state)&&void 0!==t?t:"---";var s=!0===this.config.use_old_column_format?P`<div><ul class="variations-ugly">
+  <li><ul class="slot-list">${this.getSlot().l1}${this.getSlot().l2}${this.getSlot().l3}${this.getSlot().l4}${this.getSlot().l5}</ul></li>
+  <li><ul class="slot-list">${this.getSlot().r1}${this.getSlot().r2}${this.getSlot().r3}${this.getSlot().r4}${this.getSlot().r5}</ul></li>
+</ul></div>`:P`<div>
     <ul class="variations">
       <li class="slot-list-item-1">
       <ul class="slot-list">
@@ -369,6 +369,7 @@ ${this.hass.states[this.config.entity_temp_following].state}`:P``}get slotUvSumm
       }
       .slot-list-item-1 {
         min-width:50%;
+        padding-right: 16px;
       }
       .slot-list {
         list-style: none;

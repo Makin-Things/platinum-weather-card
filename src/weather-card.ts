@@ -135,23 +135,31 @@ export class WeatherCard extends LitElement {
 
     const currentText = this.config.entity_current_text !== undefined ? this.hass.states[this.config.entity_current_text].state ?? '---' : '---';
 
-    var slot_section = (this.config.use_old_column_format === true) ? html`<ul class="variations-ugly">
-  <li>${this.getSlot().l1}${this.getSlot().l2}${this.getSlot().l3}${this.getSlot().l4}${this.getSlot().l5}</li>
-  <li>${this.getSlot().r1}${this.getSlot().r2}${this.getSlot().r3}${this.getSlot().r4}${this.getSlot().r5}</li>
-</ul>` : html`<div>
-    <ul class="variations">
-      <li class="slot-list-item-1">
-      <ul class="slot-list">
-        ${this.getSlot().l1}${this.getSlot().l2}${this.getSlot().l3}${this.getSlot().l4}${this.getSlot().l5}
-      </ul>
-      </li>
-      <li>
-      <ul class="slot-list">
-        ${this.getSlot().r1}${this.getSlot().r2}${this.getSlot().r3}${this.getSlot().r4}${this.getSlot().r5}
-      </ul>
-      </li>
-    </ul>
-  </div>`;
+    var slot_section = (this.config.use_old_column_format === true) ? html`
+      <div>
+        <ul class="variations-ugly">
+          <li>
+            <ul class="slot-list">${this.getSlot().l1}${this.getSlot().l2}${this.getSlot().l3}${this.getSlot().l4}${this.getSlot().l5}</ul>
+          </li>
+          <li>
+            <ul class="slot-list">${this.getSlot().r1}${this.getSlot().r2}${this.getSlot().r3}${this.getSlot().r4}${this.getSlot().r5}</ul>
+          </li>
+        </ul>
+      </div>` : html`
+      <div>
+        <ul class="variations">
+          <li class="slot-list-item-1">
+            <ul class="slot-list">
+              ${this.getSlot().l1}${this.getSlot().l2}${this.getSlot().l3}${this.getSlot().l4}${this.getSlot().l5}
+            </ul>
+          </li>
+          <li>
+            <ul class="slot-list">
+              ${this.getSlot().r1}${this.getSlot().r2}${this.getSlot().r3}${this.getSlot().r4}${this.getSlot().r5}
+            </ul>
+          </li>
+        </ul>
+      </div>`;
 
     return html`
       <style>
@@ -1339,6 +1347,7 @@ ${this.hass.states[this.config.entity_temp_following].state}` : html``;
       }
       .slot-list-item-1 {
         min-width:50%;
+        padding-right: 16px;
       }
       .slot-list {
         list-style: none;
