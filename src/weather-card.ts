@@ -107,9 +107,9 @@ export class WeatherCard extends LitElement {
     if ((this.config.entity_update_time !== undefined) && (this.hass.states[this.config.entity_update_time].state !== undefined)){
       const d = new Date(this.hass.states[this.config.entity_update_time].state);
       if (this.is12Hour) {
-        updateTime = d.toLocaleDateString(this.config.locale, { hour: 'numeric', minute: '2-digit', hour12: true }).replace(" am", "am, ").replace(" pm", "pm, ") + d.toLocaleDateString(this.config.locale, { dateStyle: 'full' }).replace(",", "");
+        updateTime = d.toLocaleDateString(this.config.locale, { hour: 'numeric', minute: '2-digit', hour12: true }).replace(" am", "am, ").replace(" pm", "pm, ") + d.toLocaleDateString(this.config.locale, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).replace(",", "");
       } else {
-        updateTime = d.toLocaleDateString(this.config.locale, { hour: '2-digit', minute: '2-digit', hour12: false }).replace(" am", "am, ").replace(" pm", "pm, ") + d.toLocaleDateString(this.config.locale, { dateStyle: 'full' }).replace(",", "");
+        updateTime = d.toLocaleDateString(this.config.locale, { hour: '2-digit', minute: '2-digit', hour12: false }).replace(" am", "am, ").replace(" pm", "pm, ") + d.toLocaleDateString(this.config.locale, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).replace(",", "");
       }
     } else {
       updateTime = '---';
