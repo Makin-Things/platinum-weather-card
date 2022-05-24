@@ -652,13 +652,13 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     return html`
       <div class="side-by-side">
         <ha-select label="Slot Left 1 (optional)" .configValue=${'slot_l1'} .value=${this._slot_l1}
-          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
+          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
           fixedMenuPosition
           naturalMenuWidth>
           ${slotValues}
         </ha-select>
         <ha-select label="Slot Right 1 (optional)" .configValue=${'slot_r1'} .value=${this._slot_r1}
-          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
+          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
           fixedMenuPosition
           naturalMenuWidth>
           ${slotValues}
@@ -666,13 +666,13 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
       </div>
       <div class="side-by-side">
         <ha-select label="Slot Left 2 (optional)" .configValue=${'slot_l2'} .value=${this._slot_l2}
-          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
+          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
           fixedMenuPosition
           naturalMenuWidth>
           ${slotValues}
         </ha-select>
         <ha-select label="Slot Right 2 (optional)" .configValue=${'slot_r2'} .value=${this._slot_r2}
-          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
+          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
           fixedMenuPosition
           naturalMenuWidth>
           ${slotValues}
@@ -680,13 +680,13 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
       </div>
       <div class="side-by-side">
         <ha-select label="Slot Left 3 (optional)" .configValue=${'slot_l3'} .value=${this._slot_l3}
-          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
+          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
           fixedMenuPosition
           naturalMenuWidth>
           ${slotValues}
         </ha-select>
         <ha-select label="Slot Right 3 (optional)" .configValue=${'slot_r3'} .value=${this._slot_r3}
-          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
+          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
           fixedMenuPosition
           naturalMenuWidth>
           ${slotValues}
@@ -694,13 +694,13 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
       </div>
       <div class="side-by-side">
         <ha-select label="Slot Left 4 (optional)" .configValue=${'slot_l4'} .value=${this._slot_l4}
-          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
+          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
           fixedMenuPosition
           naturalMenuWidth>
           ${slotValues}
         </ha-select>
         <ha-select label="Slot Right 4 (optional)" .configValue=${'slot_r4'} .value=${this._slot_r4}
-          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
+          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
           fixedMenuPosition
           naturalMenuWidth>
           ${slotValues}
@@ -708,13 +708,13 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
       </div>
       <div class="side-by-side">
         <ha-select label="Slot Left 5 (optional)" .configValue=${'slot_l5'} .value=${this._slot_l5}
-          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
+          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
           fixedMenuPosition
           naturalMenuWidth>
           ${slotValues}
         </ha-select>
         <ha-select label="Slot Right 5 (optional)" .configValue=${'slot_r5'} .value=${this._slot_r5}
-          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
+          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
           fixedMenuPosition
           naturalMenuWidth>
           ${slotValues}
@@ -722,13 +722,13 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
       </div>
       <div class="side-by-side">
         <ha-select label="Slot Left 6 (optional)" .configValue=${'slot_l6'} .value=${this._slot_l6}
-          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
+          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
           fixedMenuPosition
           naturalMenuWidth>
           ${slotValues}
         </ha-select>
         <ha-select label="Slot Right 6 (optional)" .configValue=${'slot_r6'} .value=${this._slot_r6}
-          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
+          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
           fixedMenuPosition
           naturalMenuWidth>
           ${slotValues}
@@ -799,38 +799,47 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
 
     return html`
       <div class="side-by-side">
-        <mwc-formfield .label=${`Title Section - ${this._show_section_title ? 'Visible' : 'Hidden'}`}>
-          <mwc-switch .checked=${this._show_section_title !==false} .configValue=${'show_section_title'}
+        <mwc-formfield .label=${`Title Section - ${this._show_section_title ? 'Visible' : 'Hidden' }`}>
+          <mwc-switch .checked=${this._show_section_title !== false} .configValue=${'show_section_title'}
             @change=${this._valueChanged}>
           </mwc-switch>
         </mwc-formfield>
-        <ha-icon-button class="edit-icon" .value=${'section_title'} .path=${mdiPencil} @click="${this._editSection}">
-        </ha-icon-button>
+        <div>
+          <ha-icon-button class="edit-icon" .value=${'section_title'} .path=${mdiPencil} @click="${this._editSection}">
+          </ha-icon-button>
+        </div>
       </div>
       <div class="side-by-side">
-        <mwc-formfield .label=${`Main Section - ${this._show_section_main ? 'Visible' : 'Hidden'}`}>
-          <mwc-switch .checked=${this._show_section_main !==false} .configValue=${'show_section_main'}
+        <mwc-formfield .label=${`Main Section - ${this._show_section_main ? 'Visible' : 'Hidden' }`}>
+          <mwc-switch .checked=${this._show_section_main !== false} .configValue=${'show_section_main'}
             @change=${this._valueChanged}>
           </mwc-switch>
         </mwc-formfield>
-        <ha-icon-button class="edit-icon" .value=${'section_main'} .path=${mdiPencil} @click="${this._editSection}">
-        </ha-icon-button>
+        <div>
+          <ha-icon-button class="edit-icon" .value=${'section_main'} .path=${mdiPencil} @click="${this._editSection}">
+          </ha-icon-button>
+        </div>
       </div>
       <div class="side-by-side">
-        <mwc-formfield .label=${`Slots Section - ${this._show_section_slots ? 'Visible' : 'Hidden'}`}>
-          <mwc-switch .checked=${this._show_section_slots !==false} .configValue=${'show_section_slots'}
+        <mwc-formfield .label=${`Slots Section - ${this._show_section_slots ? 'Visible' : 'Hidden' }`}>
+          <mwc-switch .checked=${this._show_section_slots !== false} .configValue=${'show_section_slots'}
             @change=${this._valueChanged}>
           </mwc-switch>
         </mwc-formfield>
-        <ha-icon-button class="edit-icon" .value=${'section_slots'} .path=${mdiPencil} @click="${this._editSection}">
-        </ha-icon-button>
+        <div>
+          <ha-icon-button class="edit-icon" .value=${'section_slots'} .path=${mdiPencil} @click="${this._editSection}">
+          </ha-icon-button>
+        </div>
       </div>
       <div class="side-by-side">
         <mwc-formfield id="miscellaneous" .label=${`Miscellaneous`}>
           <div id="miscellaneous"></div>
         </mwc-formfield>
-        <ha-icon-button class="edit-icon" .value=${'section_miscellaneous'} .path=${mdiPencil} @click="${this._editSection}">
-        </ha-icon-button>
+        <div>
+          <ha-icon-button class="edit-icon" .value=${'section_miscellaneous'} .path=${mdiPencil}
+            @click="${this._editSection}">
+          </ha-icon-button>
+        </div>
       </div>
     `;
   }

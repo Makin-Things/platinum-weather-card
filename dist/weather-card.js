@@ -1544,8 +1544,10 @@ const En=c`.mdc-floating-label{-moz-osx-font-smoothing:grayscale;-webkit-font-sm
             @change=${this._valueChanged}>
           </mwc-switch>
         </mwc-formfield>
-        <ha-icon-button class="edit-icon" .value=${"section_title"} .path=${At} @click="${this._editSection}">
-        </ha-icon-button>
+        <div>
+          <ha-icon-button class="edit-icon" .value=${"section_title"} .path=${At} @click="${this._editSection}">
+          </ha-icon-button>
+        </div>
       </div>
       <div class="side-by-side">
         <mwc-formfield .label=${"Main Section - "+(this._show_section_main?"Visible":"Hidden")}>
@@ -1553,8 +1555,10 @@ const En=c`.mdc-floating-label{-moz-osx-font-smoothing:grayscale;-webkit-font-sm
             @change=${this._valueChanged}>
           </mwc-switch>
         </mwc-formfield>
-        <ha-icon-button class="edit-icon" .value=${"section_main"} .path=${At} @click="${this._editSection}">
-        </ha-icon-button>
+        <div>
+          <ha-icon-button class="edit-icon" .value=${"section_main"} .path=${At} @click="${this._editSection}">
+          </ha-icon-button>
+        </div>
       </div>
       <div class="side-by-side">
         <mwc-formfield .label=${"Slots Section - "+(this._show_section_slots?"Visible":"Hidden")}>
@@ -1562,15 +1566,20 @@ const En=c`.mdc-floating-label{-moz-osx-font-smoothing:grayscale;-webkit-font-sm
             @change=${this._valueChanged}>
           </mwc-switch>
         </mwc-formfield>
-        <ha-icon-button class="edit-icon" .value=${"section_slots"} .path=${At} @click="${this._editSection}">
-        </ha-icon-button>
+        <div>
+          <ha-icon-button class="edit-icon" .value=${"section_slots"} .path=${At} @click="${this._editSection}">
+          </ha-icon-button>
+        </div>
       </div>
       <div class="side-by-side">
         <mwc-formfield id="miscellaneous" .label=${"Miscellaneous"}>
           <div id="miscellaneous"></div>
         </mwc-formfield>
-        <ha-icon-button class="edit-icon" .value=${"section_miscellaneous"} .path=${At} @click="${this._editSection}">
-        </ha-icon-button>
+        <div>
+          <ha-icon-button class="edit-icon" .value=${"section_miscellaneous"} .path=${At}
+            @click="${this._editSection}">
+          </ha-icon-button>
+        </div>
       </div>
     `:P``}_initialize(){void 0!==this.hass&&void 0!==this._config&&void 0!==this._helpers&&(this._initialized=!0)}async loadCardHelpers(){this._helpers=await window.loadCardHelpers()}_valueChangedPicker(t){if(!this._config||!this.hass)return;const e=t.target;this[`_${e.configValue}`]!==e.value&&(e.configValue&&(e.value?this._config=Object.assign(Object.assign({},this._config),{[e.configValue]:e.value}):delete this._config[e.configValue]),bt(this,"config-changed",{config:this._config}))}_editSection(t){if(t.currentTarget){const e=t.currentTarget;this._subElementEditor=e.value}}_valueChanged(t){if(!this._config||!this.hass)return;const e=t.target;if(this[`_${e.configValue}`]!==e.value){if(e.configValue)if(""===e.value){const t=Object.assign({},this._config);delete t[e.configValue],this._config=t}else this._config=Object.assign(Object.assign({},this._config),{[e.configValue]:void 0!==e.checked?e.checked:e.value});bt(this,"config-changed",{config:this._config})}}};In.elementDefinitions=Object.assign(Object.assign(Object.assign(Object.assign({"ha-card":customElements.get("ha-card")},Cn),tn),dn),Zt),In.styles=c`
     mwc-select,
