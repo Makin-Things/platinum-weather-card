@@ -869,7 +869,6 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
 
   private _editSection(ev): void {
     if (ev.currentTarget) {
-      console.info(`Edit ${ev.currentTarget.value}`)
       const target = ev.currentTarget;
       this._subElementEditor = target.value;
     }

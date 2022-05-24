@@ -80,7 +80,6 @@ export class WeatherCard extends LitElement {
       // console.info(`entity: %s`, entity);
       // console.info(`oh state: %s`, JSON.stringify(oldHass.states[entity], null, 2));
       if (oldHass.states[entity] !== this.hass.states[entity]) {
-        console.info(`update: %s=%s`, entity, this.hass.states[entity].state);
         return true;
       }
     }
