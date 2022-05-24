@@ -2,6 +2,8 @@
 import { LitElement, html, TemplateResult, css, CSSResultGroup } from 'lit';
 import { HomeAssistant, fireEvent, LovelaceCardEditor } from 'custom-card-helpers';
 
+import { mdiPencil } from '@mdi/js';
+
 import { ScopedRegistryHost } from '@lit-labs/scoped-registry-mixin';
 import { WeatherCardConfig } from './types';
 import { customElement, property, state } from 'lit/decorators';
@@ -17,6 +19,8 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
   @state() private _config?: WeatherCardConfig;
 
   @state() private _helpers?: any;
+
+  @state() private _subElementEditor: string | undefined = undefined;
 
   private _initialized = false;
 
@@ -42,8 +46,16 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     return true;
   }
 
-  get _card_title(): string {
-    return this._config?.card_title || '';
+  get _text_card_title(): string {
+    return this._config?.text_card_title || '';
+  }
+
+  get _entity_update_time(): string {
+    return this._config?.entity_update_time || '';
+  }
+
+  get _text_update_time_prefix(): string {
+    return this._config?.text_update_time_prefix || '';
   }
 
   get _entity_temperature(): string {
@@ -461,7 +473,9 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
   protected async firstUpdated(): Promise<void> {
     this.loadEntityPicker();
     this.loadSelect();
+    this.loadIcon();
     this.loadIconPicker();
+    this.loadIconButton();
   }
 
   async loadEntityPicker() {
@@ -530,11 +544,87 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     registry.define("ha-icon-picker", haIconPicker);
   }
 
-  protected render(): TemplateResult | void {
-    if (!this.hass || !this._helpers) {
-      return html``;
-    }
+  async loadIconButton() {
+    // Get the local customElement registry
+    const registry = (this.shadowRoot as any)?.customElements;
+    if (!registry) return;
 
+    // Check if the element we want is already defined in the local scope
+    if (registry.get("ha-icon-button")) return;
+
+    // Load in ha-icon-button
+    // This part will differ for every element you want
+    const ch = await (window as any).loadCardHelpers();
+    const c = await ch.createCardElement({ type: "button", button: [] });
+    await c.constructor.getConfigElement();
+
+    // Since ha-elements are not using scopedRegistry we can get a reference to
+    // the newly loaded element from the global customElement registry...
+    const haIconButton = window.customElements.get("ha-icon-button");
+
+    // ... and use that reference to register the same element in the local registry
+    registry.define("ha-icon-button", haIconButton);
+  }
+
+  async loadIcon() {
+    // Get the local customElement registry
+    const registry = (this.shadowRoot as any)?.customElements;
+    if (!registry) return;
+
+    // Check if the element we want is already defined in the local scope
+    if (registry.get("ha-icon")) return;
+
+    // Load in ha-icon
+    // This part will differ for every element you want
+    const ch = await (window as any).loadCardHelpers();
+    const c = await ch.createCardElement({ type: "button", button: [] });
+    await c.constructor.getConfigElement();
+
+    // Since ha-elements are not using scopedRegistry we can get a reference to
+    // the newly loaded element from the global customElement registry...
+    const haIcon = window.customElements.get("ha-icon");
+
+    // ... and use that reference to register the same element in the local registry
+    registry.define("ha-icon", haIcon);
+  }
+
+  private _sectionTitleEditor(): TemplateResult {
+    return html`
+      <mwc-textfield label="Card Title (optional)" .value=${this._text_card_title} .configValue=${'text_card_title'}
+        @input=${this._valueChanged}>
+      </mwc-textfield>
+      <ha-entity-picker .hass=${this.hass} .configValue=${'entity_update_time'} .value=${this._entity_update_time}
+        name="entity_update_time" label="Entity Update Time (optional)" allow-custom-entity
+        @value-changed=${this._valueChangedPicker}>
+      </ha-entity-picker>
+      <mwc-textfield label="Update Time Prefix (optional)" .value=${this._text_update_time_prefix}
+        .configValue=${'text_update_time_prefix'} @input=${this._valueChanged}>
+      </mwc-textfield>
+    `;
+  }
+
+  private _sectionMainEditor(): TemplateResult {
+    return html`
+      <ha-entity-picker .hass=${this.hass} .configValue=${'entity_temperature'} .value=${this._entity_temperature}
+        name="entity_temperature" label="Entity Current Temperature (required)" allow-custom-entity
+        @value-changed=${this._valueChangedPicker}>
+      </ha-entity-picker>
+      <ha-entity-picker .hass=${this.hass} .configValue=${'entity_apparent_temp'} .value=${this._entity_apparent_temp}
+        name="entity_apparent_temp" label="Entity Apparent Temperature (required)" allow-custom-entity
+        @value-changed=${this._valueChangedPicker}>
+      </ha-entity-picker>
+      <ha-entity-picker .hass=${this.hass} .configValue=${'entity_current_conditions'}
+        .value=${this._entity_current_conditions} name="entity_current_condition" label="Entity Current Conditions (required)"
+        allow-custom-entity @value-changed=${this._valueChangedPicker}>
+      </ha-entity-picker>
+      <ha-entity-picker .hass=${this.hass} .configValue=${'entity_current_text'} .value=${this._entity_current_text}
+        name="entity_current_text" label="Entity Current Text (required)" allow-custom-entity
+        @value-changed=${this._valueChangedPicker}>
+      </ha-entity-picker>
+    `;
+  }
+
+  private _sectionSlotsEditor(): TemplateResult {
     const slotValues = html`<mwc-list-item></mwc-list-item>
 <mwc-list-item value="daytime_high">daytime_high</mwc-list-item>
 <mwc-list-item value="daytime_low">daytime_low</mwc-list-item>
@@ -560,120 +650,189 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
 <mwc-list-item value="remove">remove</mwc-list-item>`;
 
     return html`
-        <mwc-textfield label="Card Title (optional)" .value=${this._card_title} .configValue=${'card_title'}
-          @input=${this._valueChanged}>
-        </mwc-textfield>
-        <ha-entity-picker .hass=${this.hass} .configValue=${'entity_temperature'} .value=${this._entity_temperature}
-          name="entity_temperature" label="Entity Current Temperature (required)" allow-custom-entity
-          @value-changed=${this._valueChangedPicker}>
-        </ha-entity-picker>
-        <ha-entity-picker .hass=${this.hass} .configValue=${'entity_apparent_temp'} .value=${this._entity_apparent_temp}
-          name="entity_apparent_temp" label="Entity Apparent Temperature (required)" allow-custom-entity
-          @value-changed=${this._valueChangedPicker}>
-        </ha-entity-picker>
-        <ha-entity-picker .hass=${this.hass} .configValue=${'entity_current_conditions'}
-          .value=${this._entity_current_conditions} name="entity_current_condition" label="Entity Current Conditions (required)"
-          allow-custom-entity @value-changed=${this._valueChangedPicker}>
-        </ha-entity-picker>
-        <ha-entity-picker .hass=${this.hass} .configValue=${'entity_current_text'} .value=${this._entity_current_text}
-          name="entity_current_text" label="Entity Current Text (required)" allow-custom-entity
-          @value-changed=${this._valueChangedPicker}>
-        </ha-entity-picker>
-        <div class="side-by-side">
-          <ha-select label="Slot Left 1 (optional)" .configValue=${'slot_l1'} .value=${this._slot_l1}
-            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
-            fixedMenuPosition
-            naturalMenuWidth>
-            ${slotValues}
-          </ha-select>
-          <ha-select label="Slot Right 1 (optional)" .configValue=${'slot_r1'} .value=${this._slot_r1}
-            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
-            fixedMenuPosition
-            naturalMenuWidth>
-            ${slotValues}
-          </ha-select>
+      <div class="side-by-side">
+        <ha-select label="Slot Left 1 (optional)" .configValue=${'slot_l1'} .value=${this._slot_l1}
+          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
+          fixedMenuPosition
+          naturalMenuWidth>
+          ${slotValues}
+        </ha-select>
+        <ha-select label="Slot Right 1 (optional)" .configValue=${'slot_r1'} .value=${this._slot_r1}
+          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
+          fixedMenuPosition
+          naturalMenuWidth>
+          ${slotValues}
+        </ha-select>
+      </div>
+      <div class="side-by-side">
+        <ha-select label="Slot Left 2 (optional)" .configValue=${'slot_l2'} .value=${this._slot_l2}
+          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
+          fixedMenuPosition
+          naturalMenuWidth>
+          ${slotValues}
+        </ha-select>
+        <ha-select label="Slot Right 2 (optional)" .configValue=${'slot_r2'} .value=${this._slot_r2}
+          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
+          fixedMenuPosition
+          naturalMenuWidth>
+          ${slotValues}
+        </ha-select>
+      </div>
+      <div class="side-by-side">
+        <ha-select label="Slot Left 3 (optional)" .configValue=${'slot_l3'} .value=${this._slot_l3}
+          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
+          fixedMenuPosition
+          naturalMenuWidth>
+          ${slotValues}
+        </ha-select>
+        <ha-select label="Slot Right 3 (optional)" .configValue=${'slot_r3'} .value=${this._slot_r3}
+          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
+          fixedMenuPosition
+          naturalMenuWidth>
+          ${slotValues}
+        </ha-select>
+      </div>
+      <div class="side-by-side">
+        <ha-select label="Slot Left 4 (optional)" .configValue=${'slot_l4'} .value=${this._slot_l4}
+          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
+          fixedMenuPosition
+          naturalMenuWidth>
+          ${slotValues}
+        </ha-select>
+        <ha-select label="Slot Right 4 (optional)" .configValue=${'slot_r4'} .value=${this._slot_r4}
+          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
+          fixedMenuPosition
+          naturalMenuWidth>
+          ${slotValues}
+        </ha-select>
+      </div>
+      <div class="side-by-side">
+        <ha-select label="Slot Left 5 (optional)" .configValue=${'slot_l5'} .value=${this._slot_l5}
+          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
+          fixedMenuPosition
+          naturalMenuWidth>
+          ${slotValues}
+        </ha-select>
+        <ha-select label="Slot Right 5 (optional)" .configValue=${'slot_r5'} .value=${this._slot_r5}
+          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
+          fixedMenuPosition
+          naturalMenuWidth>
+          ${slotValues}
+        </ha-select>
+      </div>
+      <div class="side-by-side">
+        <ha-select label="Slot Left 6 (optional)" .configValue=${'slot_l6'} .value=${this._slot_l6}
+          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
+          fixedMenuPosition
+          naturalMenuWidth>
+          ${slotValues}
+        </ha-select>
+        <ha-select label="Slot Right 6 (optional)" .configValue=${'slot_r6'} .value=${this._slot_r6}
+          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
+          fixedMenuPosition
+          naturalMenuWidth>
+          ${slotValues}
+        </ha-select>
+      </div>
+      ${this._optional_entities}
+    `;
+  }
+
+  private _sectionMiscellaneousEditor(): TemplateResult {
+    return html`
+      <div class="side-by-side">This will have the random settings that may affect multiple sections (ie. locale, time_format
+        etc).</div>
+    `;
+  }
+
+  private _renderSubElementEditor(): TemplateResult {
+    const subel: TemplateResult[] = [
+      html`
+        <div class="header">
+          <div class="back-title">
+            <mwc-icon-button @click=${this._goBack}>
+              <ha-icon icon="mdi:arrow-left"></ha-icon>
+            </mwc-icon-button>
+          </div>
         </div>
-        <div class="side-by-side">
-          <ha-select label="Slot Left 2 (optional)" .configValue=${'slot_l2'} .value=${this._slot_l2}
-            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
-            fixedMenuPosition
-            naturalMenuWidth>
-            ${slotValues}
-          </ha-select>
-          <ha-select label="Slot Right 2 (optional)" .configValue=${'slot_r2'} .value=${this._slot_r2}
-            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
-            fixedMenuPosition
-            naturalMenuWidth>
-            ${slotValues}
-          </ha-select>
-        </div>
-        <div class="side-by-side">
-          <ha-select label="Slot Left 3 (optional)" .configValue=${'slot_l3'} .value=${this._slot_l3}
-            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
-            fixedMenuPosition
-            naturalMenuWidth>
-            ${slotValues}
-          </ha-select>
-          <ha-select label="Slot Right 3 (optional)" .configValue=${'slot_r3'} .value=${this._slot_r3}
-            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
-            fixedMenuPosition
-            naturalMenuWidth>
-            ${slotValues}
-          </ha-select>
-        </div>
-        <div class="side-by-side">
-          <ha-select label="Slot Left 4 (optional)" .configValue=${'slot_l4'} .value=${this._slot_l4}
-            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
-            fixedMenuPosition
-            naturalMenuWidth>
-            ${slotValues}
-          </ha-select>
-          <ha-select label="Slot Right 4 (optional)" .configValue=${'slot_r4'} .value=${this._slot_r4}
-            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
-            fixedMenuPosition
-            naturalMenuWidth>
-            ${slotValues}
-          </ha-select>
-        </div>
-        <div class="side-by-side">
-          <ha-select label="Slot Left 5 (optional)" .configValue=${'slot_l5'} .value=${this._slot_l5}
-            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
-            fixedMenuPosition
-            naturalMenuWidth>
-            ${slotValues}
-          </ha-select>
-          <ha-select label="Slot Right 5 (optional)" .configValue=${'slot_r5'} .value=${this._slot_r5}
-            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
-            fixedMenuPosition
-            naturalMenuWidth>
-            ${slotValues}
-          </ha-select>
-        </div>
-        <div class="side-by-side">
-          <ha-select label="Slot Left 6 (optional)" .configValue=${'slot_l6'} .value=${this._slot_l6}
-            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
-            fixedMenuPosition
-            naturalMenuWidth>
-            ${slotValues}
-          </ha-select>
-          <ha-select label="Slot Right 6 (optional)" .configValue=${'slot_r6'} .value=${this._slot_r6}
-            @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
-            fixedMenuPosition
-            naturalMenuWidth>
-            ${slotValues}
-          </ha-select>
-        </div>
-        ${this._optional_entities}
-        <br>
-        <mwc-formfield .label=${`Toggle warning ${this._show_warning ? 'off' : 'on'}`}>
-          <mwc-switch .checked=${this._show_warning !==false} .configValue=${'show_warning'} @change=${this._valueChanged}>
+      `,
+    ];
+    switch (this._subElementEditor) {
+      case 'section_title':
+        subel.push(this._sectionTitleEditor());
+        break;
+      case 'section_main':
+        subel.push(this._sectionMainEditor());
+        break;
+      case 'section_slots':
+        subel.push(this._sectionSlotsEditor());
+        break;
+      case 'section_miscellaneous':
+        subel.push(this._sectionMiscellaneousEditor());
+        break;
+    }
+    return html`${subel}`;
+  }
+
+  private _goBack(): void {
+    this._subElementEditor = undefined;
+  }
+
+  get _show_section_title(): boolean {
+    return this._config?.show_section_title === true; // default off
+  }
+
+  get _show_section_main(): boolean {
+    return this._config?.show_section_main !== false; //default on
+  }
+
+  get _show_section_slots(): boolean {
+    return this._config?.show_section_slots !== false; //default on
+  }
+
+  protected render(): TemplateResult | void {
+    if (!this.hass || !this._helpers) {
+      return html``;
+    }
+
+    if (this._subElementEditor) return this._renderSubElementEditor();
+
+    return html`
+      <div class="side-by-side">
+        <mwc-formfield .label=${`Title Section - ${this._show_section_title ? 'Visible' : 'Hidden'}`}>
+          <mwc-switch .checked=${this._show_section_title !==false} .configValue=${'show_section_title'}
+            @change=${this._valueChanged}>
           </mwc-switch>
         </mwc-formfield>
-        <mwc-formfield .label=${`Toggle error ${this._show_error ? 'off' : 'on' }`}>
-          <mwc-switch .checked=${this._show_error !==false} .configValue=${'show_error'} @change=${this._valueChanged}>
+        <ha-icon-button class="edit-icon" .value=${'section_title'} .path=${mdiPencil} @click="${this._editSection}">
+        </ha-icon-button>
+      </div>
+      <div class="side-by-side">
+        <mwc-formfield .label=${`Main Section - ${this._show_section_main ? 'Visible' : 'Hidden'}`}>
+          <mwc-switch .checked=${this._show_section_main !==false} .configValue=${'show_section_main'}
+            @change=${this._valueChanged}>
           </mwc-switch>
         </mwc-formfield>
-        `;
+        <ha-icon-button class="edit-icon" .value=${'section_main'} .path=${mdiPencil} @click="${this._editSection}">
+        </ha-icon-button>
+      </div>
+      <div class="side-by-side">
+        <mwc-formfield .label=${`Slots Section - ${this._show_section_slots ? 'Visible' : 'Hidden'}`}>
+          <mwc-switch .checked=${this._show_section_slots !==false} .configValue=${'show_section_slots'}
+            @change=${this._valueChanged}>
+          </mwc-switch>
+        </mwc-formfield>
+        <ha-icon-button class="edit-icon" .value=${'section_slots'} .path=${mdiPencil} @click="${this._editSection}">
+        </ha-icon-button>
+      </div>
+      <div class="side-by-side">
+        <mwc-formfield id="miscellaneous" .label=${`Miscellaneous`}>
+          <div id="miscellaneous"></div>
+        </mwc-formfield>
+        <ha-icon-button class="edit-icon" .value=${'section_miscellaneous'} .path=${mdiPencil} @click="${this._editSection}">
+        </ha-icon-button>
+      </div>
+    `;
   }
 
   private _initialize(): void {
@@ -706,6 +865,14 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
       }
     }
     fireEvent(this, 'config-changed', { config: this._config });
+  }
+
+  private _editSection(ev): void {
+    if (ev.currentTarget) {
+      console.info(`Edit ${ev.currentTarget.value}`)
+      const target = ev.currentTarget;
+      this._subElementEditor = target.value;
+    }
   }
 
   private _valueChanged(ev): void {
@@ -746,9 +913,6 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     mwc-textfield {
       display: block;
     }
-    mwc-formfield {
-      padding-bottom: 8px;
-    }
     mwc-switch {
       --mdc-theme-secondary: var(--switch-checked-color);
     }
@@ -786,6 +950,9 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     }
     .side-by-side :not(:last-child) {
       padding-right: 4px;
+    }
+    div #miscellaneous {
+      width: 48px;
     }
   `;
 }

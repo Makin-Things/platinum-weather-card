@@ -100,18 +100,31 @@ export class WeatherCard extends LitElement {
     super.performUpdate();
   }
 
-  // https://lit.dev/docs/components/rendering/
-  protected render(): TemplateResult | void {
-    console.info(`Weather: render`);
-    if (this._error.length !== 0) return this._showConfigWarning(this._error);
+  private _renderTitleSection(): TemplateResult {
+    if ((this.config?.show_section_title !== true) || ((this.config.text_card_title === undefined) && (this.config.entity_update_time == undefined))) return html``;
 
-    if (this.config.show_warning) {
-      return this._showWarning(localize('common.show_warning'));
+    var updateTime: string;
+    if ((this.config.entity_update_time !== undefined) && (this.hass.states[this.config.entity_update_time].state !== undefined)){
+      const d = new Date(this.hass.states[this.config.entity_update_time].state);
+      if (this.is12Hour) {
+        updateTime = d.toLocaleString(undefined, { hour: 'numeric', minute: '2-digit', hour12: true }).replace(" am", "am, ").replace(" pm", "pm, ") + d.toLocaleString(undefined, { dateStyle: 'full' }).replace(",", "");
+      } else {
+        updateTime = d.toLocaleString(undefined, { hour: '2-digit', minute: '2-digit', hour12: false }).replace(" am", "am, ").replace(" pm", "pm, ") + d.toLocaleString(undefined, { dateStyle: 'full' }).replace(",", "");
+      }
+    } else {
+      updateTime = '---';
     }
 
-    if (this.config.show_error) {
-      return this._showError(localize('common.show_error'));
-    }
+    return html`
+      <div class="title-section">
+        ${this.config.text_card_title ? html`<div class="title">${this.config.text_card_title}</div>` : html``}
+        ${this.config.entity_update_time ? html`<div class="updated">${this.config.text_update_time_prefix ? this.config.text_update_time_prefix+' ' : ''}${updateTime}</div>` : html``}
+      </div>
+    `;
+  }
+
+  private _renderMainSection(): TemplateResult {
+    if (this.config?.show_section_main === false) return html``;
 
     const url = new URL('icons/' + (this.config.static_icons ? 'static' : 'animated') + '/' + this.weatherIcon + '.svg', import.meta.url);
     const hoverText = this.weatherIcon !== 'unknown' ? '' : `Unknown condition\n${this.currentConditions}`;
@@ -137,6 +150,19 @@ export class WeatherCard extends LitElement {
 
     const currentText = this.config.entity_current_text !== undefined ? this.hass.states[this.config.entity_current_text].state ?? '---' : '---';
 
+    return html`
+      <div class="top-row">
+        <div class="top-left">${biggerIcon}</div>
+        <div class="currentTemps">${currentTemp}${apparentTemp}</div>
+      </div>
+      ${separator}
+      <div class="current-text">${currentText}</div>
+    `;
+  }
+
+  private _renderSlotsSection(): TemplateResult {
+    if (this.config?.show_section_slots === false) return html``;
+
     var slot_section = (this.config.use_old_column_format === true) ? html`
       <div>
         <ul class="variations-ugly">
@@ -147,7 +173,8 @@ export class WeatherCard extends LitElement {
             <ul class="slot-list">${this.slotR1}${this.slotR2}${this.slotR3}${this.slotR4}${this.slotR5}${this.slotR6}</ul>
           </li>
         </ul>
-      </div>` : html`
+      </div>
+    ` : html`
       <div>
         <ul class="variations">
           <li class="slot-list-item-1">
@@ -161,7 +188,25 @@ export class WeatherCard extends LitElement {
             </ul>
           </li>
         </ul>
-      </div>`;
+      </div>
+    `;
+
+    return html`
+      <div>${slot_section}</div>
+    `;
+  }
+
+  // https://lit.dev/docs/components/rendering/
+  protected render(): TemplateResult | void {
+    if (this._error.length !== 0) return this._showConfigWarning(this._error);
+
+    if (this.config.show_warning) {
+      return this._showWarning(localize('common.show_warning'));
+    }
+
+    if (this.config.show_error) {
+      return this._showError(localize('common.show_error'));
+    }
 
     return html`
       <style>
@@ -169,13 +214,9 @@ export class WeatherCard extends LitElement {
       </style>
       <ha-card class="card">
         <div class="content">
-          <div class="top-row">
-            <div class="top-left">${biggerIcon}</div>
-            <div class="currentTemps">${currentTemp}${apparentTemp}</div>
-          </div>
-          ${separator}
-          <div class="current-text">${currentText}</div>
-          <div>${slot_section}</div>
+          ${this._renderTitleSection()}
+          ${this._renderMainSection()}
+          ${this._renderSlotsSection()}
         </div>
       </ha-card>
     `;
@@ -232,7 +273,6 @@ export class WeatherCard extends LitElement {
 
   // slots - calculates the specific slot value
   slotValue(slot: string, value: string | undefined): TemplateResult {
-    console.info('slotValue called');
     switch (value) {
       case 'pop': return this.slotPopForecast;
       case 'popforecast': return this.slotPopForecast;
@@ -1314,6 +1354,18 @@ ${this.hass.states[this.config.entity_temp_following].state}` : html``;
       }
       .content {
         align-items: center;
+      }
+      .title-section {
+        padding-bottom: 1.5em;
+      }
+      .title {
+        font-size: 1.5em;
+        color: var(--primary-text-color);
+      }
+      .updated {
+        font-size: 0.9em;
+        font-weight: 300;
+        color: var(--primary-text-color);
       }
       .top-row {
         display: flex;

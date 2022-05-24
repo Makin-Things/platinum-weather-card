@@ -15,6 +15,7 @@
   "author": "Simon <simon@makin-things.com>",
   "license": "MIT",
   "dependencies": {
+    "@mdi/js": "^6.7.96",
     "@lit-labs/scoped-registry-mixin": "^1.0.0",
     "@material/mwc-formfield": "^0.25.3",
     "@material/mwc-list": "^0.25.3",
