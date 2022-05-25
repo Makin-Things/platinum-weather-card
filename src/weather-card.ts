@@ -317,7 +317,7 @@ export class WeatherCard extends LitElement {
 
   // getters that return the html for an individual slot
   get slotEmpty(): TemplateResult {
-    return html`&nbsp;`;
+    return html`<li>&nbsp;</li>`;
   }
 
   get slotRemove(): TemplateResult {
@@ -1460,6 +1460,9 @@ ${this.hass.states[this.config.entity_temp_following].state}` : html``;
         list-style: none;
         padding: 0;
       }
+      .slot-list li {
+        height:24px;
+      }
       .variations-ugly {
         display: flex;
         flex-flow: row wrap;
@@ -1470,7 +1473,7 @@ ${this.hass.states[this.config.entity_temp_following].state}` : html``;
         padding: 0.2em;
       }
       .ha-icon {
-        height: 18px;
+        height: 24px;
         margin-right: 5px;
         color: var(--paper-item-icon-color);
       }

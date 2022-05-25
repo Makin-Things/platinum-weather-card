@@ -460,7 +460,7 @@ let WeatherCard = class WeatherCard extends s$1 {
     }
     // getters that return the html for an individual slot
     get slotEmpty() {
-        return $ `&nbsp;`;
+        return $ `<li>&nbsp;</li>`;
     }
     get slotRemove() {
         return $ ``;
@@ -1589,6 +1589,9 @@ ${this.hass.states[this.config.entity_temp_following].state}` : $ ``;
         list-style: none;
         padding: 0;
       }
+      .slot-list li {
+        height:24px;
+      }
       .variations-ugly {
         display: flex;
         flex-flow: row wrap;
@@ -1599,7 +1602,7 @@ ${this.hass.states[this.config.entity_temp_following].state}` : $ ``;
         padding: 0.2em;
       }
       .ha-icon {
-        height: 18px;
+        height: 24px;
         margin-right: 5px;
         color: var(--paper-item-icon-color);
       }
