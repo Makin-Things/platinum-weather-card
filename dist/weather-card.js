@@ -238,18 +238,30 @@ let WeatherCard = class WeatherCard extends s$1 {
         if (!this.config) {
             return false;
         }
-        const oldHass = changedProps.get("hass") || undefined;
-        if (!oldHass ||
-            oldHass.themes !== this.hass.themes ||
-            oldHass.locale !== this.hass.locale) {
-            return true;
+        if (changedProps.has('hass')) {
+            console.info('hass change');
         }
-        for (const entity of [this.config.entity_temperature, this.config.entity_apparent_temp, this.config.entity_current_conditions, this.config.entity_current_text]) {
-            // console.info(`entity: %s`, entity);
-            // console.info(`oh state: %s`, JSON.stringify(oldHass.states[entity], null, 2));
-            if (oldHass.states[entity] !== this.hass.states[entity]) {
+        if (changedProps.has('config')) {
+            console.info('config change');
+        }
+        /*    const oldHass = changedProps.get("hass") as HomeAssistant || undefined;
+        
+            if (
+              !oldHass ||
+              oldHass.themes !== this.hass.themes ||
+              oldHass.locale !== this.hass.locale
+            ) {
+              return true;
+            }*/
+        /*    for (const entity of [this.config.entity_temperature as string, this.config.entity_apparent_temp as string, this.config.entity_current_conditions as string, this.config.entity_current_text as string]) {
+              // console.info(`entity: %s`, entity);
+              // console.info(`oh state: %s`, JSON.stringify(oldHass.states[entity], null, 2));
+              if (oldHass.states[entity] !== this.hass.states[entity]) {
                 return true;
-            }
+              }
+            }*/
+        if (_e(this, changedProps, false)) {
+            console.info('Something changed');
         }
         return _e(this, changedProps, false);
     }
@@ -262,6 +274,17 @@ let WeatherCard = class WeatherCard extends s$1 {
                 }
             }
         });
+        const days = this.config['daily_forecast_days'] || 5;
+        console.info(`days=${days}`);
+        for (const entity of ['entity_forecast_icon_1', 'entity_summary_1', 'entity_forecast_low_temp_1', 'entity_forecast_high_temp_1', 'entity_pop_1', 'entity_pos_1']) {
+            if (this.config[entity] !== undefined) {
+                // check there is a number in the name
+                if (this.config[entity].match(/(\d+)(?!.*\d)/g)) ;
+                else {
+                    this._error.push(`'${entity}=${this.config[entity]}' value needs to have a number)`);
+                }
+            }
+        }
         super.performUpdate();
     }
     _renderTitleSection() {
@@ -357,15 +380,10 @@ let WeatherCard = class WeatherCard extends s$1 {
     }
     // https://lit.dev/docs/components/rendering/
     render() {
+        const htmlCode = [];
         if (this._error.length !== 0)
-            return this._showConfigWarning(this._error);
-        if (this.config.show_warning) {
-            return this._showWarning(localize('common.show_warning'));
-        }
-        if (this.config.show_error) {
-            return this._showError(localize('common.show_error'));
-        }
-        return $ `
+            htmlCode.push(this._showConfigWarning(this._error));
+        htmlCode.push($ `
       <style>
         ${this.styles}
       </style>
@@ -376,7 +394,8 @@ let WeatherCard = class WeatherCard extends s$1 {
           ${this._renderSlotsSection()}
         </div>
       </ha-card>
-    `;
+    `);
+        return $ `${htmlCode}`;
     }
     // slots - returns the value to be displyed in a specific current condition slot
     get slotL1() {
@@ -10282,7 +10301,7 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
     }
     get _daily_forecast_days() {
         var _a;
-        return ((_a = this._config) === null || _a === void 0 ? void 0 : _a.daily_forecast_days) || 5;
+        return ((_a = this._config) === null || _a === void 0 ? void 0 : _a.daily_forecast_days) || null;
     }
     get _entity_forecast_icon_1() {
         var _a;
@@ -10805,8 +10824,8 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
           <mwc-list-item value="vertical">vertical</mwc-list-item>
         </ha-select>
         <ha-select label="Daily Forecast Days (optional)" .configValue=${'daily_forecast_days'}
-          .value=${this._daily_forecast_days} @closed=${(ev) => ev.stopPropagation()}
-          @selected=${this._valueChanged}
+          .value=${this._daily_forecast_days ? this._daily_forecast_days.toString() : null} @closed=${(ev) => ev.stopPropagation()}
+          @selected=${this._valueChangedNumber}
           fixedMenuPosition
           naturalMenuWidth>
           <mwc-list-item></mwc-list-item>
@@ -11015,6 +11034,24 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
             }
             else {
                 this._config = Object.assign(Object.assign({}, this._config), { [target.configValue]: target.checked !== undefined ? target.checked : target.value });
+            }
+        }
+        ne(this, 'config-changed', { config: this._config });
+    }
+    _valueChangedNumber(ev) {
+        if (!this._config || !this.hass) {
+            return;
+        }
+        const target = ev.target;
+        if (this[`_${target.configValue}`] === target.value) {
+            return;
+        }
+        if (target.configValue) {
+            if (target.value === '' || target.value === null) {
+                delete this._config[target.configValue];
+            }
+            else {
+                this._config = Object.assign(Object.assign({}, this._config), { [target.configValue]: Number(target.value) });
             }
         }
         ne(this, 'config-changed', { config: this._config });

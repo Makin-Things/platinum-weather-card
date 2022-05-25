@@ -242,8 +242,8 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     return this._config?.daily_forecast_layout || '';
   }
 
-  get _daily_forecast_days(): layoutDays {
-    return this._config?.daily_forecast_days || 5;
+  get _daily_forecast_days(): layoutDays | null {
+    return this._config?.daily_forecast_days || null;
   }
 
   get _entity_forecast_icon_1(): string {
@@ -664,14 +664,14 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
       <div class="side-by-side">
         <div>
           <mwc-formfield .label=${'Show temperature decimals'}>
-            <mwc-switch .checked=${this._show_decimals !== false} .configValue=${'show_decimals'}
+            <mwc-switch .checked=${this._show_decimals !==false} .configValue=${'show_decimals'}
               @change=${this._valueChanged}>
             </mwc-switch>
           </mwc-formfield>
         </div>
         <div>
           <mwc-formfield .label=${'Show separator'}>
-            <mwc-switch .checked=${this._show_separator !== false} .configValue=${'show_separator'}
+            <mwc-switch .checked=${this._show_separator !==false} .configValue=${'show_separator'}
               @change=${this._valueChanged}>
             </mwc-switch>
           </mwc-formfield>
@@ -708,13 +708,13 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     return html`
       <div class="side-by-side">
         <ha-select label="Slot Left 1 (optional)" .configValue=${'slot_l1'} .value=${this._slot_l1}
-          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
+          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
           fixedMenuPosition
           naturalMenuWidth>
           ${slotValues}
         </ha-select>
         <ha-select label="Slot Right 1 (optional)" .configValue=${'slot_r1'} .value=${this._slot_r1}
-          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
+          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
           fixedMenuPosition
           naturalMenuWidth>
           ${slotValues}
@@ -722,13 +722,13 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
       </div>
       <div class="side-by-side">
         <ha-select label="Slot Left 2 (optional)" .configValue=${'slot_l2'} .value=${this._slot_l2}
-          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
+          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
           fixedMenuPosition
           naturalMenuWidth>
           ${slotValues}
         </ha-select>
         <ha-select label="Slot Right 2 (optional)" .configValue=${'slot_r2'} .value=${this._slot_r2}
-          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
+          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
           fixedMenuPosition
           naturalMenuWidth>
           ${slotValues}
@@ -736,13 +736,13 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
       </div>
       <div class="side-by-side">
         <ha-select label="Slot Left 3 (optional)" .configValue=${'slot_l3'} .value=${this._slot_l3}
-          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
+          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
           fixedMenuPosition
           naturalMenuWidth>
           ${slotValues}
         </ha-select>
         <ha-select label="Slot Right 3 (optional)" .configValue=${'slot_r3'} .value=${this._slot_r3}
-          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
+          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
           fixedMenuPosition
           naturalMenuWidth>
           ${slotValues}
@@ -750,13 +750,13 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
       </div>
       <div class="side-by-side">
         <ha-select label="Slot Left 4 (optional)" .configValue=${'slot_l4'} .value=${this._slot_l4}
-          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
+          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
           fixedMenuPosition
           naturalMenuWidth>
           ${slotValues}
         </ha-select>
         <ha-select label="Slot Right 4 (optional)" .configValue=${'slot_r4'} .value=${this._slot_r4}
-          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
+          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
           fixedMenuPosition
           naturalMenuWidth>
           ${slotValues}
@@ -764,13 +764,13 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
       </div>
       <div class="side-by-side">
         <ha-select label="Slot Left 5 (optional)" .configValue=${'slot_l5'} .value=${this._slot_l5}
-          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
+          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
           fixedMenuPosition
           naturalMenuWidth>
           ${slotValues}
         </ha-select>
         <ha-select label="Slot Right 5 (optional)" .configValue=${'slot_r5'} .value=${this._slot_r5}
-          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
+          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
           fixedMenuPosition
           naturalMenuWidth>
           ${slotValues}
@@ -778,13 +778,13 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
       </div>
       <div class="side-by-side">
         <ha-select label="Slot Left 6 (optional)" .configValue=${'slot_l6'} .value=${this._slot_l6}
-          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
+          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
           fixedMenuPosition
           naturalMenuWidth>
           ${slotValues}
         </ha-select>
         <ha-select label="Slot Right 6 (optional)" .configValue=${'slot_r6'} .value=${this._slot_r6}
-          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
+          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
           fixedMenuPosition
           naturalMenuWidth>
           ${slotValues}
@@ -798,7 +798,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     return html`
       <div class="side-by-side">
         <ha-select label="Daily Forecast Layout (optional)" .configValue=${'daily_forecast_layout'}
-          .value=${this._daily_forecast_layout} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
+          .value=${this._daily_forecast_layout} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
           @selected=${this._valueChanged}
           fixedMenuPosition
           naturalMenuWidth>
@@ -807,8 +807,12 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
           <mwc-list-item value="vertical">vertical</mwc-list-item>
         </ha-select>
         <ha-select label="Daily Forecast Days (optional)" .configValue=${'daily_forecast_days'}
-          .value=${this._daily_forecast_days} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
-          @selected=${this._valueChanged}
+          .value=${this._daily_forecast_days ? this._daily_forecast_days.toString() : null} @closed=${(ev: {
+      stopPropagation:
+      () => any;
+    }) =>
+          ev.stopPropagation()}
+          @selected=${this._valueChangedNumber}
           fixedMenuPosition
           naturalMenuWidth>
           <mwc-list-item></mwc-list-item>
@@ -914,8 +918,8 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
 
     return html`
       <div class="side-by-side">
-        <mwc-formfield .label=${`Title Section - ${this._show_section_title ? 'Visible' : 'Hidden' }`}>
-          <mwc-switch .checked=${this._show_section_title !== false} .configValue=${'show_section_title'}
+        <mwc-formfield .label=${`Title Section - ${this._show_section_title ? 'Visible' : 'Hidden'}`}>
+          <mwc-switch .checked=${this._show_section_title !==false} .configValue=${'show_section_title'}
             @change=${this._valueChanged}>
           </mwc-switch>
         </mwc-formfield>
@@ -925,8 +929,8 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
         </div>
       </div>
       <div class="side-by-side">
-        <mwc-formfield .label=${`Main Section - ${this._show_section_main ? 'Visible' : 'Hidden' }`}>
-          <mwc-switch .checked=${this._show_section_main !== false} .configValue=${'show_section_main'}
+        <mwc-formfield .label=${`Main Section - ${this._show_section_main ? 'Visible' : 'Hidden'}`}>
+          <mwc-switch .checked=${this._show_section_main !==false} .configValue=${'show_section_main'}
             @change=${this._valueChanged}>
           </mwc-switch>
         </mwc-formfield>
@@ -936,8 +940,8 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
         </div>
       </div>
       <div class="side-by-side">
-        <mwc-formfield .label=${`Slots Section - ${this._show_section_slots ? 'Visible' : 'Hidden' }`}>
-          <mwc-switch .checked=${this._show_section_slots !== false} .configValue=${'show_section_slots'}
+        <mwc-formfield .label=${`Slots Section - ${this._show_section_slots ? 'Visible' : 'Hidden'}`}>
+          <mwc-switch .checked=${this._show_section_slots !==false} .configValue=${'show_section_slots'}
             @change=${this._valueChanged}>
           </mwc-switch>
         </mwc-formfield>
@@ -947,8 +951,8 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
         </div>
       </div>
       <div class="side-by-side">
-        <mwc-formfield .label=${`Daily Forecast Section - ${this._show_section_daily_forecast ? 'Visible' : 'Hidden' }`}>
-          <mwc-switch .checked=${this._show_section_daily_forecast !== false} .configValue=${'show_section_daily_forecast'}
+        <mwc-formfield .label=${`Daily Forecast Section - ${this._show_section_daily_forecast ? 'Visible' : 'Hidden'}`}>
+          <mwc-switch .checked=${this._show_section_daily_forecast !==false} .configValue=${'show_section_daily_forecast'}
             @change=${this._valueChanged}>
           </mwc-switch>
         </mwc-formfield>
@@ -1027,6 +1031,27 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
         this._config = {
           ...this._config,
           [target.configValue]: target.checked !== undefined ? target.checked : target.value,
+        };
+      }
+    }
+    fireEvent(this, 'config-changed', { config: this._config });
+  }
+
+  private _valueChangedNumber(ev): void {
+    if (!this._config || !this.hass) {
+      return;
+    }
+    const target = ev.target;
+    if (this[`_${target.configValue}`] === target.value) {
+      return;
+    }
+    if (target.configValue) {
+      if (target.value === '' || target.value === null) {
+        delete this._config[target.configValue];
+      } else {
+        this._config = {
+          ...this._config,
+          [target.configValue]: Number(target.value),
         };
       }
     }

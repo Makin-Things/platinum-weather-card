@@ -66,6 +66,14 @@ export class WeatherCard extends LitElement {
       return false;
     }
 
+    if (changedProps.has('hass')) {
+      console.info('hass change');
+    }
+
+    if (changedProps.has('config')) {
+      console.info('config change');
+    }
+
     const oldHass = changedProps.get("hass") as HomeAssistant || undefined;
 
     if (
@@ -84,6 +92,10 @@ export class WeatherCard extends LitElement {
       }
     }
 
+    if (hasConfigOrEntityChanged(this, changedProps, false)) {
+      console.info('Something changed');
+    }
+
     return hasConfigOrEntityChanged(this, changedProps, false);
   }
 
@@ -95,7 +107,19 @@ export class WeatherCard extends LitElement {
           this._error.push(`'${key}=${this.config[key]}' not found`);
         }
       }
-    })
+    });
+    const days = this.config['daily_forecast_days'] || 5;
+    console.info(`days=${days}`);
+    for (const entity of ['entity_forecast_icon_1', 'entity_summary_1', 'entity_forecast_low_temp_1', 'entity_forecast_high_temp_1', 'entity_pop_1', 'entity_pos_1']) {
+      if (this.config[entity] !== undefined) {
+        // check there is a number in the name
+        if (this.config[entity].match(/(\d+)(?!.*\d)/g)) {
+
+        } else {
+          this._error.push(`'${entity}=${this.config[entity]}' value needs to have a number)`);
+        }
+      }
+    }
     super.performUpdate();
   }
 
@@ -197,17 +221,10 @@ export class WeatherCard extends LitElement {
 
   // https://lit.dev/docs/components/rendering/
   protected render(): TemplateResult | void {
-    if (this._error.length !== 0) return this._showConfigWarning(this._error);
+    const htmlCode: TemplateResult[] = [];
+    if (this._error.length !== 0) htmlCode.push(this._showConfigWarning(this._error));
 
-    if (this.config.show_warning) {
-      return this._showWarning(localize('common.show_warning'));
-    }
-
-    if (this.config.show_error) {
-      return this._showError(localize('common.show_error'));
-    }
-
-    return html`
+    htmlCode.push(html`
       <style>
         ${this.styles}
       </style>
@@ -218,7 +235,8 @@ export class WeatherCard extends LitElement {
           ${this._renderSlotsSection()}
         </div>
       </ha-card>
-    `;
+    `);
+    return html`${htmlCode}`;
   }
 
   // slots - returns the value to be displyed in a specific current condition slot
