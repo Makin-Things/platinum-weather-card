@@ -7,14 +7,19 @@ declare global {
   }
 }
 
+export type layoutOrientation = "horizontal" | "vertical";
+export type layoutDays = 1 | 2 | 3 | 4 | 5 | 6 | 7;
+
 // TODO Add your configuration elements here for type-checking
 export interface WeatherCardConfig extends LovelaceCardConfig {
   type: string;
   show_section_title?: boolean;
   show_section_main?: boolean;
   show_section_slots?: boolean;
-  card_title?: string;
+  show_section_daily_forecast?: boolean;
+  text_card_title?: string;
   entity_update_time?: string;
+  text_update_time_prefix?: string;
   entity_temperature?: string;
   entity_apparent_temp?: string;
   entity_current_conditions?: string;
@@ -39,4 +44,6 @@ export interface WeatherCardConfig extends LovelaceCardConfig {
   entity_wind_gust?: string;
   entity_wind_speed_kt?: string;
   entity_wind_gust_kt?: string;
+  daily_forecast_layout?: layoutOrientation;
+  daily_forecast_days?: layoutDays;
 }
