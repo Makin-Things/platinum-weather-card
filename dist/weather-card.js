@@ -145,7 +145,7 @@ function e$3(e){return o$2({descriptor:r=>({async get(){var r;return await this.
 
 var t$1,r$1;!function(e){e.language="language",e.system="system",e.comma_decimal="comma_decimal",e.decimal_comma="decimal_comma",e.space_comma="space_comma",e.none="none";}(t$1||(t$1={})),function(e){e.language="language",e.system="system",e.am_pm="12",e.twenty_four="24";}(r$1||(r$1={}));var ne=function(e,t,r,n){n=n||{},r=null==r?{}:r;var i=new Event(t,{bubbles:void 0===n.bubbles||n.bubbles,cancelable:Boolean(n.cancelable),composed:void 0===n.composed||n.composed});return i.detail=r,e.dispatchEvent(i),i};function _e(e,t,r){if(t.has("config")||r)return !0;if(e.config.entity){var n=t.get("hass");return !n||n.states[e.config.entity]!==e.hass.states[e.config.entity]}return !1}var ke=function(){var e=document.querySelector("home-assistant");if(e=(e=(e=(e=(e=(e=(e=(e=e&&e.shadowRoot)&&e.querySelector("home-assistant-main"))&&e.shadowRoot)&&e.querySelector("app-drawer-layout partial-panel-resolver"))&&e.shadowRoot||e)&&e.querySelector("ha-panel-lovelace"))&&e.shadowRoot)&&e.querySelector("hui-root")){var t=e.lovelace;return t.current_view=e.___curView,t}return null};
 
-const CARD_VERSION = '1.4.1';
+const CARD_VERSION = '2.0.0a';
 
 var common$1 = {
 	version: "Version",
@@ -201,7 +201,7 @@ function localize(string, search = '', replace = '') {
 }
 
 /* eslint no-console: 0 */
-console.info(`%c  WEATHER-CARD \n%c  ${localize('common.version')} ${CARD_VERSION}    `, 'color: orange; font-weight: bold; background: black', 'color: white; font-weight: bold; background: dimgray');
+console.info(`%c  MAKIN-THINGS-WEATHER-CARD  \n%c  ${localize('common.version')} ${CARD_VERSION}             `, 'color: orange; font-weight: bold; background: black', 'color: white; font-weight: bold; background: dimgray');
 // This puts your card into the UI card picker dialog
 window.customCards = window.customCards || [];
 window.customCards.push({
@@ -244,22 +244,19 @@ let WeatherCard = class WeatherCard extends s$1 {
         if (changedProps.has('config')) {
             console.info('config change');
         }
-        /*    const oldHass = changedProps.get("hass") as HomeAssistant || undefined;
-        
-            if (
-              !oldHass ||
-              oldHass.themes !== this.hass.themes ||
-              oldHass.locale !== this.hass.locale
-            ) {
-              return true;
-            }*/
-        /*    for (const entity of [this.config.entity_temperature as string, this.config.entity_apparent_temp as string, this.config.entity_current_conditions as string, this.config.entity_current_text as string]) {
-              // console.info(`entity: %s`, entity);
-              // console.info(`oh state: %s`, JSON.stringify(oldHass.states[entity], null, 2));
-              if (oldHass.states[entity] !== this.hass.states[entity]) {
+        const oldHass = changedProps.get("hass") || undefined;
+        if (!oldHass ||
+            oldHass.themes !== this.hass.themes ||
+            oldHass.locale !== this.hass.locale) {
+            return true;
+        }
+        for (const entity of [this.config.entity_temperature, this.config.entity_apparent_temp, this.config.entity_current_conditions, this.config.entity_current_text]) {
+            // console.info(`entity: %s`, entity);
+            // console.info(`oh state: %s`, JSON.stringify(oldHass.states[entity], null, 2));
+            if (oldHass.states[entity] !== this.hass.states[entity]) {
                 return true;
-              }
-            }*/
+            }
+        }
         if (_e(this, changedProps, false)) {
             console.info('Something changed');
         }
