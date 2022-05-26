@@ -134,7 +134,7 @@ export class WeatherCard extends LitElement {
             }
           }
         } else {
-          this._error.push(`'${entity}=${this.config[entity]}' value needs to have a number)`);
+          this._error.push(`'${entity}=${this.config[entity]}' value needs to have a number`);
         }
       }
     }
@@ -145,7 +145,7 @@ export class WeatherCard extends LitElement {
     if ((this.config?.show_section_title !== true) || ((this.config.text_card_title === undefined) && (this.config.entity_update_time == undefined))) return html``;
 
     var updateTime: string;
-    if ((this.config.entity_update_time !== undefined) && (this.hass.states[this.config.entity_update_time].state !== undefined)){
+    if ((this.config.entity_update_time) && (this.hass.states[this.config.entity_update_time]) && (this.hass.states[this.config.entity_update_time].state !== undefined)){
       const d = new Date(this.hass.states[this.config.entity_update_time].state);
       if (this.is12Hour) {
         updateTime = d.toLocaleString(this.config.locale, { hour: 'numeric', minute: '2-digit', hour12: true }).replace(" am", "am, ").replace(" pm", "pm, ") + d.toLocaleDateString(this.config.locale, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).replace(",", "");
@@ -188,9 +188,9 @@ export class WeatherCard extends LitElement {
       </div>
     `;
 
-    var separator = this.config.show_separator === true ? html`<hr class=line>` : ``;
+    const separator = this.config.show_separator === true ? html`<hr class=line>` : ``;
 
-    const currentText = this.config.entity_current_text !== undefined ? this.hass.states[this.config.entity_current_text].state ?? '---' : '---';
+    const currentText = (this.config.entity_current_text) && (this.hass.states[this.config.entity_current_text]) ? this.hass.states[this.config.entity_current_text].state ?? '---' : '---';
 
     return html`
       <div class="top-row">
@@ -245,7 +245,7 @@ export class WeatherCard extends LitElement {
     const days = this.config.daily_forecast_days || 5;
     if (this.config.daily_forecast_layout !== 'vertical') {
       for (var i = 0; i < days; i++) {
-        const forecastDate = this.config['entity_forecast_icon_1'] ? new Date(this.hass.states[this.config['entity_forecast_icon_1']].attributes['date']) : undefined;
+        const forecastDate = this.config['entity_forecast_icon_1'] && this.hass.states[this.config['entity_forecast_icon_1']] ? new Date(this.hass.states[this.config['entity_forecast_icon_1']].attributes['date']) : undefined;
         if (forecastDate) {
           forecastDate.setDate(forecastDate.getDate() + i);
         }
@@ -261,7 +261,7 @@ export class WeatherCard extends LitElement {
         const minMax = this.config.old_daily_format === true
           ?
             html`
-              <div class="f-slot"><div class="highTemp">${this.hass.states[maxEntity] !== undefined ? Math.round(Number(this.hass.states[maxEntity].state)) : 'Err'}</div><div>${tempUnit}</div></div>
+              <div class="f-slot"><div class="highTemp">${this.hass.states[maxEntity] !== undefined ? Math.round(Number(this.hass.states[maxEntity].state)) : '---'}</div><div>${tempUnit}</div></div>
               <br>
               <div class="f-slot"><div class="lowTemp">${this.hass.states[minEntity] !== undefined ? Math.round(Number(this.hass.states[minEntity].state)) : '---'}</div><div>${tempUnit}</div></div>`
           :
@@ -439,7 +439,7 @@ export class WeatherCard extends LitElement {
   ${(Number(this.hass.states[this.config.entity_pop_intensity].state)).toLocaleString()}</span><span
   class="unit">${this.getUOM('precipitation')}</span>` : this.config.entity_pop_intensity_rate && !this.config.entity_pop_intensity ? html`<span id="intensity-text"> -
   ${(Number(this.hass.states[this.config.entity_pop_intensity_rate].state)).toLocaleString()}</span><span
-  class="unit">${this.getUOM('intensity')}</span>` : ` Config Error`;
+  class="unit">${this.getUOM('intensity')}</span>` : ` ---`;
       if (this.config.alt_pop) {
         return html`<li><span class="ha-icon">
     <ha-icon icon="mdi:weather-rainy"></ha-icon>
@@ -448,13 +448,13 @@ export class WeatherCard extends LitElement {
         return this.config.entity_pop ? html`<li><span class="ha-icon">
     <ha-icon icon="mdi:weather-rainy"></ha-icon>
   </span><span id="pop-text">${this.hass.states[this.config.entity_pop] !== undefined ?
-            Math.round(Number(this.hass.states[this.config.entity_pop].state)) : "Config Error"}</span><span
+            Math.round(Number(this.hass.states[this.config.entity_pop].state)) : "---"}</span><span
     class="unit">%</span><span>${intensity}</span></li>` : html``;
       }
     } catch (e) {
       return html`<li><span class="ha-icon">
     <ha-icon icon="mdi:weather-rainy"></ha-icon>
-  </span><span id="pop-text">Config Error</span></li>`;
+  </span><span id="pop-text">--</span></li>`;
     }
   }
 
@@ -475,7 +475,7 @@ export class WeatherCard extends LitElement {
     } catch (e) {
       return html`<li><span class="ha-icon">
     <ha-icon icon="mdi:weather-rainy"></ha-icon>
-  </span><span id="pop-text">Config Error</span></li>`;
+  </span><span id="pop-text">---</span></li>`;
     }
   }
 
@@ -489,21 +489,21 @@ export class WeatherCard extends LitElement {
     } catch (e) {
       return html`<li><span class="ha-icon">
     <ha-icon icon="mdi:weather-rainy"></ha-icon>
-  </span><span id="possible_today-text">Config Error</span></li>`;
+  </span><span id="possible_today-text">---</span></li>`;
     }
   }
 
   get slotPossibleTomorrow(): TemplateResult {
     try {
-      return this.config.entity_pos_1 ? html`<li><span class="ha-icon">
+      return this.config.entity_possible_tomorrow ? html`<li><span class="ha-icon">
     <ha-icon icon="mdi:weather-rainy"></ha-icon>
   </span>${this.localeTextposTomorrow} <span
-    id="possible_tomorrow-text">${this.hass.states[this.config.entity_pos_1].state}</span><span
+    id="possible_tomorrow-text">${this.hass.states[this.config.entity_possible_tomorrow].state}</span><span
     class="unit">${this.getUOM('precipitation')}</span></li>` : html``;
     } catch (e) {
       return html`<li><span class="ha-icon">
     <ha-icon icon="mdi:weather-rainy"></ha-icon>
-  </span><span id="possible_tomorrow-text">Config Error</span></li>`;
+  </span><span id="possible_tomorrow-text">---</span></li>`;
     }
   }
 
@@ -516,7 +516,7 @@ export class WeatherCard extends LitElement {
     } catch (e) {
       return html`<li><span class="ha-icon">
     <ha-icon icon="mdi:weather-rainy"></ha-icon>
-  </span><span id="rainfall-text">Config Error</span></li>`;
+  </span><span id="rainfall-text">---</span></li>`;
     }
   }
 
@@ -527,14 +527,15 @@ export class WeatherCard extends LitElement {
     <ha-icon icon="mdi:water-percent"></ha-icon>
   </span><span id="alt-humidity">${this.hass.states[this.config.alt_humidity].state}</span></li>`;
       } else {
+        const units = this.currentHumidity !== '---' ? html`<span class="unit">%</span>` : html``;
         return this.config.entity_humidity ? html`<li><span class="ha-icon">
     <ha-icon icon="mdi:water-percent"></ha-icon>
-  </span><span id="humidity-text">${this.currentHumidity}</span><span class="unit">%</span></li>` : html``;
+  </span><span id="humidity-text">${this.currentHumidity}</span>${units}</li>` : html``;
       }
     } catch (e) {
       return html`<li><span class="ha-icon">
     <ha-icon icon="mdi:water-percent"></ha-icon>
-  </span><span id="humidity-text">Config Error</span></li>`;
+  </span><span id="humidity-text">---</span></li>`;
     }
   }
 
@@ -553,7 +554,7 @@ export class WeatherCard extends LitElement {
     } catch (e) {
       return html`<li><span class="ha-icon">
     <ha-icon icon="mdi:gauge"></ha-icon>
-  </span><span id="pressure-text">Config Error</span></li>`;
+  </span><span id="pressure-text">---</span></li>`;
     }
   }
 
@@ -590,7 +591,7 @@ export class WeatherCard extends LitElement {
     } catch (e) {
       return html`<li><span class="ha-icon">
     <ha-icon icon="mdi:thermometer-high"></ha-icon>
-  </span><span id="daytime-high-text">Config Error</span></li>`;
+  </span><span id="daytime-high-text">---</span></li>`;
     }
   }
 
@@ -627,7 +628,7 @@ export class WeatherCard extends LitElement {
     } catch (e) {
       return html`<li><span class="ha-icon">
     <ha-icon icon="mdi:thermometer-low"></ha-icon>
-  </span><span id="daytime-low-text">Config Error</span></li>`;
+  </span><span id="daytime-low-text">---</span></li>`;
     }
   }
 
@@ -640,7 +641,7 @@ export class WeatherCard extends LitElement {
     } catch (e) {
       return html`<li><span class="ha-icon">
     <ha-icon icon="mdi:thermometer"></ha-icon>
-  </span><span id="temp-next-text">Config Error</span></li>`;
+  </span><span id="temp-next-text">---</span></li>`;
     }
   }
 
@@ -661,7 +662,7 @@ export class WeatherCard extends LitElement {
     } catch (e) {
       return html`<li><span class="ha-icon">
     <ha-icon icon="mdi:thermometer"></ha-icon>
-  </span><span id="temp-following-text">Config Error</span></li>`;
+  </span><span id="temp-following-text">---</span></li>`;
     }
   }
 
@@ -683,7 +684,7 @@ ${this.hass.states[this.config.entity_temp_following].state}` : html``;
     } catch (e) {
       return html`<li><span class="ha-icon">
     <ha-icon icon="mdi:weather-sunny"></ha-icon>
-  </span><span id="daytime-uv-text">Config Error</span></li>`;
+  </span><span id="daytime-uv-text">---</span></li>`;
     }
   }
 
@@ -697,7 +698,7 @@ ${this.hass.states[this.config.entity_temp_following].state}` : html``;
     } catch (e) {
       return html`<li><span class="ha-icon">
     <ha-icon icon="mdi:fire"></ha-icon>
-  </span><span id="daytime-firedanger-text">Config Error</span></li>`;
+  </span><span id="daytime-firedanger-text">---</span></li>`;
     }
   }
 
@@ -718,7 +719,7 @@ ${this.hass.states[this.config.entity_temp_following].state}` : html``;
     } catch (e) {
       return html`<li><span class="ha-icon">
     <ha-icon icon="mdi:weather-windy"></ha-icon>
-  </span><span id="wind-error-text">Config Error</span></li>`;
+  </span><span id="wind-error-text">---</span></li>`;
     }
   }
 
@@ -732,12 +733,12 @@ ${this.hass.states[this.config.entity_temp_following].state}` : html``;
     ${this.currentWindSpeedKt}</span><span class="unit">kt</span><span id="wind-gust-kt-text"> (Gust
     ${this.currentWindGustKt}</span><span class="unit">kt)</span></li>` : this.config.entity_wind_bearing && this.config.entity_wind_speed_kt ? html`<li><span class="ha-icon">
     <ha-icon icon="mdi:weather-windy"></ha-icon>
-  </span><span>${beaufortRatingKt}</span><span>${windBearing}</span><span
-    id="wind-speed-kt-text">${this.currentWindSpeedKt}</span><span class="unit">kt</span></li>` : html``;
+  </span><span>${beaufortRatingKt}</span><span>${windBearing}</span><span id="wind-speed-kt-text">
+    ${this.currentWindSpeedKt}</span><span class="unit">kt</span></li>` : html``;
     } catch (e) {
       return html`<li><span class="ha-icon">
     <ha-icon icon="mdi:weather-windy"></ha-icon>
-  </span><span id="wind-error-text">Config Error</span></li>`;
+  </span><span id="wind-error-text">---</span></li>`;
     }
   }
 
@@ -752,7 +753,7 @@ ${this.hass.states[this.config.entity_temp_following].state}` : html``;
     } catch (e) {
       return html`<li><span class="ha-icon">
     <ha-icon icon="mdi:weather-fog"></ha-icon>
-  </span><span id="visibility-text">Config Error</span></li>`;
+  </span><span id="visibility-text">---</span></li>`;
     }
   }
 
@@ -766,7 +767,7 @@ ${this.hass.states[this.config.entity_temp_following].state}` : html``;
     } catch (e) {
       return html`<li><span class="ha-icon">
     <ha-icon icon="mdi:weather-sunset"></ha-icon>
-  </span><span id="sun-next-text">Config Error</span></li>`;
+  </span><span id="sun-next-text">---</span></li>`;
     }
   }
 
@@ -780,7 +781,7 @@ ${this.hass.states[this.config.entity_temp_following].state}` : html``;
     } catch (e) {
       return html`<li><span class="ha-icon">
     <ha-icon icon="mdi:weather-sunset"></ha-icon>
-  </span><span id="sun-following-text">Config Error</span></li>`;
+  </span><span id="sun-following-text">---</span></li>`;
     }
   }
 
@@ -795,7 +796,7 @@ ${this.hass.states[this.config.entity_temp_following].state}` : html``;
     } catch (e) {
       return html`<li><span class="ha-icon">
     <ha-icon icon="mdi:help-box"></ha-icon>
-  </span><span id="custom-1-text">Config Error</span></li>`;
+  </span><span id="custom-1-text">---</span></li>`;
     }
   }
 
@@ -810,7 +811,7 @@ ${this.hass.states[this.config.entity_temp_following].state}` : html``;
     } catch (e) {
       return html`<li><span class="ha-icon">
     <ha-icon icon="mdi:help-box"></ha-icon>
-  </span><span id="custom-2-text">Config Error</span></li>`;
+  </span><span id="custom-2-text">---</span></li>`;
     }
   }
 
