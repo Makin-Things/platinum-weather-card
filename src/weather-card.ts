@@ -66,14 +66,6 @@ export class WeatherCard extends LitElement {
       return false;
     }
 
-    if (changedProps.has('hass')) {
-      console.info('hass change');
-    }
-
-    if (changedProps.has('config')) {
-      console.info('config change');
-    }
-
     const oldHass = changedProps.get("hass") as HomeAssistant || undefined;
 
     if (
@@ -84,43 +76,70 @@ export class WeatherCard extends LitElement {
       return true;
     }
 
-    for (const entity of [this.config.entity_temperature as string, this.config.entity_apparent_temp as string, this.config.entity_current_conditions as string, this.config.entity_current_text as string]) {
-      // console.info(`entity: %s`, entity);
-      // console.info(`oh state: %s`, JSON.stringify(oldHass.states[entity], null, 2));
-      if (oldHass.states[entity] !== this.hass.states[entity]) {
-        return true;
+    // Check if any entities mentioned in the config have changed
+    if (Object.keys(this.config).every(entity => {
+      if (entity.match(/^entity_/) !== null) {
+        if (oldHass.states[this.config[entity]] !== this.hass.states[this.config[entity]]) {
+          return false;
+        }
+      }
+      return true;
+    }) === false) {
+      return true;
+    }
+
+    // check if any of the calculated forecast entities have changed, but only if the daily slot is shown
+    if (this.config['show_section_daily_forecast']) {
+      const days = this.config['daily_forecast_days'] || 5;
+      console.info(`days=${days}`);
+      for (const entity of ['entity_forecast_icon_1', 'entity_summary_1', 'entity_forecast_low_temp_1', 'entity_forecast_high_temp_1', 'entity_pop_1', 'entity_pos_1']) {
+        if (this.config[entity] !== undefined) {
+          // check there is a number in the name
+          const start = this.config[entity].match(/(\d+)(?!.*\d)/g);
+          if (start) {
+            // has a number so now check all the extra entities exist
+            for (var _i = 1; _i < days; _i++) {
+              const newEntity = this.config[entity].replace(/(\d+)(?!.*\d)/g, Number(start) + _i);
+              if (oldHass.states[newEntity] !== this.hass.states[newEntity]) {
+                return true;
+              }
+            }
+          }
+        }
       }
     }
 
-    if (hasConfigOrEntityChanged(this, changedProps, false)) {
-      console.info('Something changed');
-    }
-
-    return hasConfigOrEntityChanged(this, changedProps, false);
+    return changedProps.has('config');
   }
 
-  public async performUpdate(): Promise<void> {
+  private _checkForErrors(): boolean {
     this._error = [];
-    Object.keys(this.config).forEach(key => {
-      if (key.match(/^entity_/) !== null) {
-        if (this.hass.states[this.config[key]] === undefined) {
-          this._error.push(`'${key}=${this.config[key]}' not found`);
+    Object.keys(this.config).forEach(entity => {
+      if (entity.match(/^entity_/) !== null) {
+        if (this.hass.states[this.config[entity]] === undefined) {
+          this._error.push(`'${entity}=${this.config[entity]}' not found`);
         }
       }
     });
     const days = this.config['daily_forecast_days'] || 5;
-    console.info(`days=${days}`);
     for (const entity of ['entity_forecast_icon_1', 'entity_summary_1', 'entity_forecast_low_temp_1', 'entity_forecast_high_temp_1', 'entity_pop_1', 'entity_pos_1']) {
       if (this.config[entity] !== undefined) {
         // check there is a number in the name
-        if (this.config[entity].match(/(\d+)(?!.*\d)/g)) {
-
+        const start = this.config[entity].match(/(\d+)(?!.*\d)/g);
+        if (start) {
+          // has a number so now check all the extra entities exist
+          for (var _i = 1; _i < days; _i++) {
+            const newEntity = this.config[entity].replace(/(\d+)(?!.*\d)/g, Number(start) + _i);
+            if (this.hass.states[newEntity] === undefined) {
+              this._error.push(`'${entity}'+${_i}=${newEntity}' not found`);
+            }
+          }
         } else {
           this._error.push(`'${entity}=${this.config[entity]}' value needs to have a number)`);
         }
       }
     }
-    super.performUpdate();
+    return this._error.length !== 0;
   }
 
   private _renderTitleSection(): TemplateResult {
@@ -140,7 +159,7 @@ export class WeatherCard extends LitElement {
 
     return html`
       <div class="title-section">
-        ${this.config.text_card_title ? html`<div class="title">${this.config.text_card_title}</div>` : html``}
+        ${this.config.text_card_title ? html`<div class="card-header">${this.config.text_card_title}</div>` : html``}
         ${this.config.entity_update_time ? html`<div class="updated">${this.config.text_update_time_prefix ? this.config.text_update_time_prefix+' ' : ''}${updateTime}</div>` : html``}
       </div>
     `;
@@ -222,7 +241,7 @@ export class WeatherCard extends LitElement {
   // https://lit.dev/docs/components/rendering/
   protected render(): TemplateResult | void {
     const htmlCode: TemplateResult[] = [];
-    if (this._error.length !== 0) htmlCode.push(this._showConfigWarning(this._error));
+    if (this._checkForErrors()) htmlCode.push(this._showConfigWarning(this._error));
 
     htmlCode.push(html`
       <style>
@@ -1375,7 +1394,7 @@ ${this.hass.states[this.config.entity_temp_following].state}` : html``;
       .title-section {
         padding-bottom: 1.5em;
       }
-      .title {
+      .card-title {
         font-size: 1.5em;
         color: var(--primary-text-color);
       }
