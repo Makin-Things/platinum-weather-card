@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { LitElement, html, TemplateResult, css, PropertyValues, CSSResult, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators';
-import { HomeAssistant, hasConfigOrEntityChanged, LovelaceCardEditor, getLovelace } from 'custom-card-helpers';
+import { HomeAssistant, LovelaceCardEditor, getLovelace } from 'custom-card-helpers';
 
 import type { WeatherCardConfig } from './types';
 import { CARD_VERSION } from './const';
@@ -91,7 +91,6 @@ export class WeatherCard extends LitElement {
     // check if any of the calculated forecast entities have changed, but only if the daily slot is shown
     if (this.config['show_section_daily_forecast']) {
       const days = this.config['daily_forecast_days'] || 5;
-      console.info(`days=${days}`);
       for (const entity of ['entity_forecast_icon_1', 'entity_summary_1', 'entity_forecast_low_temp_1', 'entity_forecast_high_temp_1', 'entity_pop_1', 'entity_pos_1']) {
         if (this.config[entity] !== undefined) {
           // check there is a number in the name
@@ -168,8 +167,9 @@ export class WeatherCard extends LitElement {
   private _renderMainSection(): TemplateResult {
     if (this.config?.show_section_main === false) return html``;
 
-    const url = new URL('icons/' + (this.config.static_icons ? 'static' : 'animated') + '/' + this.weatherIcon + '.svg', import.meta.url);
-    const hoverText = this.weatherIcon !== 'unknown' ? '' : `Unknown condition\n${this.currentConditions}`;
+    const weatherIcon = this._weatherIcon(this.currentConditions);
+    const url = new URL('icons/' + (this.config.static_icons ? 'static' : 'animated') + '/' + weatherIcon + '.svg', import.meta.url);
+    const hoverText = weatherIcon !== 'unknown' ? '' : `Unknown condition\n${this.currentConditions}`;
     const biggerIcon = html`<div class="big-icon"><img src="${url.href}" width="100%" height="100%" title="${hoverText}"></div>`;
 
     const currentTemp = html`
@@ -238,6 +238,77 @@ export class WeatherCard extends LitElement {
     `;
   }
 
+  private _renderDailyForecastSection(): TemplateResult {
+    if (this.config?.show_section_daily_forecast === false) return html``;
+
+    const htmlDays: TemplateResult[] = [];
+    const days = this.config.daily_forecast_days || 5;
+    if (this.config.daily_forecast_layout !== 'vertical') {
+      for (var i = 0; i < days; i++) {
+        const forecastDate = this.config['entity_forecast_icon_1'] ? new Date(this.hass.states[this.config['entity_forecast_icon_1']].attributes['date']) : undefined;
+        if (forecastDate) {
+          forecastDate.setDate(forecastDate.getDate() + i);
+        }
+        var start = this.config['entity_forecast_icon_1'] ? this.config['entity_forecast_icon_1'].match(/(\d+)(?!.*\d)/g) : false;
+        const iconEntity = start ? this.config['entity_forecast_icon_1'].replace(/(\d+)(?!.*\d)/g, Number(start) + i) : undefined;
+        const url = new URL(('icons/' + (this.config.static_icons ? 'static' : 'animated') + '/' + (this.hass.states[iconEntity] !== undefined ? this._weatherIcon(this.hass.states[iconEntity].state) : 'unknown') + '.svg').replace("-night", "-day"), import.meta.url);
+        const htmlIcon = html`<i class="icon" style="background: none, url(${url.href}) no-repeat; background-size: contain;"></i><br>`;
+        start = this.config['entity_forecast_high_temp_1'] ? this.config['entity_forecast_high_temp_1'].match(/(\d+)(?!.*\d)/g) : false;
+        const maxEntity = start ? this.config['entity_forecast_high_temp_1'].replace(/(\d+)(?!.*\d)/g, Number(start) + i) : undefined;
+        start = this.config['entity_forecast_low_temp_1'] ? this.config['entity_forecast_low_temp_1'].match(/(\d+)(?!.*\d)/g) : false;
+        const minEntity = start ? this.config['entity_forecast_low_temp_1'].replace(/(\d+)(?!.*\d)/g, Number(start) + i) : undefined;
+        const tempUnit = html`<div class="unitc">${this.getUOM("temperature")}</div>`;
+        const minMax = this.config.old_daily_format === true
+          ?
+            html`
+              <div class="f-slot"><div class="highTemp">${this.hass.states[maxEntity] !== undefined ? Math.round(Number(this.hass.states[maxEntity].state)) : 'Err'}</div><div>${tempUnit}</div></div>
+              <br>
+              <div class="f-slot"><div class="lowTemp">${this.hass.states[minEntity] !== undefined ? Math.round(Number(this.hass.states[minEntity].state)) : '---'}</div><div>${tempUnit}</div></div>`
+          :
+            this.config.tempformat ==="highlow"
+              ?
+                html`
+                    <div class="f-slot"><div class="highTemp">${this.hass.states[maxEntity] !== undefined ? Math.round(Number(this.hass.states[maxEntity].state)) : "---"}</div>/
+                    <div class="lowTemp">${this.hass.states[minEntity] !== undefined ? Math.round(Number(this.hass.states[minEntity].state)) : "---"}</div><div>${tempUnit}</div></div>`
+              :
+                html`
+                    <div class="f-slot"><div class="lowTemp">${this.hass.states[minEntity] !== undefined ? Math.round(Number(this.hass.states[minEntity].state)) : "---"}</div>/
+                    <div class="highTemp">${this.hass.states[maxEntity] !== undefined ? Math.round(Number(this.hass.states[maxEntity].state)) : "---"}</div><div>${tempUnit}</div></div>`
+        start = this.config['entity_pop_1'] ? this.config['entity_pop_1'].match(/(\d+)(?!.*\d)/g) : false;
+        const popEntity = start ? this.config['entity_pop_1'].replace(/(\d+)(?!.*\d)/g, Number(start) + i) : undefined;
+        const pop = start ? html`<br><div class="pop">${this.hass.states[popEntity] ? Math.round(Number(this.hass.states[popEntity].state)) : "---"}%</div>` : ``;
+        start = this.config['entity_pos_1'] ? this.config['entity_pos_1'].match(/(\d+)(?!.*\d)/g) : false;
+        const posEntity = start ? this.config['entity_pos_1'].replace(/(\d+)(?!.*\d)/g, Number(start) + i) : undefined;
+        const pos = start ? html`<div class="f-slot"><div class="pos">${this.hass.states[posEntity] !== undefined ? this.hass.states[posEntity].state : "---"}</div><div class="unit">${this.getUOM('precipitation')}</div></div>` : ``;
+
+        htmlDays.push(html`
+          <div class="day-horiz fcasttooltip">
+            <span class="dayname">${forecastDate ? forecastDate.toLocaleDateString(this.config.locale,{weekday: 'short'}) : "---"}</span>
+            <br>${htmlIcon}
+            ${minMax}
+            ${pop}
+            ${pos}
+          </div>
+        `);
+      }
+      var daily_forecast_section = html`
+        <div class="daily-forecast-horiz">
+          ${htmlDays}
+        </div>
+    `
+    } else {
+      var daily_forecast_section = html`
+        <div  class="daily-forecast-vert">
+          VERTICAL
+        </div>
+    `
+    }
+
+    return html`
+      <div>${daily_forecast_section}</div>
+    `;
+  }
+
   // https://lit.dev/docs/components/rendering/
   protected render(): TemplateResult | void {
     const htmlCode: TemplateResult[] = [];
@@ -252,6 +323,7 @@ export class WeatherCard extends LitElement {
           ${this._renderTitleSection()}
           ${this._renderMainSection()}
           ${this._renderSlotsSection()}
+          ${this._renderDailyForecastSection()}
         </div>
       </ha-card>
     `);
@@ -990,8 +1062,8 @@ ${this.hass.states[this.config.entity_temp_following].state}` : html``;
   }
 
   // get the icon that matches the current conditions
-  get weatherIcon(): string {
-    switch (this.currentConditions) {
+  private _weatherIcon(conditions: string): string {
+    switch (conditions) {
       case 'sunny': return this.iconSunny;
       case 'clear': return this.iconClear;
       case 'mostly-sunny':
@@ -1355,14 +1427,14 @@ ${this.hass.states[this.config.entity_temp_following].state}` : html``;
   // https://lit.dev/docs/components/styles/
   get styles(): CSSResult {
     // Get config flags or set defaults if not configured
-    // var tooltipBGColor = this.config.tooltip_bg_color || "rgb( 75,155,239)";
-    // var tooltipFGColor = this.config.tooltip_fg_color || "#fff";
-    // var tooltipBorderColor = this.config.tooltip_border_color || "rgb(255,161,0)";
-    // var tooltipBorderWidth = this.config.tooltip_border_width || "1";
-    // var tooltipCaretSize = this.config.tooltip_caret_size || "5";
-    // var tooltipWidth = this.config.tooltip_width || "110";
-    // var tooltipLeftOffset = this.config.tooltip_left_offset || "-12";
-    // var tooltipVisible = this.config.tooltips ? "visible" : "hidden";
+    const tooltipBGColor = this.config.tooltip_bg_color || "rgb( 75,155,239)";
+    const tooltipFGColor = this.config.tooltip_fg_color || "#fff";
+    const tooltipBorderColor = this.config.tooltip_border_color || "rgb(255,161,0)";
+    const tooltipBorderWidth = this.config.tooltip_border_width || "1";
+    const tooltipCaretSize = this.config.tooltip_caret_size || "5";
+    const tooltipWidth = this.config.tooltip_width || "110";
+    const tooltipLeftOffset = this.config.tooltip_left_offset || "-12";
+    const tooltipVisible = this.config.tooltips ? "visible" : "hidden";
     // const tempTopMargin = this.config.temp_top_margin || "0px";
     const tempFontWeight = this.config.temp_font_weight || "300";
     const tempFontSize = this.config.temp_font_size || "4em";
@@ -1394,7 +1466,7 @@ ${this.hass.states[this.config.entity_temp_following].state}` : html``;
       .title-section {
         padding-bottom: 1.5em;
       }
-      .card-title {
+      .card-header {
         font-size: 1.5em;
         color: var(--primary-text-color);
       }
@@ -1539,6 +1611,96 @@ ${this.hass.states[this.config.entity_temp_following].state}` : html``;
         line-height: 80%;
         padding-top: 7px;
       }
-      `;
+      .daily-forecast-horiz {
+        display: flex;
+        flex-flow: row wrap;
+        width: 100%;
+        margin: 0 auto;
+        clear: both;
+      }
+      .daily-forecast-horiz .day-horiz:nth-last-child(1) {
+        border-right: none;
+        margin-right: 0;
+      }
+      .day-horiz {
+        flex-grow: 1;
+        float: left;
+        text-align: center;
+        color: var(--primary-text-color);
+        border-right: .1em solid #d9d9d9;
+        line-height: 1.5;
+        box-sizing: border-box;
+        margin-top: 1em;
+      }
+      .dayname {
+        text-transform: uppercase;
+      }
+      .icon {
+        width: 50px;
+        height: 50px;
+        margin: auto;
+        display: inline-block;
+        background-size: contain;
+        background-position: center center;
+        background-repeat: no-repeat;
+        text-indent: -9999px;
+      }
+      .f-slot {
+        display: inline-table;
+      }
+      .highTemp {
+        display: table-cell;
+        font-weight: bold;
+      }
+      .lowTemp {
+        display: table-cell;
+        font-weight: 300;
+        color: var(--secondary-text-color);
+      }
+      .pop {
+        font-weight: 300;
+        color: var(--primary-text-color);
+      }
+      .pos {
+        display: table-cell;
+        font-weight: 300;
+        color: var(--primary-text-color);
+      }
+      .fcasttooltip {
+        position: relative;
+        display: inline-block;
+      }
+      .fcasttooltip .fcasttooltiptext {
+        visibility: hidden;
+        width: ${unsafeCSS(tooltipWidth)}px;
+        background-color: ${unsafeCSS(tooltipBGColor)};
+        color: ${unsafeCSS(tooltipFGColor)};
+        text-align: center;
+        border-radius: 6px;
+        border-style: solid;
+        border-color: ${unsafeCSS(tooltipBorderColor)};
+        border-width: ${unsafeCSS(tooltipBorderWidth)}px;
+        padding: 5px 0;
+        /* Position the tooltip */
+        position: absolute;
+        z-index: 1;
+        bottom: 50%;
+        left: 0%;
+        margin-left: ${unsafeCSS(tooltipLeftOffset)}px;
+      }
+      .fcasttooltip .fcasttooltiptext:after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -${unsafeCSS(tooltipCaretSize)}px;
+        border-width: ${unsafeCSS(tooltipCaretSize)}px;
+        border-style: solid;
+        border-color: ${unsafeCSS(tooltipBorderColor)} transparent transparent transparent;
+      }
+      .fcasttooltip:hover .fcasttooltiptext {
+        visibility: ${unsafeCSS(tooltipVisible)};
+      }
+    `;
   }
 }
