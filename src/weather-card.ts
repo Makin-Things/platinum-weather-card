@@ -268,18 +268,18 @@ export class WeatherCard extends LitElement {
             this.config.tempformat ==="highlow"
               ?
                 html`
-                    <div class="f-slot"><div class="highTemp">${this.hass.states[maxEntity] !== undefined ? Math.round(Number(this.hass.states[maxEntity].state)) : "---"}</div>/
+                    <div class="f-slot"><div class="highTemp">${this.hass.states[maxEntity] !== undefined ? Math.round(Number(this.hass.states[maxEntity].state)) : "---"}</div><div class="slash">/</div>
                     <div class="lowTemp">${this.hass.states[minEntity] !== undefined ? Math.round(Number(this.hass.states[minEntity].state)) : "---"}</div><div>${tempUnit}</div></div>`
               :
                 html`
-                    <div class="f-slot"><div class="lowTemp">${this.hass.states[minEntity] !== undefined ? Math.round(Number(this.hass.states[minEntity].state)) : "---"}</div>/
+                    <div class="f-slot"><div class="lowTemp">${this.hass.states[minEntity] !== undefined ? Math.round(Number(this.hass.states[minEntity].state)) : "---"}</div><div class="slash">/</div>
                     <div class="highTemp">${this.hass.states[maxEntity] !== undefined ? Math.round(Number(this.hass.states[maxEntity].state)) : "---"}</div><div>${tempUnit}</div></div>`
         start = this.config['entity_pop_1'] ? this.config['entity_pop_1'].match(/(\d+)(?!.*\d)/g) : false;
         const popEntity = start ? this.config['entity_pop_1'].replace(/(\d+)(?!.*\d)/g, Number(start) + i) : undefined;
-        const pop = start ? html`<br><div class="pop">${this.hass.states[popEntity] ? Math.round(Number(this.hass.states[popEntity].state)) : "---"}%</div>` : ``;
+        const pop = start ? html`<br><div class="f-slot"><div class="pop">${this.hass.states[popEntity] ? Math.round(Number(this.hass.states[popEntity].state)) : "---"}</div><div class="unit">%</div></div>` : ``;
         start = this.config['entity_pos_1'] ? this.config['entity_pos_1'].match(/(\d+)(?!.*\d)/g) : false;
         const posEntity = start ? this.config['entity_pos_1'].replace(/(\d+)(?!.*\d)/g, Number(start) + i) : undefined;
-        const pos = start ? html`<div class="f-slot"><div class="pos">${this.hass.states[posEntity] !== undefined ? this.hass.states[posEntity].state : "---"}</div><div class="unit">${this.getUOM('precipitation')}</div></div>` : ``;
+        const pos = start ? html`<br><div class="f-slot"><div class="pos">${this.hass.states[posEntity] !== undefined ? this.hass.states[posEntity].state : "---"}</div><div class="unit">${this.getUOM('precipitation')}</div></div>` : ``;
 
         htmlDays.push(html`
           <div class="day-horiz fcasttooltip">
@@ -1648,6 +1648,7 @@ ${this.hass.states[this.config.entity_temp_following].state}` : html``;
       }
       .f-slot {
         display: inline-table;
+        height: 24px;
       }
       .highTemp {
         display: table-cell;
@@ -1658,7 +1659,12 @@ ${this.hass.states[this.config.entity_temp_following].state}` : html``;
         font-weight: 300;
         color: var(--secondary-text-color);
       }
+      .slash {
+        padding-left: 2px;
+        padding-right: 2px;
+      }
       .pop {
+        display: table-cell;
         font-weight: 300;
         color: var(--primary-text-color);
       }
