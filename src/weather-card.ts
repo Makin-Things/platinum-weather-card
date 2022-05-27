@@ -260,20 +260,20 @@ export class WeatherCard extends LitElement {
         const tempUnit = html`<div class="unitc">${this.getUOM("temperature")}</div>`;
         const minMax = this.config.old_daily_format === true
           ?
-            html`
+          html`
               <div class="f-slot"><div class="highTemp">${this.hass.states[maxEntity] !== undefined ? Math.round(Number(this.hass.states[maxEntity].state)) : '---'}</div><div>${tempUnit}</div></div>
               <br>
               <div class="f-slot"><div class="lowTemp">${this.hass.states[minEntity] !== undefined ? Math.round(Number(this.hass.states[minEntity].state)) : '---'}</div><div>${tempUnit}</div></div>`
           :
-            this.config.tempformat ==="highlow"
-              ?
-                html`
+          this.config.tempformat === "highlow"
+            ?
+            html`
                     <div class="f-slot"><div class="highTemp">${this.hass.states[maxEntity] !== undefined ? Math.round(Number(this.hass.states[maxEntity].state)) : "---"}</div><div class="slash">/</div>
                     <div class="lowTemp">${this.hass.states[minEntity] !== undefined ? Math.round(Number(this.hass.states[minEntity].state)) : "---"}</div><div>${tempUnit}</div></div>`
-              :
-                html`
+            :
+            html`
                     <div class="f-slot"><div class="lowTemp">${this.hass.states[minEntity] !== undefined ? Math.round(Number(this.hass.states[minEntity].state)) : "---"}</div><div class="slash">/</div>
-                    <div class="highTemp">${this.hass.states[maxEntity] !== undefined ? Math.round(Number(this.hass.states[maxEntity].state)) : "---"}</div><div>${tempUnit}</div></div>`
+                    <div class="highTemp">${this.hass.states[maxEntity] !== undefined ? Math.round(Number(this.hass.states[maxEntity].state)) : "---"}</div><div>${tempUnit}</div></div>`;
         start = this.config['entity_pop_1'] ? this.config['entity_pop_1'].match(/(\d+)(?!.*\d)/g) : false;
         const popEntity = start ? this.config['entity_pop_1'].replace(/(\d+)(?!.*\d)/g, Number(start) + i) : undefined;
         const pop = start ? html`<br><div class="f-slot"><div class="pop">${this.hass.states[popEntity] ? Math.round(Number(this.hass.states[popEntity].state)) : "---"}</div><div class="unit">%</div></div>` : ``;
@@ -297,9 +297,67 @@ export class WeatherCard extends LitElement {
         </div>
     `
     } else {
+      for (var i = 0; i < days; i++) {
+        const forecastDate = this.config['entity_forecast_icon_1'] && this.hass.states[this.config['entity_forecast_icon_1']] ? new Date(this.hass.states[this.config['entity_forecast_icon_1']].attributes['date']) : undefined;
+        if (forecastDate) {
+          forecastDate.setDate(forecastDate.getDate() + i);
+        }
+        var start = this.config['entity_forecast_icon_1'] ? this.config['entity_forecast_icon_1'].match(/(\d+)(?!.*\d)/g) : false;
+        const iconEntity = start ? this.config['entity_forecast_icon_1'].replace(/(\d+)(?!.*\d)/g, Number(start) + i) : undefined;
+        const url = new URL(('icons/' + (this.config.static_icons ? 'static' : 'animated') + '/' + (this.hass.states[iconEntity] !== undefined ? this._weatherIcon(this.hass.states[iconEntity].state) : 'unknown') + '.svg').replace("-night", "-day"), import.meta.url);
+        const htmlIcon = html`<i class="icon" style="background: none, url(${url.href}) no-repeat; background-size: contain;"></i><br>`;
+        start = this.config['entity_forecast_high_temp_1'] ? this.config['entity_forecast_high_temp_1'].match(/(\d+)(?!.*\d)/g) : false;
+        const maxEntity = start ? this.config['entity_forecast_high_temp_1'].replace(/(\d+)(?!.*\d)/g, Number(start) + i) : undefined;
+        start = this.config['entity_forecast_low_temp_1'] ? this.config['entity_forecast_low_temp_1'].match(/(\d+)(?!.*\d)/g) : false;
+        const minEntity = start ? this.config['entity_forecast_low_temp_1'].replace(/(\d+)(?!.*\d)/g, Number(start) + i) : undefined;
+        const tempUnit = html`<div class="unitc">${this.getUOM("temperature")}</div>`;
+        const min = this.hass.states[minEntity] !== undefined ? html`<div class="temp-label">Min: </div><div class="low-temp">${Math.round(Number(this.hass.states[minEntity].state))}</div>${tempUnit}` : html`---`;
+        const max = this.hass.states[maxEntity] !== undefined ? html`<div class="temp-label">Max: </div><div class="high-temp">${Math.round(Number(this.hass.states[maxEntity].state))}</div>${tempUnit}` : html`---`;
+        const minMax = this.config.tempformat === "highlow"
+          ?
+          html`
+              <div class="f-slot"><div class="highTemp">${this.hass.states[maxEntity] !== undefined ? Math.round(Number(this.hass.states[maxEntity].state)) : "---"}</div><div class="slash">/</div>
+              <div class="lowTemp">${this.hass.states[minEntity] !== undefined ? Math.round(Number(this.hass.states[minEntity].state)) : "---"}</div><div>${tempUnit}</div></div>`
+          :
+          html`
+              <div class="f-slot">${min}${max}</div>`;
+        start = this.config['entity_summary_1'] ? this.config['entity_summary_1'].match(/(\d+)(?!.*\d)/g) : false;
+        const summaryEntity = start ? this.config['entity_summary_1'].replace(/(\d+)(?!.*\d)/g, Number(start) + i) : undefined;
+        const summary = start ? html`<br><div class="f-slot">${this.hass.states[summaryEntity] !== undefined ? this.hass.states[summaryEntity].state : "---"}</div>` : ``;
+        start = this.config['entity_pop_1'] ? this.config['entity_pop_1'].match(/(\d+)(?!.*\d)/g) : false;
+        const popEntity = start ? this.config['entity_pop_1'].replace(/(\d+)(?!.*\d)/g, Number(start) + i) : undefined;
+        const pop = start ? html`<div class="f-slot"><div class="f-label">Chance of rain </div><div class="pop">${this.hass.states[popEntity] ? Math.round(Number(this.hass.states[popEntity].state)) : "---"}</div><div class="unit">%</div></div>` : ``;
+        start = this.config['entity_pos_1'] ? this.config['entity_pos_1'].match(/(\d+)(?!.*\d)/g) : false;
+        const posEntity = start ? this.config['entity_pos_1'].replace(/(\d+)(?!.*\d)/g, Number(start) + i) : undefined;
+        const pos = start ? html`<br><div class="f-slot"><div class="f-label">Possible rain </div><div class="pos">${this.hass.states[posEntity] !== undefined ? this.hass.states[posEntity].state : "---"}</div><div class="unit">${this.getUOM('precipitation')}</div></div>` : ``;
+        start = this.config['entity_extended_1'] ? this.config['entity_extended_1'].match(/(\d+)(?!.*\d)/g) : false;
+        const extendedEntity = start ? this.config['entity_extended_1'].replace(/(\d+)(?!.*\d)/g, Number(start) + i) : undefined;
+        const extended = start ? html`<div class="f-slot">${this.hass.states[extendedEntity] !== undefined ? this.hass.states[extendedEntity].state : "---"}</div>` : ``;
+
+        htmlDays.push(html`
+          <div class="day-vert fcasttooltip">
+            <div class="day-vert-left">
+              <span class="dayname">${forecastDate ? forecastDate.toLocaleDateString(this.config.locale,{weekday: 'short'}) : "---"}</span>
+              <br>${htmlIcon}
+            </div>
+            <div class="day-vert-middle">
+              ${minMax}
+              ${summary}
+            </div>
+            <div class="day-vert-middle">
+              ${pop}
+              ${pos}
+            </div>
+            <div class="day-vert-right">
+              ${extended}
+            </div>
+          </div>
+        `);
+      }
+
       var daily_forecast_section = html`
         <div  class="daily-forecast-vert">
-          VERTICAL
+          ${htmlDays}
         </div>
     `
     }
@@ -1633,6 +1691,38 @@ ${this.hass.states[this.config.entity_temp_following].state}` : html``;
         box-sizing: border-box;
         margin-top: 1em;
       }
+      .daily-forecast-vert {
+        display: flex;
+        flex-flow: column nowrap;
+        margin: 0 auto;
+        clear: both;
+      }
+      .daily-forecast-vert .day-vert:nth-last-child(1) {
+        border-bottom: none;
+        margin-bottom: 0;
+      }
+      .day-vert {
+        flex: 1;
+        color: var(--primary-text-color);
+        border-bottom: .1em solid #d9d9d9;
+        line-height: 1.5;
+        box-sizing: border-box;
+        margin-top: 1em;
+      }
+      .day-vert-left {
+        text-align: center;
+        float: left;
+      }
+      .day-vert-middle {
+        text-align: left;
+        float: left;
+        padding-left: 1em;
+      }
+      .day-vert-right {
+        text-align: left;
+        float: left;
+        padding-left: 1em;
+      }
       .dayname {
         text-transform: uppercase;
       }
@@ -1649,6 +1739,7 @@ ${this.hass.states[this.config.entity_temp_following].state}` : html``;
       .f-slot {
         display: inline-table;
         height: 24px;
+        font-weight: 300;
       }
       .highTemp {
         display: table-cell;
@@ -1657,11 +1748,33 @@ ${this.hass.states[this.config.entity_temp_following].state}` : html``;
       .lowTemp {
         display: table-cell;
         font-weight: 300;
-        color: var(--secondary-text-color);
       }
       .slash {
         padding-left: 2px;
         padding-right: 2px;
+      }
+      .high-temp {
+        display: table-cell;
+        font-weight: bold;
+        width: 1.5em;
+        text-align: right;
+      }
+      .low-temp {
+        display: table-cell;
+        font-weight: 300;
+        width: 1.5em;
+        text-align: right;
+      }
+      .temp-label {
+        width: 2em;
+        font-weight: 300;
+        padding-left: 0.5em;
+      }
+      .f-slot .temp-label:first-of-type {
+        padding-left: 0;
+      }
+      .f-label {
+        padding-right: 0.5em;
       }
       .pop {
         display: table-cell;
