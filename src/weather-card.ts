@@ -148,16 +148,16 @@ export class WeatherCard extends LitElement {
     if ((this.config.entity_update_time) && (this.hass.states[this.config.entity_update_time]) && (this.hass.states[this.config.entity_update_time].state !== undefined)){
       const d = new Date(this.hass.states[this.config.entity_update_time].state);
       if (this.is12Hour) {
-        updateTime = d.toLocaleString(this.config.locale, { hour: 'numeric', minute: '2-digit', hour12: true }).replace(" am", "am, ").replace(" pm", "pm, ") + d.toLocaleDateString(this.config.locale, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).replace(",", "");
+        updateTime = d.toLocaleString(this.config.locale, { hour: 'numeric', minute: '2-digit', hour12: true }).replace(" ", "")+", " + d.toLocaleDateString(this.config.locale, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).replace(",", "");
       } else {
-        updateTime = d.toLocaleString(this.config.locale, { hour: '2-digit', minute: '2-digit', hour12: false }).replace(" am", "am, ").replace(" pm", "pm, ") + d.toLocaleDateString(this.config.locale, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).replace(",", "");
+        updateTime = d.toLocaleString(this.config.locale, { hour: '2-digit', minute: '2-digit', hour12: false }) + d.toLocaleDateString(this.config.locale, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).replace(",", "");
       }
     } else {
       updateTime = '---';
     }
 
     return html`
-      <div class="title-section">
+      <div class="title-section section">
         ${this.config.text_card_title ? html`<div class="card-header">${this.config.text_card_title}</div>` : html``}
         ${this.config.entity_update_time ? html`<div class="updated">${this.config.text_update_time_prefix ? this.config.text_update_time_prefix+' ' : ''}${updateTime}</div>` : html``}
       </div>
@@ -193,7 +193,7 @@ export class WeatherCard extends LitElement {
     const currentText = (this.config.entity_current_text) && (this.hass.states[this.config.entity_current_text]) ? this.hass.states[this.config.entity_current_text].state ?? '---' : '---';
 
     return html`
-      <div class="top-row">
+      <div class="main-section section">
         <div class="top-left">${biggerIcon}</div>
         <div class="currentTemps">${currentTemp}${apparentTemp}</div>
       </div>
@@ -234,7 +234,7 @@ export class WeatherCard extends LitElement {
     `;
 
     return html`
-      <div>${slot_section}</div>
+      <div class="slot-section section">${slot_section}</div>
     `;
   }
 
@@ -292,7 +292,7 @@ export class WeatherCard extends LitElement {
         `);
       }
       var daily_forecast_section = html`
-        <div class="daily-forecast-horiz">
+        <div class="daily-forecast-horiz-section section">
           ${htmlDays}
         </div>
     `
@@ -332,7 +332,7 @@ export class WeatherCard extends LitElement {
         const pos = start ? html`<br><div class="f-slot"><div class="f-label">Possible rain </div><div class="pos">${this.hass.states[posEntity] !== undefined ? this.hass.states[posEntity].state : "---"}</div><div class="unit">${this.getUOM('precipitation')}</div></div>` : ``;
         start = this.config['entity_extended_1'] ? this.config['entity_extended_1'].match(/(\d+)(?!.*\d)/g) : false;
         const extendedEntity = start ? this.config['entity_extended_1'].replace(/(\d+)(?!.*\d)/g, Number(start) + i) : undefined;
-        const extended = start ? html`<div class="f-slot">${this.hass.states[extendedEntity] !== undefined ? this.hass.states[extendedEntity].state : "---"}</div>` : ``;
+        const extended = start ? html`<div class="f-extended">${this.hass.states[extendedEntity] !== undefined ? this.hass.states[extendedEntity].state : "---"}</div>` : ``;
 
         htmlDays.push(html`
           <div class="day-vert fcasttooltip">
@@ -356,7 +356,7 @@ export class WeatherCard extends LitElement {
       }
 
       var daily_forecast_section = html`
-        <div  class="daily-forecast-vert">
+        <div  class="daily-forecast-vert-section section">
           ${htmlDays}
         </div>
     `
@@ -1534,7 +1534,7 @@ ${this.hass.states[this.config.entity_temp_following].state}` : html``;
         font-weight: 300;
         color: var(--primary-text-color);
       }
-      .top-row {
+      .main-section {
         display: flex;
         justify-content: space-between;
         flex-wrap: nowrap;
@@ -1670,14 +1670,14 @@ ${this.hass.states[this.config.entity_temp_following].state}` : html``;
         line-height: 80%;
         padding-top: 7px;
       }
-      .daily-forecast-horiz {
+      .daily-forecast-horiz-section {
         display: flex;
         flex-flow: row wrap;
         width: 100%;
         margin: 0 auto;
         clear: both;
       }
-      .daily-forecast-horiz .day-horiz:nth-last-child(1) {
+      .daily-forecast-horiz-section .day-horiz:nth-last-child(1) {
         border-right: none;
         margin-right: 0;
       }
@@ -1691,13 +1691,13 @@ ${this.hass.states[this.config.entity_temp_following].state}` : html``;
         box-sizing: border-box;
         margin-top: 1em;
       }
-      .daily-forecast-vert {
+      .daily-forecast-vert-section {
         display: flex;
         flex-flow: column nowrap;
         margin: 0 auto;
         clear: both;
       }
-      .daily-forecast-vert .day-vert:nth-last-child(1) {
+      .daily-forecast-vert-section .day-vert:nth-last-child(1) {
         border-bottom: none;
         margin-bottom: 0;
       }
@@ -1721,7 +1721,6 @@ ${this.hass.states[this.config.entity_temp_following].state}` : html``;
       .day-vert-right {
         text-align: left;
         float: left;
-        padding-left: 1em;
       }
       .dayname {
         text-transform: uppercase;
@@ -1740,6 +1739,13 @@ ${this.hass.states[this.config.entity_temp_following].state}` : html``;
         display: inline-table;
         height: 24px;
         font-weight: 300;
+      }
+      .f-extended {
+        display: inline-table;
+        font-size: 13px;
+        font-weight: 300;
+        padding-left:0.5em;
+        padding-right: 0.5em;
       }
       .highTemp {
         display: table-cell;

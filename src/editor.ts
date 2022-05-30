@@ -919,7 +919,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     if (this._subElementEditor) return this._renderSubElementEditor();
 
     return html`
-      <div class="side-by-side">
+      <div class="side-by-side edit-title-section">
         <mwc-formfield .label=${`Title Section - ${this._show_section_title ? 'Visible' : 'Hidden'}`}>
           <mwc-switch .checked=${this._show_section_title !==false} .configValue=${'show_section_title'}
             @change=${this._valueChanged}>
@@ -930,7 +930,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
           </ha-icon-button>
         </div>
       </div>
-      <div class="side-by-side">
+      <div class="side-by-side edit-main-section">
         <mwc-formfield .label=${`Main Section - ${this._show_section_main ? 'Visible' : 'Hidden'}`}>
           <mwc-switch .checked=${this._show_section_main !==false} .configValue=${'show_section_main'}
             @change=${this._valueChanged}>
@@ -941,7 +941,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
           </ha-icon-button>
         </div>
       </div>
-      <div class="side-by-side">
+      <div class="side-by-side edit-slots-section">
         <mwc-formfield .label=${`Slots Section - ${this._show_section_slots ? 'Visible' : 'Hidden'}`}>
           <mwc-switch .checked=${this._show_section_slots !==false} .configValue=${'show_section_slots'}
             @change=${this._valueChanged}>
@@ -952,7 +952,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
           </ha-icon-button>
         </div>
       </div>
-      <div class="side-by-side">
+      <div class="side-by-side edit-daily-forecast-section">
         <mwc-formfield .label=${`Daily Forecast Section - ${this._show_section_daily_forecast ? 'Visible' : 'Hidden'}`}>
           <mwc-switch .checked=${this._show_section_daily_forecast !==false} .configValue=${'show_section_daily_forecast'}
             @change=${this._valueChanged}>
