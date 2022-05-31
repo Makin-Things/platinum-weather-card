@@ -356,11 +356,13 @@ let WeatherCard = class WeatherCard extends s$1 {
         const currentText = (this.config.entity_current_text) && (this.hass.states[this.config.entity_current_text]) ? (_b = this.hass.states[this.config.entity_current_text].state) !== null && _b !== void 0 ? _b : '---' : '---';
         return $ `
       <div class="main-section section">
-        <div class="top-left">${biggerIcon}</div>
-        <div class="currentTemps">${currentTemp}${apparentTemp}</div>
+        <div class="main-top">
+          <div class="top-left">${biggerIcon}</div>
+          <div class="currentTemps">${currentTemp}${apparentTemp}</div>
+        </div>
+        ${separator}
+        <div class="current-text">${currentText}</div>
       </div>
-      ${separator}
-      <div class="current-text">${currentText}</div>
     `;
     }
     _renderSlotsSection() {
@@ -496,19 +498,21 @@ let WeatherCard = class WeatherCard extends s$1 {
                 const extended = start ? $ `<div class="f-extended">${this.hass.states[extendedEntity] !== undefined ? this.hass.states[extendedEntity].state : "---"}</div>` : ``;
                 htmlDays.push($ `
           <div class="day-vert fcasttooltip">
-            <div class="day-vert-left">
-              <span class="dayname">${forecastDate ? forecastDate.toLocaleDateString(this.config.locale, { weekday: 'short' }) : "---"}</span>
-              <br>${htmlIcon}
+            <div class="day-vert-top">
+              <div class="day-vert-dayicon">
+                <span class="dayname">${forecastDate ? forecastDate.toLocaleDateString(this.config.locale, { weekday: 'short' }) : "---"}</span>
+                <br>${htmlIcon}
+              </div>
+              <div class="day-vert-values">
+                ${minMax}
+                ${summary}
+              </div>
+              <div class="day-vert-values">
+                ${pop}
+                ${pos}
+              </div>
             </div>
-            <div class="day-vert-middle">
-              ${minMax}
-              ${summary}
-            </div>
-            <div class="day-vert-middle">
-              ${pop}
-              ${pos}
-            </div>
-            <div class="day-vert-right">
+            <div class="day-vert-bottom">
               ${extended}
             </div>
           </div>
@@ -1645,24 +1649,27 @@ ${this.hass.states[this.config.entity_temp_following].state}` : $ ``;
         // var summaryFontSize = this.config.summary_font_size || "0.8em";
         return r$4 `
       .card {
-        padding: 16px;
+        padding: 8px 16px 8px 16px;
       }
       .content {
         align-items: center;
       }
-      .title-section {
-        padding-bottom: 1.5em;
-      }
       .card-header {
         font-size: 1.5em;
         color: var(--primary-text-color);
+      }
+      .section {
+        margin: -1px;
+        border: 1px solid transparent;
+        padding-top: 8px;
+        padding-bottom: 8px;
       }
       .updated {
         font-size: 0.9em;
         font-weight: 300;
         color: var(--primary-text-color);
       }
-      .main-section {
+      .main-top {
         display: flex;
         justify-content: space-between;
         flex-wrap: nowrap;
@@ -1673,11 +1680,11 @@ ${this.hass.states[this.config.entity_temp_following].state}` : $ ``;
         height: 8em;
       }
       .big-icon {
-        height: 10em;
-        width: 10em;
+        height: 140px;
+        width: 140px;
         position: relative;
-        left: -1em;
-        top: -2em;
+        left: -8px;
+        top: -20px;
       }
       .currentTemps {
         display: flex;
@@ -1738,7 +1745,6 @@ ${this.hass.states[this.config.entity_temp_following].state}` : $ ``;
         overflow: hidden;
         white-space: nowrap;
         text-align: ${o$6(currentTextAlignment)};
-        padding-bottom: 0.2em;
       }
       .variations {
         display: flex;
@@ -1746,7 +1752,9 @@ ${this.hass.states[this.config.entity_temp_following].state}` : $ ``;
         font-weight: 300;
         color: var(--primary-text-color);
         list-style: none;
-        padding: 0.2em;
+        margin-block-start: 0px;
+        margin-block-end: 0px;
+        padding-inline-start: 8px;
       }
       .slot-list-item-1 {
         min-width:50%;
@@ -1766,7 +1774,9 @@ ${this.hass.states[this.config.entity_temp_following].state}` : $ ``;
         font-weight: 300;
         color: var(--primary-text-color);
         list-style: none;
-        padding: 0.2em;
+        margin-block-start: 0px;
+        margin-block-end: 0px;
+        padding-inline-start: 8px;
       }
       .ha-icon {
         height: 24px;
@@ -1817,7 +1827,6 @@ ${this.hass.states[this.config.entity_temp_following].state}` : $ ``;
         border-right: .1em solid #d9d9d9;
         line-height: 1.5;
         box-sizing: border-box;
-        margin-top: 1em;
       }
       .daily-forecast-vert-section {
         display: flex;
@@ -1835,18 +1844,24 @@ ${this.hass.states[this.config.entity_temp_following].state}` : $ ``;
         border-bottom: .1em solid #d9d9d9;
         line-height: 1.5;
         box-sizing: border-box;
-        margin-top: 1em;
+        padding-left: 8px;
+        padding-right: 8px;
+        padding-bottom: 8px;
       }
-      .day-vert-left {
-        text-align: center;
+      .day-vert-top {
         float: left;
       }
-      .day-vert-middle {
+      .day-vert-dayicon {
+        text-align: left;
+        float: left;
+      }
+      .day-vert-values {
         text-align: left;
         float: left;
         padding-left: 1em;
+        margin-top: 1.5em;
       }
-      .day-vert-right {
+      .day-vert-bottom {
         text-align: left;
         float: left;
       }
@@ -1872,8 +1887,6 @@ ${this.hass.states[this.config.entity_temp_following].state}` : $ ``;
         display: inline-table;
         font-size: 13px;
         font-weight: 300;
-        padding-left:0.5em;
-        padding-right: 0.5em;
       }
       .highTemp {
         display: table-cell;
@@ -1955,6 +1968,9 @@ ${this.hass.states[this.config.entity_temp_following].state}` : $ ``;
       .fcasttooltip:hover .fcasttooltiptext {
         visibility: ${o$6(tooltipVisible)};
       }
+      /* .section:hover {
+        border: 1px solid red;
+      } */
     `;
     }
 };
