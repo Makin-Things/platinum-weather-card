@@ -2000,6 +2000,8 @@ WeatherCard = __decorate([
 ], WeatherCard);
 
 // Material Design Icons v6.7.96
+var mdiArrowDown = "M11,4H13V16L18.5,10.5L19.92,11.92L12,19.84L4.08,11.92L5.5,10.5L11,16V4Z";
+var mdiArrowUp = "M13,20H11V8L5.5,13.5L4.08,12.08L12,4.16L19.92,12.08L18.5,13.5L13,8V20Z";
 var mdiPencil = "M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z";
 
 /**
@@ -10431,6 +10433,11 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
     }
     setConfig(config) {
         this._config = config;
+        if (this._section_order === null) {
+            this._config = Object.assign(Object.assign({}, this._config), { ['section_order']: ['title', 'main', 'extended', 'slots', 'daily_forecast', 'miscellaneous'] });
+            ne(this, 'config-changed', { config: this._config });
+            // this._config['section_order'] = ['title', 'main', 'extended', 'slots', 'daily_forecast', 'miscellaneous'];
+        }
         this.loadCardHelpers();
     }
     shouldUpdate() {
@@ -10438,6 +10445,10 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
             this._initialize();
         }
         return true;
+    }
+    get _section_order() {
+        var _a;
+        return ((_a = this._config) === null || _a === void 0 ? void 0 : _a.section_order) || null;
     }
     get _text_card_title() {
         var _a;
@@ -11306,80 +11317,125 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
         var _a;
         return ((_a = this._config) === null || _a === void 0 ? void 0 : _a.show_section_daily_forecast) !== false; //default on
     }
+    getConfigBlock(block, first, last) {
+        switch (block) {
+            case 'title':
+                return $ `
+          <div class="side-by-side edit-title-section">
+            <mwc-formfield .label=${`Title Section - ${this._show_section_title ? 'Visible' : 'Hidden'}`}>
+              <mwc-switch .checked=${this._show_section_title !== false} .configValue=${'show_section_title'}
+                @change=${this._valueChanged}>
+              </mwc-switch>
+            </mwc-formfield>
+            <div>
+              <ha-icon-button class="down-icon" .value=${'title'} .path=${mdiArrowDown} .disabled=${last} @click="${this._moveDown}">
+              </ha-icon-button>
+              <ha-icon-button class="up-icon" .value=${'title'} .path=${mdiArrowUp} .disabled=${first} @click="${this._moveUp}">
+              </ha-icon-button>
+              <ha-icon-button class="edit-icon" .value=${'section_title'} .path=${mdiPencil} @click="${this._editSection}">
+              </ha-icon-button>
+            </div>
+          </div>
+        `;
+            case 'main':
+                return $ `
+          <div class="side-by-side edit-main-section">
+            <mwc-formfield .label=${`Main Section - ${this._show_section_main ? 'Visible' : 'Hidden'}`}>
+              <mwc-switch .checked=${this._show_section_main !== false} .configValue=${'show_section_main'}
+                @change=${this._valueChanged}>
+              </mwc-switch>
+            </mwc-formfield>
+            <div>
+              <ha-icon-button class="down-icon" .value=${'main'} .path=${mdiArrowDown} .disabled=${last} @click="${this._moveDown}">
+              </ha-icon-button>
+              <ha-icon-button class="up-icon" .value=${'main'} .path=${mdiArrowUp} .disabled=${first} @click="${this._moveUp}">
+              </ha-icon-button>
+              <ha-icon-button class="edit-icon" .value=${'section_main'} .path=${mdiPencil} @click="${this._editSection}">
+              </ha-icon-button>
+            </div>
+          </div>
+        `;
+            case 'extended':
+                return $ `
+          <div class="side-by-side edit-extended-section">
+            <mwc-formfield .label=${`Extended Section - ${this._show_section_extended ? 'Visible' : 'Hidden'}`}>
+              <mwc-switch .checked=${this._show_section_extended !== false} .configValue=${'show_section_extended'}
+                @change=${this._valueChanged}>
+              </mwc-switch>
+            </mwc-formfield>
+            <div>
+              <ha-icon-button class="down-icon" .value=${'extended'} .path=${mdiArrowDown} .disabled=${last} @click="${this._moveDown}">
+              </ha-icon-button>
+              <ha-icon-button class="up-icon" .value=${'extended'} .path=${mdiArrowUp} .disabled=${first} @click="${this._moveUp}">
+              </ha-icon-button>
+              <ha-icon-button class="edit-icon" .value=${'section_extended'} .path=${mdiPencil} @click="${this._editSection}">
+              </ha-icon-button>
+            </div>
+          </div>
+        `;
+            case 'slots':
+                return $ `
+          <div class="side-by-side edit-slots-section">
+            <mwc-formfield .label=${`Slots Section - ${this._show_section_slots ? 'Visible' : 'Hidden'}`}>
+              <mwc-switch .checked=${this._show_section_slots !== false} .configValue=${'show_section_slots'}
+                @change=${this._valueChanged}>
+              </mwc-switch>
+            </mwc-formfield>
+            <div>
+              <ha-icon-button class="down-icon" .value=${'slots'} .path=${mdiArrowDown} .disabled=${last} @click="${this._moveDown}">
+              </ha-icon-button>
+              <ha-icon-button class="up-icon" .value=${'slots'} .path=${mdiArrowUp} .disabled=${first} @click="${this._moveUp}">
+              </ha-icon-button>
+              <ha-icon-button class="edit-icon" .value=${'section_slots'} .path=${mdiPencil} @click="${this._editSection}">
+              </ha-icon-button>
+            </div>
+          </div>
+        `;
+            case 'daily_forecast':
+                return $ `
+          <div class="side-by-side edit-daily-forecast-section">
+            <mwc-formfield .label=${`Daily Forecast Section - ${this._show_section_daily_forecast ? 'Visible' : 'Hidden'}`}>
+              <mwc-switch .checked=${this._show_section_daily_forecast !== false} .configValue=${'show_section_daily_forecast'}
+                @change=${this._valueChanged}>
+              </mwc-switch>
+            </mwc-formfield>
+            <div>
+              <ha-icon-button class="down-icon" .value=${'daily_forecast'} .path=${mdiArrowDown} .disabled=${last} @click="${this._moveDown}">
+              </ha-icon-button>
+              <ha-icon-button class="up-icon" .value=${'daily_forecast'} .path=${mdiArrowUp} .disabled=${first} @click="${this._moveUp}">
+              </ha-icon-button>
+              <ha-icon-button class="edit-icon" .value=${'section_daily_forecast'} .path=${mdiPencil} @click="${this._editSection}">
+              </ha-icon-button>
+            </div>
+          </div>
+        `;
+            case 'miscellaneous':
+                return $ `
+          <div class="side-by-side">
+            <mwc-formfield class="no-switch" .label=${`Miscellaneous`}>
+            </mwc-formfield>
+            <div>
+              <ha-icon-button class="edit-icon" .value=${'section_miscellaneous'} .path=${mdiPencil}
+                @click="${this._editSection}">
+              </ha-icon-button>
+            </div>
+          </div>
+        `;
+        }
+        return $ ``;
+    }
     render() {
         if (!this.hass || !this._helpers) {
             return $ ``;
         }
         if (this._subElementEditor)
             return this._renderSubElementEditor();
-        return $ `
-      <div class="side-by-side edit-title-section">
-        <mwc-formfield .label=${`Title Section - ${this._show_section_title ? 'Visible' : 'Hidden'}`}>
-          <mwc-switch .checked=${this._show_section_title !== false} .configValue=${'show_section_title'}
-            @change=${this._valueChanged}>
-          </mwc-switch>
-        </mwc-formfield>
-        <div>
-          <ha-icon-button class="edit-icon" .value=${'section_title'} .path=${mdiPencil} @click="${this._editSection}">
-          </ha-icon-button>
-        </div>
-      </div>
-      <div class="side-by-side edit-main-section">
-        <mwc-formfield .label=${`Main Section - ${this._show_section_main ? 'Visible' : 'Hidden'}`}>
-          <mwc-switch .checked=${this._show_section_main !== false} .configValue=${'show_section_main'}
-            @change=${this._valueChanged}>
-          </mwc-switch>
-        </mwc-formfield>
-        <div>
-          <ha-icon-button class="edit-icon" .value=${'section_main'} .path=${mdiPencil} @click="${this._editSection}">
-          </ha-icon-button>
-        </div>
-      </div>
-      <div class="side-by-side edit-extended-section">
-        <mwc-formfield .label=${`Extended Section - ${this._show_section_extended ? 'Visible' : 'Hidden'}`}>
-          <mwc-switch .checked=${this._show_section_extended !== false} .configValue=${'show_section_extended'}
-            @change=${this._valueChanged}>
-          </mwc-switch>
-        </mwc-formfield>
-        <div>
-          <ha-icon-button class="edit-icon" .value=${'section_extended'} .path=${mdiPencil} @click="${this._editSection}">
-          </ha-icon-button>
-        </div>
-      </div>
-      <div class="side-by-side edit-slots-section">
-        <mwc-formfield .label=${`Slots Section - ${this._show_section_slots ? 'Visible' : 'Hidden'}`}>
-          <mwc-switch .checked=${this._show_section_slots !== false} .configValue=${'show_section_slots'}
-            @change=${this._valueChanged}>
-          </mwc-switch>
-        </mwc-formfield>
-        <div>
-          <ha-icon-button class="edit-icon" .value=${'section_slots'} .path=${mdiPencil} @click="${this._editSection}">
-          </ha-icon-button>
-        </div>
-      </div>
-      <div class="side-by-side edit-daily-forecast-section">
-        <mwc-formfield .label=${`Daily Forecast Section - ${this._show_section_daily_forecast ? 'Visible' : 'Hidden'}`}>
-          <mwc-switch .checked=${this._show_section_daily_forecast !== false} .configValue=${'show_section_daily_forecast'}
-            @change=${this._valueChanged}>
-          </mwc-switch>
-        </mwc-formfield>
-        <div>
-          <ha-icon-button class="edit-icon" .value=${'section_daily_forecast'} .path=${mdiPencil}
-            @click="${this._editSection}">
-          </ha-icon-button>
-        </div>
-      </div>
-      <div class="side-by-side">
-        <mwc-formfield id="miscellaneous" .label=${`Miscellaneous`}>
-          <div id="miscellaneous"></div>
-        </mwc-formfield>
-        <div>
-          <ha-icon-button class="edit-icon" .value=${'section_miscellaneous'} .path=${mdiPencil}
-            @click="${this._editSection}">
-          </ha-icon-button>
-        </div>
-      </div>
-    `;
+        const htmlConfig = [];
+        const slots = this._section_order || [];
+        slots.forEach((slot, index) => {
+            htmlConfig.push(this.getConfigBlock(slot, index === 0, index + 1 === slots.length - 1));
+        });
+        return $ `${htmlConfig}`;
     }
     _initialize() {
         if (this.hass === undefined)
@@ -11416,6 +11472,34 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
             const target = ev.currentTarget;
             this._subElementEditor = target.value;
         }
+    }
+    _moveUp(ev) {
+        if (!this._config || !this.hass) {
+            return;
+        }
+        if (ev.currentTarget) {
+            const target = ev.currentTarget;
+            if (this._config['section_order']) {
+                const slot = this._config['section_order'].findIndex(t => t === target.value);
+                console.info(`MoveUp ${slot}`);
+                [this._config['section_order'][slot], this._config['section_order'][slot - 1]] = [this._config['section_order'][slot - 1], this._config['section_order'][slot]];
+            }
+        }
+        ne(this, 'config-changed', { config: this._config });
+    }
+    _moveDown(ev) {
+        if (!this._config || !this.hass) {
+            return;
+        }
+        if (ev.currentTarget) {
+            const target = ev.currentTarget;
+            if (this._config['section_order']) {
+                const slot = this._config['section_order'].findIndex(t => t === target.value);
+                console.info(`MoveUp ${slot}`);
+                [this._config['section_order'][slot], this._config['section_order'][slot + 1]] = [this._config['section_order'][slot + 1], this._config['section_order'][slot]];
+            }
+        }
+        ne(this, 'config-changed', { config: this._config });
     }
     _valueChanged(ev) {
         if (!this._config || !this.hass) {
@@ -11475,43 +11559,35 @@ WeatherCardEditor.styles = r$4 `
     mwc-formfield {
       height: 48px;
     }
-    .option {
-      padding: 4px 0px;
+    /* .option {
       cursor: pointer;
-    }
-    .row {
+    } */
+    /* .row {
       display: flex;
       margin-bottom: -14px;
       pointer-events: none;
-    }
-    .title {
+    } */
+    /* .title {
       padding-left: 16px;
       margin-top: -6px;
       pointer-events: none;
-    }
-    .secondary {
+    } */
+    /* .secondary {
       padding-left: 40px;
       color: var(--secondary-text-color);
       pointer-events: none;
-    }
-    .values {
+    } */
+    /* .values {
       padding-left: 16px;
       background: var(--secondary-background-color);
-    }
-    ha-switch {
-      padding: 16px 6px;
-    }
+    } */
     .side-by-side {
       display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
-    .side-by-side > * {
-      flex: 1;
-    }
-    .side-by-side :not(:last-child) {
-      padding-right: 4px;
-    }
-    div #miscellaneous {
-      width: 48px;
+    .no-switch {
+      padding-left: 48px;
     }
   `;
 __decorate([
