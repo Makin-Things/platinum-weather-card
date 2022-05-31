@@ -1607,8 +1607,8 @@ ${this.hass.states[this.config.entity_temp_following].state}` : html``;
       .line {
         margin-left: 0.5em;
         margin-right: 0.5em;
-        margin-top : -12px;
-        margin-bottom: 10px;
+        margin-top : -2px;
+        margin-bottom: 0px;
       }
       .current-text {
         font-size: ${unsafeCSS(currentTextFontSize)};
@@ -1617,6 +1617,7 @@ ${this.hass.states[this.config.entity_temp_following].state}` : html``;
         white-space: nowrap;
         text-align: ${unsafeCSS(currentTextAlignment)};
         line-height: 1.2em;
+        padding-top: 8px;
       }
       .variations {
         display: flex;
