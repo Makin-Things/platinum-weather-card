@@ -1857,6 +1857,7 @@ ${this.hass.states[this.config.entity_temp_following].state}` : $ ``;
       .day-vert-dayicon {
         text-align: left;
         float: left;
+        margin-bottom: -8px;
       }
       .day-vert-values {
         text-align: left;
@@ -1890,6 +1891,7 @@ ${this.hass.states[this.config.entity_temp_following].state}` : $ ``;
         display: inline-table;
         font-size: 13px;
         font-weight: 300;
+        padding-top: 8px;
       }
       .highTemp {
         display: table-cell;
