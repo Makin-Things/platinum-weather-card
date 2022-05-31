@@ -204,6 +204,19 @@ export class WeatherCard extends LitElement {
     `;
   }
 
+  private _renderExtendedSection(): TemplateResult {
+    if (this.config?.show_section_extended === false) return html``;
+
+    const extendedEntity = this.config['entity_daily_summary'];
+    const extended = html`<div class="f-extended">${this.hass.states[extendedEntity] !== undefined ? this.hass.states[extendedEntity].state : "---"}</div>`;
+
+    return html`
+      <div class="extended-section section">
+        ${extended}
+      </div>
+    `;
+  }
+
   private _renderSlotsSection(): TemplateResult {
     if (this.config?.show_section_slots === false) return html``;
 
@@ -383,6 +396,7 @@ export class WeatherCard extends LitElement {
         <div class="content">
           ${this._renderTitleSection()}
           ${this._renderMainSection()}
+          ${this._renderExtendedSection()}
           ${this._renderSlotsSection()}
           ${this._renderDailyForecastSection()}
         </div>
@@ -1758,6 +1772,9 @@ ${this.hass.states[this.config.entity_temp_following].state}` : html``;
         font-size: 13px;
         font-weight: 300;
         padding-top: 8px;
+      }
+      .extended-section .f-extended {
+        padding-top: 0;
       }
       .highTemp {
         display: table-cell;

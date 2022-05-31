@@ -365,6 +365,18 @@ let WeatherCard = class WeatherCard extends s$1 {
       </div>
     `;
     }
+    _renderExtendedSection() {
+        var _a;
+        if (((_a = this.config) === null || _a === void 0 ? void 0 : _a.show_section_extended) === false)
+            return $ ``;
+        const extendedEntity = this.config['entity_daily_summary'];
+        const extended = $ `<div class="f-extended">${this.hass.states[extendedEntity] !== undefined ? this.hass.states[extendedEntity].state : "---"}</div>`;
+        return $ `
+      <div class="extended-section section">
+        ${extended}
+      </div>
+    `;
+    }
     _renderSlotsSection() {
         var _a;
         if (((_a = this.config) === null || _a === void 0 ? void 0 : _a.show_section_slots) === false)
@@ -540,6 +552,7 @@ let WeatherCard = class WeatherCard extends s$1 {
         <div class="content">
           ${this._renderTitleSection()}
           ${this._renderMainSection()}
+          ${this._renderExtendedSection()}
           ${this._renderSlotsSection()}
           ${this._renderDailyForecastSection()}
         </div>
@@ -1886,6 +1899,9 @@ ${this.hass.states[this.config.entity_temp_following].state}` : $ ``;
         font-size: 13px;
         font-weight: 300;
         padding-top: 8px;
+      }
+      .extended-section .f-extended {
+        padding-top: 0;
       }
       .highTemp {
         display: table-cell;
@@ -10459,6 +10475,10 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
         var _a;
         return ((_a = this._config) === null || _a === void 0 ? void 0 : _a.show_separator) === true; // default off
     }
+    get _entity_daily_summary() {
+        var _a;
+        return ((_a = this._config) === null || _a === void 0 ? void 0 : _a.entity_daily_summary) || '';
+    }
     get _slot_l1() {
         var _a;
         return ((_a = this._config) === null || _a === void 0 ? void 0 : _a.slot_l1) || '';
@@ -11029,6 +11049,14 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
       </div>
     `;
     }
+    _sectionExtendedEditor() {
+        return $ `
+      <ha-entity-picker .hass=${this.hass} .configValue=${'entity_daily_summary'} .value=${this._entity_daily_summary}
+        name="entity_daily_summary" label="Entity Daily Summary (required)" allow-custom-entity
+        @value-changed=${this._valueChangedPicker}>
+      </ha-entity-picker>
+    `;
+    }
     _sectionSlotsEditor() {
         const slotValues = $ `<mwc-list-item></mwc-list-item>
 <mwc-list-item value="daytime_high">daytime_high</mwc-list-item>
@@ -11240,6 +11268,9 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
             case 'section_main':
                 subel.push(this._sectionMainEditor());
                 break;
+            case 'section_extended':
+                subel.push(this._sectionExtendedEditor());
+                break;
             case 'section_slots':
                 subel.push(this._sectionSlotsEditor());
                 break;
@@ -11262,6 +11293,10 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
     get _show_section_main() {
         var _a;
         return ((_a = this._config) === null || _a === void 0 ? void 0 : _a.show_section_main) !== false; //default on
+    }
+    get _show_section_extended() {
+        var _a;
+        return ((_a = this._config) === null || _a === void 0 ? void 0 : _a.show_section_extended) !== false; //default on
     }
     get _show_section_slots() {
         var _a;
@@ -11297,6 +11332,17 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
         </mwc-formfield>
         <div>
           <ha-icon-button class="edit-icon" .value=${'section_main'} .path=${mdiPencil} @click="${this._editSection}">
+          </ha-icon-button>
+        </div>
+      </div>
+      <div class="side-by-side edit-extended-section">
+        <mwc-formfield .label=${`Extended Section - ${this._show_section_extended ? 'Visible' : 'Hidden'}`}>
+          <mwc-switch .checked=${this._show_section_extended !== false} .configValue=${'show_section_extended'}
+            @change=${this._valueChanged}>
+          </mwc-switch>
+        </mwc-formfield>
+        <div>
+          <ha-icon-button class="edit-icon" .value=${'section_extended'} .path=${mdiPencil} @click="${this._editSection}">
           </ha-icon-button>
         </div>
       </div>

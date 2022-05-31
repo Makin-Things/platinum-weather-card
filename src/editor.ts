@@ -82,6 +82,10 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     return this._config?.show_separator === true; // default off
   }
 
+  get _entity_daily_summary(): string {
+    return this._config?.entity_daily_summary || '';
+  }
+
   get _slot_l1(): string {
     return this._config?.slot_l1 || '';
   }
@@ -690,6 +694,15 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     `;
   }
 
+  private _sectionExtendedEditor(): TemplateResult {
+    return html`
+      <ha-entity-picker .hass=${this.hass} .configValue=${'entity_daily_summary'} .value=${this._entity_daily_summary}
+        name="entity_daily_summary" label="Entity Daily Summary (required)" allow-custom-entity
+        @value-changed=${this._valueChangedPicker}>
+      </ha-entity-picker>
+    `;
+  }
+
   private _sectionSlotsEditor(): TemplateResult {
     const slotValues = html`<mwc-list-item></mwc-list-item>
 <mwc-list-item value="daytime_high">daytime_high</mwc-list-item>
@@ -911,6 +924,9 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
       case 'section_main':
         subel.push(this._sectionMainEditor());
         break;
+      case 'section_extended':
+        subel.push(this._sectionExtendedEditor());
+        break;
       case 'section_slots':
         subel.push(this._sectionSlotsEditor());
         break;
@@ -934,6 +950,10 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
 
   get _show_section_main(): boolean {
     return this._config?.show_section_main !== false; //default on
+  }
+
+  get _show_section_extended(): boolean {
+    return this._config?.show_section_extended !== false; //default on
   }
 
   get _show_section_slots(): boolean {
@@ -971,6 +991,17 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
         </mwc-formfield>
         <div>
           <ha-icon-button class="edit-icon" .value=${'section_main'} .path=${mdiPencil} @click="${this._editSection}">
+          </ha-icon-button>
+        </div>
+      </div>
+      <div class="side-by-side edit-extended-section">
+        <mwc-formfield .label=${`Extended Section - ${this._show_section_extended ? 'Visible' : 'Hidden' }`}>
+          <mwc-switch .checked=${this._show_section_extended !== false} .configValue=${'show_section_extended'}
+            @change=${this._valueChanged}>
+          </mwc-switch>
+        </mwc-formfield>
+        <div>
+          <ha-icon-button class="edit-icon" .value=${'section_extended'} .path=${mdiPencil} @click="${this._editSection}">
           </ha-icon-button>
         </div>
       </div>
