@@ -10,12 +10,12 @@ declare global {
 export type layoutOrientation = "horizontal" | "vertical";
 export type layoutDays = 1 | 2 | 3 | 4 | 5 | 6 | 7;
 export type extendedDays = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
-export type configSlots = 'title' | 'main' | 'extended' | 'slots' | 'daily_forecast' | 'miscellaneous';
+export type configSlots = 'title' | 'main' | 'extended' | 'slots' | 'daily_forecast';
 
 // TODO Add your configuration elements here for type-checking
 export interface WeatherCardConfig extends LovelaceCardConfig {
   type: string;
-  section_order?: configSlots[];
+  section_order: configSlots[];
   show_section_title?: boolean;
   show_section_main?: boolean;
   show_section_extended?: boolean;

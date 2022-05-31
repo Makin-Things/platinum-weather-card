@@ -544,17 +544,33 @@ let WeatherCard = class WeatherCard extends s$1 {
         const htmlCode = [];
         if (this._checkForErrors())
             htmlCode.push(this._showConfigWarning(this._error));
+        const sections = [];
+        this.config.section_order.forEach(section => {
+            switch (section) {
+                case 'title':
+                    sections.push(this._renderTitleSection());
+                    break;
+                case 'main':
+                    sections.push(this._renderMainSection());
+                    break;
+                case 'extended':
+                    sections.push(this._renderExtendedSection());
+                    break;
+                case 'slots':
+                    sections.push(this._renderSlotsSection());
+                    break;
+                case 'daily_forecast':
+                    sections.push(this._renderDailyForecastSection());
+                    break;
+            }
+        });
         htmlCode.push($ `
       <style>
         ${this.styles}
       </style>
       <ha-card class="card">
         <div class="content">
-          ${this._renderTitleSection()}
-          ${this._renderMainSection()}
-          ${this._renderExtendedSection()}
-          ${this._renderSlotsSection()}
-          ${this._renderDailyForecastSection()}
+          ${sections}
         </div>
       </ha-card>
     `);
@@ -10434,9 +10450,8 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
     setConfig(config) {
         this._config = config;
         if (this._section_order === null) {
-            this._config = Object.assign(Object.assign({}, this._config), { ['section_order']: ['title', 'main', 'extended', 'slots', 'daily_forecast', 'miscellaneous'] });
+            this._config = Object.assign(Object.assign({}, this._config), { ['section_order']: ['title', 'main', 'extended', 'slots', 'daily_forecast'] });
             ne(this, 'config-changed', { config: this._config });
-            // this._config['section_order'] = ['title', 'main', 'extended', 'slots', 'daily_forecast', 'miscellaneous'];
         }
         this.loadCardHelpers();
     }
@@ -11433,8 +11448,9 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
         const htmlConfig = [];
         const slots = this._section_order || [];
         slots.forEach((slot, index) => {
-            htmlConfig.push(this.getConfigBlock(slot, index === 0, index + 1 === slots.length - 1));
+            htmlConfig.push(this.getConfigBlock(slot, index === 0, index + 1 === slots.length));
         });
+        htmlConfig.push(this.getConfigBlock('miscellaneous', false, false));
         return $ `${htmlConfig}`;
     }
     _initialize() {

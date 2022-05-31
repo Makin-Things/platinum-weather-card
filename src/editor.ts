@@ -37,10 +37,9 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     if (this._section_order === null) {
       this._config = {
         ...this._config,
-        ['section_order']: ['title', 'main', 'extended', 'slots', 'daily_forecast', 'miscellaneous'],
+        ['section_order']: ['title', 'main', 'extended', 'slots', 'daily_forecast'],
       }
       fireEvent(this, 'config-changed', { config: this._config });
-      // this._config['section_order'] = ['title', 'main', 'extended', 'slots', 'daily_forecast', 'miscellaneous'];
     }
 
     this.loadCardHelpers();
@@ -1095,8 +1094,9 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     const slots = this._section_order || [];
 
     slots.forEach((slot, index) => {
-      htmlConfig.push(this.getConfigBlock(slot, index === 0, index + 1 === slots.length - 1));
+      htmlConfig.push(this.getConfigBlock(slot, index === 0, index + 1 === slots.length));
     });
+    htmlConfig.push(this.getConfigBlock('miscellaneous', false, false));
 
     return html`${htmlConfig}`;
   }

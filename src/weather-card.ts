@@ -388,17 +388,35 @@ export class WeatherCard extends LitElement {
     const htmlCode: TemplateResult[] = [];
     if (this._checkForErrors()) htmlCode.push(this._showConfigWarning(this._error));
 
+    const sections: TemplateResult[] = [];
+    this.config.section_order.forEach(section => {
+      switch (section) {
+        case 'title':
+          sections.push(this._renderTitleSection());
+          break;
+        case 'main':
+          sections.push(this._renderMainSection());
+          break;
+        case 'extended':
+          sections.push(this._renderExtendedSection());
+          break;
+        case 'slots':
+          sections.push(this._renderSlotsSection());
+          break;
+        case 'daily_forecast':
+          sections.push(this._renderDailyForecastSection());
+          break;
+      }
+    });
+
+
     htmlCode.push(html`
       <style>
         ${this.styles}
       </style>
       <ha-card class="card">
         <div class="content">
-          ${this._renderTitleSection()}
-          ${this._renderMainSection()}
-          ${this._renderExtendedSection()}
-          ${this._renderSlotsSection()}
-          ${this._renderDailyForecastSection()}
+          ${sections}
         </div>
       </ha-card>
     `);
