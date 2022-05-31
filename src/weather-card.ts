@@ -247,10 +247,8 @@ export class WeatherCard extends LitElement {
     const days = this.config.daily_forecast_days || 5;
     if (this.config.daily_forecast_layout !== 'vertical') {
       for (var i = 0; i < days; i++) {
-        const forecastDate = this.config['entity_forecast_icon_1'] && this.hass.states[this.config['entity_forecast_icon_1']] ? new Date(this.hass.states[this.config['entity_forecast_icon_1']].attributes['date']) : undefined;
-        if (forecastDate) {
-          forecastDate.setDate(forecastDate.getDate() + i);
-        }
+        const forecastDate = new Date();
+        forecastDate.setDate(forecastDate.getDate() + i + 1);
         var start = this.config['entity_forecast_icon_1'] ? this.config['entity_forecast_icon_1'].match(/(\d+)(?!.*\d)/g) : false;
         const iconEntity = start ? this.config['entity_forecast_icon_1'].replace(/(\d+)(?!.*\d)/g, Number(start) + i) : undefined;
         const url = new URL(('icons/' + (this.config.static_icons ? 'static' : 'animated') + '/' + (this.hass.states[iconEntity] !== undefined ? this._weatherIcon(this.hass.states[iconEntity].state) : 'unknown') + '.svg').replace("-night", "-day"), import.meta.url);
@@ -300,10 +298,8 @@ export class WeatherCard extends LitElement {
     `
     } else {
       for (var i = 0; i < days; i++) {
-        const forecastDate = this.config['entity_forecast_icon_1'] && this.hass.states[this.config['entity_forecast_icon_1']] ? new Date(this.hass.states[this.config['entity_forecast_icon_1']].attributes['date']) : undefined;
-        if (forecastDate) {
-          forecastDate.setDate(forecastDate.getDate() + i);
-        }
+        const forecastDate = new Date();
+        forecastDate.setDate(forecastDate.getDate() + i + 1);
         var start = this.config['entity_forecast_icon_1'] ? this.config['entity_forecast_icon_1'].match(/(\d+)(?!.*\d)/g) : false;
         const iconEntity = start ? this.config['entity_forecast_icon_1'].replace(/(\d+)(?!.*\d)/g, Number(start) + i) : undefined;
         if (this.hass.states[iconEntity] === undefined || this.hass.states[iconEntity].state === 'unknown') { // Stop adding forecast days as soon as an undefined entity is encountered
