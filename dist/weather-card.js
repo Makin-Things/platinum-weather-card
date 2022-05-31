@@ -467,6 +467,9 @@ let WeatherCard = class WeatherCard extends s$1 {
                 }
                 var start = this.config['entity_forecast_icon_1'] ? this.config['entity_forecast_icon_1'].match(/(\d+)(?!.*\d)/g) : false;
                 const iconEntity = start ? this.config['entity_forecast_icon_1'].replace(/(\d+)(?!.*\d)/g, Number(start) + i) : undefined;
+                if (this.hass.states[iconEntity] === undefined || this.hass.states[iconEntity].state === 'unknown') { // Stop adding forecast days as soon as an undefined entity is encountered
+                    break;
+                }
                 const url = new URL(('icons/' + (this.config.static_icons ? 'static' : 'animated') + '/' + (this.hass.states[iconEntity] !== undefined ? this._weatherIcon(this.hass.states[iconEntity].state) : 'unknown') + '.svg').replace("-night", "-day"), import.meta.url);
                 const htmlIcon = $ `<i class="icon" style="background: none, url(${url.href}) no-repeat; background-size: contain;"></i><br>`;
                 start = this.config['entity_forecast_high_temp_1'] ? this.config['entity_forecast_high_temp_1'].match(/(\d+)(?!.*\d)/g) : false;
