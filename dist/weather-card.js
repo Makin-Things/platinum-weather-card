@@ -1835,14 +1835,10 @@ ${this.hass.states[this.config.entity_temp_following].state}` : $ ``;
         margin: 0 auto;
         clear: both;
       }
-      .daily-forecast-vert-section .day-vert:nth-last-child(1) {
-        border-bottom: none;
-        margin-bottom: 0;
-      }
       .day-vert {
         flex: 1;
         color: var(--primary-text-color);
-        border-bottom: .1em solid #d9d9d9;
+        border-top: .1em solid #d9d9d9;
         line-height: 1.5;
         box-sizing: border-box;
         padding-left: 8px;
