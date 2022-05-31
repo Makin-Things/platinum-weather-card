@@ -1748,6 +1748,7 @@ ${this.hass.states[this.config.entity_temp_following].state}` : $ ``;
         overflow: hidden;
         white-space: nowrap;
         text-align: ${o$6(currentTextAlignment)};
+        line-height: 1.2em;
       }
       .variations {
         display: flex;

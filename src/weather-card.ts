@@ -1620,6 +1620,7 @@ ${this.hass.states[this.config.entity_temp_following].state}` : html``;
         overflow: hidden;
         white-space: nowrap;
         text-align: ${unsafeCSS(currentTextAlignment)};
+        line-height: 1.2em;
       }
       .variations {
         display: flex;
