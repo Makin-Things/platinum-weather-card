@@ -9,6 +9,7 @@ declare global {
 
 export type layoutOrientation = "horizontal" | "vertical";
 export type layoutDays = 1 | 2 | 3 | 4 | 5 | 6 | 7;
+export type extendedDays = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
 
 // TODO Add your configuration elements here for type-checking
 export interface WeatherCardConfig extends LovelaceCardConfig {
@@ -46,4 +47,5 @@ export interface WeatherCardConfig extends LovelaceCardConfig {
   entity_wind_gust_kt?: string;
   daily_forecast_layout?: layoutOrientation;
   daily_forecast_days?: layoutDays;
+  daily_extended_forecast_days?: extendedDays;
 }

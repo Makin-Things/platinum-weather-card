@@ -496,7 +496,7 @@ let WeatherCard = class WeatherCard extends s$1 {
                 start = this.config['entity_pos_1'] ? this.config['entity_pos_1'].match(/(\d+)(?!.*\d)/g) : false;
                 const posEntity = start ? this.config['entity_pos_1'].replace(/(\d+)(?!.*\d)/g, Number(start) + i) : undefined;
                 const pos = start ? $ `<br><div class="f-slot"><div class="f-label">Possible rain </div><div class="pos">${this.hass.states[posEntity] !== undefined ? this.hass.states[posEntity].state : "---"}</div><div class="unit">${this.getUOM('precipitation')}</div></div>` : ``;
-                start = this.config['entity_extended_1'] ? this.config['entity_extended_1'].match(/(\d+)(?!.*\d)/g) : false;
+                start = this.config['entity_extended_1'] && i < (this.config['daily_extended_forecast_days'] !== 0 ? this.config['daily_extended_forecast_days'] || 7 : 0) ? this.config['entity_extended_1'].match(/(\d+)(?!.*\d)/g) : false;
                 const extendedEntity = start ? this.config['entity_extended_1'].replace(/(\d+)(?!.*\d)/g, Number(start) + i) : undefined;
                 const extended = start ? $ `<div class="f-extended">${this.hass.states[extendedEntity] !== undefined ? this.hass.states[extendedEntity].state : "---"}</div>` : ``;
                 htmlDays.push($ `
@@ -10629,6 +10629,10 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
         var _a;
         return ((_a = this._config) === null || _a === void 0 ? void 0 : _a.daily_forecast_days) || null;
     }
+    get _daily_extended_forecast_days() {
+        var _a, _b;
+        return (_b = (_a = this._config) === null || _a === void 0 ? void 0 : _a.daily_extended_forecast_days) !== null && _b !== void 0 ? _b : null;
+    }
     get _entity_forecast_icon_1() {
         var _a;
         return ((_a = this._config) === null || _a === void 0 ? void 0 : _a.entity_forecast_icon_1) || '';
@@ -10652,6 +10656,10 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
     get _entity_pos_1() {
         var _a;
         return ((_a = this._config) === null || _a === void 0 ? void 0 : _a.entity_pos_1) || '';
+    }
+    get _entity_extended_1() {
+        var _a;
+        return ((_a = this._config) === null || _a === void 0 ? void 0 : _a.entity_extended_1) || '';
     }
     get _optional_entities() {
         var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
@@ -11151,6 +11159,9 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
           <mwc-list-item value="horizontal">horizontal</mwc-list-item>
           <mwc-list-item value="vertical">vertical</mwc-list-item>
         </ha-select>
+        <div></div>
+      </div>
+      <div class="side-by-side">
         <ha-select label="Daily Forecast Days (optional)" .configValue=${'daily_forecast_days'}
           .value=${this._daily_forecast_days ? this._daily_forecast_days.toString() : null} @closed=${(ev) => ev.stopPropagation()}
           @selected=${this._valueChangedNumber}
@@ -11165,6 +11176,22 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
           ${this._daily_forecast_layout === 'vertical' ? $ `<mwc-list-item value="6">6</mwc-list-item>
           <mwc-list-item value="7">7</mwc-list-item>` : $ ``}
         </ha-select>
+        ${this._daily_forecast_layout === 'vertical' ? $ `<ha-select label="Daily Extended Days (optional)"
+          .configValue=${'daily_extended_forecast_days'} .value=${this._daily_extended_forecast_days !== null ?
+            this._daily_extended_forecast_days.toString() : null} @closed=${(ev) => ev.stopPropagation()}
+          @selected=${this._valueChangedNumber}
+          fixedMenuPosition
+          naturalMenuWidth>
+          <mwc-list-item></mwc-list-item>
+          <mwc-list-item value="0">0</mwc-list-item>
+          <mwc-list-item value="1">1</mwc-list-item>
+          <mwc-list-item value="2">2</mwc-list-item>
+          <mwc-list-item value="3">3</mwc-list-item>
+          <mwc-list-item value="4">4</mwc-list-item>
+          <mwc-list-item value="5">5</mwc-list-item>
+          <mwc-list-item value="6">6</mwc-list-item>
+          <mwc-list-item value="7">7</mwc-list-item>
+        </ha-select>` : $ `<div></div>`}
       </div>
       <ha-entity-picker .hass=${this.hass} .configValue=${'entity_forecast_icon_1'} .value=${this._entity_forecast_icon_1}
         name="entity_forecast_icon_1" label="Entity Forecast Icon 1 (optional)" allow-custom-entity
@@ -11188,6 +11215,10 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
       <ha-entity-picker .hass=${this.hass} .configValue=${'entity_pos_1'} .value=${this._entity_pos_1} name="entity_pos_1"
         label="Entity Forecast Possible 1 (optional)" allow-custom-entity @value-changed=${this._valueChangedPicker}>
       </ha-entity-picker>
+      ${this._daily_forecast_layout === 'vertical' ? $ `<ha-entity-picker .hass=${this.hass} .configValue=${'entity_extended_1'} .value=${this._entity_extended_1}
+        name="entity_extended_1" label="Entity Forecast Extended 1 (optional)" allow-custom-entity
+        @value-changed=${this._valueChangedPicker}>
+      </ha-entity-picker>` : ``}
     `;
     }
     _sectionMiscellaneousEditor() {

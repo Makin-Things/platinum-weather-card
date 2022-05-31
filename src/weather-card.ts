@@ -335,7 +335,7 @@ export class WeatherCard extends LitElement {
         start = this.config['entity_pos_1'] ? this.config['entity_pos_1'].match(/(\d+)(?!.*\d)/g) : false;
         const posEntity = start ? this.config['entity_pos_1'].replace(/(\d+)(?!.*\d)/g, Number(start) + i) : undefined;
         const pos = start ? html`<br><div class="f-slot"><div class="f-label">Possible rain </div><div class="pos">${this.hass.states[posEntity] !== undefined ? this.hass.states[posEntity].state : "---"}</div><div class="unit">${this.getUOM('precipitation')}</div></div>` : ``;
-        start = this.config['entity_extended_1'] ? this.config['entity_extended_1'].match(/(\d+)(?!.*\d)/g) : false;
+        start = this.config['entity_extended_1'] && i < (this.config['daily_extended_forecast_days'] !== 0 ? this.config['daily_extended_forecast_days'] || 7 : 0) ? this.config['entity_extended_1'].match(/(\d+)(?!.*\d)/g) : false;
         const extendedEntity = start ? this.config['entity_extended_1'].replace(/(\d+)(?!.*\d)/g, Number(start) + i) : undefined;
         const extended = start ? html`<div class="f-extended">${this.hass.states[extendedEntity] !== undefined ? this.hass.states[extendedEntity].state : "---"}</div>` : ``;
 
