@@ -15,6 +15,7 @@ export type configSlots = 'title' | 'main' | 'extended' | 'slots' | 'daily_forec
 // TODO Add your configuration elements here for type-checking
 export interface WeatherCardConfig extends LovelaceCardConfig {
   type: string;
+  card_config_version?: number;
   section_order: configSlots[];
   show_section_title?: boolean;
   show_section_main?: boolean;

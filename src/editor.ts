@@ -33,6 +33,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
   };
 
   public setConfig(config: WeatherCardConfig): void {
+    console.info(`editor setConfig`);
     this._config = config;
     if (this._section_order === null) {
       this._config = {
