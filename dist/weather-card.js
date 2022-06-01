@@ -369,11 +369,19 @@ let WeatherCard = class WeatherCard extends s$1 {
         var _a;
         if (((_a = this.config) === null || _a === void 0 ? void 0 : _a.show_section_extended) === false)
             return $ ``;
-        const extendedEntity = this.config['entity_daily_summary'];
-        const extended = $ `<div class="f-extended">${this.hass.states[extendedEntity] !== undefined ? this.hass.states[extendedEntity].state : "---"}</div>`;
+        const extendedEntity = this.config['entity_daily_summary'] || '';
+        var extended = $ ``;
+        if (this.config['extended_use_attr'] === true) {
+            extended = $ `${this.config['extended_name_attr'] !== undefined ? this.hass.states[extendedEntity].attributes[this.config['extended_name_attr']] : "---"}`;
+        }
+        else {
+            extended = $ `${this.hass.states[extendedEntity] !== undefined ? this.hass.states[extendedEntity].state : "---"}`;
+        }
         return $ `
       <div class="extended-section section">
-        ${extended}
+        <div class="f-extended">
+          ${extended}
+        </div>
       </div>
     `;
     }
@@ -10505,6 +10513,14 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
         var _a;
         return ((_a = this._config) === null || _a === void 0 ? void 0 : _a.entity_daily_summary) || '';
     }
+    get _extended_use_attr() {
+        var _a;
+        return ((_a = this._config) === null || _a === void 0 ? void 0 : _a.extended_use_attr) === true; // default off
+    }
+    get _extended_name_attr() {
+        var _a;
+        return ((_a = this._config) === null || _a === void 0 ? void 0 : _a.extended_name_attr) || '';
+    }
     get _slot_l1() {
         var _a;
         return ((_a = this._config) === null || _a === void 0 ? void 0 : _a.slot_l1) || '';
@@ -11076,11 +11092,35 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
     `;
     }
     _sectionExtendedEditor() {
+        const attr_names = [];
+        if (this._extended_use_attr === true) {
+            const attrs = this.hass !== undefined ? this.hass.states[this._entity_daily_summary].attributes : [];
+            for (const element in attrs) {
+                attr_names.push($ `<mwc-list-item value="${element}">${element}</mwc-list-item>`);
+            }
+        }
         return $ `
       <ha-entity-picker .hass=${this.hass} .configValue=${'entity_daily_summary'} .value=${this._entity_daily_summary}
         name="entity_daily_summary" label="Entity Daily Summary (required)" allow-custom-entity
         @value-changed=${this._valueChangedPicker}>
       </ha-entity-picker>
+      <div class="side-by-side">
+        <div>
+          <mwc-formfield .label=${'Use Attribute'}>
+            <mwc-switch .checked=${this._extended_use_attr !== false} .configValue=${'extended_use_attr'}
+              @change=${this._valueChanged}>
+            </mwc-switch>
+          </mwc-formfield>
+        </div>
+        ${this._extended_use_attr === true ? $ `<ha-select label="Attribute (optional)" .configValue=${'extended_name_attr'}
+          .value=${this._extended_name_attr ? this._extended_name_attr : null} @closed=${(ev) => ev.stopPropagation()}
+          @selected=${this._valueChanged}
+          fixedMenuPosition
+          naturalMenuWidth>
+          <mwc-list-item></mwc-list-item>
+          ${attr_names}
+        </ha-select>` : $ ``}
+      </div>
     `;
     }
     _sectionSlotsEditor() {
@@ -11336,7 +11376,7 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
         switch (block) {
             case 'title':
                 return $ `
-          <div class="side-by-side edit-title-section">
+          <div class="main-flex edit-title-section">
             <mwc-formfield .label=${`Title Section - ${this._show_section_title ? 'Visible' : 'Hidden'}`}>
               <mwc-switch .checked=${this._show_section_title !== false} .configValue=${'show_section_title'}
                 @change=${this._valueChanged}>
@@ -11354,7 +11394,7 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
         `;
             case 'main':
                 return $ `
-          <div class="side-by-side edit-main-section">
+          <div class="main-flex edit-main-section">
             <mwc-formfield .label=${`Main Section - ${this._show_section_main ? 'Visible' : 'Hidden'}`}>
               <mwc-switch .checked=${this._show_section_main !== false} .configValue=${'show_section_main'}
                 @change=${this._valueChanged}>
@@ -11372,7 +11412,7 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
         `;
             case 'extended':
                 return $ `
-          <div class="side-by-side edit-extended-section">
+          <div class="main-flex edit-extended-section">
             <mwc-formfield .label=${`Extended Section - ${this._show_section_extended ? 'Visible' : 'Hidden'}`}>
               <mwc-switch .checked=${this._show_section_extended !== false} .configValue=${'show_section_extended'}
                 @change=${this._valueChanged}>
@@ -11390,7 +11430,7 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
         `;
             case 'slots':
                 return $ `
-          <div class="side-by-side edit-slots-section">
+          <div class="main-flex edit-slots-section">
             <mwc-formfield .label=${`Slots Section - ${this._show_section_slots ? 'Visible' : 'Hidden'}`}>
               <mwc-switch .checked=${this._show_section_slots !== false} .configValue=${'show_section_slots'}
                 @change=${this._valueChanged}>
@@ -11408,7 +11448,7 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
         `;
             case 'daily_forecast':
                 return $ `
-          <div class="side-by-side edit-daily-forecast-section">
+          <div class="main-flex edit-daily-forecast-section">
             <mwc-formfield .label=${`Daily Forecast Section - ${this._show_section_daily_forecast ? 'Visible' : 'Hidden'}`}>
               <mwc-switch .checked=${this._show_section_daily_forecast !== false} .configValue=${'show_section_daily_forecast'}
                 @change=${this._valueChanged}>
@@ -11426,7 +11466,7 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
         `;
             case 'miscellaneous':
                 return $ `
-          <div class="side-by-side">
+          <div class="main-flex">
             <mwc-formfield class="no-switch" .label=${`Miscellaneous`}>
             </mwc-formfield>
             <div>
@@ -11573,7 +11613,7 @@ WeatherCardEditor.styles = r$4 `
       --mdc-theme-secondary: var(--switch-checked-color);
     }
     mwc-formfield {
-      height: 48px;
+      height: 56px;
     }
     /* .option {
       cursor: pointer;
@@ -11597,10 +11637,19 @@ WeatherCardEditor.styles = r$4 `
       padding-left: 16px;
       background: var(--secondary-background-color);
     } */
-    .side-by-side {
+    .main-flex {
       display: flex;
       justify-content: space-between;
       align-items: center;
+    }
+    .side-by-side {
+      display: flex;
+    }
+    .side-by-side > * {
+      flex: 1;
+    }
+    .side-by-side :not(:last-child) {
+      padding-right: 4px;
     }
     .no-switch {
       padding-left: 48px;

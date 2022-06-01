@@ -97,6 +97,14 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     return this._config?.entity_daily_summary || '';
   }
 
+  get _extended_use_attr(): boolean {
+    return this._config?.extended_use_attr === true; // default off
+  }
+
+  get _extended_name_attr(): string {
+    return this._config?.extended_name_attr || '';
+  }
+
   get _slot_l1(): string {
     return this._config?.slot_l1 || '';
   }
@@ -706,11 +714,39 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
   }
 
   private _sectionExtendedEditor(): TemplateResult {
+    const attr_names: TemplateResult[] = [];
+    if (this._extended_use_attr === true) {
+      const attrs = this.hass !== undefined ? this.hass.states[this._entity_daily_summary].attributes : [];
+      for (const element in attrs) {
+        attr_names.push(html`<mwc-list-item value="${element}">${element}</mwc-list-item>`);
+      }
+    }
+
     return html`
       <ha-entity-picker .hass=${this.hass} .configValue=${'entity_daily_summary'} .value=${this._entity_daily_summary}
         name="entity_daily_summary" label="Entity Daily Summary (required)" allow-custom-entity
         @value-changed=${this._valueChangedPicker}>
       </ha-entity-picker>
+      <div class="side-by-side">
+        <div>
+          <mwc-formfield .label=${'Use Attribute'}>
+            <mwc-switch .checked=${this._extended_use_attr !== false} .configValue=${'extended_use_attr'}
+              @change=${this._valueChanged}>
+            </mwc-switch>
+          </mwc-formfield>
+        </div>
+        ${this._extended_use_attr === true ? html`<ha-select label="Attribute (optional)" .configValue=${'extended_name_attr'}
+          .value=${this._extended_name_attr ? this._extended_name_attr : null} @closed=${(ev: { stopPropagation:
+          ()=> any;
+          }) =>
+        ev.stopPropagation()}
+          @selected=${this._valueChanged}
+          fixedMenuPosition
+          naturalMenuWidth>
+          <mwc-list-item></mwc-list-item>
+          ${attr_names}
+        </ha-select>` : html``}
+      </div>
     `;
   }
 
@@ -979,7 +1015,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     switch (block) {
       case 'title':
         return html`
-          <div class="side-by-side edit-title-section">
+          <div class="main-flex edit-title-section">
             <mwc-formfield .label=${`Title Section - ${this._show_section_title ? 'Visible' : 'Hidden' }`}>
               <mwc-switch .checked=${this._show_section_title !== false} .configValue=${'show_section_title'}
                 @change=${this._valueChanged}>
@@ -997,7 +1033,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
         `;
       case 'main':
         return html`
-          <div class="side-by-side edit-main-section">
+          <div class="main-flex edit-main-section">
             <mwc-formfield .label=${`Main Section - ${this._show_section_main ? 'Visible' : 'Hidden' }`}>
               <mwc-switch .checked=${this._show_section_main !== false} .configValue=${'show_section_main'}
                 @change=${this._valueChanged}>
@@ -1015,7 +1051,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
         `;
       case 'extended':
         return html`
-          <div class="side-by-side edit-extended-section">
+          <div class="main-flex edit-extended-section">
             <mwc-formfield .label=${`Extended Section - ${this._show_section_extended ? 'Visible' : 'Hidden' }`}>
               <mwc-switch .checked=${this._show_section_extended !== false} .configValue=${'show_section_extended'}
                 @change=${this._valueChanged}>
@@ -1033,7 +1069,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
         `;
       case 'slots':
         return html`
-          <div class="side-by-side edit-slots-section">
+          <div class="main-flex edit-slots-section">
             <mwc-formfield .label=${`Slots Section - ${this._show_section_slots ? 'Visible' : 'Hidden' }`}>
               <mwc-switch .checked=${this._show_section_slots !== false} .configValue=${'show_section_slots'}
                 @change=${this._valueChanged}>
@@ -1051,7 +1087,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
         `;
       case 'daily_forecast':
         return html`
-          <div class="side-by-side edit-daily-forecast-section">
+          <div class="main-flex edit-daily-forecast-section">
             <mwc-formfield .label=${`Daily Forecast Section - ${this._show_section_daily_forecast ? 'Visible' : 'Hidden' }`}>
               <mwc-switch .checked=${this._show_section_daily_forecast !== false} .configValue=${'show_section_daily_forecast'}
                 @change=${this._valueChanged}>
@@ -1069,7 +1105,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
         `;
       case 'miscellaneous':
         return html`
-          <div class="side-by-side">
+          <div class="main-flex">
             <mwc-formfield class="no-switch" .label=${`Miscellaneous`}>
             </mwc-formfield>
             <div>
@@ -1233,7 +1269,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
       --mdc-theme-secondary: var(--switch-checked-color);
     }
     mwc-formfield {
-      height: 48px;
+      height: 56px;
     }
     /* .option {
       cursor: pointer;
@@ -1257,10 +1293,19 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
       padding-left: 16px;
       background: var(--secondary-background-color);
     } */
-    .side-by-side {
+    .main-flex {
       display: flex;
       justify-content: space-between;
       align-items: center;
+    }
+    .side-by-side {
+      display: flex;
+    }
+    .side-by-side > * {
+      flex: 1;
+    }
+    .side-by-side :not(:last-child) {
+      padding-right: 4px;
     }
     .no-switch {
       padding-left: 48px;

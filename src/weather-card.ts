@@ -207,12 +207,19 @@ export class WeatherCard extends LitElement {
   private _renderExtendedSection(): TemplateResult {
     if (this.config?.show_section_extended === false) return html``;
 
-    const extendedEntity = this.config['entity_daily_summary'];
-    const extended = html`<div class="f-extended">${this.hass.states[extendedEntity] !== undefined ? this.hass.states[extendedEntity].state : "---"}</div>`;
+    const extendedEntity = this.config['entity_daily_summary'] || '';
+    var extended: TemplateResult = html``;
+    if (this.config['extended_use_attr'] === true) {
+      extended = html`${this.config['extended_name_attr'] !== undefined ? this.hass.states[extendedEntity].attributes[this.config['extended_name_attr']] : "---"}`;
+    } else {
+      extended = html`${this.hass.states[extendedEntity] !== undefined ? this.hass.states[extendedEntity].state : "---"}`;
+    }
 
     return html`
       <div class="extended-section section">
-        ${extended}
+        <div class="f-extended">
+          ${extended}
+        </div>
       </div>
     `;
   }
