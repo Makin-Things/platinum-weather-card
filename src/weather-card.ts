@@ -353,7 +353,12 @@ export class WeatherCard extends LitElement {
         const pos = start ? html`<br><div class="f-slot"><div class="f-label">Possible rain </div><div class="pos">${this.hass.states[posEntity] !== undefined ? this.hass.states[posEntity].state : "---"}</div><div class="unit">${this.getUOM('precipitation')}</div></div>` : ``;
         start = this.config['entity_extended_1'] && i < (this.config['daily_extended_forecast_days'] !== 0 ? this.config['daily_extended_forecast_days'] || 7 : 0) ? this.config['entity_extended_1'].match(/(\d+)(?!.*\d)/g) : false;
         const extendedEntity = start ? this.config['entity_extended_1'].replace(/(\d+)(?!.*\d)/g, Number(start) + i) : undefined;
-        const extended = start ? html`<div class="f-extended">${this.hass.states[extendedEntity] !== undefined ? this.hass.states[extendedEntity].state : "---"}</div>` : ``;
+        var extended: TemplateResult = html``;
+        if (this.config['daily_extended_use_attr'] === true) {
+          extended = start ? html`<div class="f-extended">${this.config['daily_extended_name_attr'] !== undefined ? this.hass.states[extendedEntity].attributes[this.config['daily_extended_name_attr']] : "---"}</div>` : html``;
+        } else {
+          extended = start ? html`<div class="f-extended">${this.hass.states[extendedEntity] !== undefined ? this.hass.states[extendedEntity].state : "---"}</div>` : html``;
+        }
 
         htmlDays.push(html`
           <div class="day-vert fcasttooltip">

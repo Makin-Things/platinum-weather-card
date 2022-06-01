@@ -301,6 +301,14 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     return this._config?.entity_extended_1 || '';
   }
 
+  get _daily_extended_use_attr(): boolean {
+    return this._config?.daily_extended_use_attr === true; // default off
+  }
+
+  get _daily_extended_name_attr(): string {
+    return this._config?.daily_extended_name_attr || '';
+  }
+
   get _optional_entities(): TemplateResult {
     const entities = new Set();
     for (const slot of
@@ -865,6 +873,14 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
   }
 
   private _sectionDailyForecastEditor(): TemplateResult {
+    const attr_names: TemplateResult[] = [];
+    if (this._daily_extended_use_attr === true) {
+      const attrs = this.hass !== undefined ? this.hass.states[this._entity_extended_1].attributes : [];
+      for (const element in attrs) {
+        attr_names.push(html`<mwc-list-item value="${element}">${element}</mwc-list-item>`);
+      }
+    }
+
     return html`
       <div class="side-by-side">
         <ha-select label="Daily Forecast Layout (optional)" .configValue=${'daily_forecast_layout'}
@@ -941,7 +957,27 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
       ${this._daily_forecast_layout === 'vertical' ? html`<ha-entity-picker .hass=${this.hass} .configValue=${'entity_extended_1'} .value=${this._entity_extended_1}
         name="entity_extended_1" label="Entity Forecast Extended 1 (optional)" allow-custom-entity
         @value-changed=${this._valueChangedPicker}>
-      </ha-entity-picker>` : ``}
+      </ha-entity-picker>
+      <div class="side-by-side">
+        <div>
+          <mwc-formfield .label=${'Use Attribute'}>
+            <mwc-switch .checked=${this._daily_extended_use_attr !== false} .configValue=${'daily_extended_use_attr'}
+              @change=${this._valueChanged}>
+            </mwc-switch>
+          </mwc-formfield>
+        </div>
+        ${this._daily_extended_use_attr === true ? html`<ha-select label="Attribute (optional)" .configValue=${'daily_extended_name_attr'}
+          .value=${this._daily_extended_name_attr ? this._daily_extended_name_attr : null} @closed=${(ev: { stopPropagation:
+          ()=> any;
+          }) =>
+        ev.stopPropagation()}
+          @selected=${this._valueChanged}
+          fixedMenuPosition
+          naturalMenuWidth>
+          <mwc-list-item></mwc-list-item>
+          ${attr_names}
+        </ha-select>` : html``}
+      </div>` : ``}
     `;
   }
 

@@ -514,7 +514,13 @@ let WeatherCard = class WeatherCard extends s$1 {
                 const pos = start ? $ `<br><div class="f-slot"><div class="f-label">Possible rain </div><div class="pos">${this.hass.states[posEntity] !== undefined ? this.hass.states[posEntity].state : "---"}</div><div class="unit">${this.getUOM('precipitation')}</div></div>` : ``;
                 start = this.config['entity_extended_1'] && i < (this.config['daily_extended_forecast_days'] !== 0 ? this.config['daily_extended_forecast_days'] || 7 : 0) ? this.config['entity_extended_1'].match(/(\d+)(?!.*\d)/g) : false;
                 const extendedEntity = start ? this.config['entity_extended_1'].replace(/(\d+)(?!.*\d)/g, Number(start) + i) : undefined;
-                const extended = start ? $ `<div class="f-extended">${this.hass.states[extendedEntity] !== undefined ? this.hass.states[extendedEntity].state : "---"}</div>` : ``;
+                var extended = $ ``;
+                if (this.config['daily_extended_use_attr'] === true) {
+                    extended = start ? $ `<div class="f-extended">${this.config['daily_extended_name_attr'] !== undefined ? this.hass.states[extendedEntity].attributes[this.config['daily_extended_name_attr']] : "---"}</div>` : $ ``;
+                }
+                else {
+                    extended = start ? $ `<div class="f-extended">${this.hass.states[extendedEntity] !== undefined ? this.hass.states[extendedEntity].state : "---"}</div>` : $ ``;
+                }
                 htmlDays.push($ `
           <div class="day-vert fcasttooltip">
             <div class="day-vert-top">
@@ -10717,6 +10723,14 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
         var _a;
         return ((_a = this._config) === null || _a === void 0 ? void 0 : _a.entity_extended_1) || '';
     }
+    get _daily_extended_use_attr() {
+        var _a;
+        return ((_a = this._config) === null || _a === void 0 ? void 0 : _a.daily_extended_use_attr) === true; // default off
+    }
+    get _daily_extended_name_attr() {
+        var _a;
+        return ((_a = this._config) === null || _a === void 0 ? void 0 : _a.daily_extended_name_attr) || '';
+    }
     get _optional_entities() {
         var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
         const entities = new Set();
@@ -11236,6 +11250,13 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
     `;
     }
     _sectionDailyForecastEditor() {
+        const attr_names = [];
+        if (this._daily_extended_use_attr === true) {
+            const attrs = this.hass !== undefined ? this.hass.states[this._entity_extended_1].attributes : [];
+            for (const element in attrs) {
+                attr_names.push($ `<mwc-list-item value="${element}">${element}</mwc-list-item>`);
+            }
+        }
         return $ `
       <div class="side-by-side">
         <ha-select label="Daily Forecast Layout (optional)" .configValue=${'daily_forecast_layout'}
@@ -11306,7 +11327,24 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
       ${this._daily_forecast_layout === 'vertical' ? $ `<ha-entity-picker .hass=${this.hass} .configValue=${'entity_extended_1'} .value=${this._entity_extended_1}
         name="entity_extended_1" label="Entity Forecast Extended 1 (optional)" allow-custom-entity
         @value-changed=${this._valueChangedPicker}>
-      </ha-entity-picker>` : ``}
+      </ha-entity-picker>
+      <div class="side-by-side">
+        <div>
+          <mwc-formfield .label=${'Use Attribute'}>
+            <mwc-switch .checked=${this._daily_extended_use_attr !== false} .configValue=${'daily_extended_use_attr'}
+              @change=${this._valueChanged}>
+            </mwc-switch>
+          </mwc-formfield>
+        </div>
+        ${this._daily_extended_use_attr === true ? $ `<ha-select label="Attribute (optional)" .configValue=${'daily_extended_name_attr'}
+          .value=${this._daily_extended_name_attr ? this._daily_extended_name_attr : null} @closed=${(ev) => ev.stopPropagation()}
+          @selected=${this._valueChanged}
+          fixedMenuPosition
+          naturalMenuWidth>
+          <mwc-list-item></mwc-list-item>
+          ${attr_names}
+        </ha-select>` : $ ``}
+      </div>` : ``}
     `;
     }
     _sectionMiscellaneousEditor() {
