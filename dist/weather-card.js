@@ -222,6 +222,16 @@ let WeatherCard = class WeatherCard extends s$1 {
     static getStubConfig() {
         return {};
     }
+    getCardSize() {
+        console.info(`getCardSize`);
+        var cardHeight = 16;
+        cardHeight += this._config.show_section_title === true ? 56 : 0;
+        cardHeight += this._config.show_section_main !== false ? 162 : 0;
+        cardHeight += this._config.show_section_extended !== false ? 58 : 0;
+        const cardSize = Math.ceil(cardHeight / 50);
+        console.info(`CardHeight=${cardHeight} CardSize=${cardSize}`);
+        return cardSize;
+    }
     // https://lit.dev/docs/components/properties/#accessors-custom
     setConfig(config) {
         // TODO Check for required fields and that they are of the proper format
@@ -375,13 +385,15 @@ let WeatherCard = class WeatherCard extends s$1 {
         if (((_a = this._config) === null || _a === void 0 ? void 0 : _a.show_section_extended) === false)
             return $ ``;
         const extendedEntity = this._config['entity_daily_summary'] || '';
-        var extended = $ ``;
+        var extended = [];
         if (this._config['extended_use_attr'] === true) {
-            extended = $ `${this._config['extended_name_attr'] !== undefined ? this.hass.states[extendedEntity].attributes[this._config['extended_name_attr']] : "---"}`;
+            extended.push($ `${this._config['extended_name_attr'] !== undefined ? this.hass.states[extendedEntity].attributes[this._config['extended_name_attr']] : ""}`);
         }
         else {
-            extended = $ `${this.hass.states[extendedEntity] !== undefined ? this.hass.states[extendedEntity].state : "---"}`;
+            extended.push($ `${this.hass.states[extendedEntity] !== undefined ? this.hass.states[extendedEntity].state : ""}`);
         }
+        extended.push($ `${this._config['entity_todays_fire_danger'] && this.hass.states[this._config['entity_todays_fire_danger']] && this.hass.states[this._config['entity_todays_fire_danger']].state !== "unknown" ? " " + this.hass.states[this._config['entity_todays_fire_danger']].state : ""}`);
+        extended.push($ `${this._config['entity_todays_uv_forecast'] && this.hass.states[this._config['entity_todays_uv_forecast']] && this.hass.states[this._config['entity_todays_uv_forecast']].state !== "unknown" ? " " + this.hass.states[this._config['entity_todays_uv_forecast']].state : ""}`);
         return $ `
       <div class="extended-section section">
         <div class="f-extended">
@@ -933,7 +945,7 @@ ${this.hass.states[this._config.entity_temp_following].state}` : $ ``;
             return this._config.entity_uv_alert_summary ? $ `<li><span class="ha-icon">
     <ha-icon icon="mdi:weather-sunny"></ha-icon>
   </span>${this.localeTextuvRating} <span
-    id="daytime-uv-text">${this.hass.states[this._config.entity_uv_alert_summary].state}</span></li>` : $ ``;
+    id="daytime-uv-text">${this.hass.states[this._config.entity_uv_alert_summary].state !== "unknown" ? this.hass.states[this._config.entity_uv_alert_summary].state : " n/a"}</span></li>` : $ ``;
         }
         catch (e) {
             return $ `<li><span class="ha-icon">
@@ -947,7 +959,7 @@ ${this.hass.states[this._config.entity_temp_following].state}` : $ ``;
     <ha-icon icon="mdi:fire"></ha-icon>
   </span>${this.localeTextfireDanger} <span
     id="daytime-firedanger-text">${this.hass.states[this._config.entity_fire_danger_summary].state !== 'unknown' ?
-                this.hass.states[this._config.entity_fire_danger_summary].state : 'N/A'}</span></li>` : $ ``;
+                this.hass.states[this._config.entity_fire_danger_summary].state : 'n/a'}</span></li>` : $ ``;
         }
         catch (e) {
             return $ `<li><span class="ha-icon">
@@ -10562,6 +10574,14 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
         var _a;
         return ((_a = this._config) === null || _a === void 0 ? void 0 : _a.extended_name_attr) || '';
     }
+    get _entity_todays_fire_danger() {
+        var _a;
+        return ((_a = this._config) === null || _a === void 0 ? void 0 : _a.entity_todays_fire_danger) || '';
+    }
+    get _entity_todays_uv_forecast() {
+        var _a;
+        return ((_a = this._config) === null || _a === void 0 ? void 0 : _a.entity_todays_uv_forecast) || '';
+    }
     get _slot_l1() {
         var _a;
         return ((_a = this._config) === null || _a === void 0 ? void 0 : _a.slot_l1) || '';
@@ -11170,6 +11190,14 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
           ${attr_names}
         </ha-select>` : $ ``}
       </div>
+      <ha-entity-picker .hass=${this.hass} .configValue=${'entity_todays_fire_danger'} .value=${this._entity_todays_fire_danger}
+        name="entity_todays_fire_danger" label="Entity Today's Fire Danger (optional)" allow-custom-entity
+        @value-changed=${this._valueChangedPicker}>
+      </ha-entity-picker>
+      <ha-entity-picker .hass=${this.hass} .configValue=${'entity_todays_uv_forecast'} .value=${this._entity_todays_uv_forecast}
+        name="entity_todays_uv_forecast" label="Entity Today's UV Forecast (optional)" allow-custom-entity
+        @value-changed=${this._valueChangedPicker}>
+      </ha-entity-picker>
     `;
     }
     _sectionSlotsEditor() {

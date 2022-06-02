@@ -43,6 +43,17 @@ export class WeatherCard extends LitElement {
 
   private _error: string[] = [];
 
+  public getCardSize(): number {
+    console.info(`getCardSize`);
+    var cardHeight = 16;
+    cardHeight += this._config.show_section_title === true ? 56 : 0;
+    cardHeight += this._config.show_section_main !== false ? 162 : 0;
+    cardHeight += this._config.show_section_extended !== false ? 58 : 0;
+    const cardSize = Math.ceil(cardHeight / 50);
+    console.info(`CardHeight=${cardHeight} CardSize=${cardSize}`);
+    return cardSize;
+  }
+
   // https://lit.dev/docs/components/properties/#accessors-custom
   public setConfig(config: WeatherCardConfig): void {
     // TODO Check for required fields and that they are of the proper format
@@ -214,12 +225,14 @@ export class WeatherCard extends LitElement {
     if (this._config?.show_section_extended === false) return html``;
 
     const extendedEntity = this._config['entity_daily_summary'] || '';
-    var extended: TemplateResult = html``;
+    var extended: TemplateResult[] = [];
     if (this._config['extended_use_attr'] === true) {
-      extended = html`${this._config['extended_name_attr'] !== undefined ? this.hass.states[extendedEntity].attributes[this._config['extended_name_attr']] : "---"}`;
+      extended.push(html`${this._config['extended_name_attr'] !== undefined ? this.hass.states[extendedEntity].attributes[this._config['extended_name_attr']] : ""}`);
     } else {
-      extended = html`${this.hass.states[extendedEntity] !== undefined ? this.hass.states[extendedEntity].state : "---"}`;
+      extended.push(html`${this.hass.states[extendedEntity] !== undefined ? this.hass.states[extendedEntity].state : ""}`);
     }
+    extended.push(html`${this._config['entity_todays_fire_danger'] && this.hass.states[this._config['entity_todays_fire_danger']] && this.hass.states[this._config['entity_todays_fire_danger']].state !== "unknown" ? " " + this.hass.states[this._config['entity_todays_fire_danger']].state : ""}`);
+    extended.push(html`${this._config['entity_todays_uv_forecast'] && this.hass.states[this._config['entity_todays_uv_forecast']] && this.hass.states[this._config['entity_todays_uv_forecast']].state !== "unknown" ? " " + this.hass.states[this._config['entity_todays_uv_forecast']].state : ""}`);
 
     return html`
       <div class="extended-section section">
@@ -795,7 +808,7 @@ ${this.hass.states[this._config.entity_temp_following].state}` : html``;
       return this._config.entity_uv_alert_summary ? html`<li><span class="ha-icon">
     <ha-icon icon="mdi:weather-sunny"></ha-icon>
   </span>${this.localeTextuvRating} <span
-    id="daytime-uv-text">${this.hass.states[this._config.entity_uv_alert_summary].state}</span></li>` : html``;
+    id="daytime-uv-text">${this.hass.states[this._config.entity_uv_alert_summary].state !== "unknown" ? this.hass.states[this._config.entity_uv_alert_summary].state : " n/a"}</span></li>` : html``;
     } catch (e) {
       return html`<li><span class="ha-icon">
     <ha-icon icon="mdi:weather-sunny"></ha-icon>
@@ -809,7 +822,7 @@ ${this.hass.states[this._config.entity_temp_following].state}` : html``;
     <ha-icon icon="mdi:fire"></ha-icon>
   </span>${this.localeTextfireDanger} <span
     id="daytime-firedanger-text">${this.hass.states[this._config.entity_fire_danger_summary].state !== 'unknown' ?
-          this.hass.states[this._config.entity_fire_danger_summary].state : 'N/A'}</span></li>` : html``;
+          this.hass.states[this._config.entity_fire_danger_summary].state : 'n/a'}</span></li>` : html``;
     } catch (e) {
       return html`<li><span class="ha-icon">
     <ha-icon icon="mdi:fire"></ha-icon>

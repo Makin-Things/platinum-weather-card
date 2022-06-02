@@ -106,7 +106,15 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     return this._config?.extended_name_attr || '';
   }
 
-  get _slot_l1(): string {
+  get _entity_todays_fire_danger(): string {
+    return this._config?.entity_todays_fire_danger || '';
+  }
+
+  get _entity_todays_uv_forecast(): string {
+    return this._config?.entity_todays_uv_forecast || '';
+  }
+
+get _slot_l1(): string {
     return this._config?.slot_l1 || '';
   }
 
@@ -756,6 +764,14 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
           ${attr_names}
         </ha-select>` : html``}
       </div>
+      <ha-entity-picker .hass=${this.hass} .configValue=${'entity_todays_fire_danger'} .value=${this._entity_todays_fire_danger}
+        name="entity_todays_fire_danger" label="Entity Today's Fire Danger (optional)" allow-custom-entity
+        @value-changed=${this._valueChangedPicker}>
+      </ha-entity-picker>
+      <ha-entity-picker .hass=${this.hass} .configValue=${'entity_todays_uv_forecast'} .value=${this._entity_todays_uv_forecast}
+        name="entity_todays_uv_forecast" label="Entity Today's UV Forecast (optional)" allow-custom-entity
+        @value-changed=${this._valueChangedPicker}>
+      </ha-entity-picker>
     `;
   }
 
