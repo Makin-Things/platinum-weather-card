@@ -566,6 +566,7 @@ get _slot_l1(): string {
     this.loadIcon();
     this.loadIconPicker();
     this.loadIconButton();
+    this.loadEntityAttributePicker();
   }
 
   async loadEntityPicker() {
@@ -678,6 +679,28 @@ get _slot_l1(): string {
     registry.define("ha-icon", haIcon);
   }
 
+  async loadEntityAttributePicker() {
+    // Get the local customElement registry
+    const registry = (this.shadowRoot as any)?.customElements;
+    if (!registry) return;
+
+    // Check if the element we want is already defined in the local scope
+    if (registry.get("ha-entity-attribute-picker")) return;
+
+    // Load in ha-entity-picker
+    // This part will differ for every element you want
+    const ch = await (window as any).loadCardHelpers();
+    const c = await ch.createCardElement({ type: "entity", entity: "sensor.time" });
+    await c.constructor.getConfigElement();
+
+    // Since ha-elements are not using scopedRegistry we can get a reference to
+    // the newly loaded element from the global customElement registry...
+    const haEntityAttributePicker = window.customElements.get("ha-entity-attribute-picker");
+
+    // ... and use that reference to register the same element in the local registry
+    registry.define("ha-entity-attribute-picker", haEntityAttributePicker);
+  }
+
   private _sectionTitleEditor(): TemplateResult {
     return html`
       <mwc-textfield label="Card Title (optional)" .value=${this._text_card_title} .configValue=${'text_card_title'}
@@ -752,7 +775,14 @@ get _slot_l1(): string {
             </mwc-switch>
           </mwc-formfield>
         </div>
-        ${this._extended_use_attr === true ? html`<ha-select label="Attribute (optional)" .configValue=${'extended_name_attr'}
+        <ha-entity-attribute-picker .hass=${this.hass} .entityId=${'weather.pearce'} .configValue=${'extended_name_attr'} .value=${this._extended_name_attr}
+          name="extended_name_attr" label="Attribute (optional)" allow-custom-value
+          @value-changed=${this._valueChangedPicker}>
+        </ha-entity-attribute-picker>
+        <!-- <mwc-textfield label="Attribute (optional)" .value=${this._extended_name_attr} .configValue=${'extended_name_attr'}
+          @input=${this._valueChanged}>
+        </mwc-textfield> -->
+        <!-- ${this._extended_use_attr === true ? html`<ha-select label="Attribute (optional)" .configValue=${'extended_name_attr'}
           .value=${this._extended_name_attr ? this._extended_name_attr : null} @closed=${(ev: { stopPropagation:
           ()=> any;
           }) =>
@@ -762,7 +792,7 @@ get _slot_l1(): string {
           naturalMenuWidth>
           <mwc-list-item></mwc-list-item>
           ${attr_names}
-        </ha-select>` : html``}
+        </ha-select>` : html``} --->
       </div>
       <ha-entity-picker .hass=${this.hass} .configValue=${'entity_todays_fire_danger'} .value=${this._entity_todays_fire_danger}
         name="entity_todays_fire_danger" label="Entity Today's Fire Danger (optional)" allow-custom-entity

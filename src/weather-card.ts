@@ -227,7 +227,10 @@ export class WeatherCard extends LitElement {
     const extendedEntity = this._config['entity_daily_summary'] || '';
     var extended: TemplateResult[] = [];
     if (this._config['extended_use_attr'] === true) {
-      extended.push(html`${this._config['extended_name_attr'] !== undefined ? this.hass.states[extendedEntity].attributes[this._config['extended_name_attr']] : ""}`);
+      if (this._config['extended_name_attr'] !== undefined) {
+        const attribute = this._config['extended_name_attr'].toLowerCase().split(".").reduce((retval, value) => retval !== undefined ? retval[value] : undefined, this.hass.states[extendedEntity].attributes);
+        if (attribute !== undefined) extended.push(html`${attribute}`);
+      }
     } else {
       extended.push(html`${this.hass.states[extendedEntity] !== undefined ? this.hass.states[extendedEntity].state : ""}`);
     }
