@@ -215,8 +215,8 @@ export class WeatherCard extends LitElement {
           <div class="top-left">${biggerIcon}</div>
           <div class="currentTemps">${currentTemp}${apparentTemp}</div>
         </div>
-        ${separator}
         <div class="current-text">${currentText}</div>
+        ${separator}
       </div>
     `;
   }
@@ -1641,6 +1641,10 @@ ${this.hass.states[this._config.entity_temp_following].state}` : html``;
         padding-top: 8px;
         padding-bottom: 8px;
       }
+      .extended-section {
+        padding-left: 8px;
+        padding-right: 8px;
+      }
       .updated {
         font-size: 0.9em;
         font-weight: 300;
@@ -1711,10 +1715,8 @@ ${this.hass.states[this._config.entity_temp_following].state}` : html``;
         line-height: 80%;
       }
       .line {
-        margin-left: 0.5em;
-        margin-right: 0.5em;
-        margin-top : -2px;
-        margin-bottom: 0px;
+        margin-top : 7px;
+        margin-bottom: -9px;
       }
       .current-text {
         font-size: ${unsafeCSS(currentTextFontSize)};
