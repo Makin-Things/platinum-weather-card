@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { LitElement, html, TemplateResult, css, PropertyValues, CSSResult, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators';
-import { HomeAssistant, LovelaceCardEditor, getLovelace, fireEvent } from 'custom-card-helpers';
+import { HomeAssistant, LovelaceCardEditor, getLovelace } from 'custom-card-helpers';
 
 import type { WeatherCardConfig } from './types';
 import { CARD_VERSION } from './const';
@@ -228,8 +228,8 @@ export class WeatherCard extends LitElement {
     } else {
       extended.push(html`${this.hass.states[extendedEntity] !== undefined ? this.hass.states[extendedEntity].state : ""}`);
     }
-    extended.push(html`${this._config['entity_todays_fire_danger'] && this.hass.states[this._config['entity_todays_fire_danger']] && this.hass.states[this._config['entity_todays_fire_danger']].state !== "unknown" ? " " + this.hass.states[this._config['entity_todays_fire_danger']].state : ""}`);
     extended.push(html`${this._config['entity_todays_uv_forecast'] && this.hass.states[this._config['entity_todays_uv_forecast']] && this.hass.states[this._config['entity_todays_uv_forecast']].state !== "unknown" ? " " + this.hass.states[this._config['entity_todays_uv_forecast']].state : ""}`);
+    extended.push(html`${this._config['entity_todays_fire_danger'] && this.hass.states[this._config['entity_todays_fire_danger']] && this.hass.states[this._config['entity_todays_fire_danger']].state !== "unknown" ? " " + this.hass.states[this._config['entity_todays_fire_danger']].state : ""}`);
 
     return html`
       <div class="extended-section section">
@@ -286,39 +286,39 @@ export class WeatherCard extends LitElement {
         const forecastDate = new Date();
         forecastDate.setDate(forecastDate.getDate() + i + 1);
         var start = this._config['entity_forecast_icon_1'] ? this._config['entity_forecast_icon_1'].match(/(\d+)(?!.*\d)/g) : false;
-        const iconEntity = start ? this._config['entity_forecast_icon_1'].replace(/(\d+)(?!.*\d)/g, Number(start) + i) : undefined;
-        const url = new URL(('icons/' + (this._config.static_icons ? 'static' : 'animated') + '/' + (this.hass.states[iconEntity] !== undefined ? this._weatherIcon(this.hass.states[iconEntity].state) : 'unknown') + '.svg').replace("-night", "-day"), import.meta.url);
+        const iconEntity = this._config['entity_forecast_icon_1'] ? this._config['entity_forecast_icon_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
+        const url = new URL(('icons/' + (this._config.static_icons ? 'static' : 'animated') + '/' + (iconEntity && this.hass.states[iconEntity] ? this._weatherIcon(this.hass.states[iconEntity].state) : 'unknown') + '.svg').replace("-night", "-day"), import.meta.url);
         const htmlIcon = html`<i class="icon" style="background: none, url(${url.href}) no-repeat; background-size: contain;"></i><br>`;
         start = this._config['entity_forecast_high_temp_1'] ? this._config['entity_forecast_high_temp_1'].match(/(\d+)(?!.*\d)/g) : false;
-        const maxEntity = start ? this._config['entity_forecast_high_temp_1'].replace(/(\d+)(?!.*\d)/g, Number(start) + i) : undefined;
+        const maxEntity = start && this._config['entity_forecast_high_temp_1'] ? this._config['entity_forecast_high_temp_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
         start = this._config['entity_forecast_low_temp_1'] ? this._config['entity_forecast_low_temp_1'].match(/(\d+)(?!.*\d)/g) : false;
-        const minEntity = start ? this._config['entity_forecast_low_temp_1'].replace(/(\d+)(?!.*\d)/g, Number(start) + i) : undefined;
+        const minEntity = start && this._config['entity_forecast_low_temp_1'] ? this._config['entity_forecast_low_temp_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
         const tempUnit = html`<div class="unitc">${this.getUOM("temperature")}</div>`;
         const minMax = this._config.old_daily_format === true
           ?
           html`
-              <div class="f-slot"><div class="highTemp">${this.hass.states[maxEntity] !== undefined ? Math.round(Number(this.hass.states[maxEntity].state)) : '---'}</div><div>${tempUnit}</div></div>
+              <div class="f-slot"><div class="highTemp">${maxEntity && this.hass.states[maxEntity] ? Math.round(Number(this.hass.states[maxEntity].state)) : '---'}</div><div>${tempUnit}</div></div>
               <br>
-              <div class="f-slot"><div class="lowTemp">${this.hass.states[minEntity] !== undefined ? Math.round(Number(this.hass.states[minEntity].state)) : '---'}</div><div>${tempUnit}</div></div>`
+              <div class="f-slot"><div class="lowTemp">${minEntity && this.hass.states[minEntity] ? Math.round(Number(this.hass.states[minEntity].state)) : '---'}</div><div>${tempUnit}</div></div>`
           :
           this._config.tempformat === "highlow"
             ?
             html`
-                    <div class="f-slot"><div class="highTemp">${this.hass.states[maxEntity] !== undefined ? Math.round(Number(this.hass.states[maxEntity].state)) : "---"}</div><div class="slash">/</div>
-                    <div class="lowTemp">${this.hass.states[minEntity] !== undefined ? Math.round(Number(this.hass.states[minEntity].state)) : "---"}</div><div>${tempUnit}</div></div>`
+                    <div class="f-slot"><div class="highTemp">${maxEntity && this.hass.states[maxEntity] ? Math.round(Number(this.hass.states[maxEntity].state)) : "---"}</div><div class="slash">/</div>
+                    <div class="lowTemp">${minEntity && this.hass.states[minEntity] ? Math.round(Number(this.hass.states[minEntity].state)) : "---"}</div><div>${tempUnit}</div></div>`
             :
             html`
-                    <div class="f-slot"><div class="lowTemp">${this.hass.states[minEntity] !== undefined ? Math.round(Number(this.hass.states[minEntity].state)) : "---"}</div><div class="slash">/</div>
-                    <div class="highTemp">${this.hass.states[maxEntity] !== undefined ? Math.round(Number(this.hass.states[maxEntity].state)) : "---"}</div><div>${tempUnit}</div></div>`;
+                    <div class="f-slot"><div class="lowTemp">${minEntity && this.hass.states[minEntity] ? Math.round(Number(this.hass.states[minEntity].state)) : "---"}</div><div class="slash">/</div>
+                    <div class="highTemp">${maxEntity && this.hass.states[maxEntity] ? Math.round(Number(this.hass.states[maxEntity].state)) : "---"}</div><div>${tempUnit}</div></div>`;
         start = this._config['entity_pop_1'] ? this._config['entity_pop_1'].match(/(\d+)(?!.*\d)/g) : false;
-        const popEntity = start ? this._config['entity_pop_1'].replace(/(\d+)(?!.*\d)/g, Number(start) + i) : undefined;
-        const pop = start ? html`<br><div class="f-slot"><div class="pop">${this.hass.states[popEntity] ? Math.round(Number(this.hass.states[popEntity].state)) : "---"}</div><div class="unit">%</div></div>` : ``;
+        const popEntity = start && this._config['entity_pop_1'] ? this._config['entity_pop_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
+        const pop = start ? html`<br><div class="f-slot"><div class="pop">${popEntity && this.hass.states[popEntity] ? Math.round(Number(this.hass.states[popEntity].state)) : "---"}</div><div class="unit">%</div></div>` : ``;
         start = this._config['entity_pos_1'] ? this._config['entity_pos_1'].match(/(\d+)(?!.*\d)/g) : false;
-        const posEntity = start ? this._config['entity_pos_1'].replace(/(\d+)(?!.*\d)/g, Number(start) + i) : undefined;
-        const pos = start ? html`<br><div class="f-slot"><div class="pos">${this.hass.states[posEntity] !== undefined ? this.hass.states[posEntity].state : "---"}</div><div class="unit">${this.getUOM('precipitation')}</div></div>` : ``;
+        const posEntity = start && this._config['entity_pos_1'] ? this._config['entity_pos_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
+        const pos = start ? html`<br><div class="f-slot"><div class="pos">${posEntity && this.hass.states[posEntity] ? this.hass.states[posEntity].state : "---"}</div><div class="unit">${this.getUOM('precipitation')}</div></div>` : ``;
         start = this._config['entity_summary_1'] ? this._config['entity_summary_1'].match(/(\d+)(?!.*\d)/g) : false;
-        const tooltipEntity = start ? this._config['entity_summary_1'].replace(/(\d+)(?!.*\d)/g, Number(start) + i) : undefined;
-        const tooltip = html`<div class="fcasttooltiptext" id="fcast-summary-${i}">${this._config.tooltips ? this.hass.states[tooltipEntity] !== undefined ? this.hass.states[tooltipEntity].state : "Config Error" : ""}</div>`;
+        const tooltipEntity = start && this._config['entity_summary_1'] ? this._config['entity_summary_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
+        const tooltip = html`<div class="fcasttooltiptext" id="fcast-summary-${i}">${this._config.tooltips && tooltipEntity ? this.hass.states[tooltipEntity] ? this.hass.states[tooltipEntity].state : "Config Error" : ""}</div>`;
 
         htmlDays.push(html`
           <div class="day-horiz fcasttooltip">
@@ -341,47 +341,47 @@ export class WeatherCard extends LitElement {
         const forecastDate = new Date();
         forecastDate.setDate(forecastDate.getDate() + i + 1);
         var start = this._config['entity_forecast_icon_1'] ? this._config['entity_forecast_icon_1'].match(/(\d+)(?!.*\d)/g) : false;
-        const iconEntity = start ? this._config['entity_forecast_icon_1'].replace(/(\d+)(?!.*\d)/g, Number(start) + i) : undefined;
-        if (this.hass.states[iconEntity] === undefined || this.hass.states[iconEntity].state === 'unknown') { // Stop adding forecast days as soon as an undefined entity is encountered
+        const iconEntity = start && this._config['entity_forecast_icon_1'] ? this._config['entity_forecast_icon_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
+        if (!iconEntity || this.hass.states[iconEntity] === undefined || this.hass.states[iconEntity].state === 'unknown') { // Stop adding forecast days as soon as an undefined entity is encountered
           break;
         }
         const url = new URL(('icons/' + (this._config.static_icons ? 'static' : 'animated') + '/' + (this.hass.states[iconEntity] !== undefined ? this._weatherIcon(this.hass.states[iconEntity].state) : 'unknown') + '.svg').replace("-night", "-day"), import.meta.url);
         const htmlIcon = html`<i class="icon" style="background: none, url(${url.href}) no-repeat; background-size: contain;"></i><br>`;
         start = this._config['entity_forecast_high_temp_1'] ? this._config['entity_forecast_high_temp_1'].match(/(\d+)(?!.*\d)/g) : false;
-        const maxEntity = start ? this._config['entity_forecast_high_temp_1'].replace(/(\d+)(?!.*\d)/g, Number(start) + i) : undefined;
+        const maxEntity = start && this._config['entity_forecast_high_temp_1'] ? this._config['entity_forecast_high_temp_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
         start = this._config['entity_forecast_low_temp_1'] ? this._config['entity_forecast_low_temp_1'].match(/(\d+)(?!.*\d)/g) : false;
-        const minEntity = start ? this._config['entity_forecast_low_temp_1'].replace(/(\d+)(?!.*\d)/g, Number(start) + i) : undefined;
+        const minEntity = start && this._config['entity_forecast_low_temp_1'] ? this._config['entity_forecast_low_temp_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
         const tempUnit = html`<div class="unitc">${this.getUOM("temperature")}</div>`;
-        const min = this.hass.states[minEntity] !== undefined ? html`<div class="temp-label">Min: </div><div class="low-temp">${Math.round(Number(this.hass.states[minEntity].state))}</div>${tempUnit}` : html`---`;
-        const max = this.hass.states[maxEntity] !== undefined ? html`<div class="temp-label">Max: </div><div class="high-temp">${Math.round(Number(this.hass.states[maxEntity].state))}</div>${tempUnit}` : html`---`;
+        const min = minEntity && this.hass.states[minEntity] ? html`<div class="temp-label">Min: </div><div class="low-temp">${Math.round(Number(this.hass.states[minEntity].state))}</div>${tempUnit}` : html`---`;
+        const max = maxEntity && this.hass.states[maxEntity] ? html`<div class="temp-label">Max: </div><div class="high-temp">${Math.round(Number(this.hass.states[maxEntity].state))}</div>${tempUnit}` : html`---`;
         const minMax = this._config.tempformat === "highlow"
           ?
           html`
-              <div class="f-slot"><div class="highTemp">${this.hass.states[maxEntity] !== undefined ? Math.round(Number(this.hass.states[maxEntity].state)) : "---"}</div><div class="slash">/</div>
-              <div class="lowTemp">${this.hass.states[minEntity] !== undefined ? Math.round(Number(this.hass.states[minEntity].state)) : "---"}</div><div>${tempUnit}</div></div>`
+              <div class="f-slot"><div class="highTemp">${maxEntity && this.hass.states[maxEntity] ? Math.round(Number(this.hass.states[maxEntity].state)) : "---"}</div><div class="slash">/</div>
+              <div class="lowTemp">${minEntity && this.hass.states[minEntity] ? Math.round(Number(this.hass.states[minEntity].state)) : "---"}</div><div>${tempUnit}</div></div>`
           :
           html`
               <div class="f-slot">${min}${max}</div>`;
         start = this._config['entity_summary_1'] ? this._config['entity_summary_1'].match(/(\d+)(?!.*\d)/g) : false;
-        const summaryEntity = start ? this._config['entity_summary_1'].replace(/(\d+)(?!.*\d)/g, Number(start) + i) : undefined;
-        const summary = start ? html`<br><div class="f-slot">${this.hass.states[summaryEntity] !== undefined ? this.hass.states[summaryEntity].state : "---"}</div>` : ``;
+        const summaryEntity = start && this._config['entity_summary_1'] ? this._config['entity_summary_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
+        const summary = start ? html`<br><div class="f-slot">${summaryEntity && this.hass.states[summaryEntity] ? this.hass.states[summaryEntity].state : "---"}</div>` : ``;
         start = this._config['entity_pop_1'] ? this._config['entity_pop_1'].match(/(\d+)(?!.*\d)/g) : false;
-        const popEntity = start ? this._config['entity_pop_1'].replace(/(\d+)(?!.*\d)/g, Number(start) + i) : undefined;
-        const pop = start ? html`<div class="f-slot"><div class="f-label">Chance of rain </div><div class="pop">${this.hass.states[popEntity] ? Math.round(Number(this.hass.states[popEntity].state)) : "---"}</div><div class="unit">%</div></div>` : ``;
+        const popEntity = start && this._config['entity_pop_1'] ? this._config['entity_pop_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
+        const pop = start ? html`<div class="f-slot"><div class="f-label">Chance of rain </div><div class="pop">${popEntity && this.hass.states[popEntity] ? Math.round(Number(this.hass.states[popEntity].state)) : "---"}</div><div class="unit">%</div></div>` : ``;
         start = this._config['entity_pos_1'] ? this._config['entity_pos_1'].match(/(\d+)(?!.*\d)/g) : false;
-        const posEntity = start ? this._config['entity_pos_1'].replace(/(\d+)(?!.*\d)/g, Number(start) + i) : undefined;
-        const pos = start ? html`<br><div class="f-slot"><div class="f-label">Possible rain </div><div class="pos">${this.hass.states[posEntity] !== undefined ? this.hass.states[posEntity].state : "---"}</div><div class="unit">${this.getUOM('precipitation')}</div></div>` : ``;
+        const posEntity = start && this._config['entity_pos_1'] ? this._config['entity_pos_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
+        const pos = start ? html`<br><div class="f-slot"><div class="f-label">Possible rain </div><div class="pos">${posEntity && this.hass.states[posEntity] ? this.hass.states[posEntity].state : "---"}</div><div class="unit">${this.getUOM('precipitation')}</div></div>` : ``;
         start = this._config['entity_extended_1'] && i < (this._config['daily_extended_forecast_days'] !== 0 ? this._config['daily_extended_forecast_days'] || 7 : 0) ? this._config['entity_extended_1'].match(/(\d+)(?!.*\d)/g) : false;
         var extended: TemplateResult = html``;
         if (this._config['daily_extended_use_attr'] === true) {
           start = this._config['entity_extended_1'] ? this._config['entity_extended_1'].match(/(\d+)(?!.*\d)/g) : false;
-          const extendedEntity = start ? this._config['entity_extended_1'].replace(/(\d+)(?!.*\d)/g, Number(start) + i) : undefined;
+          const extendedEntity = start && this._config['entity_extended_1'] ? this._config['entity_extended_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
           start = this._config['daily_extended_name_attr'] && i < (this._config['daily_extended_forecast_days'] !== 0 ? this._config['daily_extended_forecast_days'] || 7 : 0) ? this._config['daily_extended_name_attr'].match(/(\d+)(?!.*\d)/g) : false;
-          const attribute = start == null ? this.hass.states[extendedEntity].attributes[this._config['daily_extended_name_attr']] : start ? this._config['daily_extended_name_attr'].replace(/(\d+)(?!.*\d)/g, Number(start) + i).toLowerCase().split(".").reduce((retval, value) => retval !== undefined ? retval[value] : undefined, this.hass.states[extendedEntity].attributes) : undefined;
+          const attribute = start == null && extendedEntity && this._config['daily_extended_name_attr'] ? this.hass.states[extendedEntity].attributes[this._config['daily_extended_name_attr']] : start && this._config['daily_extended_name_attr'] && extendedEntity ? this._config['daily_extended_name_attr'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)).toLowerCase().split(".").reduce((retval, value) => retval !== undefined ? retval[value] : undefined, this.hass.states[extendedEntity].attributes) : undefined;
           extended = attribute ? html`<div class="f-extended">${attribute}</div>` : html``;
         } else {
-          const extendedEntity = start ? this._config['entity_extended_1'].replace(/(\d+)(?!.*\d)/g, Number(start) + i) : undefined;
-          extended = start ? html`<div class="f-extended">${this.hass.states[extendedEntity] !== undefined ? this.hass.states[extendedEntity].state : "---"}</div>` : html``;
+          const extendedEntity = start && this._config['entity_extended_1'] ? this._config['entity_extended_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
+          extended = start ? html`<div class="f-extended">${extendedEntity && this.hass.states[extendedEntity] ? this.hass.states[extendedEntity].state : "---"}</div>` : html``;
         }
 
         htmlDays.push(html`
@@ -775,7 +775,7 @@ export class WeatherCard extends LitElement {
   }
 
   get tempNextIcon(): string {
-    return this.hass.states[this._config.entity_temp_next_label].state.includes("Min") ? "mdi:thermometer-low" : "mdi:thermometer-high";
+    return this._config.entity_temp_next_label ? this.hass.states[this._config.entity_temp_next_label].state.includes("Min") ? "mdi:thermometer-low" : "mdi:thermometer-high" : "";
   }
 
   get tempNextText(): TemplateResult {
@@ -796,7 +796,7 @@ export class WeatherCard extends LitElement {
   }
 
   get tempFollowingIcon(): string {
-    return this.hass.states[this._config.entity_temp_following_label].state.includes("Min") ? "mdi:thermometer-low" : "mdi:thermometer-high";
+    return this._config.entity_temp_following_label ? this.hass.states[this._config.entity_temp_following_label].state.includes("Min") ? "mdi:thermometer-low" : "mdi:thermometer-high" : "";
   }
 
   get tempFollowingText(): TemplateResult {
@@ -1138,45 +1138,56 @@ ${this.hass.states[this._config.entity_temp_following].state}` : html``;
     var nextSunSet: string;
     var nextSunRise: string;
     if (this.is12Hour) {
-      nextSunSet = new Date(this.hass.states[this._config.entity_sun].attributes.next_setting).toLocaleTimeString(this._config.locale, { hour: 'numeric', minute: '2-digit', hour12: true }).replace(" am","am").replace(" pm","pm");
-      nextSunRise = new Date(this.hass.states[this._config.entity_sun].attributes.next_rising).toLocaleTimeString(this._config.locale, { hour: 'numeric', minute: '2-digit', hour12: true }).replace(" am","am").replace(" pm","pm");
+      nextSunSet = this._config.entity_sun ? new Date(this.hass.states[this._config.entity_sun].attributes.next_setting).toLocaleTimeString(this._config.locale, { hour: 'numeric', minute: '2-digit', hour12: true }).replace(" am","am").replace(" pm","pm") : "";
+      nextSunRise = this._config.entity_sun ? new Date(this.hass.states[this._config.entity_sun].attributes.next_rising).toLocaleTimeString(this._config.locale, { hour: 'numeric', minute: '2-digit', hour12: true }).replace(" am","am").replace(" pm","pm") : "";
     } else {
-      nextSunSet = new Date(this.hass.states[this._config.entity_sun].attributes.next_setting).toLocaleTimeString(this._config.locale, { hour: '2-digit', minute: '2-digit', hour12: false });
-      nextSunRise = new Date(this.hass.states[this._config.entity_sun].attributes.next_rising).toLocaleTimeString(this._config.locale, { hour: '2-digit', minute: '2-digit', hour12: false });
+      nextSunSet = this._config.entity_sun ? new Date(this.hass.states[this._config.entity_sun].attributes.next_setting).toLocaleTimeString(this._config.locale, { hour: '2-digit', minute: '2-digit', hour12: false }) : "";
+      nextSunRise = this._config.entity_sun ? new Date(this.hass.states[this._config.entity_sun].attributes.next_rising).toLocaleTimeString(this._config.locale, { hour: '2-digit', minute: '2-digit', hour12: false }) : "";
     }
     var nextDate = new Date();
     nextDate.setDate(nextDate.getDate() + 1);
-    if (this.hass.states[this._config.entity_sun].state == "above_horizon") {
-      nextSunRise = nextDate.toLocaleDateString(this._config.locale, { weekday: 'short' }) + " " + nextSunRise;
-      return {
-        'next': html`<li><span class="ha-icon">
+    if (this._config.entity_sun) {
+      if (this.hass.states[this._config.entity_sun].state == "above_horizon") {
+        nextSunRise = nextDate.toLocaleDateString(this._config.locale, { weekday: 'short' }) + " " + nextSunRise;
+        return {
+          'next': html`<li><span class="ha-icon">
     <ha-icon id="sun-next-icon" icon="mdi:weather-sunset-down"></ha-icon>
   </span><span id="sun-next-text">${nextSunSet}</span></li>`,
-        'following': html`<li><span class="ha-icon">
+          'following': html`<li><span class="ha-icon">
     <ha-icon id="sun-following-icon" icon="mdi:weather-sunset-up"></ha-icon>
   </span><span id="sun-following-text">${nextSunRise}</span></li>`,
-        'nextText': nextSunSet,
-        'followingText': nextSunRise,
-        'nextIcon': "mdi:weather-sunset-down",
-        'followingIcon': "mdi:weather-sunset-up",
-      };
-    } else {
-      if (new Date().getDate() != new Date(this.hass.states[this._config.entity_sun].attributes.next_rising).getDate()) {
-        nextSunRise = nextDate.toLocaleDateString(this._config.locale, { weekday: 'short' }) + " " + nextSunRise;
-        nextSunSet = nextDate.toLocaleDateString(this._config.locale, { weekday: 'short' }) + " " + nextSunSet;
-      }
-      return {
-        'next': html`<li><span class="ha-icon">
+          'nextText': nextSunSet,
+          'followingText': nextSunRise,
+          'nextIcon': "mdi:weather-sunset-down",
+          'followingIcon': "mdi:weather-sunset-up",
+        };
+      } else {
+        if (new Date().getDate() != new Date(this.hass.states[this._config.entity_sun].attributes.next_rising).getDate()) {
+          nextSunRise = nextDate.toLocaleDateString(this._config.locale, { weekday: 'short' }) + " " + nextSunRise;
+          nextSunSet = nextDate.toLocaleDateString(this._config.locale, { weekday: 'short' }) + " " + nextSunSet;
+        }
+        return {
+          'next': html`<li><span class="ha-icon">
     <ha-icon id="sun-next-icon" icon="mdi:weather-sunset-up"></ha-icon>
   </span><span id="sun-next-text">${nextSunRise}</span></li>`,
-        'following': html`<li><span class="ha-icon">
+          'following': html`<li><span class="ha-icon">
     <ha-icon id="sun-following-icon" icon="mdi:weather-sunset-down"></ha-icon>
   </span><span id="sun-following-text">${nextSunSet}</span></li>`,
-        'nextText': nextSunRise,
-        'followingText': nextSunSet,
-        'nextIcon': "mdi:weather-sunset-up",
-        'followingIcon': "mdi:weather-sunset-down",
-      };
+          'nextText': nextSunRise,
+          'followingText': nextSunSet,
+          'nextIcon': "mdi:weather-sunset-up",
+          'followingIcon': "mdi:weather-sunset-down",
+        };
+      }
+    } else {
+      return {
+        'next': html``,
+        'following': html``,
+        nextText: "",
+        followingText: "",
+        nextIcon: "",
+        followingIcon: ""
+      }
     }
   }
 

@@ -2,6 +2,8 @@
 import { LitElement, html, TemplateResult, css, CSSResultGroup } from 'lit';
 import { HomeAssistant, fireEvent, LovelaceCardEditor } from 'custom-card-helpers';
 
+import { keys } from 'ts-transformer-keys';
+
 import { mdiPencil, mdiArrowDown, mdiArrowUp } from '@mdi/js';
 
 import { ScopedRegistryHost } from '@lit-labs/scoped-registry-mixin';
@@ -52,15 +54,25 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
       return;
     }
 
-    this._config = {
-      ...this._config,
+    let tmpConfig = { ...this._config };
+    const keysOfProps = keys<WeatherCardConfig>();
+
+    for (const element in this._config) {
+      if (!keysOfProps.includes(element)) {
+        console.info(`removing ${element}`);
+        delete tmpConfig[element];
+      }
+    }
+
+    tmpConfig = {
+      ...tmpConfig,
       card_config_version: 2,
     }
 
-  fireEvent(this, 'config-changed', { config: this._config });
-}
+    this._config = tmpConfig;
 
-
+    fireEvent(this, 'config-changed', { config: this._config });
+  }
 
   protected shouldUpdate(): boolean {
     if (!this._initialized) {
@@ -726,12 +738,12 @@ get _slot_l1(): string {
           @value-changed=${this._valueChangedPicker}>
         </ha-entity-attribute-picker>` : html ``}
       </div>
-      <ha-entity-picker .hass=${this.hass} .configValue=${'entity_todays_fire_danger'} .value=${this._entity_todays_fire_danger}
-        name="entity_todays_fire_danger" label="Entity Today's Fire Danger (optional)" allow-custom-entity
-        @value-changed=${this._valueChangedPicker}>
-      </ha-entity-picker>
       <ha-entity-picker .hass=${this.hass} .configValue=${'entity_todays_uv_forecast'} .value=${this._entity_todays_uv_forecast}
         name="entity_todays_uv_forecast" label="Entity Today's UV Forecast (optional)" allow-custom-entity
+        @value-changed=${this._valueChangedPicker}>
+      </ha-entity-picker>
+      <ha-entity-picker .hass=${this.hass} .configValue=${'entity_todays_fire_danger'} .value=${this._entity_todays_fire_danger}
+        name="entity_todays_fire_danger" label="Entity Today's Fire Danger (optional)" allow-custom-entity
         @value-changed=${this._valueChangedPicker}>
       </ha-entity-picker>
     `;

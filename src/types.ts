@@ -54,7 +54,47 @@ export interface WeatherCardConfig extends LovelaceCardConfig {
   entity_wind_gust?: string;
   entity_wind_speed_kt?: string;
   entity_wind_gust_kt?: string;
+  entity_temp_next?: string;
+  entity_temp_next_label?: string;
+  entity_temp_following?: string;
+  entity_temp_following_label?: string;
+  entity_daytime_high?: string;
+  entity_daytime_low?: string;
+  entity_fire_danger?: string;
+  entity_fire_danger_summary?: string;
+  entity_pop?: string;
+  entity_possible_today?: string;
+  entity_sun?: string;
+  entity_uv_alert_summary?: string;
+  entity_rainfall?: string;
+  entity_todays_fire_danger?: string;
+  entity_todays_uv_forecast?: string;
+
+  custom1_value?: string;
+  custom1_icon?: string;
+  custom1_units?: string;
+  custom2_value?: string;
+  custom2_icon?: string;
+  custom2_units?: string;
+
+  entity_forecast_icon_1?: string;
+  entity_pop_1?: string;
+  entity_pos_1?: string;
+  entity_summary_1?: string;
+  entity_forecast_low_temp_1?: string;
+  entity_forecast_high_temp_1?: string;
+  entity_extended_1?: string;
+
   daily_forecast_layout?: layoutOrientation;
   daily_forecast_days?: layoutDays;
   daily_extended_forecast_days?: extendedDays;
+  daily_extended_use_attr?: boolean;
+  daily_extended_name_attr?: string;
+
+
+  locale?: string;
+  old_daily_format?: boolean;
+  show_beaufort?: boolean;
+  static_icons?: boolean;
+  how_decimals_today?: boolean;
 }

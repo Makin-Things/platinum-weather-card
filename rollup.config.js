@@ -1,4 +1,5 @@
 import typescript from 'rollup-plugin-typescript2';
+import keysTransformer from 'ts-transformer-keys/transformer';
 import commonjs from 'rollup-plugin-commonjs';
 import nodeResolve from 'rollup-plugin-node-resolve';
 import babel from 'rollup-plugin-babel';
@@ -25,7 +26,10 @@ const serveopts = {
 const plugins = [
   nodeResolve({}),
   commonjs(),
-  typescript(),
+  typescript({ transformers: [service => ({
+    before: [ keysTransformer(service.getProgram()) ],
+    after: []
+  })] }),
   json(),
   babel({
     exclude: 'node_modules/**',
