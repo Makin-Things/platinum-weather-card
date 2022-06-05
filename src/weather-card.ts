@@ -1717,10 +1717,10 @@ ${this.hass.states[this._config.entity_temp_following].state}` : html``;
       .line {
         margin-top : 7px;
         margin-bottom: -9px;
+        color: var(--primary-text-color);
       }
       .current-text {
         font-size: ${unsafeCSS(currentTextFontSize)};
-        color: var(--secondary-text-color);
         overflow: hidden;
         white-space: nowrap;
         text-align: ${unsafeCSS(currentTextAlignment)};

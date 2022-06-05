@@ -561,144 +561,66 @@ get _slot_l1(): string {
   }
 
   protected async firstUpdated(): Promise<void> {
-    this.loadEntityPicker();
-    this.loadSelect();
-    this.loadIcon();
-    this.loadIconPicker();
-    this.loadIconButton();
-    this.loadEntityAttributePicker();
+    this.loadEditorElements();
   }
 
-  async loadEntityPicker() {
+  async loadEditorElements() {
     // Get the local customElement registry
     const registry = (this.shadowRoot as any)?.customElements;
     if (!registry) return;
 
+    let c_button: any = undefined;
     // Check if the element we want is already defined in the local scope
-    if (registry.get("ha-entity-picker")) return;
+    if (!registry.get("ha-entity-picker") ||
+      !registry.get("ha-select") ||
+      !registry.get("ha-icon-picker") ||
+      !registry.get("ha-icon-button") ||
+      !registry.get("ha-icon")) {
+      // Load in a card that uses the elements needed
+      // This part will differ for every element you want
+      const ch = await (window as any).loadCardHelpers();
+      c_button = await ch.createCardElement({ type: "button", button: [] });
+      if (c_button) await c_button.constructor.getConfigElement();
+    }
 
-    // Load in ha-entity-picker
-    // This part will differ for every element you want
-    const ch = await (window as any).loadCardHelpers();
-    const c = await ch.createCardElement({ type: "button", button: [] });
-    await c.constructor.getConfigElement();
+    let c_entity: any = undefined;
+    if (!registry.get("ha-entity-attribute-picker")) {
+      // Load in a card that uses the elements needed
+      // This part will differ for every element you want
+      const ch = await (window as any).loadCardHelpers();
+      c_entity = await ch.createCardElement({ type: "entity", entity: "sensor.time" });
+      await c_entity.constructor.getConfigElement();
+    }
 
-    // Since ha-elements are not using scopedRegistry we can get a reference to
-    // the newly loaded element from the global customElement registry...
-    const haEntityPicker = window.customElements.get("ha-entity-picker");
+    if (c_button) {
+      if (!registry.get("ha-entity-picker")) {
+        const haElement = window.customElements.get("ha-entity-picker");
+        registry.define("ha-entity-picker", haElement);
+      }
+      if (!registry.get("ha-select")) {
+        const haElement = window.customElements.get("ha-select");
+        registry.define("ha-select", haElement);
+      }
+      if (!registry.get("ha-icon-picker")) {
+        const haElement = window.customElements.get("ha-icon-picker");
+        registry.define("ha-icon-picker", haElement);
+      }
+      if (!registry.get("ha-icon-button")) {
+        const haElement = window.customElements.get("ha-icon-button");
+        registry.define("ha-icon-button", haElement);
+      }
+      if (!registry.get("ha-icon")) {
+        const haElement = window.customElements.get("ha-icon");
+        registry.define("ha-icon", haElement);
+      }
+    }
 
-    // ... and use that reference to register the same element in the local registry
-    registry.define("ha-entity-picker", haEntityPicker);
-  }
-
-  async loadSelect() {
-    // Get the local customElement registry
-    const registry = (this.shadowRoot as any)?.customElements;
-    if (!registry) return;
-
-    // Check if the element we want is already defined in the local scope
-    if (registry.get("ha-select")) return;
-
-    // Load in ha-select
-    // This part will differ for every element you want
-    const ch = await (window as any).loadCardHelpers();
-    const c = await ch.createCardElement({ type: "button", button: [] });
-    await c.constructor.getConfigElement();
-
-    // Since ha-elements are not using scopedRegistry we can get a reference to
-    // the newly loaded element from the global customElement registry...
-    const haSelect = window.customElements.get("ha-select");
-
-    // ... and use that reference to register the same element in the local registry
-    registry.define("ha-select", haSelect);
-  }
-
-  async loadIconPicker() {
-    // Get the local customElement registry
-    const registry = (this.shadowRoot as any)?.customElements;
-    if (!registry) return;
-
-    // Check if the element we want is already defined in the local scope
-    if (registry.get("ha-icon-picker")) return;
-
-    // Load in ha-icon-picker
-    // This part will differ for every element you want
-    const ch = await (window as any).loadCardHelpers();
-    const c = await ch.createCardElement({ type: "button", button: [] });
-    await c.constructor.getConfigElement();
-
-    // Since ha-elements are not using scopedRegistry we can get a reference to
-    // the newly loaded element from the global customElement registry...
-    const haIconPicker = window.customElements.get("ha-icon-picker");
-
-    // ... and use that reference to register the same element in the local registry
-    registry.define("ha-icon-picker", haIconPicker);
-  }
-
-  async loadIconButton() {
-    // Get the local customElement registry
-    const registry = (this.shadowRoot as any)?.customElements;
-    if (!registry) return;
-
-    // Check if the element we want is already defined in the local scope
-    if (registry.get("ha-icon-button")) return;
-
-    // Load in ha-icon-button
-    // This part will differ for every element you want
-    const ch = await (window as any).loadCardHelpers();
-    const c = await ch.createCardElement({ type: "button", button: [] });
-    await c.constructor.getConfigElement();
-
-    // Since ha-elements are not using scopedRegistry we can get a reference to
-    // the newly loaded element from the global customElement registry...
-    const haIconButton = window.customElements.get("ha-icon-button");
-
-    // ... and use that reference to register the same element in the local registry
-    registry.define("ha-icon-button", haIconButton);
-  }
-
-  async loadIcon() {
-    // Get the local customElement registry
-    const registry = (this.shadowRoot as any)?.customElements;
-    if (!registry) return;
-
-    // Check if the element we want is already defined in the local scope
-    if (registry.get("ha-icon")) return;
-
-    // Load in ha-icon
-    // This part will differ for every element you want
-    const ch = await (window as any).loadCardHelpers();
-    const c = await ch.createCardElement({ type: "button", button: [] });
-    await c.constructor.getConfigElement();
-
-    // Since ha-elements are not using scopedRegistry we can get a reference to
-    // the newly loaded element from the global customElement registry...
-    const haIcon = window.customElements.get("ha-icon");
-
-    // ... and use that reference to register the same element in the local registry
-    registry.define("ha-icon", haIcon);
-  }
-
-  async loadEntityAttributePicker() {
-    // Get the local customElement registry
-    const registry = (this.shadowRoot as any)?.customElements;
-    if (!registry) return;
-
-    // Check if the element we want is already defined in the local scope
-    if (registry.get("ha-entity-attribute-picker")) return;
-
-    // Load in ha-entity-picker
-    // This part will differ for every element you want
-    const ch = await (window as any).loadCardHelpers();
-    const c = await ch.createCardElement({ type: "entity", entity: "sensor.time" });
-    await c.constructor.getConfigElement();
-
-    // Since ha-elements are not using scopedRegistry we can get a reference to
-    // the newly loaded element from the global customElement registry...
-    const haEntityAttributePicker = window.customElements.get("ha-entity-attribute-picker");
-
-    // ... and use that reference to register the same element in the local registry
-    registry.define("ha-entity-attribute-picker", haEntityAttributePicker);
+    if (c_entity) {
+      if (!registry.get("ha-entity-attribute-picker")) {
+        const haElement = window.customElements.get("ha-entity-attribute-picker");
+        registry.define("ha-entity-attribute-picker", haElement);
+      }
+    }
   }
 
   private _sectionTitleEditor(): TemplateResult {
