@@ -46,6 +46,22 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     this.loadCardHelpers();
   }
 
+  private _configCleanup() {
+    console.info(`configCleanup`);
+    if (!this._config || !this.hass) {
+      return;
+    }
+
+    this._config = {
+      ...this._config,
+      card_config_version: 2,
+    }
+
+  fireEvent(this, 'config-changed', { config: this._config });
+}
+
+
+
   protected shouldUpdate(): boolean {
     if (!this._initialized) {
       this._initialize();
@@ -561,6 +577,13 @@ get _slot_l1(): string {
   }
 
   protected async firstUpdated(): Promise<void> {
+    if (this._config && this.hass) {
+      console.info(`Card Config Version=${this._config.card_config_version || 'no version'}`);
+      if (this._config.card_config_version !== 2) {
+        this._configCleanup();
+      }
+    }
+
     this.loadEditorElements();
   }
 

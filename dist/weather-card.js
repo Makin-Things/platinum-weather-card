@@ -242,11 +242,6 @@ let WeatherCard = class WeatherCard extends s$1 {
             ke().setEditMode(true);
         }
         this._config = Object.assign({ name: 'Weather' }, config);
-        console.info(`Card Config Version=${this._config.card_config_version || 'no version'}`);
-        if (this._config.card_config_version !== 2) {
-            this._configCleanup();
-        }
-        console.info('setConfig end');
     }
     // https://lit.dev/docs/components/lifecycle/#reactive-update-cycle-performing
     shouldUpdate(changedProps) {
@@ -540,9 +535,10 @@ let WeatherCard = class WeatherCard extends s$1 {
                 start = this._config['entity_extended_1'] && i < (this._config['daily_extended_forecast_days'] !== 0 ? this._config['daily_extended_forecast_days'] || 7 : 0) ? this._config['entity_extended_1'].match(/(\d+)(?!.*\d)/g) : false;
                 var extended = $ ``;
                 if (this._config['daily_extended_use_attr'] === true) {
-                    const extendedEntity = this._config['entity_extended_1'];
+                    start = this._config['entity_extended_1'] ? this._config['entity_extended_1'].match(/(\d+)(?!.*\d)/g) : false;
+                    const extendedEntity = start ? this._config['entity_extended_1'].replace(/(\d+)(?!.*\d)/g, Number(start) + i) : undefined;
                     start = this._config['daily_extended_name_attr'] && i < (this._config['daily_extended_forecast_days'] !== 0 ? this._config['daily_extended_forecast_days'] || 7 : 0) ? this._config['daily_extended_name_attr'].match(/(\d+)(?!.*\d)/g) : false;
-                    const attribute = start ? this._config['daily_extended_name_attr'].replace(/(\d+)(?!.*\d)/g, Number(start) + i).toLowerCase().split(".").reduce((retval, value) => retval !== undefined ? retval[value] : undefined, this.hass.states[extendedEntity].attributes) : undefined;
+                    const attribute = start == null ? this.hass.states[extendedEntity].attributes[this._config['daily_extended_name_attr']] : start ? this._config['daily_extended_name_attr'].replace(/(\d+)(?!.*\d)/g, Number(start) + i).toLowerCase().split(".").reduce((retval, value) => retval !== undefined ? retval[value] : undefined, this.hass.states[extendedEntity].attributes) : undefined;
                     extended = attribute ? $ `<div class="f-extended">${attribute}</div>` : $ ``;
                 }
                 else {
@@ -1685,31 +1681,6 @@ ${this.hass.states[this._config.entity_temp_following].state}` : $ ``;
             origConfig: this._config,
         });
         return $ `${errorCard}`;
-    }
-    // public setConfig(config: WeatherCardConfig): void {
-    //   this._config = config;
-    //   if (this._section_order === null) {
-    //     this._config = {
-    //       ...this._config,
-    //       ['section_order']: ['title', 'main', 'extended', 'slots', 'daily_forecast'],
-    //     }
-    //     fireEvent(this, 'config-changed', { config: this._config });
-    //   }
-    //   this.loadCardHelpers();
-    // }
-    _configCleanup() {
-        console.info(`configCleanup`);
-        // const tmpConfig = { ...this._config };
-        // delete tmpConfig['fred'];
-        this._config = Object.assign(Object.assign({}, this._config), { card_config_version: 2 });
-        // tmpConfig['card_config_version'] = 2;
-        // this._config = tmpConfig;
-        // super.setConfig(this._config);
-        // if (this.hass) {
-        //   console.info(`request update`);
-        //    this.requestUpdate();
-        //  }
-        //  fireEvent(this, 'config-changed', { config: this._config });
     }
     // https://lit.dev/docs/components/styles/
     get styles() {
@@ -10525,6 +10496,14 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
         }
         this.loadCardHelpers();
     }
+    _configCleanup() {
+        console.info(`configCleanup`);
+        if (!this._config || !this.hass) {
+            return;
+        }
+        this._config = Object.assign(Object.assign({}, this._config), { card_config_version: 2 });
+        ne(this, 'config-changed', { config: this._config });
+    }
     shouldUpdate() {
         if (!this._initialized) {
             this._initialize();
@@ -11013,6 +10992,12 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
         return ((_a = this._config) === null || _a === void 0 ? void 0 : _a.show_error) || false;
     }
     async firstUpdated() {
+        if (this._config && this.hass) {
+            console.info(`Card Config Version=${this._config.card_config_version || 'no version'}`);
+            if (this._config.card_config_version !== 2) {
+                this._configCleanup();
+            }
+        }
         this.loadEditorElements();
     }
     async loadEditorElements() {

@@ -69,12 +69,6 @@ export class WeatherCard extends LitElement {
       name: 'Weather',
       ...config,
     };
-
-    console.info(`Card Config Version=${this._config.card_config_version || 'no version'}`);
-    if (this._config.card_config_version !== 2) {
-      this._configCleanup();
-    }
-    console.info('setConfig end');
   }
 
   // https://lit.dev/docs/components/lifecycle/#reactive-update-cycle-performing
@@ -380,9 +374,10 @@ export class WeatherCard extends LitElement {
         start = this._config['entity_extended_1'] && i < (this._config['daily_extended_forecast_days'] !== 0 ? this._config['daily_extended_forecast_days'] || 7 : 0) ? this._config['entity_extended_1'].match(/(\d+)(?!.*\d)/g) : false;
         var extended: TemplateResult = html``;
         if (this._config['daily_extended_use_attr'] === true) {
-          const extendedEntity = this._config['entity_extended_1'];
+          start = this._config['entity_extended_1'] ? this._config['entity_extended_1'].match(/(\d+)(?!.*\d)/g) : false;
+          const extendedEntity = start ? this._config['entity_extended_1'].replace(/(\d+)(?!.*\d)/g, Number(start) + i) : undefined;
           start = this._config['daily_extended_name_attr'] && i < (this._config['daily_extended_forecast_days'] !== 0 ? this._config['daily_extended_forecast_days'] || 7 : 0) ? this._config['daily_extended_name_attr'].match(/(\d+)(?!.*\d)/g) : false;
-          const attribute = start ? this._config['daily_extended_name_attr'].replace(/(\d+)(?!.*\d)/g, Number(start) + i).toLowerCase().split(".").reduce((retval, value) => retval !== undefined ? retval[value] : undefined, this.hass.states[extendedEntity].attributes) : undefined;
+          const attribute = start == null ? this.hass.states[extendedEntity].attributes[this._config['daily_extended_name_attr']] : start ? this._config['daily_extended_name_attr'].replace(/(\d+)(?!.*\d)/g, Number(start) + i).toLowerCase().split(".").reduce((retval, value) => retval !== undefined ? retval[value] : undefined, this.hass.states[extendedEntity].attributes) : undefined;
           extended = attribute ? html`<div class="f-extended">${attribute}</div>` : html``;
         } else {
           const extendedEntity = start ? this._config['entity_extended_1'].replace(/(\d+)(?!.*\d)/g, Number(start) + i) : undefined;
@@ -1557,42 +1552,6 @@ ${this.hass.states[this._config.entity_temp_following].state}` : html``;
     });
 
     return html`${errorCard}`;
-  }
-
-
-  // public setConfig(config: WeatherCardConfig): void {
-  //   this._config = config;
-  //   if (this._section_order === null) {
-  //     this._config = {
-  //       ...this._config,
-  //       ['section_order']: ['title', 'main', 'extended', 'slots', 'daily_forecast'],
-  //     }
-  //     fireEvent(this, 'config-changed', { config: this._config });
-  //   }
-
-  //   this.loadCardHelpers();
-  // }
-
-
-  private _configCleanup() {
-    console.info(`configCleanup`);
-    // const tmpConfig = { ...this._config };
-    // delete tmpConfig['fred'];
-
-
-    this._config = {
-      ...this._config,
-      card_config_version: 2,
-    }
-
-    // tmpConfig['card_config_version'] = 2;
-    // this._config = tmpConfig;
-    // super.setConfig(this._config);
-    // if (this.hass) {
-    //   console.info(`request update`);
-    //    this.requestUpdate();
-    //  }
-    //  fireEvent(this, 'config-changed', { config: this._config });
   }
 
   // https://lit.dev/docs/components/styles/
