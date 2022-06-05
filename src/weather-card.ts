@@ -378,11 +378,14 @@ export class WeatherCard extends LitElement {
         const posEntity = start ? this._config['entity_pos_1'].replace(/(\d+)(?!.*\d)/g, Number(start) + i) : undefined;
         const pos = start ? html`<br><div class="f-slot"><div class="f-label">Possible rain </div><div class="pos">${this.hass.states[posEntity] !== undefined ? this.hass.states[posEntity].state : "---"}</div><div class="unit">${this.getUOM('precipitation')}</div></div>` : ``;
         start = this._config['entity_extended_1'] && i < (this._config['daily_extended_forecast_days'] !== 0 ? this._config['daily_extended_forecast_days'] || 7 : 0) ? this._config['entity_extended_1'].match(/(\d+)(?!.*\d)/g) : false;
-        const extendedEntity = start ? this._config['entity_extended_1'].replace(/(\d+)(?!.*\d)/g, Number(start) + i) : undefined;
         var extended: TemplateResult = html``;
         if (this._config['daily_extended_use_attr'] === true) {
-          extended = start ? html`<div class="f-extended">${this._config['daily_extended_name_attr'] !== undefined ? this.hass.states[extendedEntity].attributes[this._config['daily_extended_name_attr']] : "---"}</div>` : html``;
+          const extendedEntity = this._config['entity_extended_1'];
+          start = this._config['daily_extended_name_attr'] && i < (this._config['daily_extended_forecast_days'] !== 0 ? this._config['daily_extended_forecast_days'] || 7 : 0) ? this._config['daily_extended_name_attr'].match(/(\d+)(?!.*\d)/g) : false;
+          const attribute = start ? this._config['daily_extended_name_attr'].replace(/(\d+)(?!.*\d)/g, Number(start) + i).toLowerCase().split(".").reduce((retval, value) => retval !== undefined ? retval[value] : undefined, this.hass.states[extendedEntity].attributes) : undefined;
+          extended = attribute ? html`<div class="f-extended">${attribute}</div>` : html``;
         } else {
+          const extendedEntity = start ? this._config['entity_extended_1'].replace(/(\d+)(?!.*\d)/g, Number(start) + i) : undefined;
           extended = start ? html`<div class="f-extended">${this.hass.states[extendedEntity] !== undefined ? this.hass.states[extendedEntity].state : "---"}</div>` : html``;
         }
 

@@ -538,12 +538,15 @@ let WeatherCard = class WeatherCard extends s$1 {
                 const posEntity = start ? this._config['entity_pos_1'].replace(/(\d+)(?!.*\d)/g, Number(start) + i) : undefined;
                 const pos = start ? $ `<br><div class="f-slot"><div class="f-label">Possible rain </div><div class="pos">${this.hass.states[posEntity] !== undefined ? this.hass.states[posEntity].state : "---"}</div><div class="unit">${this.getUOM('precipitation')}</div></div>` : ``;
                 start = this._config['entity_extended_1'] && i < (this._config['daily_extended_forecast_days'] !== 0 ? this._config['daily_extended_forecast_days'] || 7 : 0) ? this._config['entity_extended_1'].match(/(\d+)(?!.*\d)/g) : false;
-                const extendedEntity = start ? this._config['entity_extended_1'].replace(/(\d+)(?!.*\d)/g, Number(start) + i) : undefined;
                 var extended = $ ``;
                 if (this._config['daily_extended_use_attr'] === true) {
-                    extended = start ? $ `<div class="f-extended">${this._config['daily_extended_name_attr'] !== undefined ? this.hass.states[extendedEntity].attributes[this._config['daily_extended_name_attr']] : "---"}</div>` : $ ``;
+                    const extendedEntity = this._config['entity_extended_1'];
+                    start = this._config['daily_extended_name_attr'] && i < (this._config['daily_extended_forecast_days'] !== 0 ? this._config['daily_extended_forecast_days'] || 7 : 0) ? this._config['daily_extended_name_attr'].match(/(\d+)(?!.*\d)/g) : false;
+                    const attribute = start ? this._config['daily_extended_name_attr'].replace(/(\d+)(?!.*\d)/g, Number(start) + i).toLowerCase().split(".").reduce((retval, value) => retval !== undefined ? retval[value] : undefined, this.hass.states[extendedEntity].attributes) : undefined;
+                    extended = attribute ? $ `<div class="f-extended">${attribute}</div>` : $ ``;
                 }
                 else {
+                    const extendedEntity = start ? this._config['entity_extended_1'].replace(/(\d+)(?!.*\d)/g, Number(start) + i) : undefined;
                     extended = start ? $ `<div class="f-extended">${this.hass.states[extendedEntity] !== undefined ? this.hass.states[extendedEntity].state : "---"}</div>` : $ ``;
                 }
                 htmlDays.push($ `
@@ -11025,7 +11028,7 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
             !registry.get("ha-icon-picker") ||
             !registry.get("ha-icon-button") ||
             !registry.get("ha-icon")) {
-            // Load in elements needed
+            // Load in a card that uses the elements needed
             // This part will differ for every element you want
             const ch = await window.loadCardHelpers();
             c_button = await ch.createCardElement({ type: "button", button: [] });
@@ -11034,7 +11037,7 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
         }
         let c_entity = undefined;
         if (!registry.get("ha-entity-attribute-picker")) {
-            // Load in elements needed
+            // Load in a card that uses the elements needed
             // This part will differ for every element you want
             const ch = await window.loadCardHelpers();
             c_entity = await ch.createCardElement({ type: "entity", entity: "sensor.time" });
@@ -11120,12 +11123,8 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
     `;
     }
     _sectionExtendedEditor() {
-        const attr_names = [];
         if (this._extended_use_attr === true) {
-            const attrs = this.hass !== undefined ? this.hass.states[this._entity_daily_summary].attributes : [];
-            for (const element in attrs) {
-                attr_names.push($ `<mwc-list-item value="${element}">${element}</mwc-list-item>`);
-            }
+            this.hass !== undefined ? this.hass.states[this._entity_daily_summary].attributes : [];
         }
         return $ `
       <ha-entity-picker .hass=${this.hass} .configValue=${'entity_daily_summary'} .value=${this._entity_daily_summary}
@@ -11140,21 +11139,11 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
             </mwc-switch>
           </mwc-formfield>
         </div>
-        <ha-entity-attribute-picker .hass=${this.hass} .entityId=${'weather.pearce'} .configValue=${'extended_name_attr'} .value=${this._extended_name_attr}
-          name="extended_name_attr" label="Attribute (optional)" allow-custom-value
+        ${this._extended_use_attr === true ? $ `<ha-entity-attribute-picker .hass=${this.hass} .entityId=${this._entity_daily_summary}
+          .configValue=${'extended_name_attr'} .value=${this._extended_name_attr} name="extended_name_attr" label="Attribute (optional)"
+          allow-custom-value
           @value-changed=${this._valueChangedPicker}>
-        </ha-entity-attribute-picker>
-        <!-- <mwc-textfield label="Attribute (optional)" .value=${this._extended_name_attr} .configValue=${'extended_name_attr'}
-          @input=${this._valueChanged}>
-        </mwc-textfield> -->
-        <!-- ${this._extended_use_attr === true ? $ `<ha-select label="Attribute (optional)" .configValue=${'extended_name_attr'}
-          .value=${this._extended_name_attr ? this._extended_name_attr : null} @closed=${(ev) => ev.stopPropagation()}
-          @selected=${this._valueChanged}
-          fixedMenuPosition
-          naturalMenuWidth>
-          <mwc-list-item></mwc-list-item>
-          ${attr_names}
-        </ha-select>` : $ ``} --->
+        </ha-entity-attribute-picker>` : $ ``}
       </div>
       <ha-entity-picker .hass=${this.hass} .configValue=${'entity_todays_fire_danger'} .value=${this._entity_todays_fire_danger}
         name="entity_todays_fire_danger" label="Entity Today's Fire Danger (optional)" allow-custom-entity
@@ -11279,12 +11268,8 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
     `;
     }
     _sectionDailyForecastEditor() {
-        const attr_names = [];
         if (this._daily_extended_use_attr === true) {
-            const attrs = this.hass !== undefined ? this.hass.states[this._entity_extended_1].attributes : [];
-            for (const element in attrs) {
-                attr_names.push($ `<mwc-list-item value="${element}">${element}</mwc-list-item>`);
-            }
+            this.hass !== undefined ? this.hass.states[this._entity_extended_1].attributes : [];
         }
         return $ `
       <div class="side-by-side">
@@ -11353,8 +11338,9 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
       <ha-entity-picker .hass=${this.hass} .configValue=${'entity_pos_1'} .value=${this._entity_pos_1} name="entity_pos_1"
         label="Entity Forecast Possible 1 (optional)" allow-custom-entity @value-changed=${this._valueChangedPicker}>
       </ha-entity-picker>
-      ${this._daily_forecast_layout === 'vertical' ? $ `<ha-entity-picker .hass=${this.hass} .configValue=${'entity_extended_1'} .value=${this._entity_extended_1}
-        name="entity_extended_1" label="Entity Forecast Extended 1 (optional)" allow-custom-entity
+      ${this._daily_forecast_layout === 'vertical' ? $ `<ha-entity-picker .hass=${this.hass} .configValue=${'entity_extended_1'}
+        .value=${this._entity_extended_1} name="entity_extended_1" label="Entity Forecast Extended 1 (optional)"
+        allow-custom-entity
         @value-changed=${this._valueChangedPicker}>
       </ha-entity-picker>
       <div class="side-by-side">
@@ -11365,14 +11351,11 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
             </mwc-switch>
           </mwc-formfield>
         </div>
-        ${this._daily_extended_use_attr === true ? $ `<ha-select label="Attribute (optional)" .configValue=${'daily_extended_name_attr'}
-          .value=${this._daily_extended_name_attr ? this._daily_extended_name_attr : null} @closed=${(ev) => ev.stopPropagation()}
-          @selected=${this._valueChanged}
-          fixedMenuPosition
-          naturalMenuWidth>
-          <mwc-list-item></mwc-list-item>
-          ${attr_names}
-        </ha-select>` : $ ``}
+        ${this._daily_extended_use_attr === true ? $ `<ha-entity-attribute-picker .hass=${this.hass} .entityId=${this._entity_extended_1}
+          .configValue=${'daily_extended_name_attr'} .value=${this._daily_extended_name_attr} name="daily_extended_name_attr" label="Attribute (optional)"
+          allow-custom-value
+          @value-changed=${this._valueChangedPicker}>
+        </ha-entity-attribute-picker>` : $ ``}
       </div>` : ``}
     `;
     }

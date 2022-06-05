@@ -697,24 +697,11 @@ get _slot_l1(): string {
             </mwc-switch>
           </mwc-formfield>
         </div>
-        <ha-entity-attribute-picker .hass=${this.hass} .entityId=${'weather.pearce'} .configValue=${'extended_name_attr'} .value=${this._extended_name_attr}
-          name="extended_name_attr" label="Attribute (optional)" allow-custom-value
+        ${this._extended_use_attr === true ? html`<ha-entity-attribute-picker .hass=${this.hass} .entityId=${this._entity_daily_summary}
+          .configValue=${'extended_name_attr'} .value=${this._extended_name_attr} name="extended_name_attr" label="Attribute (optional)"
+          allow-custom-value
           @value-changed=${this._valueChangedPicker}>
-        </ha-entity-attribute-picker>
-        <!-- <mwc-textfield label="Attribute (optional)" .value=${this._extended_name_attr} .configValue=${'extended_name_attr'}
-          @input=${this._valueChanged}>
-        </mwc-textfield> -->
-        <!-- ${this._extended_use_attr === true ? html`<ha-select label="Attribute (optional)" .configValue=${'extended_name_attr'}
-          .value=${this._extended_name_attr ? this._extended_name_attr : null} @closed=${(ev: { stopPropagation:
-          ()=> any;
-          }) =>
-        ev.stopPropagation()}
-          @selected=${this._valueChanged}
-          fixedMenuPosition
-          naturalMenuWidth>
-          <mwc-list-item></mwc-list-item>
-          ${attr_names}
-        </ha-select>` : html``} --->
+        </ha-entity-attribute-picker>` : html ``}
       </div>
       <ha-entity-picker .hass=${this.hass} .configValue=${'entity_todays_fire_danger'} .value=${this._entity_todays_fire_danger}
         name="entity_todays_fire_danger" label="Entity Today's Fire Danger (optional)" allow-custom-entity
@@ -923,8 +910,9 @@ get _slot_l1(): string {
       <ha-entity-picker .hass=${this.hass} .configValue=${'entity_pos_1'} .value=${this._entity_pos_1} name="entity_pos_1"
         label="Entity Forecast Possible 1 (optional)" allow-custom-entity @value-changed=${this._valueChangedPicker}>
       </ha-entity-picker>
-      ${this._daily_forecast_layout === 'vertical' ? html`<ha-entity-picker .hass=${this.hass} .configValue=${'entity_extended_1'} .value=${this._entity_extended_1}
-        name="entity_extended_1" label="Entity Forecast Extended 1 (optional)" allow-custom-entity
+      ${this._daily_forecast_layout === 'vertical' ? html`<ha-entity-picker .hass=${this.hass} .configValue=${'entity_extended_1'}
+        .value=${this._entity_extended_1} name="entity_extended_1" label="Entity Forecast Extended 1 (optional)"
+        allow-custom-entity
         @value-changed=${this._valueChangedPicker}>
       </ha-entity-picker>
       <div class="side-by-side">
@@ -935,17 +923,11 @@ get _slot_l1(): string {
             </mwc-switch>
           </mwc-formfield>
         </div>
-        ${this._daily_extended_use_attr === true ? html`<ha-select label="Attribute (optional)" .configValue=${'daily_extended_name_attr'}
-          .value=${this._daily_extended_name_attr ? this._daily_extended_name_attr : null} @closed=${(ev: { stopPropagation:
-          ()=> any;
-          }) =>
-        ev.stopPropagation()}
-          @selected=${this._valueChanged}
-          fixedMenuPosition
-          naturalMenuWidth>
-          <mwc-list-item></mwc-list-item>
-          ${attr_names}
-        </ha-select>` : html``}
+        ${this._daily_extended_use_attr === true ? html`<ha-entity-attribute-picker .hass=${this.hass} .entityId=${this._entity_extended_1}
+          .configValue=${'daily_extended_name_attr'} .value=${this._daily_extended_name_attr} name="daily_extended_name_attr" label="Attribute (optional)"
+          allow-custom-value
+          @value-changed=${this._valueChangedPicker}>
+        </ha-entity-attribute-picker>` : html``}
       </div>` : ``}
     `;
   }
