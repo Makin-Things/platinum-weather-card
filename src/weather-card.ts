@@ -156,10 +156,10 @@ export class WeatherCard extends LitElement {
     if ((this._config?.show_section_title !== true) || ((this._config.text_card_title === undefined) && (this._config.entity_update_time == undefined))) return html``;
 
     var updateTime: string;
-    if ((this._config.entity_update_time) && (this.hass.states[this._config.entity_update_time]) && (this.hass.states[this._config.entity_update_time].state !== undefined)){
+    if ((this._config.entity_update_time) && (this.hass.states[this._config.entity_update_time]) && (this.hass.states[this._config.entity_update_time].state !== undefined)) {
       const d = new Date(this.hass.states[this._config.entity_update_time].state);
       if (this.is12Hour) {
-        updateTime = d.toLocaleString(this._config.locale, { hour: 'numeric', minute: '2-digit', hour12: true }).replace(" ", "")+", " + d.toLocaleDateString(this._config.locale, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).replace(",", "");
+        updateTime = d.toLocaleString(this._config.locale, { hour: 'numeric', minute: '2-digit', hour12: true }).replace(" ", "") + ", " + d.toLocaleDateString(this._config.locale, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).replace(",", "");
       } else {
         updateTime = d.toLocaleString(this._config.locale, { hour: '2-digit', minute: '2-digit', hour12: false }) + d.toLocaleDateString(this._config.locale, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).replace(",", "");
       }
@@ -170,7 +170,8 @@ export class WeatherCard extends LitElement {
     return html`
       <div class="title-section section">
         ${this._config.text_card_title ? html`<div class="card-header">${this._config.text_card_title}</div>` : html``}
-        ${this._config.entity_update_time ? html`<div class="updated">${this._config.text_update_time_prefix ? this._config.text_update_time_prefix+' ' : ''}${updateTime}</div>` : html``}
+        ${this._config.entity_update_time ? html`<div class="updated">${this._config.text_update_time_prefix ?
+        this._config.text_update_time_prefix + ' ' : ''}${updateTime}</div>` : html``}
       </div>
     `;
   }
@@ -228,8 +229,12 @@ export class WeatherCard extends LitElement {
     } else {
       extended.push(html`${this.hass.states[extendedEntity] !== undefined ? this.hass.states[extendedEntity].state : ""}`);
     }
-    extended.push(html`${this._config['entity_todays_uv_forecast'] && this.hass.states[this._config['entity_todays_uv_forecast']] && this.hass.states[this._config['entity_todays_uv_forecast']].state !== "unknown" ? " " + this.hass.states[this._config['entity_todays_uv_forecast']].state : ""}`);
-    extended.push(html`${this._config['entity_todays_fire_danger'] && this.hass.states[this._config['entity_todays_fire_danger']] && this.hass.states[this._config['entity_todays_fire_danger']].state !== "unknown" ? " " + this.hass.states[this._config['entity_todays_fire_danger']].state : ""}`);
+    extended.push(html`${this._config['entity_todays_uv_forecast'] && this.hass.states[this._config['entity_todays_uv_forecast']] &&
+      this.hass.states[this._config['entity_todays_uv_forecast']].state !== "unknown" ? " " +
+    this.hass.states[this._config['entity_todays_uv_forecast']].state : ""}`);
+    extended.push(html`${this._config['entity_todays_fire_danger'] && this.hass.states[this._config['entity_todays_fire_danger']] &&
+      this.hass.states[this._config['entity_todays_fire_danger']].state !== "unknown" ? " " +
+    this.hass.states[this._config['entity_todays_fire_danger']].state : ""}`);
 
     return html`
       <div class="extended-section section">
@@ -297,32 +302,56 @@ export class WeatherCard extends LitElement {
         const minMax = this._config.old_daily_format === true
           ?
           html`
-              <div class="f-slot"><div class="highTemp">${maxEntity && this.hass.states[maxEntity] ? Math.round(Number(this.hass.states[maxEntity].state)) : '---'}</div><div>${tempUnit}</div></div>
+              <div class="f-slot">
+                <div class="highTemp">${maxEntity && this.hass.states[maxEntity] ?
+              Math.round(Number(this.hass.states[maxEntity].state)) : '---'}</div>
+                <div>${tempUnit}</div>
+              </div>
               <br>
-              <div class="f-slot"><div class="lowTemp">${minEntity && this.hass.states[minEntity] ? Math.round(Number(this.hass.states[minEntity].state)) : '---'}</div><div>${tempUnit}</div></div>`
+              <div class="f-slot">
+                <div class="lowTemp">${minEntity && this.hass.states[minEntity] ?
+              Math.round(Number(this.hass.states[minEntity].state)) : '---'}</div>
+                <div>${tempUnit}</div>
+              </div>`
           :
           this._config.tempformat === "highlow"
             ?
             html`
-                    <div class="f-slot"><div class="highTemp">${maxEntity && this.hass.states[maxEntity] ? Math.round(Number(this.hass.states[maxEntity].state)) : "---"}</div><div class="slash">/</div>
-                    <div class="lowTemp">${minEntity && this.hass.states[minEntity] ? Math.round(Number(this.hass.states[minEntity].state)) : "---"}</div><div>${tempUnit}</div></div>`
+                    <div class="f-slot">
+                      <div class="highTemp">${maxEntity && this.hass.states[maxEntity] ?
+                Math.round(Number(this.hass.states[maxEntity].state)) : "---"}</div>
+                      <div class="slash">/</div>
+                      <div class="lowTemp">${minEntity && this.hass.states[minEntity] ?
+                Math.round(Number(this.hass.states[minEntity].state)) : "---"}</div>
+                      <div>${tempUnit}</div>
+                    </div>`
             :
             html`
-                    <div class="f-slot"><div class="lowTemp">${minEntity && this.hass.states[minEntity] ? Math.round(Number(this.hass.states[minEntity].state)) : "---"}</div><div class="slash">/</div>
-                    <div class="highTemp">${maxEntity && this.hass.states[maxEntity] ? Math.round(Number(this.hass.states[maxEntity].state)) : "---"}</div><div>${tempUnit}</div></div>`;
+                    <div class="f-slot">
+                      <div class="lowTemp">${minEntity && this.hass.states[minEntity] ?
+                Math.round(Number(this.hass.states[minEntity].state)) : "---"}</div>
+                      <div class="slash">/</div>
+                      <div class="highTemp">${maxEntity && this.hass.states[maxEntity] ?
+                Math.round(Number(this.hass.states[maxEntity].state)) : "---"}</div>
+                      <div>${tempUnit}</div>
+                    </div>`;
         start = this._config['entity_pop_1'] ? this._config['entity_pop_1'].match(/(\d+)(?!.*\d)/g) : false;
         const popEntity = start && this._config['entity_pop_1'] ? this._config['entity_pop_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
-        const pop = start ? html`<br><div class="f-slot"><div class="pop">${popEntity && this.hass.states[popEntity] ? Math.round(Number(this.hass.states[popEntity].state)) : "---"}</div><div class="unit">%</div></div>` : ``;
+        const pop = start ? html`
+          <br><div class="f-slot"><div class="pop">${popEntity && this.hass.states[popEntity] ? Math.round(Number(this.hass.states[popEntity].state)) : "---"}</div><div class="unit">%</div></div>` : ``;
         start = this._config['entity_pos_1'] ? this._config['entity_pos_1'].match(/(\d+)(?!.*\d)/g) : false;
         const posEntity = start && this._config['entity_pos_1'] ? this._config['entity_pos_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
-        const pos = start ? html`<br><div class="f-slot"><div class="pos">${posEntity && this.hass.states[posEntity] ? this.hass.states[posEntity].state : "---"}</div><div class="unit">${this.getUOM('precipitation')}</div></div>` : ``;
+        const pos = start ? html`
+          <br><div class="f-slot"><div class="pos">${posEntity && this.hass.states[posEntity] ? this.hass.states[posEntity].state : "---"}</div><div class="unit">${this.getUOM('precipitation')}</div></div>` : ``;
         start = this._config['entity_summary_1'] ? this._config['entity_summary_1'].match(/(\d+)(?!.*\d)/g) : false;
         const tooltipEntity = start && this._config['entity_summary_1'] ? this._config['entity_summary_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
-        const tooltip = html`<div class="fcasttooltiptext" id="fcast-summary-${i}">${this._config.tooltips && tooltipEntity ? this.hass.states[tooltipEntity] ? this.hass.states[tooltipEntity].state : "Config Error" : ""}</div>`;
+        const tooltip = html`<div class="fcasttooltiptext" id="fcast-summary-${i}">${this._config.tooltips && tooltipEntity ?
+          this.hass.states[tooltipEntity] ? this.hass.states[tooltipEntity].state : "Config Error" : ""}</div>`;
 
         htmlDays.push(html`
           <div class="day-horiz fcasttooltip">
-            <span class="dayname">${forecastDate ? forecastDate.toLocaleDateString(this._config.locale,{weekday: 'short'}) : "---"}</span>
+            <span class="dayname">${forecastDate ? forecastDate.toLocaleDateString(this._config.locale, { weekday: 'short' }) :
+            "---"}</span>
             <br>${htmlIcon}
             ${minMax}
             ${pop}
@@ -352,25 +381,41 @@ export class WeatherCard extends LitElement {
         start = this._config['entity_forecast_low_temp_1'] ? this._config['entity_forecast_low_temp_1'].match(/(\d+)(?!.*\d)/g) : false;
         const minEntity = start && this._config['entity_forecast_low_temp_1'] ? this._config['entity_forecast_low_temp_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
         const tempUnit = html`<div class="unitc">${this.getUOM("temperature")}</div>`;
-        const min = minEntity && this.hass.states[minEntity] ? html`<div class="temp-label">Min: </div><div class="low-temp">${Math.round(Number(this.hass.states[minEntity].state))}</div>${tempUnit}` : html`---`;
-        const max = maxEntity && this.hass.states[maxEntity] ? html`<div class="temp-label">Max: </div><div class="high-temp">${Math.round(Number(this.hass.states[maxEntity].state))}</div>${tempUnit}` : html`---`;
+        const min = minEntity && this.hass.states[minEntity] ? html`
+          <div class="temp-label">Min: </div>
+          <div class="low-temp">${Math.round(Number(this.hass.states[minEntity].state))}</div>${tempUnit}` : html`---`;
+        const max = maxEntity && this.hass.states[maxEntity] ? html`
+          <div class="temp-label">Max: </div>
+          <div class="high-temp">${Math.round(Number(this.hass.states[maxEntity].state))}</div>${tempUnit}` : html`---`;
         const minMax = this._config.tempformat === "highlow"
           ?
           html`
-              <div class="f-slot"><div class="highTemp">${maxEntity && this.hass.states[maxEntity] ? Math.round(Number(this.hass.states[maxEntity].state)) : "---"}</div><div class="slash">/</div>
-              <div class="lowTemp">${minEntity && this.hass.states[minEntity] ? Math.round(Number(this.hass.states[minEntity].state)) : "---"}</div><div>${tempUnit}</div></div>`
+              <div class="f-slot">
+                <div class="highTemp">${maxEntity && this.hass.states[maxEntity] ?
+              Math.round(Number(this.hass.states[maxEntity].state)) : "---"}</div>
+                <div class="slash">/</div>
+                <div class="lowTemp">${minEntity && this.hass.states[minEntity] ?
+              Math.round(Number(this.hass.states[minEntity].state)) : "---"}</div>
+                <div>${tempUnit}</div>
+              </div>`
           :
           html`
               <div class="f-slot">${min}${max}</div>`;
         start = this._config['entity_summary_1'] ? this._config['entity_summary_1'].match(/(\d+)(?!.*\d)/g) : false;
         const summaryEntity = start && this._config['entity_summary_1'] ? this._config['entity_summary_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
-        const summary = start ? html`<br><div class="f-slot">${summaryEntity && this.hass.states[summaryEntity] ? this.hass.states[summaryEntity].state : "---"}</div>` : ``;
+        const summary = start ? html`
+          <br><div class="f-slot">${summaryEntity && this.hass.states[summaryEntity] ? this.hass.states[summaryEntity].state : "---"}</div>` : ``;
         start = this._config['entity_pop_1'] ? this._config['entity_pop_1'].match(/(\d+)(?!.*\d)/g) : false;
         const popEntity = start && this._config['entity_pop_1'] ? this._config['entity_pop_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
-        const pop = start ? html`<div class="f-slot"><div class="f-label">Chance of rain </div><div class="pop">${popEntity && this.hass.states[popEntity] ? Math.round(Number(this.hass.states[popEntity].state)) : "---"}</div><div class="unit">%</div></div>` : ``;
+        const pop = start ? html`
+          <div class="f-slot"><div class="f-label">Chance of rain </div>
+          <div class="pop">${popEntity && this.hass.states[popEntity] ? Math.round(Number(this.hass.states[popEntity].state)) : "---"}</div><div class="unit">%</div></div>` : ``;
         start = this._config['entity_pos_1'] ? this._config['entity_pos_1'].match(/(\d+)(?!.*\d)/g) : false;
         const posEntity = start && this._config['entity_pos_1'] ? this._config['entity_pos_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
-        const pos = start ? html`<br><div class="f-slot"><div class="f-label">Possible rain </div><div class="pos">${posEntity && this.hass.states[posEntity] ? this.hass.states[posEntity].state : "---"}</div><div class="unit">${this.getUOM('precipitation')}</div></div>` : ``;
+        const pos = start ? html`
+          <br><div class="f-slot"><div class="f-label">Possible rain </div>
+          <div class="pos">${posEntity && this.hass.states[posEntity] ? this.hass.states[posEntity].state : "---"}</div>
+          <div class="unit">${this.getUOM('precipitation')}</div></div>` : ``;
         start = this._config['entity_extended_1'] && i < (this._config['daily_extended_forecast_days'] !== 0 ? this._config['daily_extended_forecast_days'] || 7 : 0) ? this._config['entity_extended_1'].match(/(\d+)(?!.*\d)/g) : false;
         var extended: TemplateResult = html``;
         if (this._config['daily_extended_use_attr'] === true) {
@@ -381,14 +426,17 @@ export class WeatherCard extends LitElement {
           extended = attribute ? html`<div class="f-extended">${attribute}</div>` : html``;
         } else {
           const extendedEntity = start && this._config['entity_extended_1'] ? this._config['entity_extended_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
-          extended = start ? html`<div class="f-extended">${extendedEntity && this.hass.states[extendedEntity] ? this.hass.states[extendedEntity].state : "---"}</div>` : html``;
+          extended = start ? html`<div class="f-extended">${extendedEntity && this.hass.states[extendedEntity] ? this.hass.states[extendedEntity].state :
+            "---"}</div>` : html``;
         }
 
         htmlDays.push(html`
           <div class="day-vert fcasttooltip">
             <div class="day-vert-top">
               <div class="day-vert-dayicon">
-                <span class="dayname">${forecastDate ? forecastDate.toLocaleDateString(this._config.locale,{weekday: 'short'}) : "---"}</span>
+                <span class="dayname">${forecastDate ? forecastDate.toLocaleDateString(this._config.locale, { weekday: 'short' })
+                  :
+            "---"}</span>
                 <br>${htmlIcon}
               </div>
               <div class="day-vert-values">
@@ -408,7 +456,7 @@ export class WeatherCard extends LitElement {
       }
 
       var daily_forecast_section = html`
-        <div  class="daily-forecast-vert-section section">
+        <div class="daily-forecast-vert-section section">
           ${htmlDays}
         </div>
     `
@@ -419,7 +467,6 @@ export class WeatherCard extends LitElement {
     `;
   }
 
-  // https://lit.dev/docs/components/rendering/
   protected render(): TemplateResult | void {
     const htmlCode: TemplateResult[] = [];
     if (this._checkForErrors()) htmlCode.push(this._showConfigWarning(this._error));
@@ -444,7 +491,6 @@ export class WeatherCard extends LitElement {
           break;
       }
     });
-
 
     htmlCode.push(html`
       <style>
@@ -543,7 +589,7 @@ export class WeatherCard extends LitElement {
       case 'l4': return this.slotPressure;
       case 'l5': return this.slotSunNext;
       case 'l6': return this.slotRemove;
-      case 'r1': return this.slotPop;
+      case 'r1': return this.slotPopForecast;
       case 'r2': return this.slotHumidity;
       case 'r3': return this.slotUvSummary;
       case 'r4': return this.slotFireSummary;
@@ -562,386 +608,289 @@ export class WeatherCard extends LitElement {
     return html``;
   }
 
-  get slotPop(): TemplateResult {
-    try {
-      var intensity = this._config.entity_pop_intensity && !this._config.entity_pop_intensity_rate ? html`<span id="intensity-text"> -
-  ${(Number(this.hass.states[this._config.entity_pop_intensity].state)).toLocaleString()}</span><span
-  class="unit">${this.getUOM('precipitation')}</span>` : this._config.entity_pop_intensity_rate && !this._config.entity_pop_intensity ? html`<span id="intensity-text"> -
-  ${(Number(this.hass.states[this._config.entity_pop_intensity_rate].state)).toLocaleString()}</span><span
-  class="unit">${this.getUOM('intensity')}</span>` : ` ---`;
-      if (this._config.alt_pop) {
-        return html`<li><span class="ha-icon">
-    <ha-icon icon="mdi:weather-rainy"></ha-icon>
-  </span><span id="alt-pop">${this.hass.states[this._config.alt_pop].state}</span></li>`;
-      } else {
-        return this._config.entity_pop ? html`<li><span class="ha-icon">
-    <ha-icon icon="mdi:weather-rainy"></ha-icon>
-  </span><span id="pop-text">${this.hass.states[this._config.entity_pop] !== undefined ?
-            Math.round(Number(this.hass.states[this._config.entity_pop].state)) : "---"}</span><span
-    class="unit">%</span><span>${intensity}</span></li>` : html``;
-      }
-    } catch (e) {
-      return html`<li><span class="ha-icon">
-    <ha-icon icon="mdi:weather-rainy"></ha-icon>
-  </span><span id="pop-text">--</span></li>`;
-    }
-  }
+  // No longer used - will be removed later
+  // get slotPop(): TemplateResult {
+  //   var intensity = this._config.entity_pop_intensity && !this._config.entity_pop_intensity_rate ?
+  //     html`<span id="intensity-text"> - ${(Number(this.hass.states[this._config.entity_pop_intensity].state)).toLocaleString()}</span><span class="unit">${this.getUOM('precipitation')}</span>` :
+  //     this._config.entity_pop_intensity_rate && !this._config.entity_pop_intensity ? html`<span id="intensity-text"> - ${(Number(this.hass.states[this._config.entity_pop_intensity_rate].state)).toLocaleString()}</span><span class="unit">${this.getUOM('intensity')}</span>` : ` ---`;
+  //   return this._config.entity_pop ?
+  //     html`<li><span class="ha-icon"><ha-icon icon="mdi:weather-rainy"></ha-icon></span><span id="pop-text">${this.hass.states[this._config.entity_pop] !== undefined ?
+  //     Math.round(Number(this.hass.states[this._config.entity_pop].state)) : "---"}</span><span class="unit">%</span><span>${intensity}</span></li>` : html``;
+  // }
 
   get slotPopForecast(): TemplateResult {
-    try {
-      if (this._config.alt_pop) {
-        return html`<li><span class="ha-icon">
-    <ha-icon icon="mdi:weather-rainy"></ha-icon>
-  </span><span id="alt-pop">${this.hass.states[this._config.alt_pop].state}</span></li>`;
-      } else {
-        return this._config.entity_pop && this._config.entity_possible_today ? html`<li><span class="ha-icon">
-    <ha-icon icon="mdi:weather-rainy"></ha-icon>
-  </span><span id="pop-text">${Math.round(Number(this.hass.states[this._config.entity_pop].state))}</span><span
-    class="unit">%</span><span> - <span
-      id="pop-text-today">${this.hass.states[this._config.entity_possible_today].state}</span></span><span
-    class="unit">${this.getUOM('precipitation')}</span></li>` : html``;
-      }
-    } catch (e) {
-      return html`<li><span class="ha-icon">
-    <ha-icon icon="mdi:weather-rainy"></ha-icon>
-  </span><span id="pop-text">---</span></li>`;
-    }
+    const pop = this._config.entity_pop ? Math.round(Number(this.hass.states[this._config.entity_pop].state)) : "---";
+    const pop_units = pop !== "---" ? html`<div class="slot-text unit">%</div>` : html``;
+    const pos = this._config.entity_possible_today ? this.hass.states[this._config.entity_possible_today].state : "---";
+    const pos_units = pos !== "---" ? html`<div class="slot-text unit">${this.getUOM('precipitation')}</div>` : html``;
+    return html`
+      <li>
+        <div class="slot">
+          <div class="slot-icon">
+            <ha-icon icon="mdi:weather-rainy"></ha-icon>
+          </div>
+          <div class="slot-text pop-text">${pop}</div>${pop_units}<div class="slot-text">&nbsp;-&nbsp;</div>
+          <div class="slot-text pop-text-today">${pos}</div>${pos_units}
+        </div>
+      </li>
+    `;
   }
 
   get slotPossibleToday(): TemplateResult {
-    try {
-      return this._config.entity_possible_today ? html`<li><span class="ha-icon">
-    <ha-icon icon="mdi:weather-rainy"></ha-icon>
-  </span>${this.localeTextposToday} <span
-    id="possible_today-text">${this.hass.states[this._config.entity_possible_today].state}</span><span
-    class="unit">${this.getUOM('precipitation')}</span></li>` : html``;
-    } catch (e) {
-      return html`<li><span class="ha-icon">
-    <ha-icon icon="mdi:weather-rainy"></ha-icon>
-  </span><span id="possible_today-text">---</span></li>`;
-    }
+    const pos = this._config.entity_possible_today ? this.hass.states[this._config.entity_possible_today].state : "---";
+    const units = pos !== "---" ? html`<div class="slot-text unit">${this.getUOM('precipitation')}</div>` : html``;
+    return html`
+      <li>
+        <div class="slot">
+          <div class="slot-icon">
+            <ha-icon icon="mdi:weather-rainy"></ha-icon>
+          </div>${this.localeTextposToday}&nbsp;<div class="slot-text possible_today-text">${pos}</div>${units}
+        </div>
+      </li>
+    `;
   }
 
   get slotPossibleTomorrow(): TemplateResult {
-    try {
-      return this._config.entity_possible_tomorrow ? html`<li><span class="ha-icon">
-    <ha-icon icon="mdi:weather-rainy"></ha-icon>
-  </span>${this.localeTextposTomorrow} <span
-    id="possible_tomorrow-text">${this.hass.states[this._config.entity_possible_tomorrow].state}</span><span
-    class="unit">${this.getUOM('precipitation')}</span></li>` : html``;
-    } catch (e) {
-      return html`<li><span class="ha-icon">
-    <ha-icon icon="mdi:weather-rainy"></ha-icon>
-  </span><span id="possible_tomorrow-text">---</span></li>`;
-    }
+    const pos = this._config.entity_possible_tomorrow ? this.hass.states[this._config.entity_possible_tomorrow].state : "---";
+    const units = pos !== "---" ? html`<div class="slot-text unit">${this.getUOM('precipitation')}</div>` : html``;
+    return html`
+      <li>
+        <div class="slot">
+          <div class="slot-icon">
+            <ha-icon icon="mdi:weather-rainy"></ha-icon>
+          </div>${this.localeTextposTomorrow}&nbsp;<div class="slot-text possible_tomorrow-text">${pos}</div>${units}
+        </div>
+      </li>
+    `;
   }
 
   get slotRainfall(): TemplateResult {
-    try {
-      return this._config.entity_rainfall ? html`<li><span class="ha-icon">
-    <ha-icon icon="mdi:weather-rainy"></ha-icon>
-  </span><span id="rainfall-text">${this.hass.states[this._config.entity_rainfall].state}</span><span
-    class="unit">${this.getUOM('precipitation')}</span></li>` : html``;
-    } catch (e) {
-      return html`<li><span class="ha-icon">
-    <ha-icon icon="mdi:weather-rainy"></ha-icon>
-  </span><span id="rainfall-text">---</span></li>`;
-    }
+    const rainfall = this.currentRainfall;
+    const units = rainfall !== "---" ? html`<div class="slot-text unit"></span>${this.getUOM('precipitation')}</div>` : html``;
+    return html`
+      <li>
+        <div class="slot">
+          <div class="slot-icon">
+            <ha-icon icon="mdi:weather-rainy"></ha-icon>
+          </div>
+          <div class="slot-text rainfall-text">${rainfall}</div>${units}
+        </div>
+      </li>
+    `;
   }
 
   get slotHumidity(): TemplateResult {
-    try {
-      if (this._config.alt_humidity) {
-        return html`<li><span class="ha-icon">
-    <ha-icon icon="mdi:water-percent"></ha-icon>
-  </span><span id="alt-humidity">${this.hass.states[this._config.alt_humidity].state}</span></li>`;
-      } else {
-        const units = this.currentHumidity !== '---' ? html`<span class="unit">%</span>` : html``;
-        return this._config.entity_humidity ? html`<li><span class="ha-icon">
-    <ha-icon icon="mdi:water-percent"></ha-icon>
-  </span><span id="humidity-text">${this.currentHumidity}</span>${units}</li>` : html``;
-      }
-    } catch (e) {
-      return html`<li><span class="ha-icon">
-    <ha-icon icon="mdi:water-percent"></ha-icon>
-  </span><span id="humidity-text">---</span></li>`;
-    }
+    const humidity = this.currentHumidity;
+    const units = humidity !== '---' ? html`<div class="slot-text unit">%</div>` : html``;
+    return html`
+      <li>
+        <div class="slot">
+          <div class="slot-icon">
+            <ha-icon icon="mdi:water-percent"></ha-icon>
+          </div>
+          <div class="slot-text humidity-text">${humidity}</div>${units}
+        </div>
+      </li>`;
   }
 
   get slotPressure(): TemplateResult {
-    try {
-      if (this._config.alt_pressure) {
-        return html`<li><span class="ha-icon">
-    <ha-icon icon="mdi:gauge"></ha-icon>
-  </span><span id="alt-pressure">${this.hass.states[this._config.alt_pressure].state}</span></li>`;
-      } else {
-        return this._config.entity_pressure ? html`<li><span class="ha-icon">
-    <ha-icon icon="mdi:gauge"></ha-icon>
-  </span><span id="pressure-text">${this.currentPressure}</span><span class="unit">${this._config.pressure_units ?
-            this._config.pressure_units : this.getUOM('air_pressure')}</span></li>` : html``;
-      }
-    } catch (e) {
-      return html`<li><span class="ha-icon">
-    <ha-icon icon="mdi:gauge"></ha-icon>
-  </span><span id="pressure-text">---</span></li>`;
-    }
+    const pressure = this.currentPressure;
+    const units = pressure !== "---" ? html`<div class="slot-text unit">${this._config.pressure_units ? this._config.pressure_units : this.getUOM('air_pressure')}
+</div>` : html``;
+    return html`
+      <li>
+        <div class="slot">
+          <div class="slot-icon">
+            <ha-icon icon="mdi:gauge"></ha-icon>
+          </div>
+          <div class="slot-text pressure-text">${this.currentPressure}</div>${units}
+        </div>
+      </li>
+    `;
   }
 
   get slotDaytimeHigh(): TemplateResult {
-    try {
-      if (this._config.alt_daytime_high) {
-        return html`<li><span class="ha-icon">
-    <ha-icon icon="mdi:thermometer-high"></ha-icon>
-  </span><span id="alt-daytime-high">${this.hass.states[this._config.alt_daytime_high].state}</span></li>`;
-      } else {
-        return this._config.entity_daytime_high && this._config.show_decimals_today ? html`<li>
-  <div class="slot">
-    <div class="slot-icon">
-      <ha-icon icon="mdi:thermometer-high"></ha-icon>
-    </div>
-    <div class="slot-text">${this.localeTextmaxToday}&nbsp;</div>
-    <div class="slot-text" id="daytime-high-text">
-      ${(Number(this.hass.states[this._config.entity_daytime_high].state)).toLocaleString(undefined,
-            { minimumFractionDigits: 1, maximumFractionDigits: 1 })}</div>
-    <div class="unitc">${this.getUOM('temperature')}</div>
-  </div>
-</li>` : this._config.entity_daytime_high && !this._config.show_decimals_today ? html`<li>
-  <div class="slot">
-    <div class="slot-icon">
-      <ha-icon icon="mdi:thermometer-high"></ha-icon>
-    </div>
-    <div class="slot-text">${this.localeTextmaxToday}&nbsp;</div>
-    <div class="slot-text" id="daytime-high-text">
-      ${(Number(this.hass.states[this._config.entity_daytime_high].state).toFixed(0)).toLocaleString()}</div>
-    <div class="unitc">${this.getUOM('temperature')}</div>
-  </div>
-</li>` : html``;
-      }
-    } catch (e) {
-      return html`<li><span class="ha-icon">
-    <ha-icon icon="mdi:thermometer-high"></ha-icon>
-  </span><span id="daytime-high-text">---</span></li>`;
-    }
+    const digits = this._config.show_decimals_today === true ? 1 : 0;
+    const temp = this._config.entity_daytime_high ? (Number(this.hass.states[this._config.entity_daytime_high].state)).toLocaleString(undefined, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
+    const units = temp !== "---" ? html`<div class="unitc">${this.getUOM('temperature')}</div>` : html``;
+    return html`
+      <li>
+        <div class="slot">
+          <div class="slot-icon">
+            <ha-icon icon="mdi:thermometer-high"></ha-icon>
+          </div>
+          <div class="slot-text">${this.localeTextmaxToday}&nbsp;</div>
+          <div class="slot-text daytime-high-text">${temp}</div>${units}
+        </div>
+      </li>
+    `;
   }
 
   get slotDaytimeLow(): TemplateResult {
-    try {
-      if (this._config.alt_daytime_low) {
-        return html`<li><span class="ha-icon">
-    <ha-icon icon="mdi:thermometer-low"></ha-icon>
-  </span><span id="alt-daytime-low">${this.hass.states[this._config.alt_daytime_low].state}</span></li>`;
-      } else {
-        return this._config.entity_daytime_low && this._config.show_decimals_today ? html`<li>
-  <div class="slot">
-    <div class="slot-icon">
-      <ha-icon icon="mdi:thermometer-low"></ha-icon>
-    </div>
-    <div class="slot-text">${this.localeTextminToday}&nbsp;</div>
-    <div class="slot-text" id="daytime-low-text">
-      ${(Number(this.hass.states[this._config.entity_daytime_low].state)).toLocaleString(undefined,
-        { minimumFractionDigits: 1, maximumFractionDigits: 1 })}</div>
-    <div class="unitc">${this.getUOM('temperature')}</div>
-  </div>
-</li>` : this._config.entity_daytime_low && !this._config.show_decimals_today ? html`<li>
-  <div class="slot">
-    <div class="slot-icon">
-      <ha-icon icon="mdi:thermometer-low"></ha-icon>
-    </div>
-    <div class="slot-text">${this.localeTextminToday}&nbsp;</div>
-    <div class="slot-text" id="daytime-low-text">
-      ${(Number(this.hass.states[this._config.entity_daytime_low].state).toFixed(0)).toLocaleString()}</div>
-    <div class="unitc">${this.getUOM('temperature')}</div>
-  </div>
-</li>` : html``;
-      }
-    } catch (e) {
-      return html`<li><span class="ha-icon">
-    <ha-icon icon="mdi:thermometer-low"></ha-icon>
-  </span><span id="daytime-low-text">---</span></li>`;
-    }
+    const digits = this._config.show_decimals_today === true ? 1 : 0;
+    const temp = this._config.entity_daytime_low ? (Number(this.hass.states[this._config.entity_daytime_low].state)).toLocaleString(undefined, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
+    const units = temp !== "---" ? html`<div class="unitc">${this.getUOM('temperature')}</div>` : html``;
+    return html`
+      <li>
+        <div class="slot">
+          <div class="slot-icon">
+            <ha-icon icon="mdi:thermometer-low"></ha-icon>
+          </div>
+          <div class="slot-text">${this.localeTextminToday}&nbsp;</div>
+          <div class="slot-text daytime-low-text">${temp}</div>${units}
+        </div>
+      </li>
+    `;
   }
 
   get slotTempNext(): TemplateResult {
-    try {
-      return this._config.entity_temp_next && this._config.entity_temp_next_label ? html`<li><div class="slot"><div class="slot-icon">
-    <ha-icon id="temp-next-icon" icon="${this.tempNextIcon}"></ha-icon>
-  </div><div class="slot-text" id="temp-next-text">${this.tempNextText}</div><div class="unitc">${this.getUOM('temperature')}</div>
-  </div></li>` : html``;
-    } catch (e) {
-      return html`<li><span class="ha-icon">
-    <ha-icon icon="mdi:thermometer"></ha-icon>
-  </span><span id="temp-next-text">---</span></li>`;
-    }
-  }
-
-  get tempNextIcon(): string {
-    return this._config.entity_temp_next_label ? this.hass.states[this._config.entity_temp_next_label].state.includes("Min") ? "mdi:thermometer-low" : "mdi:thermometer-high" : "";
-  }
-
-  get tempNextText(): TemplateResult {
-    return this._config.entity_temp_next && this._config.entity_temp_next_label ? html`${this.hass.states[this._config.entity_temp_next_label].state} ${this.hass.states[this._config.entity_temp_next].state}` : html``;
+    const icon = this._config.entity_temp_next_label ? this.hass.states[this._config.entity_temp_next_label].state.includes("Min") ? "mdi:thermometer-low" : "mdi:thermometer-high" : "mdi:help-box";
+    const temp = this._config.entity_temp_next ? this.hass.states[this._config.entity_temp_next].state : "---";
+    const label = this._config.entity_temp_next_label ? this.hass.states[this._config.entity_temp_next_label].state : "";
+    const units = temp !== "---" ? html`<div class="slot-text unitc">${this.getUOM('temperature')}</div>` : html``;
+    return html`
+      <li>
+        <div class="slot">
+          <div class="slot-icon">
+            <ha-icon icon="${icon}"></ha-icon>
+          </div>
+          <div class="slot-text temp-next-text">${label} ${temp}</div>
+          ${units}
+        </div>
+      </li>
+    `;
   }
 
   get slotTempFollowing(): TemplateResult {
-    try {
-      return this._config.entity_temp_following && this._config.entity_temp_following_label ? html`<li><div class="slot"><div class="slot-icon">
-    <ha-icon id="temp-following-icon" icon="${this.tempFollowingIcon}"></ha-icon>
-  </div><div class="slot-text" id="temp-following-text">${this.tempFollowingText}</div><div
-    class="unitc">${this.getUOM('temperature')}</div></div></li>` : html``;
-    } catch (e) {
-      return html`<li><span class="ha-icon">
-    <ha-icon icon="mdi:thermometer"></ha-icon>
-  </span><span id="temp-following-text">---</span></li>`;
-    }
-  }
-
-  get tempFollowingIcon(): string {
-    return this._config.entity_temp_following_label ? this.hass.states[this._config.entity_temp_following_label].state.includes("Min") ? "mdi:thermometer-low" : "mdi:thermometer-high" : "";
-  }
-
-  get tempFollowingText(): TemplateResult {
-    return this._config.entity_temp_following && this._config.entity_temp_following_label ? html`${this.hass.states[this._config.entity_temp_following_label].state}
-${this.hass.states[this._config.entity_temp_following].state}` : html``;
+    const icon = this._config.entity_temp_following_label ? this.hass.states[this._config.entity_temp_following_label].state.includes("Min") ? "mdi:thermometer-low" : "mdi:thermometer-high" : "mdi:help-box";
+    const temp = this._config.entity_temp_following ? this.hass.states[this._config.entity_temp_following].state : "---";
+    const label = this._config.entity_temp_following_label ? this.hass.states[this._config.entity_temp_following_label].state : "";
+    const units = temp !== "---" ? html`<div class="slot-text unitc">${this.getUOM('temperature')}</div>` : html``;
+    return html`
+      <li>
+        <div class="slot">
+          <div class="slot-icon">
+            <ha-icon icon="${icon}"></ha-icon>
+          </div>
+          <div class="slot-text temp-following-text">${label} ${temp}</div>
+          ${units}
+        </div>
+      </li>
+    `;
   }
 
   get slotUvSummary(): TemplateResult {
-    try {
-      return this._config.entity_uv_alert_summary ? html`<li><span class="ha-icon">
-    <ha-icon icon="mdi:weather-sunny"></ha-icon>
-  </span>${this.localeTextuvRating} <span
-    id="daytime-uv-text">${this.hass.states[this._config.entity_uv_alert_summary].state !== "unknown" ? this.hass.states[this._config.entity_uv_alert_summary].state : " n/a"}</span></li>` : html``;
-    } catch (e) {
-      return html`<li><span class="ha-icon">
-    <ha-icon icon="mdi:weather-sunny"></ha-icon>
-  </span><span id="daytime-uv-text">---</span></li>`;
-    }
+    const uv = this._config.entity_uv_alert_summary ? this.hass.states[this._config.entity_uv_alert_summary].state !== "unknown" ? this.hass.states[this._config.entity_uv_alert_summary].state : "n/a" : "---";
+    return html`
+      <li>
+        <div class="slot">
+          <div class="slot-icon">
+            <ha-icon icon="mdi:weather-sunny"></ha-icon>
+          </div>
+          <div class="slot-text daytime-uv-text">${this.localeTextuvRating} ${uv}</div>
+        </div>
+      </li>
+    `;
   }
 
   get slotFireSummary(): TemplateResult {
-    try {
-      return this._config.entity_fire_danger_summary ? html`<li><span class="ha-icon">
-    <ha-icon icon="mdi:fire"></ha-icon>
-  </span>${this.localeTextfireDanger} <span
-    id="daytime-firedanger-text">${this.hass.states[this._config.entity_fire_danger_summary].state !== 'unknown' ?
-          this.hass.states[this._config.entity_fire_danger_summary].state : 'n/a'}</span></li>` : html``;
-    } catch (e) {
-      return html`<li><span class="ha-icon">
-    <ha-icon icon="mdi:fire"></ha-icon>
-  </span><span id="daytime-firedanger-text">---</span></li>`;
-    }
+    const fire = this._config.entity_fire_danger_summary ? this.hass.states[this._config.entity_fire_danger_summary].state !== 'unknown' ? this.hass.states[this._config.entity_fire_danger_summary].state : "n/a" : "---";
+    return html`
+      <li>
+        <div class="slot">
+          <div class="slot-icon">
+            <ha-icon icon="mdi:fire"></ha-icon>
+          </div>
+          <div class="slot-text fire-danger-text">${this.localeTextfireDanger} ${fire}</div>
+        </div>
+      </li>`;
   }
 
   get slotWind(): TemplateResult {
-    try {
-      var windBearing = this._config.entity_wind_bearing ? html`<span id="wind-bearing-text">${this.currentWindBearing}</span>` : ``;
-      var beaufortRating = this._config.entity_wind_speed ? html`<span id="beaufort-text">${this.currentBeaufort}</span>` : ``;
-      return this._config.alt_wind ? html`<li><span class="ha-icon">
-    <ha-icon icon="mdi:weather-windy"></ha-icon>
-  </span><span id="alt-wind">${this.hass.states[this._config.alt_wind].state}</span></li>` : this._config.entity_wind_bearing && this._config.entity_wind_speed && this._config.entity_wind_gust ? html`<li><span class="ha-icon">
-    <ha-icon icon="mdi:weather-windy"></ha-icon>
-  </span><span>${beaufortRating}</span><span>${windBearing}</span><span id="wind-speed-text">
-    ${this.currentWindSpeed}</span><span class="unit">${this.getUOM('length')}/h</span><span id="wind-gust-text"> (Gust
-    ${this.currentWindGust}</span><span class="unit">${this.getUOM('length')}/h)</span></li>` : this._config.entity_wind_bearing && this._config.entity_wind_speed ? html`<li><span class="ha-icon">
-    <ha-icon icon="mdi:weather-windy"></ha-icon>
-  </span><span>${beaufortRating}</span><span>${windBearing}</span><span id="wind-speed-text">
-    ${this.currentWindSpeed}</span><span class="unit"> ${this.getUOM('length')}/h</span></li>` : html``;
-    } catch (e) {
-      return html`<li><span class="ha-icon">
-    <ha-icon icon="mdi:weather-windy"></ha-icon>
-  </span><span id="wind-error-text">---</span></li>`;
-    }
+    const beaufort = this._config.entity_wind_speed && this._config.show_beaufort ? html`<div class="slot-text"></div>BFT: ${this.currentBeaufort} -&nbsp;</div>` : "";
+    const bearing = this._config.entity_wind_bearing ? html`<div class="slot-text">${this.currentWindBearing}&nbsp;</div>` : "";
+    const units = html`<div class="slot-text unit">${this.getUOM('length')}/h</div>`;
+    const speed = this._config.entity_wind_speed ? html`<div class="slot-text">${this.currentWindSpeed}</div>${units}&nbsp;` : "";
+    const gust = this._config.entity_wind_gust ? html`<div class="slot-text">(Gust ${this.currentWindGust}</div>${units})` : "";
+    return html`
+      <li>
+        <div class="slot">
+          <div class="slot-icon">
+            <ha-icon icon="mdi:weather-windy"></ha-icon>
+          </div>
+          ${beaufort}${bearing}${speed}${gust}
+        </div>
+      </li>
+    `;
   }
 
   get slotWindKt(): TemplateResult {
-    try {
-      var windBearing = this._config.entity_wind_bearing ? html`<span id="wind-bearing-kt-text">${this.currentWindBearing}</span>` : ``;
-      var beaufortRatingKt = this._config.entity_wind_speed_kt ? html`<span id="beaufort-kt-text">${this.currentBeaufortkt}</span>` : ``;
-      return this._config.entity_wind_bearing && this._config.entity_wind_speed_kt && this._config.entity_wind_gust_kt ? html`<li><span class="ha-icon">
-    <ha-icon icon="mdi:weather-windy"></ha-icon>
-  </span><span>${beaufortRatingKt}</span><span>${windBearing}</span><span id="wind-speed-kt-text">
-    ${this.currentWindSpeedKt}</span><span class="unit">kt</span><span id="wind-gust-kt-text"> (Gust
-    ${this.currentWindGustKt}</span><span class="unit">kt)</span></li>` : this._config.entity_wind_bearing && this._config.entity_wind_speed_kt ? html`<li><span class="ha-icon">
-    <ha-icon icon="mdi:weather-windy"></ha-icon>
-  </span><span>${beaufortRatingKt}</span><span>${windBearing}</span><span id="wind-speed-kt-text">
-    ${this.currentWindSpeedKt}</span><span class="unit">kt</span></li>` : html``;
-    } catch (e) {
-      return html`<li><span class="ha-icon">
-    <ha-icon icon="mdi:weather-windy"></ha-icon>
-  </span><span id="wind-error-text">---</span></li>`;
-    }
+    const beaufort = this._config.entity_wind_speed_kt && this._config.show_beaufort ? html`<div class="slot-text"></div>BFT: ${this.currentBeaufortKt} -&nbsp;</div>` : "";
+    const bearing = this._config.entity_wind_bearing ? html`<div class="slot-text">${this.currentWindBearing}&nbsp;</div>` : "";
+    const units = html`<div class="slot-text unit">Kt</div>`;
+    const speed = this._config.entity_wind_speed_kt ? html`<div class="slot-text">${this.currentWindSpeedKt}</div>${units}&nbsp;` : "";
+    const gust = this._config.entity_wind_gust_kt ? html`<div class="slot-text">(Gust ${this.currentWindGustKt}</div>${units})` : "";
+    return html`
+      <li>
+        <div class="slot">
+          <div class="slot-icon">
+            <ha-icon icon="mdi:weather-windy"></ha-icon>
+          </div>
+          ${beaufort}${bearing}${speed}${gust}
+        </div>
+      </li>
+    `;
   }
 
   get slotVisibility(): TemplateResult {
-    try {
-      return this._config.alt_visibility ? html`<li><span class="ha-icon">
-    <ha-icon icon="mdi:weather-fog"></ha-icon>
-  </span><span id="alt-visibility">${this.hass.states[this._config.alt_visibility].state}</span></li>` : this._config.entity_visibility ? html`<li><span class="ha-icon">
-    <ha-icon icon="mdi:weather-fog"></ha-icon>
-  </span><span id="visibility-text">${this.currentVisibility}</span><span class="unit"> ${this.getUOM('length')}</span>
-</li>` : html``;
-    } catch (e) {
-      return html`<li><span class="ha-icon">
-    <ha-icon icon="mdi:weather-fog"></ha-icon>
-  </span><span id="visibility-text">---</span></li>`;
-    }
+    const vis = this.currentVisibility;
+    const units = vis !== "---" ? this.getUOM('length') : "";
+    return html`
+      <li>
+        <div class="slot-icon">
+          <ha-icon icon="mdi:weather-fog"></ha-icon>
+        </div>
+        <div class="slot-text visibility-text">${vis}</div>
+        <div class="slot-text unit"> ${units}
+        </div>
+      </li>
+    `;
   }
 
   get slotSunNext(): TemplateResult {
-    try {
-      if (this._config.alt_sun_next) {
-        return html`<li><span id="alt-sun-next">${this.hass.states[this._config.alt_sun_next].state}</span></li>`;
-      } else {
-        return this._config.entity_sun ? this.sunSet.next : html``;
-      }
-    } catch (e) {
-      return html`<li><span class="ha-icon">
-    <ha-icon icon="mdi:weather-sunset"></ha-icon>
-  </span><span id="sun-next-text">---</span></li>`;
-    }
+    return this._config.entity_sun ? this.sunSet.next : html``;
   }
 
   get slotSunFollowing(): TemplateResult {
-    try {
-      if (this._config.alt_sun_following) {
-        return html`<li><span id="alt-sun-following">${this.hass.states[this._config.alt_sun_following].state}</span></li>`;
-      } else {
-        return this._config.entity_sun ? this.sunSet.following : html``;
-      }
-    } catch (e) {
-      return html`<li><span class="ha-icon">
-    <ha-icon icon="mdi:weather-sunset"></ha-icon>
-  </span><span id="sun-following-text">---</span></li>`;
-    }
+    return this._config.entity_sun ? this.sunSet.following : html``;
   }
 
   get slotCustom1(): TemplateResult {
-    try {
-      var icon = this._config.custom1_icon ? this._config.custom1_icon : 'mdi:help-box';
-      var value = this._config.custom1_value ? this.hass.states[this._config.custom1_value].state : 'unknown';
-      var unit = this._config.custom1_units ? this._config.custom1_units : '';
-      return html`<li><span class="ha-icon">
-    <ha-icon icon=${icon}></ha-icon>
-  </span><span id="custom-1-text">${value}</span><span class="unit">${unit}</span></li>`;
-    } catch (e) {
-      return html`<li><span class="ha-icon">
-    <ha-icon icon="mdi:help-box"></ha-icon>
-  </span><span id="custom-1-text">---</span></li>`;
-    }
+    var icon = this._config.custom1_icon ? this._config.custom1_icon : 'mdi:help-box';
+    var value = this._config.custom1_value ? this.hass.states[this._config.custom1_value].state : 'unknown';
+    var unit = this._config.custom1_units ? this._config.custom1_units : '';
+    return html`
+      <li>
+        <div class="slot-icon">
+          <ha-icon icon=${icon}></ha-icon>
+        </div>
+        <div class="slot-text custom-1-text">${value}</div><div class="slot-text unit">${unit}</div>
+      </li>
+    `;
   }
 
   get slotCustom2(): TemplateResult {
-    try {
-      var icon = this._config.custom2_icon ? this._config.custom2_icon : 'mdi:help-box';
-      var value = this._config.custom2_value ? this.hass.states[this._config.custom2_value].state : 'unknown';
-      var unit = this._config.custom2_units ? this._config.custom2_units : '';
-      return html`<li><span class="ha-icon">
-    <ha-icon icon=${icon}></ha-icon>
-  </span><span id="custom-2-text">${value}</span><span class="unit">${unit}</span></li>`;
-    } catch (e) {
-      return html`<li><span class="ha-icon">
-    <ha-icon icon="mdi:help-box"></ha-icon>
-  </span><span id="custom-2-text">---</span></li>`;
-    }
+    var icon = this._config.custom2_icon ? this._config.custom2_icon : 'mdi:help-box';
+    var value = this._config.custom2_value ? this.hass.states[this._config.custom2_value].state : 'unknown';
+    var unit = this._config.custom2_units ? this._config.custom2_units : '';
+    return html`
+      <li>
+        <div class="slot-icon">
+          <ha-icon icon=${icon}></ha-icon>
+        </div>
+        <div class="slot-text custom-2-text">${value}</div><div class="slot-text unit">${unit}</div>
+      </li>
+    `;
   }
 
   // getters that return the value to be shown
@@ -972,6 +921,12 @@ ${this.hass.states[this._config.entity_temp_following].state}` : html``;
 
   get currentHumidity(): string {
     const entity = this._config.entity_humidity;
+    return entity && this.hass.states[entity]
+      ? (Number(this.hass.states[entity].state)).toLocaleString() : '---';
+  }
+
+  get currentRainfall(): string {
+    const entity = this._config.entity_rainfall;
     return entity && this.hass.states[entity]
       ? (Number(this.hass.states[entity].state)).toLocaleString() : '---';
   }
@@ -1019,14 +974,6 @@ ${this.hass.states[this._config.entity_temp_following].state}` : html``;
       ? Math.round(Number(this.hass.states[entity].state)).toLocaleString() : '---';
   }
 
-  get currentBeaufort() {
-    return this._config.show_beaufort == true ? html`Bft: ${this.beaufortWind} - ` : ``;
-  }
-
-  get currentBeaufortkt() {
-    return this._config.show_beaufort === true ? html`Bft: ${this.beaufortWindKt} - ` : ``;
-  }
-
   // windDirections - returns set of possible wind directions by specified language
   get windDirections(): string[] {
     const windDirections_en = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW', 'N'];
@@ -1058,7 +1005,7 @@ ${this.hass.states[this._config.entity_temp_following].state}` : html``;
 
   // beaufortWind - returns the wind speed on the beaufort scale
   // reference https://en.wikipedia.org/wiki/Beaufort_scale
-  get beaufortWind(): string {
+  get currentBeaufort(): string {
     const entity = this._config.entity_wind_speed;
     if (entity && this.hass.states[entity] && !isNaN(Number(this.hass.states[entity].state))) {
       const value = Number(this.hass.states[entity].state);
@@ -1110,7 +1057,7 @@ ${this.hass.states[this._config.entity_temp_following].state}` : html``;
     return '---';
   }
 
-  get beaufortWindKt(): string {
+  get currentBeaufortKt(): string {
     const entity = this._config.entity_wind_speed_kt;
     if (entity && this.hass.states[entity] && !isNaN(Number(this.hass.states[entity].state))) {
       const value = Number(this.hass.states[entity].state);
@@ -1138,8 +1085,8 @@ ${this.hass.states[this._config.entity_temp_following].state}` : html``;
     var nextSunSet: string;
     var nextSunRise: string;
     if (this.is12Hour) {
-      nextSunSet = this._config.entity_sun ? new Date(this.hass.states[this._config.entity_sun].attributes.next_setting).toLocaleTimeString(this._config.locale, { hour: 'numeric', minute: '2-digit', hour12: true }).replace(" am","am").replace(" pm","pm") : "";
-      nextSunRise = this._config.entity_sun ? new Date(this.hass.states[this._config.entity_sun].attributes.next_rising).toLocaleTimeString(this._config.locale, { hour: 'numeric', minute: '2-digit', hour12: true }).replace(" am","am").replace(" pm","pm") : "";
+      nextSunSet = this._config.entity_sun ? new Date(this.hass.states[this._config.entity_sun].attributes.next_setting).toLocaleTimeString(this._config.locale, { hour: 'numeric', minute: '2-digit', hour12: true }).replace(" am", "am").replace(" pm", "pm") : "";
+      nextSunRise = this._config.entity_sun ? new Date(this.hass.states[this._config.entity_sun].attributes.next_rising).toLocaleTimeString(this._config.locale, { hour: 'numeric', minute: '2-digit', hour12: true }).replace(" am", "am").replace(" pm", "pm") : "";
     } else {
       nextSunSet = this._config.entity_sun ? new Date(this.hass.states[this._config.entity_sun].attributes.next_setting).toLocaleTimeString(this._config.locale, { hour: '2-digit', minute: '2-digit', hour12: false }) : "";
       nextSunRise = this._config.entity_sun ? new Date(this.hass.states[this._config.entity_sun].attributes.next_rising).toLocaleTimeString(this._config.locale, { hour: '2-digit', minute: '2-digit', hour12: false }) : "";
@@ -1150,12 +1097,20 @@ ${this.hass.states[this._config.entity_temp_following].state}` : html``;
       if (this.hass.states[this._config.entity_sun].state == "above_horizon") {
         nextSunRise = nextDate.toLocaleDateString(this._config.locale, { weekday: 'short' }) + " " + nextSunRise;
         return {
-          'next': html`<li><span class="ha-icon">
-    <ha-icon id="sun-next-icon" icon="mdi:weather-sunset-down"></ha-icon>
-  </span><span id="sun-next-text">${nextSunSet}</span></li>`,
-          'following': html`<li><span class="ha-icon">
-    <ha-icon id="sun-following-icon" icon="mdi:weather-sunset-up"></ha-icon>
-  </span><span id="sun-following-text">${nextSunRise}</span></li>`,
+          'next': html`
+            <li>
+              <div class="slot-icon">
+                <ha-icon id="sun-next-icon" icon="mdi:weather-sunset-down"></ha-icon>
+              </div>
+              <div class="slot-text sun-next-text">${nextSunSet}</div>
+            </li>`,
+          'following': html`
+            <li>
+              <div class="slot-icon">
+                <ha-icon id="sun-following-icon" icon="mdi:weather-sunset-up"></ha-icon>
+              </div>
+              <div class="slot-text sun-following-text">${nextSunRise}</div>
+            </li>`,
           'nextText': nextSunSet,
           'followingText': nextSunRise,
           'nextIcon': "mdi:weather-sunset-down",
@@ -1167,12 +1122,20 @@ ${this.hass.states[this._config.entity_temp_following].state}` : html``;
           nextSunSet = nextDate.toLocaleDateString(this._config.locale, { weekday: 'short' }) + " " + nextSunSet;
         }
         return {
-          'next': html`<li><span class="ha-icon">
-    <ha-icon id="sun-next-icon" icon="mdi:weather-sunset-up"></ha-icon>
-  </span><span id="sun-next-text">${nextSunRise}</span></li>`,
-          'following': html`<li><span class="ha-icon">
-    <ha-icon id="sun-following-icon" icon="mdi:weather-sunset-down"></ha-icon>
-  </span><span id="sun-following-text">${nextSunSet}</span></li>`,
+          'next': html`
+            <li>
+              <div class="slot-icon">
+                <ha-icon id="sun-next-icon" icon="mdi:weather-sunset-up"></ha-icon>
+              </div>
+              <div class="slot-text sun-next-text">${nextSunRise}</div>
+            </li>`,
+          'following': html`
+            <li>
+              <div class="slot-icon">
+                <ha-icon id="sun-following-icon" icon="mdi:weather-sunset-down"></ha-icon>
+              </div>
+              <div class="slot-text sun-following-text">${nextSunSet}</div>
+            </li>`,
           'nextText': nextSunRise,
           'followingText': nextSunSet,
           'nextIcon': "mdi:weather-sunset-up",
