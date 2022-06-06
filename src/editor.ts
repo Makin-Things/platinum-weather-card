@@ -142,7 +142,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     return this._config?.entity_todays_uv_forecast || '';
   }
 
-get _slot_l1(): string {
+  get _slot_l1(): string {
     return this._config?.slot_l1 || '';
   }
 
@@ -736,7 +736,7 @@ get _slot_l1(): string {
           .configValue=${'extended_name_attr'} .value=${this._extended_name_attr} name="extended_name_attr" label="Attribute (optional)"
           allow-custom-value
           @value-changed=${this._valueChangedPicker}>
-        </ha-entity-attribute-picker>` : html ``}
+        </ha-entity-attribute-picker>` : html``}
       </div>
       <ha-entity-picker .hass=${this.hass} .configValue=${'entity_todays_uv_forecast'} .value=${this._entity_todays_uv_forecast}
         name="entity_todays_uv_forecast" label="Entity Today's UV Forecast (optional)" allow-custom-entity
@@ -750,112 +750,89 @@ get _slot_l1(): string {
   }
 
   private _sectionSlotsEditor(): TemplateResult {
-    const slotValues = html`<mwc-list-item></mwc-list-item>
-<mwc-list-item value="daytime_high">daytime_high</mwc-list-item>
-<mwc-list-item value="daytime_low">daytime_low</mwc-list-item>
-<mwc-list-item value="temp_next">temp_next</mwc-list-item>
-<mwc-list-item value="temp_following">temp_following</mwc-list-item>
-<mwc-list-item value="wind">wind</mwc-list-item>
-<mwc-list-item value="wind_kt">wind_kt</mwc-list-item>
-<mwc-list-item value="visibility">visibility</mwc-list-item>
-<mwc-list-item value="sun_next">sun_next</mwc-list-item>
-<mwc-list-item value="sun_following">sun_following</mwc-list-item>
-<mwc-list-item value="pop">pop</mwc-list-item>
-<mwc-list-item value="popforecast">popforecast</mwc-list-item>
-<mwc-list-item value="humidity">humidity</mwc-list-item>
-<mwc-list-item value="pressure">pressure</mwc-list-item>
-<mwc-list-item value="uv_summary">uv_summary</mwc-list-item>
-<mwc-list-item value="fire_summary">fire_summary</mwc-list-item>
-<mwc-list-item value="possible_today">possible_today</mwc-list-item>
-<mwc-list-item value="possible_tomorrow">possible_tomorrow</mwc-list-item>
-<mwc-list-item value="rainfall">rainfall</mwc-list-item>
-<mwc-list-item value="custom1">custom1</mwc-list-item>
-<mwc-list-item value="custom2">custom2</mwc-list-item>
-<mwc-list-item value="empty">empty</mwc-list-item>
-<mwc-list-item value="remove">remove</mwc-list-item>`;
+    const slotValues = html`
+      <mwc-list-item></mwc-list-item>
+      <mwc-list-item value="humidity">Current humidity</mwc-list-item>
+      <mwc-list-item value="rainfall">Today's recorded rainfall</mwc-list-item>
+      <mwc-list-item value="pressure">Current air pressure</mwc-list-item>
+      <mwc-list-item value="wind">Current wind conditions</mwc-list-item>
+      <mwc-list-item value="wind_kt">Current wind conditions kts</mwc-list-item>
+      <mwc-list-item value="visibility">Current visibility</mwc-list-item>
+      <mwc-list-item value="daytime_high">Today's forecast high</mwc-list-item>
+      <mwc-list-item value="daytime_low">Today's forecast low</mwc-list-item>
+      <mwc-list-item value="temp_next">Next temp min/max</mwc-list-item>
+      <mwc-list-item value="temp_following">Following temp min/max</mwc-list-item>
+      <mwc-list-item value="sun_next">Next sun rise/set time</mwc-list-item>
+      <mwc-list-item value="sun_following">Following sun rise/set time</mwc-list-item>
+      <mwc-list-item value="pop">pop</mwc-list-item>
+      <mwc-list-item value="popforecast">popforecast</mwc-list-item>
+      <mwc-list-item value="possible_today">Today's forecast rainfall</mwc-list-item>
+      <mwc-list-item value="possible_tomorrow">Tomorrow's forecast rainfall</mwc-list-item>
+      <mwc-list-item value="uv_summary">Today's UV forecast</mwc-list-item>
+      <mwc-list-item value="fire_summary">Today's fire danger</mwc-list-item>
+      <mwc-list-item value="custom1">Custom entity 1</mwc-list-item>
+      <mwc-list-item value="custom2">Custom entity 1</mwc-list-item>
+      <mwc-list-item value="empty">Blank slot</mwc-list-item>
+      <mwc-list-item value="remove">Remove slot</mwc-list-item>`;
 
     return html`
       <div class="side-by-side">
         <ha-select label="Slot Left 1 (optional)" .configValue=${'slot_l1'} .value=${this._slot_l1}
-          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
-          fixedMenuPosition
-          naturalMenuWidth>
+          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}>
           ${slotValues}
         </ha-select>
         <ha-select label="Slot Right 1 (optional)" .configValue=${'slot_r1'} .value=${this._slot_r1}
-          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
-          fixedMenuPosition
-          naturalMenuWidth>
+          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}>
           ${slotValues}
         </ha-select>
       </div>
       <div class="side-by-side">
         <ha-select label="Slot Left 2 (optional)" .configValue=${'slot_l2'} .value=${this._slot_l2}
-          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
-          fixedMenuPosition
-          naturalMenuWidth>
+          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}>
           ${slotValues}
         </ha-select>
         <ha-select label="Slot Right 2 (optional)" .configValue=${'slot_r2'} .value=${this._slot_r2}
-          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
-          fixedMenuPosition
-          naturalMenuWidth>
+          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}>
           ${slotValues}
         </ha-select>
       </div>
       <div class="side-by-side">
         <ha-select label="Slot Left 3 (optional)" .configValue=${'slot_l3'} .value=${this._slot_l3}
-          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
-          fixedMenuPosition
-          naturalMenuWidth>
+          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}>
           ${slotValues}
         </ha-select>
         <ha-select label="Slot Right 3 (optional)" .configValue=${'slot_r3'} .value=${this._slot_r3}
-          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
-          fixedMenuPosition
-          naturalMenuWidth>
+          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}>
           ${slotValues}
         </ha-select>
       </div>
       <div class="side-by-side">
         <ha-select label="Slot Left 4 (optional)" .configValue=${'slot_l4'} .value=${this._slot_l4}
-          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
-          fixedMenuPosition
-          naturalMenuWidth>
+          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}>
           ${slotValues}
         </ha-select>
         <ha-select label="Slot Right 4 (optional)" .configValue=${'slot_r4'} .value=${this._slot_r4}
-          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
-          fixedMenuPosition
-          naturalMenuWidth>
+          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}>
           ${slotValues}
         </ha-select>
       </div>
       <div class="side-by-side">
         <ha-select label="Slot Left 5 (optional)" .configValue=${'slot_l5'} .value=${this._slot_l5}
-          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
-          fixedMenuPosition
-          naturalMenuWidth>
+          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}>
           ${slotValues}
         </ha-select>
         <ha-select label="Slot Right 5 (optional)" .configValue=${'slot_r5'} .value=${this._slot_r5}
-          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
-          fixedMenuPosition
-          naturalMenuWidth>
+          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}>
           ${slotValues}
         </ha-select>
       </div>
       <div class="side-by-side">
         <ha-select label="Slot Left 6 (optional)" .configValue=${'slot_l6'} .value=${this._slot_l6}
-          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
-          fixedMenuPosition
-          naturalMenuWidth>
+          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}>
           ${slotValues}
         </ha-select>
         <ha-select label="Slot Right 6 (optional)" .configValue=${'slot_r6'} .value=${this._slot_r6}
-          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
-          fixedMenuPosition
-          naturalMenuWidth>
+          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}>
           ${slotValues}
         </ha-select>
       </div>
@@ -875,10 +852,7 @@ get _slot_l1(): string {
     return html`
       <div class="side-by-side">
         <ha-select label="Daily Forecast Layout (optional)" .configValue=${'daily_forecast_layout'}
-          .value=${this._daily_forecast_layout} @closed=${(ev: { stopPropagation: ()=> any; }) => ev.stopPropagation()}
-          @selected=${this._valueChanged}
-          fixedMenuPosition
-          naturalMenuWidth>
+          .value=${this._daily_forecast_layout} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()} @selected=${this._valueChanged}>
           <mwc-list-item></mwc-list-item>
           <mwc-list-item value="horizontal">horizontal</mwc-list-item>
           <mwc-list-item value="vertical">vertical</mwc-list-item>
@@ -887,13 +861,7 @@ get _slot_l1(): string {
       </div>
       <div class="side-by-side">
         <ha-select label="Daily Forecast Days (optional)" .configValue=${'daily_forecast_days'}
-          .value=${this._daily_forecast_days ? this._daily_forecast_days.toString() : null} @closed=${(ev: { stopPropagation:
-          ()=> any;
-          }) =>
-        ev.stopPropagation()}
-          @selected=${this._valueChangedNumber}
-          fixedMenuPosition
-          naturalMenuWidth>
+          .value=${this._daily_forecast_days ? this._daily_forecast_days.toString() : null} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()} @selected=${this._valueChangedNumber}>
           <mwc-list-item></mwc-list-item>
           <mwc-list-item value="1">1</mwc-list-item>
           <mwc-list-item value="2">2</mwc-list-item>
@@ -905,13 +873,7 @@ get _slot_l1(): string {
         </ha-select>
         ${this._daily_forecast_layout === 'vertical' ? html`<ha-select label="Daily Extended Days (optional)"
           .configValue=${'daily_extended_forecast_days'} .value=${this._daily_extended_forecast_days !== null ?
-          this._daily_extended_forecast_days.toString() : null} @closed=${(ev: {
-            stopPropagation: ()=> any;
-            }) =>
-          ev.stopPropagation()}
-          @selected=${this._valueChangedNumber}
-          fixedMenuPosition
-          naturalMenuWidth>
+          this._daily_extended_forecast_days.toString() : null} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()} @selected=${this._valueChangedNumber}>
           <mwc-list-item></mwc-list-item>
           <mwc-list-item value="0">0</mwc-list-item>
           <mwc-list-item value="1">1</mwc-list-item>
@@ -1033,12 +995,12 @@ get _slot_l1(): string {
     return this._config?.show_section_daily_forecast !== false; //default on
   }
 
-  private getConfigBlock(block: string, first:boolean, last:boolean): TemplateResult {
+  private getConfigBlock(block: string, first: boolean, last: boolean): TemplateResult {
     switch (block) {
       case 'title':
         return html`
           <div class="main-flex edit-title-section">
-            <mwc-formfield .label=${`Title Section - ${this._show_section_title ? 'Visible' : 'Hidden' }`}>
+            <mwc-formfield .label=${`Title Section - ${this._show_section_title ? 'Visible' : 'Hidden'}`}>
               <mwc-switch .checked=${this._show_section_title !== false} .configValue=${'show_section_title'}
                 @change=${this._valueChanged}>
               </mwc-switch>
@@ -1056,7 +1018,7 @@ get _slot_l1(): string {
       case 'main':
         return html`
           <div class="main-flex edit-main-section">
-            <mwc-formfield .label=${`Main Section - ${this._show_section_main ? 'Visible' : 'Hidden' }`}>
+            <mwc-formfield .label=${`Main Section - ${this._show_section_main ? 'Visible' : 'Hidden'}`}>
               <mwc-switch .checked=${this._show_section_main !== false} .configValue=${'show_section_main'}
                 @change=${this._valueChanged}>
               </mwc-switch>
@@ -1074,7 +1036,7 @@ get _slot_l1(): string {
       case 'extended':
         return html`
           <div class="main-flex edit-extended-section">
-            <mwc-formfield .label=${`Extended Section - ${this._show_section_extended ? 'Visible' : 'Hidden' }`}>
+            <mwc-formfield .label=${`Extended Section - ${this._show_section_extended ? 'Visible' : 'Hidden'}`}>
               <mwc-switch .checked=${this._show_section_extended !== false} .configValue=${'show_section_extended'}
                 @change=${this._valueChanged}>
               </mwc-switch>
@@ -1092,7 +1054,7 @@ get _slot_l1(): string {
       case 'slots':
         return html`
           <div class="main-flex edit-slots-section">
-            <mwc-formfield .label=${`Slots Section - ${this._show_section_slots ? 'Visible' : 'Hidden' }`}>
+            <mwc-formfield .label=${`Slots Section - ${this._show_section_slots ? 'Visible' : 'Hidden'}`}>
               <mwc-switch .checked=${this._show_section_slots !== false} .configValue=${'show_section_slots'}
                 @change=${this._valueChanged}>
               </mwc-switch>
@@ -1110,7 +1072,7 @@ get _slot_l1(): string {
       case 'daily_forecast':
         return html`
           <div class="main-flex edit-daily-forecast-section">
-            <mwc-formfield .label=${`Daily Forecast Section - ${this._show_section_daily_forecast ? 'Visible' : 'Hidden' }`}>
+            <mwc-formfield .label=${`Daily Forecast Section - ${this._show_section_daily_forecast ? 'Visible' : 'Hidden'}`}>
               <mwc-switch .checked=${this._show_section_daily_forecast !== false} .configValue=${'show_section_daily_forecast'}
                 @change=${this._valueChanged}>
               </mwc-switch>
@@ -1283,7 +1245,15 @@ get _slot_l1(): string {
   // }
 
   static styles: CSSResultGroup = css`
-    mwc-select,
+    :host {
+      display: block;
+              /* --mdc-menu-min-width: var(--parentWidth); */
+      --mdc-menu-item-height: 36px;
+      --mdc-typography-subtitle1-font-size: 13px;
+    }
+    mwc-select {
+      display: block;
+    }
     mwc-textfield {
       display: block;
     }

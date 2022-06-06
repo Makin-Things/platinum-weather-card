@@ -303,14 +303,12 @@ export class WeatherCard extends LitElement {
           ?
           html`
               <div class="f-slot">
-                <div class="highTemp">${maxEntity && this.hass.states[maxEntity] ?
-              Math.round(Number(this.hass.states[maxEntity].state)) : '---'}</div>
+                <div class="highTemp">${maxEntity && this.hass.states[maxEntity] ? Math.round(Number(this.hass.states[maxEntity].state)) : '---'}</div>
                 <div>${tempUnit}</div>
               </div>
               <br>
               <div class="f-slot">
-                <div class="lowTemp">${minEntity && this.hass.states[minEntity] ?
-              Math.round(Number(this.hass.states[minEntity].state)) : '---'}</div>
+                <div class="lowTemp">${minEntity && this.hass.states[minEntity] ? Math.round(Number(this.hass.states[minEntity].state)) : '---'}</div>
                 <div>${tempUnit}</div>
               </div>`
           :
@@ -434,9 +432,7 @@ export class WeatherCard extends LitElement {
           <div class="day-vert fcasttooltip">
             <div class="day-vert-top">
               <div class="day-vert-dayicon">
-                <span class="dayname">${forecastDate ? forecastDate.toLocaleDateString(this._config.locale, { weekday: 'short' })
-                  :
-            "---"}</span>
+                <span class="dayname">${forecastDate ? forecastDate.toLocaleDateString(this._config.locale, { weekday: 'short' }) : "---"}</span>
                 <br>${htmlIcon}
               </div>
               <div class="day-vert-values">
