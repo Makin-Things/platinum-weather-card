@@ -2051,6 +2051,7 @@ WeatherCard = __decorate([
 // Material Design Icons v6.7.96
 var mdiArrowDown = "M11,4H13V16L18.5,10.5L19.92,11.92L12,19.84L4.08,11.92L5.5,10.5L11,16V4Z";
 var mdiArrowUp = "M13,20H11V8L5.5,13.5L4.08,12.08L12,4.16L19.92,12.08L18.5,13.5L13,8V20Z";
+var mdiBacteria = "M21,16C21,15.5 20.95,15.08 20.88,14.68L22.45,13.9L21.55,12.1L20.18,12.79C19.63,11.96 18.91,11.5 18.29,11.28L18.95,9.32L17.05,8.68L16.29,10.96C14.96,10.83 14.17,10.32 13.7,9.77L15.45,8.9L14.55,7.1L13,7.89C12.97,7.59 12.86,6.72 12.28,5.87L13.83,3.55L12.17,2.44L10.76,4.56C10.28,4.33 9.7,4.15 9,4.06V2H7V4.1C6.29,4.25 5.73,4.54 5.32,4.91L2.7,2.29L1.29,3.71L4.24,6.65C4,7.39 4,8 4,8H2V10H4.04C4.1,10.63 4.21,11.36 4.4,12.15L1.68,13.05L2.31,14.95L5,14.05C5.24,14.56 5.5,15.08 5.82,15.58L3.44,17.17L4.55,18.83L7.07,17.15C7.63,17.71 8.29,18.21 9.06,18.64L8.1,20.55L9.89,21.45L10.89,19.45L10.73,19.36C11.68,19.68 12.76,19.9 14,19.97V22H16V19.93C16.76,19.84 17.81,19.64 18.77,19.19L20.29,20.71L21.7,19.29L20.37,17.95C20.75,17.44 21,16.8 21,16M8.5,11A1.5,1.5 0 0,1 7,9.5A1.5,1.5 0 0,1 8.5,8A1.5,1.5 0 0,1 10,9.5A1.5,1.5 0 0,1 8.5,11M11,14A1,1 0 0,1 10,13A1,1 0 0,1 11,12A1,1 0 0,1 12,13A1,1 0 0,1 11,14M15.5,17A1.5,1.5 0 0,1 14,15.5A1.5,1.5 0 0,1 15.5,14A1.5,1.5 0 0,1 17,15.5A1.5,1.5 0 0,1 15.5,17Z";
 var mdiPencil = "M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z";
 
 /**
@@ -11371,6 +11372,9 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
       ${this._optional_entities}
     `;
     }
+    _optionSlotsEditor() {
+        return $ `Coming Soon`;
+    }
     _sectionDailyForecastEditor() {
         if (this._daily_extended_use_attr === true) {
             this.hass !== undefined ? this.hass.states[this._entity_extended_1].attributes : [];
@@ -11454,7 +11458,7 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
       </div>` : ``}
     `;
     }
-    _sectionMiscellaneousEditor() {
+    _optionGlobalOptionsEditor() {
         return $ `
       <div class="side-by-side">
         <div>
@@ -11510,11 +11514,14 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
             case 'section_slots':
                 subel.push(this._sectionSlotsEditor());
                 break;
+            case 'option_slots':
+                subel.push(this._optionSlotsEditor());
+                break;
             case 'section_daily_forecast':
                 subel.push(this._sectionDailyForecastEditor());
                 break;
-            case 'section_miscellaneous':
-                subel.push(this._sectionMiscellaneousEditor());
+            case 'option_global_options':
+                subel.push(this._optionGlobalOptionsEditor());
                 break;
         }
         return $ `${subel}`;
@@ -11557,8 +11564,9 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
               </ha-icon-button>
               <ha-icon-button class="up-icon" .value=${'title'} .path=${mdiArrowUp} .disabled=${first} @click="${this._moveUp}">
               </ha-icon-button>
-              <ha-icon-button class="edit-icon" .value=${'section_title'} .path=${mdiPencil} @click="${this._editSection}">
+              <ha-icon-button class="edit-icon" .value=${'section_title'} .path=${mdiPencil} @click="${this._editSubmenu}">
               </ha-icon-button>
+              <div class="no-icon"></div>
             </div>
           </div>
         `;
@@ -11575,8 +11583,9 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
               </ha-icon-button>
               <ha-icon-button class="up-icon" .value=${'main'} .path=${mdiArrowUp} .disabled=${first} @click="${this._moveUp}">
               </ha-icon-button>
-              <ha-icon-button class="edit-icon" .value=${'section_main'} .path=${mdiPencil} @click="${this._editSection}">
+              <ha-icon-button class="edit-icon" .value=${'section_main'} .path=${mdiPencil} @click="${this._editSubmenu}">
               </ha-icon-button>
+              <div class="no-icon"></div>
             </div>
           </div>
         `;
@@ -11593,8 +11602,9 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
               </ha-icon-button>
               <ha-icon-button class="up-icon" .value=${'extended'} .path=${mdiArrowUp} .disabled=${first} @click="${this._moveUp}">
               </ha-icon-button>
-              <ha-icon-button class="edit-icon" .value=${'section_extended'} .path=${mdiPencil} @click="${this._editSection}">
+              <ha-icon-button class="edit-icon" .value=${'section_extended'} .path=${mdiPencil} @click="${this._editSubmenu}">
               </ha-icon-button>
+              <div class="no-icon"></div>
             </div>
           </div>
         `;
@@ -11611,7 +11621,9 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
               </ha-icon-button>
               <ha-icon-button class="up-icon" .value=${'slots'} .path=${mdiArrowUp} .disabled=${first} @click="${this._moveUp}">
               </ha-icon-button>
-              <ha-icon-button class="edit-icon" .value=${'section_slots'} .path=${mdiPencil} @click="${this._editSection}">
+              <ha-icon-button class="edit-icon" .value=${'section_slots'} .path=${mdiPencil} @click="${this._editSubmenu}">
+              </ha-icon-button>
+              <ha-icon-button class="options-icon" .value=${'option_slots'} .path=${mdiBacteria} @click="${this._editSubmenu}">
               </ha-icon-button>
             </div>
           </div>
@@ -11629,19 +11641,21 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
               </ha-icon-button>
               <ha-icon-button class="up-icon" .value=${'daily_forecast'} .path=${mdiArrowUp} .disabled=${first} @click="${this._moveUp}">
               </ha-icon-button>
-              <ha-icon-button class="edit-icon" .value=${'section_daily_forecast'} .path=${mdiPencil} @click="${this._editSection}">
+              <ha-icon-button class="edit-icon" .value=${'section_daily_forecast'} .path=${mdiPencil} @click="${this._editSubmenu}">
               </ha-icon-button>
+              <div class="no-icon"></div>
             </div>
           </div>
         `;
-            case 'miscellaneous':
+            case 'global_options':
                 return $ `
           <div class="main-flex">
-            <mwc-formfield class="no-switch" .label=${`Miscellaneous`}>
+            <mwc-formfield class="no-switch" .label=${`Global Options`}>
             </mwc-formfield>
             <div>
-              <ha-icon-button class="edit-icon" .value=${'section_miscellaneous'} .path=${mdiPencil}
-                @click="${this._editSection}">
+              <div class="no-icon"></div>
+              <ha-icon-button class="edit-icon" .value=${'option_global_options'} .path=${mdiBacteria}
+                @click="${this._editSubmenu}">
               </ha-icon-button>
             </div>
           </div>
@@ -11660,7 +11674,7 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
         slots.forEach((slot, index) => {
             htmlConfig.push(this.getConfigBlock(slot, index === 0, index + 1 === slots.length));
         });
-        htmlConfig.push(this.getConfigBlock('miscellaneous', false, false));
+        htmlConfig.push(this.getConfigBlock('global_options', false, false));
         return $ `${htmlConfig}`;
     }
     _initialize() {
@@ -11693,7 +11707,7 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
         }
         ne(this, 'config-changed', { config: this._config });
     }
-    _editSection(ev) {
+    _editSubmenu(ev) {
         if (ev.currentTarget) {
             const target = ev.currentTarget;
             this._subElementEditor = target.value;
@@ -11792,6 +11806,10 @@ WeatherCardEditor.styles = r$4 `
     }
     mwc-formfield {
       height: 56px;
+    }
+    .no-icon {
+      display: inline-flex;
+      width: var(--mds-icon-button-size, 48px);
     }
     /* .option {
       cursor: pointer;

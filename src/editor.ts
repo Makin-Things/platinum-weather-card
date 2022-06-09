@@ -4,7 +4,8 @@ import { HomeAssistant, fireEvent, LovelaceCardEditor } from 'custom-card-helper
 
 import { keys } from 'ts-transformer-keys';
 
-import { mdiPencil, mdiArrowDown, mdiArrowUp } from '@mdi/js';
+import { mdiPencil, mdiArrowDown, mdiArrowUp, mdiBacteria } from '@mdi/js';
+//import { mdiPencil, mdiArrowDown, mdiArrowUp, mdiSquareEditOutline } from '@mdi/js';
 
 import { ScopedRegistryHost } from '@lit-labs/scoped-registry-mixin';
 import { WeatherCardConfig, layoutOrientation, layoutDays, extendedDays, configSlots, iconSets, timeFormat } from './types';
@@ -986,6 +987,10 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     `;
   }
 
+  private _optionSlotsEditor(): TemplateResult {
+    return html`Coming Soon`;
+  }
+
   private _sectionDailyForecastEditor(): TemplateResult {
     const attr_names: TemplateResult[] = [];
     if (this._daily_extended_use_attr === true) {
@@ -1075,7 +1080,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     `;
   }
 
-  private _sectionMiscellaneousEditor(): TemplateResult {
+  private _optionGlobalOptionsEditor(): TemplateResult {
     return html`
       <div class="side-by-side">
         <div>
@@ -1132,11 +1137,14 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
       case 'section_slots':
         subel.push(this._sectionSlotsEditor());
         break;
+      case 'option_slots':
+        subel.push(this._optionSlotsEditor());
+        break;
       case 'section_daily_forecast':
         subel.push(this._sectionDailyForecastEditor());
         break;
-      case 'section_miscellaneous':
-        subel.push(this._sectionMiscellaneousEditor());
+      case 'option_global_options':
+        subel.push(this._optionGlobalOptionsEditor());
         break;
     }
     return html`${subel}`;
@@ -1181,8 +1189,9 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
               </ha-icon-button>
               <ha-icon-button class="up-icon" .value=${'title'} .path=${mdiArrowUp} .disabled=${first} @click="${this._moveUp}">
               </ha-icon-button>
-              <ha-icon-button class="edit-icon" .value=${'section_title'} .path=${mdiPencil} @click="${this._editSection}">
+              <ha-icon-button class="edit-icon" .value=${'section_title'} .path=${mdiPencil} @click="${this._editSubmenu}">
               </ha-icon-button>
+              <div class="no-icon"></div>
             </div>
           </div>
         `;
@@ -1199,8 +1208,9 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
               </ha-icon-button>
               <ha-icon-button class="up-icon" .value=${'main'} .path=${mdiArrowUp} .disabled=${first} @click="${this._moveUp}">
               </ha-icon-button>
-              <ha-icon-button class="edit-icon" .value=${'section_main'} .path=${mdiPencil} @click="${this._editSection}">
+              <ha-icon-button class="edit-icon" .value=${'section_main'} .path=${mdiPencil} @click="${this._editSubmenu}">
               </ha-icon-button>
+              <div class="no-icon"></div>
             </div>
           </div>
         `;
@@ -1217,8 +1227,9 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
               </ha-icon-button>
               <ha-icon-button class="up-icon" .value=${'extended'} .path=${mdiArrowUp} .disabled=${first} @click="${this._moveUp}">
               </ha-icon-button>
-              <ha-icon-button class="edit-icon" .value=${'section_extended'} .path=${mdiPencil} @click="${this._editSection}">
+              <ha-icon-button class="edit-icon" .value=${'section_extended'} .path=${mdiPencil} @click="${this._editSubmenu}">
               </ha-icon-button>
+              <div class="no-icon"></div>
             </div>
           </div>
         `;
@@ -1235,7 +1246,9 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
               </ha-icon-button>
               <ha-icon-button class="up-icon" .value=${'slots'} .path=${mdiArrowUp} .disabled=${first} @click="${this._moveUp}">
               </ha-icon-button>
-              <ha-icon-button class="edit-icon" .value=${'section_slots'} .path=${mdiPencil} @click="${this._editSection}">
+              <ha-icon-button class="edit-icon" .value=${'section_slots'} .path=${mdiPencil} @click="${this._editSubmenu}">
+              </ha-icon-button>
+              <ha-icon-button class="options-icon" .value=${'option_slots'} .path=${mdiBacteria} @click="${this._editSubmenu}">
               </ha-icon-button>
             </div>
           </div>
@@ -1253,19 +1266,21 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
               </ha-icon-button>
               <ha-icon-button class="up-icon" .value=${'daily_forecast'} .path=${mdiArrowUp} .disabled=${first} @click="${this._moveUp}">
               </ha-icon-button>
-              <ha-icon-button class="edit-icon" .value=${'section_daily_forecast'} .path=${mdiPencil} @click="${this._editSection}">
+              <ha-icon-button class="edit-icon" .value=${'section_daily_forecast'} .path=${mdiPencil} @click="${this._editSubmenu}">
               </ha-icon-button>
+              <div class="no-icon"></div>
             </div>
           </div>
         `;
-      case 'miscellaneous':
+      case 'global_options':
         return html`
           <div class="main-flex">
-            <mwc-formfield class="no-switch" .label=${`Miscellaneous`}>
+            <mwc-formfield class="no-switch" .label=${`Global Options`}>
             </mwc-formfield>
             <div>
-              <ha-icon-button class="edit-icon" .value=${'section_miscellaneous'} .path=${mdiPencil}
-                @click="${this._editSection}">
+              <div class="no-icon"></div>
+              <ha-icon-button class="edit-icon" .value=${'option_global_options'} .path=${mdiBacteria}
+                @click="${this._editSubmenu}">
               </ha-icon-button>
             </div>
           </div>
@@ -1287,7 +1302,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     slots.forEach((slot, index) => {
       htmlConfig.push(this.getConfigBlock(slot, index === 0, index + 1 === slots.length));
     });
-    htmlConfig.push(this.getConfigBlock('miscellaneous', false, false));
+    htmlConfig.push(this.getConfigBlock('global_options', false, false));
 
     return html`${htmlConfig}`;
   }
@@ -1324,7 +1339,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     fireEvent(this, 'config-changed', { config: this._config });
   }
 
-  private _editSection(ev): void {
+  private _editSubmenu(ev): void {
     if (ev.currentTarget) {
       const target = ev.currentTarget;
       this._subElementEditor = target.value;
@@ -1433,6 +1448,10 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     }
     mwc-formfield {
       height: 56px;
+    }
+    .no-icon {
+      display: inline-flex;
+      width: var(--mds-icon-button-size, 48px);
     }
     /* .option {
       cursor: pointer;
