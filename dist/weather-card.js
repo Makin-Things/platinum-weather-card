@@ -722,6 +722,8 @@ let WeatherCard = class WeatherCard extends s$1 {
             case 'sun_following': return this.slotSunFollowing;
             case 'custom1': return this.slotCustom1;
             case 'custom2': return this.slotCustom2;
+            case 'custom3': return this.slotCustom3;
+            case 'custom4': return this.slotCustom4;
             case 'empty': return this.slotEmpty;
             case 'remove': return this.slotRemove;
         }
@@ -1011,6 +1013,32 @@ let WeatherCard = class WeatherCard extends s$1 {
           <ha-icon icon=${icon}></ha-icon>
         </div>
         <div class="slot-text custom-2-text">${value}</div><div class="slot-text unit">${unit}</div>
+      </li>
+    `;
+    }
+    get slotCustom3() {
+        var icon = this._config.custom3_icon ? this._config.custom3_icon : 'mdi:help-box';
+        var value = this._config.custom3_value ? this.hass.states[this._config.custom3_value].state : 'unknown';
+        var unit = this._config.custom3_units ? this._config.custom3_units : '';
+        return $ `
+      <li>
+        <div class="slot-icon">
+          <ha-icon icon=${icon}></ha-icon>
+        </div>
+        <div class="slot-text custom-3-text">${value}</div><div class="slot-text unit">${unit}</div>
+      </li>
+    `;
+    }
+    get slotCustom4() {
+        var icon = this._config.custom4_icon ? this._config.custom4_icon : 'mdi:help-box';
+        var value = this._config.custom4_value ? this.hass.states[this._config.custom4_value].state : 'unknown';
+        var unit = this._config.custom4_units ? this._config.custom4_units : '';
+        return $ `
+      <li>
+        <div class="slot-icon">
+          <ha-icon icon=${icon}></ha-icon>
+        </div>
+        <div class="slot-text custom-4-text">${value}</div><div class="slot-text unit">${unit}</div>
       </li>
     `;
     }
@@ -10485,7 +10513,7 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
             delete tmpConfig['locale'];
         }
         // Remove unused entries
-        const keysOfProps = ["type", "card_config_version", "section_order", "show_section_title", "show_section_main", "show_section_extended", "show_section_slots", "show_section_daily_forecast", "text_card_title", "entity_update_time", "text_update_time_prefix", "entity_temperature", "entity_apparent_temp", "entity_current_conditions", "entity_current_text", "show_decimals", "show_separator", "entity_daily_summary", "extended_use_attr", "extended_name_attr", "slot_l1", "slot_l2", "slot_l3", "slot_l4", "slot_l5", "slot_l6", "slot_r1", "slot_r2", "slot_r3", "slot_r4", "slot_r5", "slot_r6", "entity_humidity", "entity_pressure", "entity_visibility", "entity_wind_bearing", "entity_wind_speed", "entity_wind_gust", "entity_wind_speed_kt", "entity_wind_gust_kt", "entity_temp_next", "entity_temp_next_label", "entity_temp_following", "entity_temp_following_label", "entity_daytime_high", "entity_daytime_low", "entity_fire_danger", "entity_fire_danger_summary", "entity_pop", "entity_possible_today", "entity_sun", "entity_uv_alert_summary", "entity_rainfall", "entity_todays_fire_danger", "entity_todays_uv_forecast", "custom1_value", "custom1_icon", "custom1_units", "custom2_value", "custom2_icon", "custom2_units", "entity_forecast_icon_1", "entity_pop_1", "entity_pos_1", "entity_summary_1", "entity_forecast_low_temp_1", "entity_forecast_high_temp_1", "entity_extended_1", "daily_forecast_layout", "daily_forecast_days", "daily_extended_forecast_days", "daily_extended_use_attr", "daily_extended_name_attr", "option_locale", "option_static_icons", "option_icon_set", "option_time_format", "show_decimals_today", "old_daily_format", "show_beaufort", "index", "view_index"];
+        const keysOfProps = ["type", "card_config_version", "section_order", "show_section_title", "show_section_main", "show_section_extended", "show_section_slots", "show_section_daily_forecast", "text_card_title", "entity_update_time", "text_update_time_prefix", "entity_temperature", "entity_apparent_temp", "entity_current_conditions", "entity_current_text", "show_decimals", "show_separator", "entity_daily_summary", "extended_use_attr", "extended_name_attr", "slot_l1", "slot_l2", "slot_l3", "slot_l4", "slot_l5", "slot_l6", "slot_r1", "slot_r2", "slot_r3", "slot_r4", "slot_r5", "slot_r6", "entity_humidity", "entity_pressure", "entity_visibility", "entity_wind_bearing", "entity_wind_speed", "entity_wind_gust", "entity_wind_speed_kt", "entity_wind_gust_kt", "entity_temp_next", "entity_temp_next_label", "entity_temp_following", "entity_temp_following_label", "entity_daytime_high", "entity_daytime_low", "entity_fire_danger", "entity_fire_danger_summary", "entity_pop", "entity_possible_today", "entity_sun", "entity_uv_alert_summary", "entity_rainfall", "entity_todays_fire_danger", "entity_todays_uv_forecast", "custom1_value", "custom1_icon", "custom1_units", "custom2_value", "custom2_icon", "custom2_units", "custom3_value", "custom3_icon", "custom3_units", "custom4_value", "custom4_icon", "custom4_units", "entity_forecast_icon_1", "entity_pop_1", "entity_pos_1", "entity_summary_1", "entity_forecast_low_temp_1", "entity_forecast_high_temp_1", "entity_extended_1", "daily_forecast_layout", "daily_forecast_days", "daily_extended_forecast_days", "daily_extended_use_attr", "daily_extended_name_attr", "option_locale", "option_static_icons", "option_icon_set", "option_time_format", "show_decimals_today", "old_daily_format", "show_beaufort", "index", "view_index"];
         for (const element in this._config) {
             if (!keysOfProps.includes(element)) {
                 console.info(`removing ${element}`);
@@ -10718,6 +10746,30 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
         var _a;
         return ((_a = this._config) === null || _a === void 0 ? void 0 : _a.custom2_units) || '';
     }
+    get _custom3_value() {
+        var _a;
+        return ((_a = this._config) === null || _a === void 0 ? void 0 : _a.custom3_value) || '';
+    }
+    get _custom3_icon() {
+        var _a;
+        return ((_a = this._config) === null || _a === void 0 ? void 0 : _a.custom3_icon) || '';
+    }
+    get _custom3_units() {
+        var _a;
+        return ((_a = this._config) === null || _a === void 0 ? void 0 : _a.custom3_units) || '';
+    }
+    get _custom4_value() {
+        var _a;
+        return ((_a = this._config) === null || _a === void 0 ? void 0 : _a.custom4_value) || '';
+    }
+    get _custom4_icon() {
+        var _a;
+        return ((_a = this._config) === null || _a === void 0 ? void 0 : _a.custom4_icon) || '';
+    }
+    get _custom4_units() {
+        var _a;
+        return ((_a = this._config) === null || _a === void 0 ? void 0 : _a.custom4_units) || '';
+    }
     get _daily_forecast_layout() {
         var _a;
         return ((_a = this._config) === null || _a === void 0 ? void 0 : _a.daily_forecast_layout) || '';
@@ -10858,114 +10910,192 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
                 case 'custom2':
                     entities.add('custom2');
                     break;
+                case 'custom3':
+                    entities.add('custom3');
+                    break;
+                case 'custom4':
+                    entities.add('custom4');
+                    break;
             }
         }
         const entity_daytime_high = entities.has("entity_daytime_high") ?
-            $ `<ha-entity-picker .hass=${this.hass} .configValue=${'entity_daytime_high'} .value=${this._entity_daytime_high}
-  name="entity_daytime_high" label="Entity Daytime High (optional)" allow-custom-entity
-  @value-changed=${this._valueChangedPicker}></ha-entity-picker>` : '';
+            $ `
+        <ha-entity-picker .hass=${this.hass} .configValue=${'entity_daytime_high'} .value=${this._entity_daytime_high}
+          name="entity_daytime_high" label="Entity Daytime High (optional)" allow-custom-entity @value-changed=${this._valueChangedPicker}>
+        </ha-entity-picker>
+      ` : '';
         const entity_daytime_low = entities.has("entity_daytime_low") ?
-            $ `<ha-entity-picker .hass=${this.hass} .configValue=${'entity_daytime_low'} .value=${this._entity_daytime_low}
-  name="entity_daytime_low" label="Entity Daytime Low (optional)" allow-custom-entity
-  @value-changed=${this._valueChangedPicker}></ha-entity-picker>` : '';
+            $ `
+        <ha-entity-picker .hass=${this.hass} .configValue=${'entity_daytime_low'} .value=${this._entity_daytime_low}
+          name="entity_daytime_low" label="Entity Daytime Low (optional)" allow-custom-entity @value-changed=${this._valueChangedPicker}>
+        </ha-entity-picker>
+      ` : '';
         const entity_temp_next = entities.has("entity_temp_next") ?
-            $ `<ha-entity-picker .hass=${this.hass} .configValue=${'entity_temp_next'} .value=${this._entity_temp_next}
-  name="entity_temp_next" label="Entity Temp Next (optional)" allow-custom-entity
-  @value-changed=${this._valueChangedPicker}></ha-entity-picker>` : '';
+            $ `
+        <ha-entity-picker .hass=${this.hass} .configValue=${'entity_temp_next'} .value=${this._entity_temp_next}
+          name="entity_temp_next" label="Entity Temp Next (optional)" allow-custom-entity @value-changed=${this._valueChangedPicker}>
+        </ha-entity-picker>
+      ` : '';
         const entity_temp_next_label = entities.has("entity_temp_next_label") ?
-            $ `<ha-entity-picker .hass=${this.hass} .configValue=${'entity_temp_next_label'} .value=${this._entity_temp_next_label}
-  name="entity_temp_next_label" label="Entity Temp Next Label (optional)" allow-custom-entity
-  @value-changed=${this._valueChangedPicker}></ha-entity-picker>` : '';
+            $ `
+        <ha-entity-picker .hass=${this.hass} .configValue=${'entity_temp_next_label'} .value=${this._entity_temp_next_label}
+          name="entity_temp_next_label" label="Entity Temp Next Label (optional)" allow-custom-entity @value-changed=${this._valueChangedPicker}>
+        </ha-entity-picker>
+      ` : '';
         const entity_temp_following = entities.has("entity_temp_following") ?
-            $ `<ha-entity-picker .hass=${this.hass} .configValue=${'entity_temp_following'} .value=${this._entity_temp_following}
-  name="entity_temp_following" label="Entity Temp Following (optional)" allow-custom-entity
-  @value-changed=${this._valueChangedPicker}></ha-entity-picker>` : '';
+            $ `
+        <ha-entity-picker .hass=${this.hass} .configValue=${'entity_temp_following'} .value=${this._entity_temp_following}
+          name="entity_temp_following" label="Entity Temp Following (optional)" allow-custom-entity @value-changed=${this._valueChangedPicker}>
+        </ha-entity-picker>
+      ` : '';
         const entity_temp_following_label = entities.has("entity_temp_following_label") ?
-            $ `<ha-entity-picker .hass=${this.hass} .configValue=${'entity_temp_following_label'}
-  .value=${this._entity_temp_following_label} name="entity_temp_following_label"
-  label="Entity Temp Following Label (optional)" allow-custom-entity @value-changed=${this._valueChangedPicker}>
-</ha-entity-picker>` : '';
+            $ `
+        <ha-entity-picker .hass=${this.hass} .configValue=${'entity_temp_following_label'} .value=${this._entity_temp_following_label} name="entity_temp_following_label"
+          label="Entity Temp Following Label (optional)" allow-custom-entity @value-changed=${this._valueChangedPicker}>
+        </ha-entity-picker>
+      ` : '';
         const entity_wind_bearing = entities.has("entity_wind_bearing") ?
-            $ `<ha-entity-picker .hass=${this.hass} .configValue=${'entity_wind_bearing'} .value=${this._entity_wind_bearing}
-  name="entity_wind_bearing" label="Entity Wind Bearing (optional)" allow-custom-entity
-  @value-changed=${this._valueChangedPicker}></ha-entity-picker>` : '';
+            $ `
+        <ha-entity-picker .hass=${this.hass} .configValue=${'entity_wind_bearing'} .value=${this._entity_wind_bearing}
+          name="entity_wind_bearing" label="Entity Wind Bearing (optional)" allow-custom-entity @value-changed=${this._valueChangedPicker}>
+        </ha-entity-picker>
+      ` : '';
         const entity_wind_speed = entities.has("entity_wind_speed") ?
-            $ `<ha-entity-picker .hass=${this.hass} .configValue=${'entity_wind_speed'} .value=${this._entity_wind_speed}
-  name="entity_wind_speed" label="Entity Wind Speed (optional)" allow-custom-entity
-  @value-changed=${this._valueChangedPicker}></ha-entity-picker>` : '';
+            $ `
+        <ha-entity-picker .hass=${this.hass} .configValue=${'entity_wind_speed'} .value=${this._entity_wind_speed}
+          name="entity_wind_speed" label="Entity Wind Speed (optional)" allow-custom-entity @value-changed=${this._valueChangedPicker}>
+        </ha-entity-picker>
+      ` : '';
         const entity_wind_gust = entities.has("entity_wind_gust") ?
-            $ `<ha-entity-picker .hass=${this.hass} .configValue=${'entity_wind_gust'} .value=${this._entity_wind_gust}
-  name="entity_wind_gust" label="Entity Wind Gust (optional)" allow-custom-entity
-  @value-changed=${this._valueChangedPicker}></ha-entity-picker>` : '';
+            $ `
+        <ha-entity-picker .hass=${this.hass} .configValue=${'entity_wind_gust'} .value=${this._entity_wind_gust}
+          name="entity_wind_gust" label="Entity Wind Gust (optional)" allow-custom-entity @value-changed=${this._valueChangedPicker}>
+        </ha-entity-picker>
+      ` : '';
         const entity_wind_speed_kt = entities.has("entity_wind_speed_kt") ?
-            $ `<ha-entity-picker .hass=${this.hass} .configValue=${'entity_wind_speed_kt'} .value=${this._entity_wind_speed_kt}
-  name="entity_wind_speed_kt" label="Entity Wind Speed Kt (optional)" allow-custom-entity
-  @value-changed=${this._valueChangedPicker}></ha-entity-picker>` : '';
+            $ `
+        <ha-entity-picker .hass=${this.hass} .configValue=${'entity_wind_speed_kt'} .value=${this._entity_wind_speed_kt}
+          name="entity_wind_speed_kt" label="Entity Wind Speed Kt (optional)" allow-custom-entity @value-changed=${this._valueChangedPicker}>
+        </ha-entity-picker>
+      ` : '';
         const entity_wind_gust_kt = entities.has("entity_wind_gust_kt") ?
-            $ `<ha-entity-picker .hass=${this.hass} .configValue=${'entity_wind_gust_kt'} .value=${this._entity_wind_gust_kt}
-  name="entity_wind_gust_kt" label="Entity Wind Gust Kt (optional)" allow-custom-entity
-  @value-changed=${this._valueChangedPicker}></ha-entity-picker>` : '';
+            $ `
+        <ha-entity-picker .hass=${this.hass} .configValue=${'entity_wind_gust_kt'} .value=${this._entity_wind_gust_kt}
+          name="entity_wind_gust_kt" label="Entity Wind Gust Kt (optional)" allow-custom-entity @value-changed=${this._valueChangedPicker}>
+        </ha-entity-picker>
+      ` : '';
         const entity_visibility = entities.has("entity_visibility") ?
-            $ `<ha-entity-picker .hass=${this.hass} .configValue=${'entity_visibility'} .value=${this._entity_visibility}
-  name="entity_visibility" label="Entity Visibility (optional)" allow-custom-entity
-  @value-changed=${this._valueChangedPicker}></ha-entity-picker>` : '';
+            $ `
+        <ha-entity-picker .hass=${this.hass} .configValue=${'entity_visibility'} .value=${this._entity_visibility}
+          name="entity_visibility" label="Entity Visibility (optional)" allow-custom-entity @value-changed=${this._valueChangedPicker}>
+        </ha-entity-picker>
+      ` : '';
         const entity_sun = entities.has("entity_sun") ?
-            $ `<ha-entity-picker .hass=${this.hass} .configValue=${'entity_sun'} .value=${this._entity_sun} name="entity_sun"
-  label="Entity Sun (optional)" allow-custom-entity @value-changed=${this._valueChangedPicker}></ha-entity-picker>` : '';
+            $ `
+        <ha-entity-picker .hass=${this.hass} .configValue=${'entity_sun'} .value=${this._entity_sun} name="entity_sun"
+          label="Entity Sun (optional)" allow-custom-entity @value-changed=${this._valueChangedPicker}>
+        </ha-entity-picker>
+      ` : '';
         const entity_pop = entities.has("entity_pop") ?
-            $ `<ha-entity-picker .hass=${this.hass} .configValue=${'entity_pop'} .value=${this._entity_pop} name="entity_pop"
-  label="Chance or Rain (optional)" allow-custom-entity @value-changed=${this._valueChangedPicker}></ha-entity-picker>` : '';
+            $ `
+        <ha-entity-picker .hass=${this.hass} .configValue=${'entity_pop'} .value=${this._entity_pop} name="entity_pop"
+          label="Chance or Rain (optional)" allow-custom-entity @value-changed=${this._valueChangedPicker}>
+        </ha-entity-picker>
+      ` : '';
         const entity_possible_today = entities.has("entity_possible_today") ?
-            $ `<ha-entity-picker .hass=${this.hass} .configValue=${'entity_possible_today'} .value=${this._entity_possible_today}
-  name="entity_possible_today" label="Possible Rain Today (optional)" allow-custom-entity
-  @value-changed=${this._valueChangedPicker}></ha-entity-picker>` : '';
+            $ `
+        <ha-entity-picker .hass=${this.hass} .configValue=${'entity_possible_today'} .value=${this._entity_possible_today}
+          name="entity_possible_today" label="Possible Rain Today (optional)" allow-custom-entity @value-changed=${this._valueChangedPicker}>
+        </ha-entity-picker>
+      ` : '';
         const entity_possible_tomorrow = entities.has("entity_possible_tomorrow") ?
-            $ `<ha-entity-picker .hass=${this.hass} .configValue=${'entity_possible_tomorrow'} .value=${this._entity_possible_tomorrow}
-  name="entity_possible_tomorrow" label="Possible Rain Tomorrow (optional)" allow-custom-entity
-  @value-changed=${this._valueChangedPicker}></ha-entity-picker>` : '';
+            $ `
+        <ha-entity-picker .hass=${this.hass} .configValue=${'entity_possible_tomorrow'} .value=${this._entity_possible_tomorrow}
+          name="entity_possible_tomorrow" label="Possible Rain Tomorrow (optional)" allow-custom-entity @value-changed=${this._valueChangedPicker}>
+        </ha-entity-picker>
+      ` : '';
         const entity_humidity = entities.has("entity_humidity") ?
-            $ `<ha-entity-picker .hass=${this.hass} .configValue=${'entity_humidity'} .value=${this._entity_humidity}
-  name="entity_humidity" label="Humidity (optional)" allow-custom-entity @value-changed=${this._valueChangedPicker}>
-</ha-entity-picker>` : '';
+            $ `
+        <ha-entity-picker .hass=${this.hass} .configValue=${'entity_humidity'} .value=${this._entity_humidity}
+          name="entity_humidity" label="Humidity (optional)" allow-custom-entity @value-changed=${this._valueChangedPicker}>
+        </ha-entity-picker>
+      ` : '';
         const entity_pressure = entities.has("entity_pressure") ?
-            $ `<ha-entity-picker .hass=${this.hass} .configValue=${'entity_pressure'} .value=${this._entity_pressure}
-  name="entity_pressure" label="Atmospheric Pressure (optional)" allow-custom-entity
-  @value-changed=${this._valueChangedPicker}></ha-entity-picker>` : '';
+            $ `
+        <ha-entity-picker .hass=${this.hass} .configValue=${'entity_pressure'} .value=${this._entity_pressure}
+          name="entity_pressure" label="Atmospheric Pressure (optional)" allow-custom-entity @value-changed=${this._valueChangedPicker}>
+        </ha-entity-picker>
+      ` : '';
         const entity_uv_alert_summary = entities.has("entity_uv_alert_summary") ?
-            $ `<ha-entity-picker .hass=${this.hass} .configValue=${'entity_uv_alert_summary'} .value=${this._entity_uv_alert_summary}
-  name="entity_uv_alert_summary" label="UV Alert Summary (optional)" allow-custom-entity
-  @value-changed=${this._valueChangedPicker}>
-</ha-entity-picker>` : '';
+            $ `
+        <ha-entity-picker .hass=${this.hass} .configValue=${'entity_uv_alert_summary'} .value=${this._entity_uv_alert_summary}
+          name="entity_uv_alert_summary" label="UV Alert Summary (optional)" allow-custom-entity @value-changed=${this._valueChangedPicker}>
+        </ha-entity-picker>
+      ` : '';
         const entity_fire_danger_summary = entities.has("entity_fire_danger_summary") ?
-            $ `<ha-entity-picker .hass=${this.hass} .configValue=${'entity_fire_danger_summary'}
-  .value=${this._entity_fire_danger_summary} name="entity_fire_danger_summary" label="Fire Danger Summary (optional)"
-  allow-custom-entity @value-changed=${this._valueChangedPicker}></ha-entity-picker>` : '';
+            $ `
+        <ha-entity-picker .hass=${this.hass} .configValue=${'entity_fire_danger_summary'} .value=${this._entity_fire_danger_summary}
+          name="entity_fire_danger_summary" label="Fire Danger Summary (optional)" allow-custom-entity @value-changed=${this._valueChangedPicker}>
+        </ha-entity-picker>
+      ` : '';
         const entity_rainfall = entities.has("entity_rainfall") ?
-            $ `<ha-entity-picker .hass=${this.hass} .configValue=${'entity_rainfall'} .value=${this._entity_rainfall}
-  name="entity_rainfall" label="Todays Rain (optional)" allow-custom-entity @value-changed=${this._valueChangedPicker}>
-</ha-entity-picker>` : '';
+            $ `
+        <ha-entity-picker .hass=${this.hass} .configValue=${'entity_rainfall'} .value=${this._entity_rainfall}
+          name="entity_rainfall" label="Todays Rain (optional)" allow-custom-entity @value-changed=${this._valueChangedPicker}>
+        </ha-entity-picker>
+      ` : '';
         const entity_custom1 = entities.has("custom1") ?
-            $ `<ha-entity-picker .hass=${this.hass} .configValue=${'custom1_value'} .value=${this._custom1_value} name="custom1_value"
-  label="Custom 1 Value (optional)" allow-custom-entity @value-changed=${this._valueChangedPicker}>
-</ha-entity-picker>
-<div class="side-by-side">
-  <ha-icon-picker .hass=${this.hass} .configValue=${'custom1_icon'} .value=${this._custom1_icon} name="custom1_icon"
-    label="Custom 1 Icon (optional)" @value-changed=${this._valueChanged}></ha-icon-picker>
-  <mwc-textfield label="Custom 1 Units (optional)" .value=${this._custom1_units} .configValue=${'custom1_units'}
-    @input=${this._valueChanged}>
-  </mwc-textfield>
-</div>` : '';
+            $ `
+        <ha-entity-picker .hass=${this.hass} .configValue=${'custom1_value'} .value=${this._custom1_value} name="custom1_value"
+          label="Custom 1 Value (optional)" allow-custom-entity @value-changed=${this._valueChangedPicker}>
+        </ha-entity-picker>
+        <div class="side-by-side">
+          <ha-icon-picker .hass=${this.hass} .configValue=${'custom1_icon'} .value=${this._custom1_icon} name="custom1_icon"
+            label="Custom 1 Icon (optional)" @value-changed=${this._valueChanged}>
+          </ha-icon-picker>
+          <mwc-textfield label="Custom 1 Units (optional)" .value=${this._custom1_units} .configValue=${'custom1_units'} @input=${this._valueChanged}>
+          </mwc-textfield>
+        </div>
+      ` : '';
         const entity_custom2 = entities.has("custom2") ?
-            $ `<ha-entity-picker .hass=${this.hass} .configValue=${'custom2_value'} .value=${this._custom2_value} name="custom2_value"
-  label="Custom 2 Value (optional)" allow-custom-entity @value-changed=${this._valueChangedPicker}>
-</ha-entity-picker>
-<div class="side-by-side">
-  <ha-icon-picker .hass=${this.hass} .configValue=${'custom2_icon'} .value=${this._custom2_icon} name="custom2_icon"
-    label="Custom 2 Icon (optional)" @value-changed=${this._valueChanged}></ha-icon-picker>
-  <mwc-textfield label="Custom 2 Units (optional)" .value=${this._custom2_units} .configValue=${'custom2_units'}
-    @input=${this._valueChanged}>
-  </mwc-textfield>
-</div>` : '';
+            $ `
+        <ha-entity-picker .hass=${this.hass} .configValue=${'custom2_value'} .value=${this._custom2_value} name="custom2_value"
+          label="Custom 2 Value (optional)" allow-custom-entity @value-changed=${this._valueChangedPicker}>
+        </ha-entity-picker>
+        <div class="side-by-side">
+          <ha-icon-picker .hass=${this.hass} .configValue=${'custom2_icon'} .value=${this._custom2_icon} name="custom2_icon"
+            label="Custom 2 Icon (optional)" @value-changed=${this._valueChanged}>
+          </ha-icon-picker>
+          <mwc-textfield label="Custom 2 Units (optional)" .value=${this._custom2_units} .configValue=${'custom2_units'} @input=${this._valueChanged}>
+          </mwc-textfield>
+        </div>
+      ` : '';
+        const entity_custom3 = entities.has("custom3") ?
+            $ `
+        <ha-entity-picker .hass=${this.hass} .configValue=${'custom3_value'} .value=${this._custom3_value} name="custom3_value"
+          label="Custom 3 Value (optional)" allow-custom-entity @value-changed=${this._valueChangedPicker}>
+        </ha-entity-picker>
+        <div class="side-by-side">
+          <ha-icon-picker .hass=${this.hass} .configValue=${'custom3_icon'} .value=${this._custom3_icon} name="custom3_icon"
+            label="Custom 3 Icon (optional)" @value-changed=${this._valueChanged}>
+          </ha-icon-picker>
+          <mwc-textfield label="Custom 3 Units (optional)" .value=${this._custom3_units} .configValue=${'custom3_units'} @input=${this._valueChanged}>
+          </mwc-textfield>
+        </div>
+      ` : '';
+        const entity_custom4 = entities.has("custom4") ?
+            $ `
+        <ha-entity-picker .hass=${this.hass} .configValue=${'custom4_value'} .value=${this._custom4_value} name="custom4_value"
+          label="Custom 4 Value (optional)" allow-custom-entity @value-changed=${this._valueChangedPicker}>
+        </ha-entity-picker>
+        <div class="side-by-side">
+          <ha-icon-picker .hass=${this.hass} .configValue=${'custom4_icon'} .value=${this._custom4_icon} name="custom4_icon"
+            label="Custom 4 Icon (optional)" @value-changed=${this._valueChanged}>
+          </ha-icon-picker>
+          <mwc-textfield label="Custom 4 Units (optional)" .value=${this._custom4_units} .configValue=${'custom4_units'} @input=${this._valueChanged}>
+          </mwc-textfield>
+        </div>
+      ` : '';
         return $ `
       ${entity_daytime_high}
       ${entity_daytime_low}
@@ -10989,7 +11119,9 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
       ${entity_fire_danger_summary}
       ${entity_rainfall}
       ${entity_custom1}
-      ${entity_custom2}`;
+      ${entity_custom2}
+      ${entity_custom3}
+      ${entity_custom4}`;
     }
     get _show_warning() {
         var _a;
@@ -11170,7 +11302,9 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
       <mwc-list-item value="uv_summary">Today's UV forecast</mwc-list-item>
       <mwc-list-item value="fire_summary">Today's fire danger</mwc-list-item>
       <mwc-list-item value="custom1">Custom entity 1</mwc-list-item>
-      <mwc-list-item value="custom2">Custom entity 1</mwc-list-item>
+      <mwc-list-item value="custom2">Custom entity 2</mwc-list-item>
+      <mwc-list-item value="custom3">Custom entity 3</mwc-list-item>
+      <mwc-list-item value="custom4">Custom entity 4</mwc-list-item>
       <mwc-list-item value="empty">Blank slot</mwc-list-item>
       <mwc-list-item value="remove">Remove slot</mwc-list-item>`;
         return $ `

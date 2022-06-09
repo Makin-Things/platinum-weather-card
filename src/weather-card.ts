@@ -579,6 +579,8 @@ export class WeatherCard extends LitElement {
       case 'sun_following': return this.slotSunFollowing;
       case 'custom1': return this.slotCustom1;
       case 'custom2': return this.slotCustom2;
+      case 'custom3': return this.slotCustom3;
+      case 'custom4': return this.slotCustom4;
       case 'empty': return this.slotEmpty;
       case 'remove': return this.slotRemove;
     }
@@ -891,6 +893,34 @@ export class WeatherCard extends LitElement {
           <ha-icon icon=${icon}></ha-icon>
         </div>
         <div class="slot-text custom-2-text">${value}</div><div class="slot-text unit">${unit}</div>
+      </li>
+    `;
+  }
+
+  get slotCustom3(): TemplateResult {
+    var icon = this._config.custom3_icon ? this._config.custom3_icon : 'mdi:help-box';
+    var value = this._config.custom3_value ? this.hass.states[this._config.custom3_value].state : 'unknown';
+    var unit = this._config.custom3_units ? this._config.custom3_units : '';
+    return html`
+      <li>
+        <div class="slot-icon">
+          <ha-icon icon=${icon}></ha-icon>
+        </div>
+        <div class="slot-text custom-3-text">${value}</div><div class="slot-text unit">${unit}</div>
+      </li>
+    `;
+  }
+
+  get slotCustom4(): TemplateResult {
+    var icon = this._config.custom4_icon ? this._config.custom4_icon : 'mdi:help-box';
+    var value = this._config.custom4_value ? this.hass.states[this._config.custom4_value].state : 'unknown';
+    var unit = this._config.custom4_units ? this._config.custom4_units : '';
+    return html`
+      <li>
+        <div class="slot-icon">
+          <ha-icon icon=${icon}></ha-icon>
+        </div>
+        <div class="slot-text custom-4-text">${value}</div><div class="slot-text unit">${unit}</div>
       </li>
     `;
   }
