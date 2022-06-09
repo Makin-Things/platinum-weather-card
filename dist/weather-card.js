@@ -11230,6 +11230,10 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
         name="entity_current_text" label="Entity Current Text (required)" allow-custom-entity
         @value-changed=${this._valueChangedPicker}>
       </ha-entity-picker>
+    `;
+    }
+    _optionOverviewEditor() {
+        return $ `
       <div class="side-by-side">
         <div>
           <mwc-formfield .label=${'Show temperature decimals'}>
@@ -11508,6 +11512,9 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
             case 'section_overview':
                 subel.push(this._sectionOverviewEditor());
                 break;
+            case 'option_overview':
+                subel.push(this._optionOverviewEditor());
+                break;
             case 'section_extended':
                 subel.push(this._sectionExtendedEditor());
                 break;
@@ -11585,7 +11592,8 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
               </ha-icon-button>
               <ha-icon-button class="edit-icon" .value=${'section_overview'} .path=${mdiPencil} @click="${this._editSubmenu}">
               </ha-icon-button>
-              <div class="no-icon"></div>
+              <ha-icon-button class="option-icon" .value=${'option_overview'} .path=${mdiBacteria} @click="${this._editSubmenu}">
+              </ha-icon-button>
             </div>
           </div>
         `;
