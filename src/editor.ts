@@ -7,7 +7,7 @@ import { keys } from 'ts-transformer-keys';
 import { mdiPencil, mdiArrowDown, mdiArrowUp } from '@mdi/js';
 
 import { ScopedRegistryHost } from '@lit-labs/scoped-registry-mixin';
-import { WeatherCardConfig, layoutOrientation, layoutDays, extendedDays, configSlots } from './types';
+import { WeatherCardConfig, layoutOrientation, layoutDays, extendedDays, configSlots, iconSets } from './types';
 import { customElement, property, state } from 'lit/decorators';
 import { formfieldDefinition } from '../elements/formfield';
 import { selectDefinition } from '../elements/select';
@@ -55,8 +55,20 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     }
 
     let tmpConfig = { ...this._config };
-    const keysOfProps = keys<WeatherCardConfig>();
 
+    // Rename options
+    if (tmpConfig.old_icon) {
+      tmpConfig['option_icon_set'] = tmpConfig.old_icon === 'false' ? 'new' : tmpConfig.old_icon === 'hybrid' ? 'hybrid' : 'old';
+      delete tmpConfig['old_icon'];
+    }
+
+    if (tmpConfig.static_icons) {
+      tmpConfig['option_static_icons'] = tmpConfig.static_icons;
+      delete tmpConfig['static_icons'];
+    }
+
+    // Remove unused entries
+    const keysOfProps = keys<WeatherCardConfig>();
     for (const element in this._config) {
       if (!keysOfProps.includes(element)) {
         console.info(`removing ${element}`);
@@ -344,6 +356,14 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
 
   get _daily_extended_name_attr(): string {
     return this._config?.daily_extended_name_attr || '';
+  }
+
+  get _option_static_icons(): boolean {
+    return this._config?.option_static_icons === true; // default off
+  }
+
+  get _option_icon_set(): iconSets | null {
+    return this._config?.option_icon_set ?? null;
   }
 
   get _optional_entities(): TemplateResult {
@@ -931,8 +951,22 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
 
   private _sectionMiscellaneousEditor(): TemplateResult {
     return html`
-      <div class="side-by-side">This will have the random settings that may affect multiple sections (ie. locale, time_format
-        etc).</div>
+      <div class="side-by-side">
+        <div>
+          <mwc-formfield .label=${'Show static Icons'}>
+            <mwc-switch .checked=${this._option_static_icons !== false} .configValue=${'option_static_icons'}
+              @change=${this._valueChanged}>
+            </mwc-switch>
+          </mwc-formfield>
+        </div>
+        <ha-select label="Icon Set (optional)" .configValue=${'option_icon_set'} .value=${this._option_icon_set} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
+          @selected=${this._valueChanged}>
+          <mwc-list-item></mwc-list-item>
+          <mwc-list-item value="new">New</mwc-list-item>
+          <mwc-list-item value="hybrid">Hybrid</mwc-list-item>
+          <mwc-list-item value="old">Old</mwc-list-item>
+        </ha-select>
+      </div>
     `;
   }
 

@@ -180,7 +180,7 @@ export class WeatherCard extends LitElement {
     if (this._config?.show_section_main === false) return html``;
 
     const weatherIcon = this._weatherIcon(this.currentConditions);
-    const url = new URL('icons/' + (this._config.static_icons ? 'static' : 'animated') + '/' + weatherIcon + '.svg', import.meta.url);
+    const url = new URL('icons/' + (this._config.option_static_icons ? 'static' : 'animated') + '/' + weatherIcon + '.svg', import.meta.url);
     const hoverText = weatherIcon !== 'unknown' ? '' : `Unknown condition\n${this.currentConditions}`;
     const biggerIcon = html`<div class="big-icon"><img src="${url.href}" width="100%" height="100%" title="${hoverText}"></div>`;
 
@@ -292,7 +292,7 @@ export class WeatherCard extends LitElement {
         forecastDate.setDate(forecastDate.getDate() + i + 1);
         var start = this._config['entity_forecast_icon_1'] ? this._config['entity_forecast_icon_1'].match(/(\d+)(?!.*\d)/g) : false;
         const iconEntity = this._config['entity_forecast_icon_1'] ? this._config['entity_forecast_icon_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
-        const url = new URL(('icons/' + (this._config.static_icons ? 'static' : 'animated') + '/' + (iconEntity && this.hass.states[iconEntity] ? this._weatherIcon(this.hass.states[iconEntity].state) : 'unknown') + '.svg').replace("-night", "-day"), import.meta.url);
+        const url = new URL(('icons/' + (this._config.option_static_icons ? 'static' : 'animated') + '/' + (iconEntity && this.hass.states[iconEntity] ? this._weatherIcon(this.hass.states[iconEntity].state) : 'unknown') + '.svg').replace("-night", "-day"), import.meta.url);
         const htmlIcon = html`<i class="icon" style="background: none, url(${url.href}) no-repeat; background-size: contain;"></i><br>`;
         start = this._config['entity_forecast_high_temp_1'] ? this._config['entity_forecast_high_temp_1'].match(/(\d+)(?!.*\d)/g) : false;
         const maxEntity = start && this._config['entity_forecast_high_temp_1'] ? this._config['entity_forecast_high_temp_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
@@ -372,7 +372,7 @@ export class WeatherCard extends LitElement {
         if (!iconEntity || this.hass.states[iconEntity] === undefined || this.hass.states[iconEntity].state === 'unknown') { // Stop adding forecast days as soon as an undefined entity is encountered
           break;
         }
-        const url = new URL(('icons/' + (this._config.static_icons ? 'static' : 'animated') + '/' + (this.hass.states[iconEntity] !== undefined ? this._weatherIcon(this.hass.states[iconEntity].state) : 'unknown') + '.svg').replace("-night", "-day"), import.meta.url);
+        const url = new URL(('icons/' + (this._config.option_static_icons ? 'static' : 'animated') + '/' + (this.hass.states[iconEntity] !== undefined ? this._weatherIcon(this.hass.states[iconEntity].state) : 'unknown') + '.svg').replace("-night", "-day"), import.meta.url);
         const htmlIcon = html`<i class="icon" style="background: none, url(${url.href}) no-repeat; background-size: contain;"></i><br>`;
         start = this._config['entity_forecast_high_temp_1'] ? this._config['entity_forecast_high_temp_1'].match(/(\d+)(?!.*\d)/g) : false;
         const maxEntity = start && this._config['entity_forecast_high_temp_1'] ? this._config['entity_forecast_high_temp_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
@@ -1233,17 +1233,17 @@ export class WeatherCard extends LitElement {
   }
 
   get iconStyle(): string {
-    return (this._config.old_icon === "hybrid") ? `hybrid` : (this._config.old_icon === "false") ? `false` : `true`;
+    return (this._config.option_icon_set) ? this._config.option_icon_set : `old`;
   }
 
   get iconSunny(): string {
     const iconStyle = this.iconStyle;
-    return (iconStyle === "true") ? `${this.dayOrNight}` : (iconStyle === "hybrid") ? `sunny-${this.dayOrNight}` : `sunny-${this.dayOrNight}`;
+    return (iconStyle === "true") ? `sunny-${this.dayOrNight}` : (iconStyle === "hybrid") ? `sunny-${this.dayOrNight}` : `sunny-${this.dayOrNight}`;
   }
 
   get iconClear(): string {
     const iconStyle = this.iconStyle;
-    return (iconStyle === "true") ? `${this.dayOrNight}` : (iconStyle === "hybrid") ? `sunny-${this.dayOrNight}` : `clear-${this.dayOrNight}`;
+    return (iconStyle === "true") ? `clear-${this.dayOrNight}` : (iconStyle === "hybrid") ? `sunny-${this.dayOrNight}` : `clear-${this.dayOrNight}`;
   }
 
   get iconMostlySunny(): string {

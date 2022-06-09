@@ -11,6 +11,7 @@ export type layoutOrientation = "horizontal" | "vertical";
 export type layoutDays = 1 | 2 | 3 | 4 | 5 | 6 | 7;
 export type extendedDays = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
 export type configSlots = 'title' | 'main' | 'extended' | 'slots' | 'daily_forecast';
+export type iconSets = 'old' | 'new' | 'hybrid';
 
 // TODO Add your configuration elements here for type-checking
 export interface WeatherCardConfig extends LovelaceCardConfig {
@@ -95,6 +96,7 @@ export interface WeatherCardConfig extends LovelaceCardConfig {
   locale?: string;
   old_daily_format?: boolean;
   show_beaufort?: boolean;
-  static_icons?: boolean;
-  how_decimals_today?: boolean;
+  option_static_icons?: boolean;
+  option_icon_set?: iconSets;
+  show_decimals_today?: boolean;
 }
