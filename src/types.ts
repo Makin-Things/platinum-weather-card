@@ -10,7 +10,7 @@ declare global {
 export type layoutOrientation = "horizontal" | "vertical";
 export type layoutDays = 1 | 2 | 3 | 4 | 5 | 6 | 7;
 export type extendedDays = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
-export type configSlots = 'title' | 'main' | 'extended' | 'slots' | 'daily_forecast';
+export type configSlots = 'title' | 'overview' | 'extended' | 'slots' | 'daily_forecast';
 export type iconSets = 'old' | 'new' | 'hybrid';
 export type timeFormat = 'system' | '12hour' | '24hour';
 

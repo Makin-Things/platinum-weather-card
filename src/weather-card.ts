@@ -47,7 +47,7 @@ export class WeatherCard extends LitElement {
     console.info(`getCardSize`);
     var cardHeight = 16;
     cardHeight += this._config.show_section_title === true ? 56 : 0;
-    cardHeight += this._config.show_section_main !== false ? 162 : 0;
+    cardHeight += this._config.overview !== false ? 162 : 0;
     cardHeight += this._config.show_section_extended !== false ? 58 : 0;
     const cardSize = Math.ceil(cardHeight / 50);
     console.info(`CardHeight=${cardHeight} CardSize=${cardSize}`);
@@ -182,8 +182,8 @@ export class WeatherCard extends LitElement {
     `;
   }
 
-  private _renderMainSection(): TemplateResult {
-    if (this._config?.show_section_main === false) return html``;
+  private _renderOverviewSection(): TemplateResult {
+    if (this._config?.show_section_overview === false) return html``;
 
     const weatherIcon = this._weatherIcon(this.currentConditions);
     const url = new URL('icons/' + (this._config.option_static_icons ? 'static' : 'animated') + '/' + weatherIcon + '.svg', import.meta.url);
@@ -211,8 +211,8 @@ export class WeatherCard extends LitElement {
     const currentText = (this._config.entity_current_text) && (this.hass.states[this._config.entity_current_text]) ? this.hass.states[this._config.entity_current_text].state ?? '---' : '---';
 
     return html`
-      <div class="main-section section">
-        <div class="main-top">
+      <div class="overview-section section">
+        <div class="overview-top">
           <div class="top-left">${biggerIcon}</div>
           <div class="currentTemps">${currentTemp}${apparentTemp}</div>
         </div>
@@ -479,8 +479,8 @@ export class WeatherCard extends LitElement {
         case 'title':
           sections.push(this._renderTitleSection());
           break;
-        case 'main':
-          sections.push(this._renderMainSection());
+        case 'overview':
+          sections.push(this._renderOverviewSection());
           break;
         case 'extended':
           sections.push(this._renderExtendedSection());
@@ -1628,7 +1628,7 @@ export class WeatherCard extends LitElement {
         font-weight: 300;
         color: var(--primary-text-color);
       }
-      .main-top {
+      .overview-top {
         display: flex;
         justify-content: space-between;
         flex-wrap: nowrap;

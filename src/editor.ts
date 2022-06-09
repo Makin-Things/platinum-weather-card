@@ -41,7 +41,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     if (this._section_order === null) {
       this._config = {
         ...this._config,
-        ['section_order']: ['title', 'main', 'extended', 'slots', 'daily_forecast'],
+        ['section_order']: ['title', 'overview', 'extended', 'slots', 'daily_forecast'],
       }
       fireEvent(this, 'config-changed', { config: this._config });
     }
@@ -818,7 +818,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     `;
   }
 
-  private _sectionMainEditor(): TemplateResult {
+  private _sectionOverviewEditor(): TemplateResult {
     return html`
       <ha-entity-picker .hass=${this.hass} .configValue=${'entity_temperature'} .value=${this._entity_temperature}
         name="entity_temperature" label="Entity Current Temperature (required)" allow-custom-entity
@@ -1128,8 +1128,8 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
       case 'section_title':
         subel.push(this._sectionTitleEditor());
         break;
-      case 'section_main':
-        subel.push(this._sectionMainEditor());
+      case 'section_overview':
+        subel.push(this._sectionOverviewEditor());
         break;
       case 'section_extended':
         subel.push(this._sectionExtendedEditor());
@@ -1158,8 +1158,8 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     return this._config?.show_section_title === true; // default off
   }
 
-  get _show_section_main(): boolean {
-    return this._config?.show_section_main !== false; //default on
+  get _show_section_overview(): boolean {
+    return this._config?.show_section_overview !== false; //default on
   }
 
   get _show_section_extended(): boolean {
@@ -1178,7 +1178,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     switch (block) {
       case 'title':
         return html`
-          <div class="main-flex edit-title-section">
+          <div class="section-flex edit-title-section">
             <mwc-formfield .label=${`Title Section`}>
               <mwc-switch .checked=${this._show_section_title !== false} .configValue=${'show_section_title'}
                 @change=${this._valueChanged}>
@@ -1195,20 +1195,20 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
             </div>
           </div>
         `;
-      case 'main':
+      case 'overview':
         return html`
-          <div class="main-flex edit-main-section">
-            <mwc-formfield .label=${`Main Section`}>
-              <mwc-switch .checked=${this._show_section_main !== false} .configValue=${'show_section_main'}
+          <div class="section-flex edit-overview-section">
+            <mwc-formfield .label=${`Overview Section`}>
+              <mwc-switch .checked=${this._show_section_overview !== false} .configValue=${'show_section_overview'}
                 @change=${this._valueChanged}>
               </mwc-switch>
             </mwc-formfield>
             <div>
-              <ha-icon-button class="down-icon" .value=${'main'} .path=${mdiArrowDown} .disabled=${last} @click="${this._moveDown}">
+              <ha-icon-button class="down-icon" .value=${'overview'} .path=${mdiArrowDown} .disabled=${last} @click="${this._moveDown}">
               </ha-icon-button>
-              <ha-icon-button class="up-icon" .value=${'main'} .path=${mdiArrowUp} .disabled=${first} @click="${this._moveUp}">
+              <ha-icon-button class="up-icon" .value=${'overview'} .path=${mdiArrowUp} .disabled=${first} @click="${this._moveUp}">
               </ha-icon-button>
-              <ha-icon-button class="edit-icon" .value=${'section_main'} .path=${mdiPencil} @click="${this._editSubmenu}">
+              <ha-icon-button class="edit-icon" .value=${'section_overview'} .path=${mdiPencil} @click="${this._editSubmenu}">
               </ha-icon-button>
               <div class="no-icon"></div>
             </div>
@@ -1216,7 +1216,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
         `;
       case 'extended':
         return html`
-          <div class="main-flex edit-extended-section">
+          <div class="section-flex edit-extended-section">
             <mwc-formfield .label=${`Extended Section`}>
               <mwc-switch .checked=${this._show_section_extended !== false} .configValue=${'show_section_extended'}
                 @change=${this._valueChanged}>
@@ -1235,7 +1235,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
         `;
       case 'slots':
         return html`
-          <div class="main-flex edit-slots-section">
+          <div class="section-flex edit-slots-section">
             <mwc-formfield .label=${`Slots Section`}>
               <mwc-switch .checked=${this._show_section_slots !== false} .configValue=${'show_section_slots'}
                 @change=${this._valueChanged}>
@@ -1255,7 +1255,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
         `;
       case 'daily_forecast':
         return html`
-          <div class="main-flex edit-daily-forecast-section">
+          <div class="section-flex edit-daily-forecast-section">
             <mwc-formfield .label=${`Daily Forecast Section`}>
               <mwc-switch .checked=${this._show_section_daily_forecast !== false} .configValue=${'show_section_daily_forecast'}
                 @change=${this._valueChanged}>
@@ -1274,7 +1274,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
         `;
       case 'global_options':
         return html`
-          <div class="main-flex">
+          <div class="section-flex">
             <mwc-formfield class="no-switch" .label=${`Global Options`}>
             </mwc-formfield>
             <div>
@@ -1475,7 +1475,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
       padding-left: 16px;
       background: var(--secondary-background-color);
     } */
-    .main-flex {
+    .section-flex {
       display: flex;
       justify-content: space-between;
       align-items: center;
