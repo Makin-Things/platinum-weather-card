@@ -4,7 +4,7 @@ import { LitElement, html, TemplateResult, css, PropertyValues, CSSResult, unsaf
 import { customElement, property, state } from 'lit/decorators';
 import { HomeAssistant, LovelaceCardEditor, getLovelace } from 'custom-card-helpers';
 
-import type { WeatherCardConfig } from './types';
+import type { timeFormat, WeatherCardConfig } from './types';
 import { CARD_VERSION } from './const';
 import { localize } from './localize/localize';
 
@@ -158,10 +158,16 @@ export class WeatherCard extends LitElement {
     var updateTime: string;
     if ((this._config.entity_update_time) && (this.hass.states[this._config.entity_update_time]) && (this.hass.states[this._config.entity_update_time].state !== undefined)) {
       const d = new Date(this.hass.states[this._config.entity_update_time].state);
-      if (this.is12Hour) {
-        updateTime = d.toLocaleString(this._config.locale, { hour: 'numeric', minute: '2-digit', hour12: true }).replace(" ", "") + ", " + d.toLocaleDateString(this._config.locale, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).replace(",", "");
-      } else {
-        updateTime = d.toLocaleString(this._config.locale, { hour: '2-digit', minute: '2-digit', hour12: false }) + d.toLocaleDateString(this._config.locale, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).replace(",", "");
+      switch (this.timeFormat) {
+        case '12hour':
+          updateTime = d.toLocaleString(this.locale, { hour: 'numeric', minute: '2-digit', hour12: true }).replace(" ", "") + ", " + d.toLocaleDateString(this.locale, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).replace(",", "");
+          break;
+        case '24hour':
+          updateTime = d.toLocaleString(this.locale, { hour: '2-digit', minute: '2-digit', hour12: false }) + ", " + d.toLocaleDateString(this.locale, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).replace(",", "");
+          break;
+        case 'system':
+          updateTime = d.toLocaleTimeString(navigator.language, { timeStyle: 'short' }).replace(" ", "") + ", " + d.toLocaleDateString(navigator.language).replace(",", "");
+          break;
       }
     } else {
       updateTime = '---';
@@ -348,7 +354,7 @@ export class WeatherCard extends LitElement {
 
         htmlDays.push(html`
           <div class="day-horiz fcasttooltip">
-            <span class="dayname">${forecastDate ? forecastDate.toLocaleDateString(this._config.locale, { weekday: 'short' }) :
+            <span class="dayname">${forecastDate ? forecastDate.toLocaleDateString(this.locale, { weekday: 'short' }) :
             "---"}</span>
             <br>${htmlIcon}
             ${minMax}
@@ -432,7 +438,7 @@ export class WeatherCard extends LitElement {
           <div class="day-vert fcasttooltip">
             <div class="day-vert-top">
               <div class="day-vert-dayicon">
-                <span class="dayname">${forecastDate ? forecastDate.toLocaleDateString(this._config.locale, { weekday: 'short' }) : "---"}</span>
+                <span class="dayname">${forecastDate ? forecastDate.toLocaleDateString(this.locale, { weekday: 'short' }) : "---"}</span>
                 <br>${htmlIcon}
               </div>
               <div class="day-vert-values">
@@ -707,7 +713,7 @@ export class WeatherCard extends LitElement {
 
   get slotDaytimeHigh(): TemplateResult {
     const digits = this._config.show_decimals_today === true ? 1 : 0;
-    const temp = this._config.entity_daytime_high ? (Number(this.hass.states[this._config.entity_daytime_high].state)).toLocaleString(undefined, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
+    const temp = this._config.entity_daytime_high ? (Number(this.hass.states[this._config.entity_daytime_high].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
     const units = temp !== "---" ? html`<div class="unitc">${this.getUOM('temperature')}</div>` : html``;
     return html`
       <li>
@@ -724,7 +730,7 @@ export class WeatherCard extends LitElement {
 
   get slotDaytimeLow(): TemplateResult {
     const digits = this._config.show_decimals_today === true ? 1 : 0;
-    const temp = this._config.entity_daytime_low ? (Number(this.hass.states[this._config.entity_daytime_low].state)).toLocaleString(undefined, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
+    const temp = this._config.entity_daytime_low ? (Number(this.hass.states[this._config.entity_daytime_low].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
     const units = temp !== "---" ? html`<div class="unitc">${this.getUOM('temperature')}</div>` : html``;
     return html`
       <li>
@@ -902,7 +908,7 @@ export class WeatherCard extends LitElement {
     return entity && this.hass.states[entity]
       ? this._config.show_decimals !== true
         ? String(Math.round(Number(this.hass.states[entity].state)))
-        : this.hass.states[entity].state
+        : Number(this.hass.states[entity].state).toLocaleString(this.locale)
       : '---';
   }
 
@@ -911,33 +917,33 @@ export class WeatherCard extends LitElement {
     return entity && this.hass.states[entity]
       ? this._config.show_decimals !== true
         ? String(Math.round(Number(this.hass.states[entity].state)))
-        : this.hass.states[entity].state
+        : Number(this.hass.states[entity].state).toLocaleString(this.locale)
       : '---';
   }
 
   get currentHumidity(): string {
     const entity = this._config.entity_humidity;
     return entity && this.hass.states[entity]
-      ? (Number(this.hass.states[entity].state)).toLocaleString() : '---';
+      ? (Number(this.hass.states[entity].state)).toLocaleString(this.locale) : '---';
   }
 
   get currentRainfall(): string {
     const entity = this._config.entity_rainfall;
     return entity && this.hass.states[entity]
-      ? (Number(this.hass.states[entity].state)).toLocaleString() : '---';
+      ? (Number(this.hass.states[entity].state)).toLocaleString(this.locale) : '---';
   }
 
   get currentPressure(): string {
     const entity = this._config.entity_pressure;
     var places = this._config.show_decimals_pressure ? Math.max(Math.min(this._config.show_decimals_pressure, 3), 0) : 0;
     return entity && this.hass.states[entity]
-      ? (Number(this.hass.states[entity].state)).toLocaleString(undefined, { minimumFractionDigits: places, maximumFractionDigits: places }) : '---';
+      ? (Number(this.hass.states[entity].state)).toLocaleString(this.locale, { minimumFractionDigits: places, maximumFractionDigits: places }) : '---';
   }
 
   get currentVisibility(): string {
     const entity = this._config.entity_visibility;
     return entity && this.hass.states[entity]
-      ? (Number(this.hass.states[entity].state)).toLocaleString() : '---';
+      ? (Number(this.hass.states[entity].state)).toLocaleString(this.locale) : '---';
   }
 
   get currentWindBearing(): string {
@@ -949,25 +955,25 @@ export class WeatherCard extends LitElement {
   get currentWindSpeed(): string {
     const entity = this._config.entity_wind_speed;
     return entity && this.hass.states[entity]
-      ? Math.round(Number(this.hass.states[entity].state)).toLocaleString() : '---';
+      ? Math.round(Number(this.hass.states[entity].state)).toLocaleString(this.locale) : '---';
   }
 
   get currentWindGust(): string {
     const entity = this._config.entity_wind_gust;
     return entity && this.hass.states[entity]
-      ? Math.round(Number(this.hass.states[entity].state)).toLocaleString() : '---';
+      ? Math.round(Number(this.hass.states[entity].state)).toLocaleString(this.locale) : '---';
   }
 
   get currentWindSpeedKt(): string {
     const entity = this._config.entity_wind_speed_kt;
     return entity && this.hass.states[entity]
-      ? Math.round(Number(this.hass.states[entity].state)).toLocaleString() : '---';
+      ? Math.round(Number(this.hass.states[entity].state)).toLocaleString(this.locale) : '---';
   }
 
   get currentWindGustKt(): string {
     const entity = this._config.entity_wind_gust_kt;
     return entity && this.hass.states[entity]
-      ? Math.round(Number(this.hass.states[entity].state)).toLocaleString() : '---';
+      ? Math.round(Number(this.hass.states[entity].state)).toLocaleString(this.locale) : '---';
   }
 
   // windDirections - returns set of possible wind directions by specified language
@@ -980,7 +986,7 @@ export class WeatherCard extends LitElement {
     const windDirections_da = ['N', 'NNØ', 'NØ', 'ØNØ', 'Ø', 'ØSØ', 'SØ', 'SSØ', 'S', 'SSV', 'SV', 'VSV', 'V', 'VNV', 'NV', 'NNV', 'N'];
     const windDirections_ru = ['С', 'ССВ', 'СВ', 'ВСВ', 'В', 'ВЮВ', 'ЮВ', 'ЮЮВ', 'Ю', 'ЮЮЗ', 'ЮЗ', 'ЗЮЗ', 'З', 'ЗСЗ', 'СЗ', 'ССЗ', 'С'];
 
-    switch (this._config.locale) {
+    switch (this.locale) {
       case "it":
       case "fr":
         return windDirections_fr;
@@ -1080,18 +1086,25 @@ export class WeatherCard extends LitElement {
   get sunSet(): { next: TemplateResult, following: TemplateResult, nextText: string, followingText: string, nextIcon: string, followingIcon: string } {
     var nextSunSet: string;
     var nextSunRise: string;
-    if (this.is12Hour) {
-      nextSunSet = this._config.entity_sun ? new Date(this.hass.states[this._config.entity_sun].attributes.next_setting).toLocaleTimeString(this._config.locale, { hour: 'numeric', minute: '2-digit', hour12: true }).replace(" am", "am").replace(" pm", "pm") : "";
-      nextSunRise = this._config.entity_sun ? new Date(this.hass.states[this._config.entity_sun].attributes.next_rising).toLocaleTimeString(this._config.locale, { hour: 'numeric', minute: '2-digit', hour12: true }).replace(" am", "am").replace(" pm", "pm") : "";
-    } else {
-      nextSunSet = this._config.entity_sun ? new Date(this.hass.states[this._config.entity_sun].attributes.next_setting).toLocaleTimeString(this._config.locale, { hour: '2-digit', minute: '2-digit', hour12: false }) : "";
-      nextSunRise = this._config.entity_sun ? new Date(this.hass.states[this._config.entity_sun].attributes.next_rising).toLocaleTimeString(this._config.locale, { hour: '2-digit', minute: '2-digit', hour12: false }) : "";
+    switch (this.timeFormat) {
+      case '12hour':
+        nextSunSet = this._config.entity_sun ? new Date(this.hass.states[this._config.entity_sun].attributes.next_setting).toLocaleTimeString(this.locale, { hour: 'numeric', minute: '2-digit', hour12: true }).replace(" am", "am").replace(" pm", "pm") : "";
+        nextSunRise = this._config.entity_sun ? new Date(this.hass.states[this._config.entity_sun].attributes.next_rising).toLocaleTimeString(this.locale, { hour: 'numeric', minute: '2-digit', hour12: true }).replace(" am", "am").replace(" pm", "pm") : "";
+        break;
+      case '24hour':
+        nextSunSet = this._config.entity_sun ? new Date(this.hass.states[this._config.entity_sun].attributes.next_setting).toLocaleTimeString(this.locale, { hour: '2-digit', minute: '2-digit', hour12: false }) : "";
+        nextSunRise = this._config.entity_sun ? new Date(this.hass.states[this._config.entity_sun].attributes.next_rising).toLocaleTimeString(this.locale, { hour: '2-digit', minute: '2-digit', hour12: false }) : "";
+        break;
+      case 'system':
+        nextSunSet = this._config.entity_sun ? new Date(this.hass.states[this._config.entity_sun].attributes.next_setting).toLocaleTimeString(navigator.language, { timeStyle: 'short' }).replace(" am", "am").replace(" pm", "pm") : "";
+        nextSunRise = this._config.entity_sun ? new Date(this.hass.states[this._config.entity_sun].attributes.next_rising).toLocaleTimeString(navigator.language, { timeStyle: 'short' }).replace(" am", "am").replace(" pm", "pm") : "";
+        break;
     }
     var nextDate = new Date();
     nextDate.setDate(nextDate.getDate() + 1);
     if (this._config.entity_sun) {
       if (this.hass.states[this._config.entity_sun].state == "above_horizon") {
-        nextSunRise = nextDate.toLocaleDateString(this._config.locale, { weekday: 'short' }) + " " + nextSunRise;
+        nextSunRise = nextDate.toLocaleDateString(this.locale, { weekday: 'short' }) + " " + nextSunRise;
         return {
           'next': html`
             <li>
@@ -1114,8 +1127,8 @@ export class WeatherCard extends LitElement {
         };
       } else {
         if (new Date().getDate() != new Date(this.hass.states[this._config.entity_sun].attributes.next_rising).getDate()) {
-          nextSunRise = nextDate.toLocaleDateString(this._config.locale, { weekday: 'short' }) + " " + nextSunRise;
-          nextSunSet = nextDate.toLocaleDateString(this._config.locale, { weekday: 'short' }) + " " + nextSunSet;
+          nextSunRise = nextDate.toLocaleDateString(this.locale, { weekday: 'short' }) + " " + nextSunRise;
+          nextSunSet = nextDate.toLocaleDateString(this.locale, { weekday: 'short' }) + " " + nextSunSet;
         }
         return {
           'next': html`
@@ -1151,14 +1164,8 @@ export class WeatherCard extends LitElement {
   }
 
   // is12Hour - returns true if 12 hour clock or false if 24
-  get is12Hour(): boolean {
-    var hourFormat = this._config.time_format ? this._config.time_format : 12
-    switch (hourFormat) {
-      case 24:
-        return false;
-      default:
-        return true;
-    }
+  get timeFormat(): timeFormat {
+    return this._config.option_time_format ? this._config.option_time_format : 'system';
   }
 
   // get the icon that matches the current conditions
@@ -1372,8 +1379,17 @@ export class WeatherCard extends LitElement {
     return (iconStyle === "true") ? `cloudy-${this.dayOrNight}-3` : (iconStyle === "hybrid") ? `cloudy-${this.dayOrNight}-3` : `cloudy-${this.dayOrNight}-3`;
   }
 
+  get locale(): string | undefined {
+    try {
+      Intl.NumberFormat(this._config.option_locale);
+      return this._config.option_locale;
+    } catch (e) {
+      return undefined;
+    }
+  }
+
   get localeTextfeelsLike(): string {
-    switch (this._config.locale) {
+    switch (this.locale) {
       case 'it': return "Percepito";
       case 'fr': return "Ressenti";
       case 'de': return "Gefühlt";
@@ -1388,7 +1404,7 @@ export class WeatherCard extends LitElement {
   }
 
   get localeTextmaxToday(): string {
-    switch (this._config.locale) {
+    switch (this.locale) {
       case 'it': return "Max oggi";
       case 'fr': return "Max aujourd'hui";
       case 'de': return "Max heute";
@@ -1403,7 +1419,7 @@ export class WeatherCard extends LitElement {
   }
 
   get localeTextminToday(): string {
-    switch (this._config.locale) {
+    switch (this.locale) {
       case 'it': return "Min oggi";
       case 'fr': return "Min aujourd'hui";
       case 'de': return "Min heute";
@@ -1418,7 +1434,7 @@ export class WeatherCard extends LitElement {
   }
 
   get localeTextposToday(): string {
-    switch (this._config.locale) {
+    switch (this.locale) {
       case 'it': return "Previsione";
       case 'fr': return "Prévoir";
       case 'de': return "Vorhersage";
@@ -1433,7 +1449,7 @@ export class WeatherCard extends LitElement {
   }
 
   get localeTextposTomorrow(): string {
-    switch (this._config.locale) {
+    switch (this.locale) {
       case 'it': return "Prev per domani";
       case 'fr': return "Prév demain";
       case 'de': return "Prog morgen";
@@ -1448,7 +1464,7 @@ export class WeatherCard extends LitElement {
   }
 
   get localeTextuvRating(): string {
-    switch (this._config.locale) {
+    switch (this.locale) {
       case 'it': return "UV";
       case 'fr': return "UV";
       case 'de': return "UV";
@@ -1463,7 +1479,7 @@ export class WeatherCard extends LitElement {
   }
 
   get localeTextfireDanger(): string {
-    switch (this._config.locale) {
+    switch (this.locale) {
       case 'it': return "Fuoco";
       case 'fr': return "Feu";
       case 'de': return "Feuer";

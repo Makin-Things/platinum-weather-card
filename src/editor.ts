@@ -7,7 +7,7 @@ import { keys } from 'ts-transformer-keys';
 import { mdiPencil, mdiArrowDown, mdiArrowUp } from '@mdi/js';
 
 import { ScopedRegistryHost } from '@lit-labs/scoped-registry-mixin';
-import { WeatherCardConfig, layoutOrientation, layoutDays, extendedDays, configSlots, iconSets } from './types';
+import { WeatherCardConfig, layoutOrientation, layoutDays, extendedDays, configSlots, iconSets, timeFormat } from './types';
 import { customElement, property, state } from 'lit/decorators';
 import { formfieldDefinition } from '../elements/formfield';
 import { selectDefinition } from '../elements/select';
@@ -65,6 +65,16 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     if (tmpConfig.static_icons) {
       tmpConfig['option_static_icons'] = tmpConfig.static_icons;
       delete tmpConfig['static_icons'];
+    }
+
+    if (tmpConfig.time_format) {
+      tmpConfig['option_time_format'] = tmpConfig.time_format === '12' ? '12hour' : '24hour';
+      delete tmpConfig['time_format'];
+    }
+
+    if (tmpConfig.locale) {
+      tmpConfig['option_locale'] = tmpConfig.locale;
+      delete tmpConfig['locale'];
     }
 
     // Remove unused entries
@@ -364,6 +374,14 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
 
   get _option_icon_set(): iconSets | null {
     return this._config?.option_icon_set ?? null;
+  }
+
+  get _option_time_format(): timeFormat | null {
+    return this._config?.option_time_format ?? null;
+  }
+
+  get _option_locale(): string {
+    return this._config?.option_locale || '';
   }
 
   get _optional_entities(): TemplateResult {
@@ -966,6 +984,17 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
           <mwc-list-item value="hybrid">Hybrid</mwc-list-item>
           <mwc-list-item value="old">Old</mwc-list-item>
         </ha-select>
+      </div>
+      <div class="side-by-side">
+        <ha-select label="Time Format (optional)" .configValue=${'option_time_format'} .value=${this._option_time_format} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}
+          @selected=${this._valueChanged}>
+          <mwc-list-item></mwc-list-item>
+          <mwc-list-item value="system">System</mwc-list-item>
+          <mwc-list-item value="12hour">12 hour</mwc-list-item>
+          <mwc-list-item value="24hour">24 hour</mwc-list-item>
+        </ha-select>
+        <mwc-textfield label="Locale (optional)" .value=${this._option_locale} .configValue=${'option_locale'} @input=${this._valueChanged}>
+        </mwc-textfield>
       </div>
     `;
   }

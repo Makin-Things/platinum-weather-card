@@ -1,4 +1,4 @@
-import { LovelaceCard, LovelaceCardConfig, LovelaceCardEditor } from 'custom-card-helpers';
+import { LovelaceCard, LovelaceCardConfig, LovelaceCardEditor, TimeFormat } from 'custom-card-helpers';
 
 declare global {
   interface HTMLElementTagNameMap {
@@ -12,6 +12,7 @@ export type layoutDays = 1 | 2 | 3 | 4 | 5 | 6 | 7;
 export type extendedDays = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
 export type configSlots = 'title' | 'main' | 'extended' | 'slots' | 'daily_forecast';
 export type iconSets = 'old' | 'new' | 'hybrid';
+export type timeFormat = 'system' | '12hour' | '24hour';
 
 // TODO Add your configuration elements here for type-checking
 export interface WeatherCardConfig extends LovelaceCardConfig {
@@ -93,10 +94,11 @@ export interface WeatherCardConfig extends LovelaceCardConfig {
   daily_extended_name_attr?: string;
 
 
-  locale?: string;
-  old_daily_format?: boolean;
-  show_beaufort?: boolean;
+  option_locale?: string;
   option_static_icons?: boolean;
   option_icon_set?: iconSets;
+  option_time_format?: timeFormat;
   show_decimals_today?: boolean;
+  old_daily_format?: boolean;
+  show_beaufort?: boolean;
 }

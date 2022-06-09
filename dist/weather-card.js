@@ -323,11 +323,16 @@ let WeatherCard = class WeatherCard extends s$1 {
         var updateTime;
         if ((this._config.entity_update_time) && (this.hass.states[this._config.entity_update_time]) && (this.hass.states[this._config.entity_update_time].state !== undefined)) {
             const d = new Date(this.hass.states[this._config.entity_update_time].state);
-            if (this.is12Hour) {
-                updateTime = d.toLocaleString(this._config.locale, { hour: 'numeric', minute: '2-digit', hour12: true }).replace(" ", "") + ", " + d.toLocaleDateString(this._config.locale, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).replace(",", "");
-            }
-            else {
-                updateTime = d.toLocaleString(this._config.locale, { hour: '2-digit', minute: '2-digit', hour12: false }) + d.toLocaleDateString(this._config.locale, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).replace(",", "");
+            switch (this.timeFormat) {
+                case '12hour':
+                    updateTime = d.toLocaleString(this.locale, { hour: 'numeric', minute: '2-digit', hour12: true }).replace(" ", "") + ", " + d.toLocaleDateString(this.locale, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).replace(",", "");
+                    break;
+                case '24hour':
+                    updateTime = d.toLocaleString(this.locale, { hour: '2-digit', minute: '2-digit', hour12: false }) + ", " + d.toLocaleDateString(this.locale, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).replace(",", "");
+                    break;
+                case 'system':
+                    updateTime = d.toLocaleTimeString(navigator.language, { timeStyle: 'short' }).replace(" ", "") + ", " + d.toLocaleDateString(navigator.language).replace(",", "");
+                    break;
             }
         }
         else {
@@ -508,7 +513,7 @@ let WeatherCard = class WeatherCard extends s$1 {
                     this.hass.states[tooltipEntity] ? this.hass.states[tooltipEntity].state : "Config Error" : ""}</div>`;
                 htmlDays.push($ `
           <div class="day-horiz fcasttooltip">
-            <span class="dayname">${forecastDate ? forecastDate.toLocaleDateString(this._config.locale, { weekday: 'short' }) :
+            <span class="dayname">${forecastDate ? forecastDate.toLocaleDateString(this.locale, { weekday: 'short' }) :
                     "---"}</span>
             <br>${htmlIcon}
             ${minMax}
@@ -593,7 +598,7 @@ let WeatherCard = class WeatherCard extends s$1 {
           <div class="day-vert fcasttooltip">
             <div class="day-vert-top">
               <div class="day-vert-dayicon">
-                <span class="dayname">${forecastDate ? forecastDate.toLocaleDateString(this._config.locale, { weekday: 'short' }) : "---"}</span>
+                <span class="dayname">${forecastDate ? forecastDate.toLocaleDateString(this.locale, { weekday: 'short' }) : "---"}</span>
                 <br>${htmlIcon}
               </div>
               <div class="day-vert-values">
@@ -840,7 +845,7 @@ let WeatherCard = class WeatherCard extends s$1 {
     }
     get slotDaytimeHigh() {
         const digits = this._config.show_decimals_today === true ? 1 : 0;
-        const temp = this._config.entity_daytime_high ? (Number(this.hass.states[this._config.entity_daytime_high].state)).toLocaleString(undefined, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
+        const temp = this._config.entity_daytime_high ? (Number(this.hass.states[this._config.entity_daytime_high].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
         const units = temp !== "---" ? $ `<div class="unitc">${this.getUOM('temperature')}</div>` : $ ``;
         return $ `
       <li>
@@ -856,7 +861,7 @@ let WeatherCard = class WeatherCard extends s$1 {
     }
     get slotDaytimeLow() {
         const digits = this._config.show_decimals_today === true ? 1 : 0;
-        const temp = this._config.entity_daytime_low ? (Number(this.hass.states[this._config.entity_daytime_low].state)).toLocaleString(undefined, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
+        const temp = this._config.entity_daytime_low ? (Number(this.hass.states[this._config.entity_daytime_low].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
         const units = temp !== "---" ? $ `<div class="unitc">${this.getUOM('temperature')}</div>` : $ ``;
         return $ `
       <li>
@@ -1021,7 +1026,7 @@ let WeatherCard = class WeatherCard extends s$1 {
         return entity && this.hass.states[entity]
             ? this._config.show_decimals !== true
                 ? String(Math.round(Number(this.hass.states[entity].state)))
-                : this.hass.states[entity].state
+                : Number(this.hass.states[entity].state).toLocaleString(this.locale)
             : '---';
     }
     get currentApparentTemperature() {
@@ -1029,29 +1034,29 @@ let WeatherCard = class WeatherCard extends s$1 {
         return entity && this.hass.states[entity]
             ? this._config.show_decimals !== true
                 ? String(Math.round(Number(this.hass.states[entity].state)))
-                : this.hass.states[entity].state
+                : Number(this.hass.states[entity].state).toLocaleString(this.locale)
             : '---';
     }
     get currentHumidity() {
         const entity = this._config.entity_humidity;
         return entity && this.hass.states[entity]
-            ? (Number(this.hass.states[entity].state)).toLocaleString() : '---';
+            ? (Number(this.hass.states[entity].state)).toLocaleString(this.locale) : '---';
     }
     get currentRainfall() {
         const entity = this._config.entity_rainfall;
         return entity && this.hass.states[entity]
-            ? (Number(this.hass.states[entity].state)).toLocaleString() : '---';
+            ? (Number(this.hass.states[entity].state)).toLocaleString(this.locale) : '---';
     }
     get currentPressure() {
         const entity = this._config.entity_pressure;
         var places = this._config.show_decimals_pressure ? Math.max(Math.min(this._config.show_decimals_pressure, 3), 0) : 0;
         return entity && this.hass.states[entity]
-            ? (Number(this.hass.states[entity].state)).toLocaleString(undefined, { minimumFractionDigits: places, maximumFractionDigits: places }) : '---';
+            ? (Number(this.hass.states[entity].state)).toLocaleString(this.locale, { minimumFractionDigits: places, maximumFractionDigits: places }) : '---';
     }
     get currentVisibility() {
         const entity = this._config.entity_visibility;
         return entity && this.hass.states[entity]
-            ? (Number(this.hass.states[entity].state)).toLocaleString() : '---';
+            ? (Number(this.hass.states[entity].state)).toLocaleString(this.locale) : '---';
     }
     get currentWindBearing() {
         const entity = this._config.entity_wind_bearing;
@@ -1061,22 +1066,22 @@ let WeatherCard = class WeatherCard extends s$1 {
     get currentWindSpeed() {
         const entity = this._config.entity_wind_speed;
         return entity && this.hass.states[entity]
-            ? Math.round(Number(this.hass.states[entity].state)).toLocaleString() : '---';
+            ? Math.round(Number(this.hass.states[entity].state)).toLocaleString(this.locale) : '---';
     }
     get currentWindGust() {
         const entity = this._config.entity_wind_gust;
         return entity && this.hass.states[entity]
-            ? Math.round(Number(this.hass.states[entity].state)).toLocaleString() : '---';
+            ? Math.round(Number(this.hass.states[entity].state)).toLocaleString(this.locale) : '---';
     }
     get currentWindSpeedKt() {
         const entity = this._config.entity_wind_speed_kt;
         return entity && this.hass.states[entity]
-            ? Math.round(Number(this.hass.states[entity].state)).toLocaleString() : '---';
+            ? Math.round(Number(this.hass.states[entity].state)).toLocaleString(this.locale) : '---';
     }
     get currentWindGustKt() {
         const entity = this._config.entity_wind_gust_kt;
         return entity && this.hass.states[entity]
-            ? Math.round(Number(this.hass.states[entity].state)).toLocaleString() : '---';
+            ? Math.round(Number(this.hass.states[entity].state)).toLocaleString(this.locale) : '---';
     }
     // windDirections - returns set of possible wind directions by specified language
     get windDirections() {
@@ -1087,7 +1092,7 @@ let WeatherCard = class WeatherCard extends s$1 {
         const windDirections_he = ['צפון', 'צ-צ-מז', 'צפון מזרח', 'מז-צ-מז', 'מזרח', 'מז-ד-מז', 'דרום מזרח', 'ד-ד-מז', 'דרום', 'ד-ד-מע', 'דרום מערב', 'מע-ד-מע', 'מערב', 'מע-צ-מע', 'צפון מערב', 'צ-צ-מע', 'צפון'];
         const windDirections_da = ['N', 'NNØ', 'NØ', 'ØNØ', 'Ø', 'ØSØ', 'SØ', 'SSØ', 'S', 'SSV', 'SV', 'VSV', 'V', 'VNV', 'NV', 'NNV', 'N'];
         const windDirections_ru = ['С', 'ССВ', 'СВ', 'ВСВ', 'В', 'ВЮВ', 'ЮВ', 'ЮЮВ', 'Ю', 'ЮЮЗ', 'ЮЗ', 'ЗЮЗ', 'З', 'ЗСЗ', 'СЗ', 'ССЗ', 'С'];
-        switch (this._config.locale) {
+        switch (this.locale) {
             case "it":
             case "fr":
                 return windDirections_fr;
@@ -1232,19 +1237,25 @@ let WeatherCard = class WeatherCard extends s$1 {
     get sunSet() {
         var nextSunSet;
         var nextSunRise;
-        if (this.is12Hour) {
-            nextSunSet = this._config.entity_sun ? new Date(this.hass.states[this._config.entity_sun].attributes.next_setting).toLocaleTimeString(this._config.locale, { hour: 'numeric', minute: '2-digit', hour12: true }).replace(" am", "am").replace(" pm", "pm") : "";
-            nextSunRise = this._config.entity_sun ? new Date(this.hass.states[this._config.entity_sun].attributes.next_rising).toLocaleTimeString(this._config.locale, { hour: 'numeric', minute: '2-digit', hour12: true }).replace(" am", "am").replace(" pm", "pm") : "";
-        }
-        else {
-            nextSunSet = this._config.entity_sun ? new Date(this.hass.states[this._config.entity_sun].attributes.next_setting).toLocaleTimeString(this._config.locale, { hour: '2-digit', minute: '2-digit', hour12: false }) : "";
-            nextSunRise = this._config.entity_sun ? new Date(this.hass.states[this._config.entity_sun].attributes.next_rising).toLocaleTimeString(this._config.locale, { hour: '2-digit', minute: '2-digit', hour12: false }) : "";
+        switch (this.timeFormat) {
+            case '12hour':
+                nextSunSet = this._config.entity_sun ? new Date(this.hass.states[this._config.entity_sun].attributes.next_setting).toLocaleTimeString(this.locale, { hour: 'numeric', minute: '2-digit', hour12: true }).replace(" am", "am").replace(" pm", "pm") : "";
+                nextSunRise = this._config.entity_sun ? new Date(this.hass.states[this._config.entity_sun].attributes.next_rising).toLocaleTimeString(this.locale, { hour: 'numeric', minute: '2-digit', hour12: true }).replace(" am", "am").replace(" pm", "pm") : "";
+                break;
+            case '24hour':
+                nextSunSet = this._config.entity_sun ? new Date(this.hass.states[this._config.entity_sun].attributes.next_setting).toLocaleTimeString(this.locale, { hour: '2-digit', minute: '2-digit', hour12: false }) : "";
+                nextSunRise = this._config.entity_sun ? new Date(this.hass.states[this._config.entity_sun].attributes.next_rising).toLocaleTimeString(this.locale, { hour: '2-digit', minute: '2-digit', hour12: false }) : "";
+                break;
+            case 'system':
+                nextSunSet = this._config.entity_sun ? new Date(this.hass.states[this._config.entity_sun].attributes.next_setting).toLocaleTimeString(navigator.language, { timeStyle: 'short' }).replace(" am", "am").replace(" pm", "pm") : "";
+                nextSunRise = this._config.entity_sun ? new Date(this.hass.states[this._config.entity_sun].attributes.next_rising).toLocaleTimeString(navigator.language, { timeStyle: 'short' }).replace(" am", "am").replace(" pm", "pm") : "";
+                break;
         }
         var nextDate = new Date();
         nextDate.setDate(nextDate.getDate() + 1);
         if (this._config.entity_sun) {
             if (this.hass.states[this._config.entity_sun].state == "above_horizon") {
-                nextSunRise = nextDate.toLocaleDateString(this._config.locale, { weekday: 'short' }) + " " + nextSunRise;
+                nextSunRise = nextDate.toLocaleDateString(this.locale, { weekday: 'short' }) + " " + nextSunRise;
                 return {
                     'next': $ `
             <li>
@@ -1268,8 +1279,8 @@ let WeatherCard = class WeatherCard extends s$1 {
             }
             else {
                 if (new Date().getDate() != new Date(this.hass.states[this._config.entity_sun].attributes.next_rising).getDate()) {
-                    nextSunRise = nextDate.toLocaleDateString(this._config.locale, { weekday: 'short' }) + " " + nextSunRise;
-                    nextSunSet = nextDate.toLocaleDateString(this._config.locale, { weekday: 'short' }) + " " + nextSunSet;
+                    nextSunRise = nextDate.toLocaleDateString(this.locale, { weekday: 'short' }) + " " + nextSunRise;
+                    nextSunSet = nextDate.toLocaleDateString(this.locale, { weekday: 'short' }) + " " + nextSunSet;
                 }
                 return {
                     'next': $ `
@@ -1305,14 +1316,8 @@ let WeatherCard = class WeatherCard extends s$1 {
         }
     }
     // is12Hour - returns true if 12 hour clock or false if 24
-    get is12Hour() {
-        var hourFormat = this._config.time_format ? this._config.time_format : 12;
-        switch (hourFormat) {
-            case 24:
-                return false;
-            default:
-                return true;
-        }
+    get timeFormat() {
+        return this._config.option_time_format ? this._config.option_time_format : 'system';
     }
     // get the icon that matches the current conditions
     _weatherIcon(conditions) {
@@ -1494,8 +1499,17 @@ let WeatherCard = class WeatherCard extends s$1 {
         const iconStyle = this.iconStyle;
         return (iconStyle === "true") ? `cloudy-${this.dayOrNight}-3` : (iconStyle === "hybrid") ? `cloudy-${this.dayOrNight}-3` : `cloudy-${this.dayOrNight}-3`;
     }
+    get locale() {
+        try {
+            Intl.NumberFormat(this._config.option_locale);
+            return this._config.option_locale;
+        }
+        catch (e) {
+            return undefined;
+        }
+    }
     get localeTextfeelsLike() {
-        switch (this._config.locale) {
+        switch (this.locale) {
             case 'it': return "Percepito";
             case 'fr': return "Ressenti";
             case 'de': return "Gefühlt";
@@ -1509,7 +1523,7 @@ let WeatherCard = class WeatherCard extends s$1 {
         }
     }
     get localeTextmaxToday() {
-        switch (this._config.locale) {
+        switch (this.locale) {
             case 'it': return "Max oggi";
             case 'fr': return "Max aujourd'hui";
             case 'de': return "Max heute";
@@ -1523,7 +1537,7 @@ let WeatherCard = class WeatherCard extends s$1 {
         }
     }
     get localeTextminToday() {
-        switch (this._config.locale) {
+        switch (this.locale) {
             case 'it': return "Min oggi";
             case 'fr': return "Min aujourd'hui";
             case 'de': return "Min heute";
@@ -1537,7 +1551,7 @@ let WeatherCard = class WeatherCard extends s$1 {
         }
     }
     get localeTextposToday() {
-        switch (this._config.locale) {
+        switch (this.locale) {
             case 'it': return "Previsione";
             case 'fr': return "Prévoir";
             case 'de': return "Vorhersage";
@@ -1551,7 +1565,7 @@ let WeatherCard = class WeatherCard extends s$1 {
         }
     }
     get localeTextposTomorrow() {
-        switch (this._config.locale) {
+        switch (this.locale) {
             case 'it': return "Prev per domani";
             case 'fr': return "Prév demain";
             case 'de': return "Prog morgen";
@@ -1565,7 +1579,7 @@ let WeatherCard = class WeatherCard extends s$1 {
         }
     }
     get localeTextuvRating() {
-        switch (this._config.locale) {
+        switch (this.locale) {
             case 'it': return "UV";
             case 'fr': return "UV";
             case 'de': return "UV";
@@ -1579,7 +1593,7 @@ let WeatherCard = class WeatherCard extends s$1 {
         }
     }
     get localeTextfireDanger() {
-        switch (this._config.locale) {
+        switch (this.locale) {
             case 'it': return "Fuoco";
             case 'fr': return "Feu";
             case 'de': return "Feuer";
@@ -10462,8 +10476,16 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
             tmpConfig['option_static_icons'] = tmpConfig.static_icons;
             delete tmpConfig['static_icons'];
         }
+        if (tmpConfig.time_format) {
+            tmpConfig['option_time_format'] = tmpConfig.time_format === '12' ? '12hour' : '24hour';
+            delete tmpConfig['time_format'];
+        }
+        if (tmpConfig.locale) {
+            tmpConfig['option_locale'] = tmpConfig.locale;
+            delete tmpConfig['locale'];
+        }
         // Remove unused entries
-        const keysOfProps = ["type", "card_config_version", "section_order", "show_section_title", "show_section_main", "show_section_extended", "show_section_slots", "show_section_daily_forecast", "text_card_title", "entity_update_time", "text_update_time_prefix", "entity_temperature", "entity_apparent_temp", "entity_current_conditions", "entity_current_text", "show_decimals", "show_separator", "entity_daily_summary", "extended_use_attr", "extended_name_attr", "slot_l1", "slot_l2", "slot_l3", "slot_l4", "slot_l5", "slot_l6", "slot_r1", "slot_r2", "slot_r3", "slot_r4", "slot_r5", "slot_r6", "entity_humidity", "entity_pressure", "entity_visibility", "entity_wind_bearing", "entity_wind_speed", "entity_wind_gust", "entity_wind_speed_kt", "entity_wind_gust_kt", "entity_temp_next", "entity_temp_next_label", "entity_temp_following", "entity_temp_following_label", "entity_daytime_high", "entity_daytime_low", "entity_fire_danger", "entity_fire_danger_summary", "entity_pop", "entity_possible_today", "entity_sun", "entity_uv_alert_summary", "entity_rainfall", "entity_todays_fire_danger", "entity_todays_uv_forecast", "custom1_value", "custom1_icon", "custom1_units", "custom2_value", "custom2_icon", "custom2_units", "entity_forecast_icon_1", "entity_pop_1", "entity_pos_1", "entity_summary_1", "entity_forecast_low_temp_1", "entity_forecast_high_temp_1", "entity_extended_1", "daily_forecast_layout", "daily_forecast_days", "daily_extended_forecast_days", "daily_extended_use_attr", "daily_extended_name_attr", "locale", "old_daily_format", "show_beaufort", "option_static_icons", "option_icon_set", "show_decimals_today", "index", "view_index"];
+        const keysOfProps = ["type", "card_config_version", "section_order", "show_section_title", "show_section_main", "show_section_extended", "show_section_slots", "show_section_daily_forecast", "text_card_title", "entity_update_time", "text_update_time_prefix", "entity_temperature", "entity_apparent_temp", "entity_current_conditions", "entity_current_text", "show_decimals", "show_separator", "entity_daily_summary", "extended_use_attr", "extended_name_attr", "slot_l1", "slot_l2", "slot_l3", "slot_l4", "slot_l5", "slot_l6", "slot_r1", "slot_r2", "slot_r3", "slot_r4", "slot_r5", "slot_r6", "entity_humidity", "entity_pressure", "entity_visibility", "entity_wind_bearing", "entity_wind_speed", "entity_wind_gust", "entity_wind_speed_kt", "entity_wind_gust_kt", "entity_temp_next", "entity_temp_next_label", "entity_temp_following", "entity_temp_following_label", "entity_daytime_high", "entity_daytime_low", "entity_fire_danger", "entity_fire_danger_summary", "entity_pop", "entity_possible_today", "entity_sun", "entity_uv_alert_summary", "entity_rainfall", "entity_todays_fire_danger", "entity_todays_uv_forecast", "custom1_value", "custom1_icon", "custom1_units", "custom2_value", "custom2_icon", "custom2_units", "entity_forecast_icon_1", "entity_pop_1", "entity_pos_1", "entity_summary_1", "entity_forecast_low_temp_1", "entity_forecast_high_temp_1", "entity_extended_1", "daily_forecast_layout", "daily_forecast_days", "daily_extended_forecast_days", "daily_extended_use_attr", "daily_extended_name_attr", "option_locale", "option_static_icons", "option_icon_set", "option_time_format", "show_decimals_today", "old_daily_format", "show_beaufort", "index", "view_index"];
         for (const element in this._config) {
             if (!keysOfProps.includes(element)) {
                 console.info(`removing ${element}`);
@@ -10751,6 +10773,14 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
     get _option_icon_set() {
         var _a, _b;
         return (_b = (_a = this._config) === null || _a === void 0 ? void 0 : _a.option_icon_set) !== null && _b !== void 0 ? _b : null;
+    }
+    get _option_time_format() {
+        var _a, _b;
+        return (_b = (_a = this._config) === null || _a === void 0 ? void 0 : _a.option_time_format) !== null && _b !== void 0 ? _b : null;
+    }
+    get _option_locale() {
+        var _a;
+        return ((_a = this._config) === null || _a === void 0 ? void 0 : _a.option_locale) || '';
     }
     get _optional_entities() {
         var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
@@ -11307,6 +11337,17 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
           <mwc-list-item value="hybrid">Hybrid</mwc-list-item>
           <mwc-list-item value="old">Old</mwc-list-item>
         </ha-select>
+      </div>
+      <div class="side-by-side">
+        <ha-select label="Time Format (optional)" .configValue=${'option_time_format'} .value=${this._option_time_format} @closed=${(ev) => ev.stopPropagation()}
+          @selected=${this._valueChanged}>
+          <mwc-list-item></mwc-list-item>
+          <mwc-list-item value="system">System</mwc-list-item>
+          <mwc-list-item value="12hour">12 hour</mwc-list-item>
+          <mwc-list-item value="24hour">24 hour</mwc-list-item>
+        </ha-select>
+        <mwc-textfield label="Locale (optional)" .value=${this._option_locale} .configValue=${'option_locale'} @input=${this._valueChanged}>
+        </mwc-textfield>
       </div>
     `;
     }
