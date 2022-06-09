@@ -1179,7 +1179,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
       case 'title':
         return html`
           <div class="main-flex edit-title-section">
-            <mwc-formfield .label=${`Title Section - ${this._show_section_title ? 'Visible' : 'Hidden'}`}>
+            <mwc-formfield .label=${`Title Section`}>
               <mwc-switch .checked=${this._show_section_title !== false} .configValue=${'show_section_title'}
                 @change=${this._valueChanged}>
               </mwc-switch>
@@ -1198,7 +1198,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
       case 'main':
         return html`
           <div class="main-flex edit-main-section">
-            <mwc-formfield .label=${`Main Section - ${this._show_section_main ? 'Visible' : 'Hidden'}`}>
+            <mwc-formfield .label=${`Main Section`}>
               <mwc-switch .checked=${this._show_section_main !== false} .configValue=${'show_section_main'}
                 @change=${this._valueChanged}>
               </mwc-switch>
@@ -1217,7 +1217,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
       case 'extended':
         return html`
           <div class="main-flex edit-extended-section">
-            <mwc-formfield .label=${`Extended Section - ${this._show_section_extended ? 'Visible' : 'Hidden'}`}>
+            <mwc-formfield .label=${`Extended Section`}>
               <mwc-switch .checked=${this._show_section_extended !== false} .configValue=${'show_section_extended'}
                 @change=${this._valueChanged}>
               </mwc-switch>
@@ -1236,7 +1236,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
       case 'slots':
         return html`
           <div class="main-flex edit-slots-section">
-            <mwc-formfield .label=${`Slots Section - ${this._show_section_slots ? 'Visible' : 'Hidden'}`}>
+            <mwc-formfield .label=${`Slots Section`}>
               <mwc-switch .checked=${this._show_section_slots !== false} .configValue=${'show_section_slots'}
                 @change=${this._valueChanged}>
               </mwc-switch>
@@ -1256,7 +1256,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
       case 'daily_forecast':
         return html`
           <div class="main-flex edit-daily-forecast-section">
-            <mwc-formfield .label=${`Daily Forecast Section - ${this._show_section_daily_forecast ? 'Visible' : 'Hidden'}`}>
+            <mwc-formfield .label=${`Daily Forecast Section`}>
               <mwc-switch .checked=${this._show_section_daily_forecast !== false} .configValue=${'show_section_daily_forecast'}
                 @change=${this._valueChanged}>
               </mwc-switch>
