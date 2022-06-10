@@ -1028,41 +1028,6 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     }
 
     return html`
-      <div class="side-by-side">
-        <ha-select label="Daily Forecast Layout (optional)" .configValue=${'daily_forecast_layout'}
-          .value=${this._daily_forecast_layout} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()} @selected=${this._valueChanged}>
-          <mwc-list-item></mwc-list-item>
-          <mwc-list-item value="horizontal">horizontal</mwc-list-item>
-          <mwc-list-item value="vertical">vertical</mwc-list-item>
-        </ha-select>
-        <div></div>
-      </div>
-      <div class="side-by-side">
-        <ha-select label="Daily Forecast Days (optional)" .configValue=${'daily_forecast_days'}
-          .value=${this._daily_forecast_days ? this._daily_forecast_days.toString() : null} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()} @selected=${this._valueChangedNumber}>
-          <mwc-list-item></mwc-list-item>
-          <mwc-list-item value="1">1</mwc-list-item>
-          <mwc-list-item value="2">2</mwc-list-item>
-          <mwc-list-item value="3">3</mwc-list-item>
-          <mwc-list-item value="4">4</mwc-list-item>
-          <mwc-list-item value="5">5</mwc-list-item>
-          ${this._daily_forecast_layout === 'vertical' ? html`<mwc-list-item value="6">6</mwc-list-item>
-          <mwc-list-item value="7">7</mwc-list-item>` : html``}
-        </ha-select>
-        ${this._daily_forecast_layout === 'vertical' ? html`<ha-select label="Daily Extended Days (optional)"
-          .configValue=${'daily_extended_forecast_days'} .value=${this._daily_extended_forecast_days !== null ?
-          this._daily_extended_forecast_days.toString() : null} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()} @selected=${this._valueChangedNumber}>
-          <mwc-list-item></mwc-list-item>
-          <mwc-list-item value="0">0</mwc-list-item>
-          <mwc-list-item value="1">1</mwc-list-item>
-          <mwc-list-item value="2">2</mwc-list-item>
-          <mwc-list-item value="3">3</mwc-list-item>
-          <mwc-list-item value="4">4</mwc-list-item>
-          <mwc-list-item value="5">5</mwc-list-item>
-          <mwc-list-item value="6">6</mwc-list-item>
-          <mwc-list-item value="7">7</mwc-list-item>
-        </ha-select>` : html`<div></div>`}
-      </div>
       <ha-entity-picker .hass=${this.hass} .configValue=${'entity_forecast_icon_1'} .value=${this._entity_forecast_icon_1}
         name="entity_forecast_icon_1" label="Entity Forecast Icon 1 (optional)" allow-custom-entity
         @value-changed=${this._valueChangedPicker}>
@@ -1104,6 +1069,46 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
           @value-changed=${this._valueChangedPicker}>
         </ha-entity-attribute-picker>` : html``}
       </div>` : ``}
+    `;
+  }
+
+  private _optionDailyForecastEditor(): TemplateResult {
+    return html`
+      <div class="side-by-side">
+        <ha-select label="Daily Forecast Layout (optional)" .configValue=${'daily_forecast_layout'}
+          .value=${this._daily_forecast_layout} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()} @selected=${this._valueChanged}>
+          <mwc-list-item></mwc-list-item>
+          <mwc-list-item value="horizontal">horizontal</mwc-list-item>
+          <mwc-list-item value="vertical">vertical</mwc-list-item>
+        </ha-select>
+        <div></div>
+      </div>
+      <div class="side-by-side">
+        <ha-select label="Daily Forecast Days (optional)" .configValue=${'daily_forecast_days'}
+          .value=${this._daily_forecast_days ? this._daily_forecast_days.toString() : null} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()} @selected=${this._valueChangedNumber}>
+          <mwc-list-item></mwc-list-item>
+          <mwc-list-item value="1">1</mwc-list-item>
+          <mwc-list-item value="2">2</mwc-list-item>
+          <mwc-list-item value="3">3</mwc-list-item>
+          <mwc-list-item value="4">4</mwc-list-item>
+          <mwc-list-item value="5">5</mwc-list-item>
+          ${this._daily_forecast_layout === 'vertical' ? html`<mwc-list-item value="6">6</mwc-list-item>
+          <mwc-list-item value="7">7</mwc-list-item>` : html``}
+        </ha-select>
+        ${this._daily_forecast_layout === 'vertical' ? html`<ha-select label="Daily Extended Days (optional)"
+          .configValue=${'daily_extended_forecast_days'} .value=${this._daily_extended_forecast_days !== null ?
+          this._daily_extended_forecast_days.toString() : null} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()} @selected=${this._valueChangedNumber}>
+          <mwc-list-item></mwc-list-item>
+          <mwc-list-item value="0">0</mwc-list-item>
+          <mwc-list-item value="1">1</mwc-list-item>
+          <mwc-list-item value="2">2</mwc-list-item>
+          <mwc-list-item value="3">3</mwc-list-item>
+          <mwc-list-item value="4">4</mwc-list-item>
+          <mwc-list-item value="5">5</mwc-list-item>
+          <mwc-list-item value="6">6</mwc-list-item>
+          <mwc-list-item value="7">7</mwc-list-item>
+        </ha-select>` : html`<div></div>`}
+      </div>
     `;
   }
 
@@ -1172,6 +1177,9 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
         break;
       case 'section_daily_forecast':
         subel.push(this._sectionDailyForecastEditor());
+        break;
+      case 'option_daily_forecast':
+        subel.push(this._optionDailyForecastEditor());
         break;
       case 'option_global_options':
         subel.push(this._optionGlobalOptionsEditor());
@@ -1299,7 +1307,8 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
               </ha-icon-button>
               <ha-icon-button class="edit-icon" .value=${'section_daily_forecast'} .path=${mdiPencil} @click="${this._editSubmenu}">
               </ha-icon-button>
-              <div class="no-icon"></div>
+              <ha-icon-button class="options-icon" .value=${'option_daily_forecast'} .path=${mdiApplicationEditOutline} @click="${this._editSubmenu}">
+              </ha-icon-button>
             </div>
           </div>
         `;

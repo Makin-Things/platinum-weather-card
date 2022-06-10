@@ -2049,9 +2049,9 @@ WeatherCard = __decorate([
 ], WeatherCard);
 
 // Material Design Icons v6.7.96
+var mdiApplicationEditOutline = "M11 20V22H3C1.9 22 1 21.1 1 20V4C1 2.9 1.9 2 3 2H21C22.1 2 23 2.9 23 4V12.1L22.8 11.9C22.3 11.4 21.7 11.1 21 11.1V6H3V20H11M21.4 13.3L22.7 14.6C22.9 14.8 22.9 15.2 22.7 15.4L21.7 16.4L19.6 14.3L20.6 13.3C20.7 13.2 20.8 13.1 21 13.1C21.2 13.1 21.3 13.2 21.4 13.3M21.1 16.9L15.1 23H13V20.9L19.1 14.8L21.1 16.9Z";
 var mdiArrowDown = "M11,4H13V16L18.5,10.5L19.92,11.92L12,19.84L4.08,11.92L5.5,10.5L11,16V4Z";
 var mdiArrowUp = "M13,20H11V8L5.5,13.5L4.08,12.08L12,4.16L19.92,12.08L18.5,13.5L13,8V20Z";
-var mdiBacteria = "M21,16C21,15.5 20.95,15.08 20.88,14.68L22.45,13.9L21.55,12.1L20.18,12.79C19.63,11.96 18.91,11.5 18.29,11.28L18.95,9.32L17.05,8.68L16.29,10.96C14.96,10.83 14.17,10.32 13.7,9.77L15.45,8.9L14.55,7.1L13,7.89C12.97,7.59 12.86,6.72 12.28,5.87L13.83,3.55L12.17,2.44L10.76,4.56C10.28,4.33 9.7,4.15 9,4.06V2H7V4.1C6.29,4.25 5.73,4.54 5.32,4.91L2.7,2.29L1.29,3.71L4.24,6.65C4,7.39 4,8 4,8H2V10H4.04C4.1,10.63 4.21,11.36 4.4,12.15L1.68,13.05L2.31,14.95L5,14.05C5.24,14.56 5.5,15.08 5.82,15.58L3.44,17.17L4.55,18.83L7.07,17.15C7.63,17.71 8.29,18.21 9.06,18.64L8.1,20.55L9.89,21.45L10.89,19.45L10.73,19.36C11.68,19.68 12.76,19.9 14,19.97V22H16V19.93C16.76,19.84 17.81,19.64 18.77,19.19L20.29,20.71L21.7,19.29L20.37,17.95C20.75,17.44 21,16.8 21,16M8.5,11A1.5,1.5 0 0,1 7,9.5A1.5,1.5 0 0,1 8.5,8A1.5,1.5 0 0,1 10,9.5A1.5,1.5 0 0,1 8.5,11M11,14A1,1 0 0,1 10,13A1,1 0 0,1 11,12A1,1 0 0,1 12,13A1,1 0 0,1 11,14M15.5,17A1.5,1.5 0 0,1 14,15.5A1.5,1.5 0 0,1 15.5,14A1.5,1.5 0 0,1 17,15.5A1.5,1.5 0 0,1 15.5,17Z";
 var mdiPencil = "M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z";
 
 /**
@@ -11410,41 +11410,6 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
             this.hass !== undefined ? this.hass.states[this._entity_extended_1].attributes : [];
         }
         return $ `
-      <div class="side-by-side">
-        <ha-select label="Daily Forecast Layout (optional)" .configValue=${'daily_forecast_layout'}
-          .value=${this._daily_forecast_layout} @closed=${(ev) => ev.stopPropagation()} @selected=${this._valueChanged}>
-          <mwc-list-item></mwc-list-item>
-          <mwc-list-item value="horizontal">horizontal</mwc-list-item>
-          <mwc-list-item value="vertical">vertical</mwc-list-item>
-        </ha-select>
-        <div></div>
-      </div>
-      <div class="side-by-side">
-        <ha-select label="Daily Forecast Days (optional)" .configValue=${'daily_forecast_days'}
-          .value=${this._daily_forecast_days ? this._daily_forecast_days.toString() : null} @closed=${(ev) => ev.stopPropagation()} @selected=${this._valueChangedNumber}>
-          <mwc-list-item></mwc-list-item>
-          <mwc-list-item value="1">1</mwc-list-item>
-          <mwc-list-item value="2">2</mwc-list-item>
-          <mwc-list-item value="3">3</mwc-list-item>
-          <mwc-list-item value="4">4</mwc-list-item>
-          <mwc-list-item value="5">5</mwc-list-item>
-          ${this._daily_forecast_layout === 'vertical' ? $ `<mwc-list-item value="6">6</mwc-list-item>
-          <mwc-list-item value="7">7</mwc-list-item>` : $ ``}
-        </ha-select>
-        ${this._daily_forecast_layout === 'vertical' ? $ `<ha-select label="Daily Extended Days (optional)"
-          .configValue=${'daily_extended_forecast_days'} .value=${this._daily_extended_forecast_days !== null ?
-            this._daily_extended_forecast_days.toString() : null} @closed=${(ev) => ev.stopPropagation()} @selected=${this._valueChangedNumber}>
-          <mwc-list-item></mwc-list-item>
-          <mwc-list-item value="0">0</mwc-list-item>
-          <mwc-list-item value="1">1</mwc-list-item>
-          <mwc-list-item value="2">2</mwc-list-item>
-          <mwc-list-item value="3">3</mwc-list-item>
-          <mwc-list-item value="4">4</mwc-list-item>
-          <mwc-list-item value="5">5</mwc-list-item>
-          <mwc-list-item value="6">6</mwc-list-item>
-          <mwc-list-item value="7">7</mwc-list-item>
-        </ha-select>` : $ `<div></div>`}
-      </div>
       <ha-entity-picker .hass=${this.hass} .configValue=${'entity_forecast_icon_1'} .value=${this._entity_forecast_icon_1}
         name="entity_forecast_icon_1" label="Entity Forecast Icon 1 (optional)" allow-custom-entity
         @value-changed=${this._valueChangedPicker}>
@@ -11486,6 +11451,45 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
           @value-changed=${this._valueChangedPicker}>
         </ha-entity-attribute-picker>` : $ ``}
       </div>` : ``}
+    `;
+    }
+    _optionDailyForecastEditor() {
+        return $ `
+      <div class="side-by-side">
+        <ha-select label="Daily Forecast Layout (optional)" .configValue=${'daily_forecast_layout'}
+          .value=${this._daily_forecast_layout} @closed=${(ev) => ev.stopPropagation()} @selected=${this._valueChanged}>
+          <mwc-list-item></mwc-list-item>
+          <mwc-list-item value="horizontal">horizontal</mwc-list-item>
+          <mwc-list-item value="vertical">vertical</mwc-list-item>
+        </ha-select>
+        <div></div>
+      </div>
+      <div class="side-by-side">
+        <ha-select label="Daily Forecast Days (optional)" .configValue=${'daily_forecast_days'}
+          .value=${this._daily_forecast_days ? this._daily_forecast_days.toString() : null} @closed=${(ev) => ev.stopPropagation()} @selected=${this._valueChangedNumber}>
+          <mwc-list-item></mwc-list-item>
+          <mwc-list-item value="1">1</mwc-list-item>
+          <mwc-list-item value="2">2</mwc-list-item>
+          <mwc-list-item value="3">3</mwc-list-item>
+          <mwc-list-item value="4">4</mwc-list-item>
+          <mwc-list-item value="5">5</mwc-list-item>
+          ${this._daily_forecast_layout === 'vertical' ? $ `<mwc-list-item value="6">6</mwc-list-item>
+          <mwc-list-item value="7">7</mwc-list-item>` : $ ``}
+        </ha-select>
+        ${this._daily_forecast_layout === 'vertical' ? $ `<ha-select label="Daily Extended Days (optional)"
+          .configValue=${'daily_extended_forecast_days'} .value=${this._daily_extended_forecast_days !== null ?
+            this._daily_extended_forecast_days.toString() : null} @closed=${(ev) => ev.stopPropagation()} @selected=${this._valueChangedNumber}>
+          <mwc-list-item></mwc-list-item>
+          <mwc-list-item value="0">0</mwc-list-item>
+          <mwc-list-item value="1">1</mwc-list-item>
+          <mwc-list-item value="2">2</mwc-list-item>
+          <mwc-list-item value="3">3</mwc-list-item>
+          <mwc-list-item value="4">4</mwc-list-item>
+          <mwc-list-item value="5">5</mwc-list-item>
+          <mwc-list-item value="6">6</mwc-list-item>
+          <mwc-list-item value="7">7</mwc-list-item>
+        </ha-select>` : $ `<div></div>`}
+      </div>
     `;
     }
     _optionGlobalOptionsEditor() {
@@ -11553,6 +11557,9 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
             case 'section_daily_forecast':
                 subel.push(this._sectionDailyForecastEditor());
                 break;
+            case 'option_daily_forecast':
+                subel.push(this._optionDailyForecastEditor());
+                break;
             case 'option_global_options':
                 subel.push(this._optionGlobalOptionsEditor());
                 break;
@@ -11618,7 +11625,7 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
               </ha-icon-button>
               <ha-icon-button class="edit-icon" .value=${'section_overview'} .path=${mdiPencil} @click="${this._editSubmenu}">
               </ha-icon-button>
-              <ha-icon-button class="option-icon" .value=${'option_overview'} .path=${mdiBacteria} @click="${this._editSubmenu}">
+              <ha-icon-button class="option-icon" .value=${'option_overview'} .path=${mdiApplicationEditOutline} @click="${this._editSubmenu}">
               </ha-icon-button>
             </div>
           </div>
@@ -11657,7 +11664,7 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
               </ha-icon-button>
               <ha-icon-button class="edit-icon" .value=${'section_slots'} .path=${mdiPencil} @click="${this._editSubmenu}">
               </ha-icon-button>
-              <ha-icon-button class="options-icon" .value=${'option_slots'} .path=${mdiBacteria} @click="${this._editSubmenu}">
+              <ha-icon-button class="options-icon" .value=${'option_slots'} .path=${mdiApplicationEditOutline} @click="${this._editSubmenu}">
               </ha-icon-button>
             </div>
           </div>
@@ -11677,7 +11684,8 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
               </ha-icon-button>
               <ha-icon-button class="edit-icon" .value=${'section_daily_forecast'} .path=${mdiPencil} @click="${this._editSubmenu}">
               </ha-icon-button>
-              <div class="no-icon"></div>
+              <ha-icon-button class="options-icon" .value=${'option_daily_forecast'} .path=${mdiApplicationEditOutline} @click="${this._editSubmenu}">
+              </ha-icon-button>
             </div>
           </div>
         `;
@@ -11688,7 +11696,7 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
             </mwc-formfield>
             <div>
               <div class="no-icon"></div>
-              <ha-icon-button class="edit-icon" .value=${'option_global_options'} .path=${mdiBacteria}
+              <ha-icon-button class="edit-icon" .value=${'option_global_options'} .path=${mdiApplicationEditOutline}
                 @click="${this._editSubmenu}">
               </ha-icon-button>
             </div>
