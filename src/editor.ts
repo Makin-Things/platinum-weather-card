@@ -4,8 +4,7 @@ import { HomeAssistant, fireEvent, LovelaceCardEditor } from 'custom-card-helper
 
 import { keys } from 'ts-transformer-keys';
 
-import { mdiPencil, mdiArrowDown, mdiArrowUp, mdiBacteria } from '@mdi/js';
-//import { mdiPencil, mdiArrowDown, mdiArrowUp, mdiSquareEditOutline } from '@mdi/js';
+import { mdiPencil, mdiArrowDown, mdiArrowUp, mdiApplicationEditOutline } from '@mdi/js';
 
 import { ScopedRegistryHost } from '@lit-labs/scoped-registry-mixin';
 import { WeatherCardConfig, layoutOrientation, layoutDays, extendedDays, sectionType, iconSets, timeFormat, sectionNames } from './types';
@@ -1241,7 +1240,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
               </ha-icon-button>
               <ha-icon-button class="edit-icon" .value=${'section_overview'} .path=${mdiPencil} @click="${this._editSubmenu}">
               </ha-icon-button>
-              <ha-icon-button class="option-icon" .value=${'option_overview'} .path=${mdiBacteria} @click="${this._editSubmenu}">
+              <ha-icon-button class="option-icon" .value=${'option_overview'} .path=${mdiApplicationEditOutline} @click="${this._editSubmenu}">
               </ha-icon-button>
             </div>
           </div>
@@ -1280,7 +1279,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
               </ha-icon-button>
               <ha-icon-button class="edit-icon" .value=${'section_slots'} .path=${mdiPencil} @click="${this._editSubmenu}">
               </ha-icon-button>
-              <ha-icon-button class="options-icon" .value=${'option_slots'} .path=${mdiBacteria} @click="${this._editSubmenu}">
+              <ha-icon-button class="options-icon" .value=${'option_slots'} .path=${mdiApplicationEditOutline} @click="${this._editSubmenu}">
               </ha-icon-button>
             </div>
           </div>
@@ -1311,7 +1310,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
             </mwc-formfield>
             <div>
               <div class="no-icon"></div>
-              <ha-icon-button class="edit-icon" .value=${'option_global_options'} .path=${mdiBacteria}
+              <ha-icon-button class="edit-icon" .value=${'option_global_options'} .path=${mdiApplicationEditOutline}
                 @click="${this._editSubmenu}">
               </ha-icon-button>
             </div>
