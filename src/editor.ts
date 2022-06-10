@@ -7,7 +7,7 @@ import { keys } from 'ts-transformer-keys';
 import { mdiPencil, mdiArrowDown, mdiArrowUp, mdiApplicationEditOutline } from '@mdi/js';
 
 import { ScopedRegistryHost } from '@lit-labs/scoped-registry-mixin';
-import { WeatherCardConfig, layoutOrientation, layoutDays, extendedDays, sectionType, iconSets, timeFormat, sectionNames } from './types';
+import { WeatherCardConfig, layoutOrientation, layoutDays, extendedDays, sectionType, iconSets, timeFormat, sectionNames, pressureDecimals } from './types';
 import { customElement, property, state } from 'lit/decorators';
 import { formfieldDefinition } from '../elements/formfield';
 import { selectDefinition } from '../elements/select';
@@ -98,6 +98,16 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     if (tmpConfig.locale) {
       tmpConfig['option_locale'] = tmpConfig.locale;
       delete tmpConfig['locale'];
+    }
+
+    if (tmpConfig.option_today_decimals) {
+      tmpConfig['option_today_decimals'] = tmpConfig.option_today_decimals;
+      delete tmpConfig['option_today_decimals'];
+    }
+
+    if (tmpConfig.show_decimals_pressure) {
+      tmpConfig['option_pressure_decimals'] = tmpConfig.show_decimals_pressure;
+      delete tmpConfig['show_decimals_pressure'];
     }
 
     // Remove unused entries
@@ -413,6 +423,14 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
 
   get _daily_extended_name_attr(): string {
     return this._config?.daily_extended_name_attr || '';
+  }
+
+  get _option_today_decimals(): boolean {
+    return this._config?.option_today_decimals === true; // default off
+  }
+
+  get _option_pressure_decimals(): pressureDecimals | null {
+    return this._config?.option_pressure_decimals || null;
   }
 
   get _option_static_icons(): boolean {
@@ -1015,7 +1033,25 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
   }
 
   private _optionSlotsEditor(): TemplateResult {
-    return html`Coming Soon`;
+    return html`
+      <div class="side-by-side">
+        <div>
+          <mwc-formfield .label=${'Todays Temperature Decimals'}>
+            <mwc-switch .checked=${this._option_today_decimals !== false} .configValue=${'option_today_decimals'}
+              @change=${this._valueChanged}>
+            </mwc-switch>
+          </mwc-formfield>
+        </div>
+        <ha-select label="Pressure Decimals (optional)" .configValue=${'option_pressure_decimals'}
+          .value=${this._option_pressure_decimals ? this._option_pressure_decimals.toString() : null} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()} @selected=${this._valueChangedNumber}>
+          <mwc-list-item></mwc-list-item>
+          <mwc-list-item value="0">0</mwc-list-item>
+          <mwc-list-item value="1">1</mwc-list-item>
+          <mwc-list-item value="2">2</mwc-list-item>
+          <mwc-list-item value="3">3</mwc-list-item>
+        </ha-select>
+      </div>
+    `;
   }
 
   private _sectionDailyForecastEditor(): TemplateResult {

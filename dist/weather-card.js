@@ -832,8 +832,7 @@ let WeatherCard = class WeatherCard extends s$1 {
     }
     get slotPressure() {
         const pressure = this.currentPressure;
-        const units = pressure !== "---" ? $ `<div class="slot-text unit">${this._config.pressure_units ? this._config.pressure_units : this.getUOM('air_pressure')}
-</div>` : $ ``;
+        const units = pressure !== "---" ? $ `<div class="slot-text unit">${this._config.pressure_units ? this._config.pressure_units : this.getUOM('air_pressure')}</div>` : $ ``;
         return $ `
       <li>
         <div class="slot">
@@ -846,7 +845,7 @@ let WeatherCard = class WeatherCard extends s$1 {
     `;
     }
     get slotDaytimeHigh() {
-        const digits = this._config.show_decimals_today === true ? 1 : 0;
+        const digits = this._config.option_today_decimals === true ? 1 : 0;
         const temp = this._config.entity_daytime_high ? (Number(this.hass.states[this._config.entity_daytime_high].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
         const units = temp !== "---" ? $ `<div class="unitc">${this.getUOM('temperature')}</div>` : $ ``;
         return $ `
@@ -862,7 +861,7 @@ let WeatherCard = class WeatherCard extends s$1 {
     `;
     }
     get slotDaytimeLow() {
-        const digits = this._config.show_decimals_today === true ? 1 : 0;
+        const digits = this._config.option_today_decimals === true ? 1 : 0;
         const temp = this._config.entity_daytime_low ? (Number(this.hass.states[this._config.entity_daytime_low].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
         const units = temp !== "---" ? $ `<div class="unitc">${this.getUOM('temperature')}</div>` : $ ``;
         return $ `
@@ -878,8 +877,9 @@ let WeatherCard = class WeatherCard extends s$1 {
     `;
     }
     get slotTempNext() {
+        const digits = this._config.option_today_decimals === true ? 1 : 0;
         const icon = this._config.entity_temp_next_label ? this.hass.states[this._config.entity_temp_next_label].state.includes("Min") ? "mdi:thermometer-low" : "mdi:thermometer-high" : "mdi:help-box";
-        const temp = this._config.entity_temp_next ? this.hass.states[this._config.entity_temp_next].state : "---";
+        const temp = this._config.entity_temp_next ? (Number(this.hass.states[this._config.entity_temp_next].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
         const label = this._config.entity_temp_next_label ? this.hass.states[this._config.entity_temp_next_label].state : "";
         const units = temp !== "---" ? $ `<div class="slot-text unitc">${this.getUOM('temperature')}</div>` : $ ``;
         return $ `
@@ -895,8 +895,9 @@ let WeatherCard = class WeatherCard extends s$1 {
     `;
     }
     get slotTempFollowing() {
+        const digits = this._config.option_today_decimals === true ? 1 : 0;
         const icon = this._config.entity_temp_following_label ? this.hass.states[this._config.entity_temp_following_label].state.includes("Min") ? "mdi:thermometer-low" : "mdi:thermometer-high" : "mdi:help-box";
-        const temp = this._config.entity_temp_following ? this.hass.states[this._config.entity_temp_following].state : "---";
+        const temp = this._config.entity_temp_following ? (Number(this.hass.states[this._config.entity_temp_following].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
         const label = this._config.entity_temp_following_label ? this.hass.states[this._config.entity_temp_following_label].state : "";
         const units = temp !== "---" ? $ `<div class="slot-text unitc">${this.getUOM('temperature')}</div>` : $ ``;
         return $ `
@@ -1077,7 +1078,7 @@ let WeatherCard = class WeatherCard extends s$1 {
     }
     get currentPressure() {
         const entity = this._config.entity_pressure;
-        var places = this._config.show_decimals_pressure ? Math.max(Math.min(this._config.show_decimals_pressure, 3), 0) : 0;
+        var places = this._config.option_pressure_decimals ? Math.max(Math.min(this._config.option_pressure_decimals, 3), 0) : 0;
         return entity && this.hass.states[entity]
             ? (Number(this.hass.states[entity].state)).toLocaleString(this.locale, { minimumFractionDigits: places, maximumFractionDigits: places }) : '---';
     }
@@ -10539,8 +10540,16 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
             tmpConfig['option_locale'] = tmpConfig.locale;
             delete tmpConfig['locale'];
         }
+        if (tmpConfig.option_today_decimals) {
+            tmpConfig['option_today_decimals'] = tmpConfig.option_today_decimals;
+            delete tmpConfig['option_today_decimals'];
+        }
+        if (tmpConfig.show_decimals_pressure) {
+            tmpConfig['option_pressure_decimals'] = tmpConfig.show_decimals_pressure;
+            delete tmpConfig['show_decimals_pressure'];
+        }
         // Remove unused entries
-        const keysOfProps = ["type", "card_config_version", "section_order", "show_section_title", "show_section_main", "show_section_extended", "show_section_slots", "show_section_daily_forecast", "text_card_title", "entity_update_time", "text_update_time_prefix", "entity_temperature", "entity_apparent_temp", "entity_current_conditions", "entity_current_text", "show_decimals", "show_separator", "entity_daily_summary", "extended_use_attr", "extended_name_attr", "slot_l1", "slot_l2", "slot_l3", "slot_l4", "slot_l5", "slot_l6", "slot_r1", "slot_r2", "slot_r3", "slot_r4", "slot_r5", "slot_r6", "entity_humidity", "entity_pressure", "entity_visibility", "entity_wind_bearing", "entity_wind_speed", "entity_wind_gust", "entity_wind_speed_kt", "entity_wind_gust_kt", "entity_temp_next", "entity_temp_next_label", "entity_temp_following", "entity_temp_following_label", "entity_daytime_high", "entity_daytime_low", "entity_fire_danger", "entity_fire_danger_summary", "entity_pop", "entity_possible_today", "entity_sun", "entity_uv_alert_summary", "entity_rainfall", "entity_todays_fire_danger", "entity_todays_uv_forecast", "custom1_value", "custom1_icon", "custom1_units", "custom2_value", "custom2_icon", "custom2_units", "custom3_value", "custom3_icon", "custom3_units", "custom4_value", "custom4_icon", "custom4_units", "entity_forecast_icon_1", "entity_pop_1", "entity_pos_1", "entity_summary_1", "entity_forecast_low_temp_1", "entity_forecast_high_temp_1", "entity_extended_1", "daily_forecast_layout", "daily_forecast_days", "daily_extended_forecast_days", "daily_extended_use_attr", "daily_extended_name_attr", "option_locale", "option_static_icons", "option_icon_set", "option_time_format", "show_decimals_today", "old_daily_format", "show_beaufort", "index", "view_index"];
+        const keysOfProps = ["type", "card_config_version", "section_order", "show_section_title", "show_section_main", "show_section_extended", "show_section_slots", "show_section_daily_forecast", "text_card_title", "entity_update_time", "text_update_time_prefix", "entity_temperature", "entity_apparent_temp", "entity_current_conditions", "entity_current_text", "show_decimals", "show_separator", "entity_daily_summary", "extended_use_attr", "extended_name_attr", "slot_l1", "slot_l2", "slot_l3", "slot_l4", "slot_l5", "slot_l6", "slot_r1", "slot_r2", "slot_r3", "slot_r4", "slot_r5", "slot_r6", "entity_humidity", "entity_pressure", "entity_visibility", "entity_wind_bearing", "entity_wind_speed", "entity_wind_gust", "entity_wind_speed_kt", "entity_wind_gust_kt", "entity_temp_next", "entity_temp_next_label", "entity_temp_following", "entity_temp_following_label", "entity_daytime_high", "entity_daytime_low", "entity_fire_danger", "entity_fire_danger_summary", "entity_pop", "entity_possible_today", "entity_sun", "entity_uv_alert_summary", "entity_rainfall", "entity_todays_fire_danger", "entity_todays_uv_forecast", "custom1_value", "custom1_icon", "custom1_units", "custom2_value", "custom2_icon", "custom2_units", "custom3_value", "custom3_icon", "custom3_units", "custom4_value", "custom4_icon", "custom4_units", "entity_forecast_icon_1", "entity_pop_1", "entity_pos_1", "entity_summary_1", "entity_forecast_low_temp_1", "entity_forecast_high_temp_1", "entity_extended_1", "daily_forecast_layout", "daily_forecast_days", "daily_extended_forecast_days", "daily_extended_use_attr", "daily_extended_name_attr", "option_today_decimals", "option_pressure_decimals", "option_locale", "option_static_icons", "option_icon_set", "option_time_format", "show_decimals_today", "old_daily_format", "show_beaufort", "index", "view_index"];
         for (const element in this._config) {
             if (!keysOfProps.includes(element)) {
                 console.info(`removing ${element}`);
@@ -10844,6 +10853,14 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
     get _daily_extended_name_attr() {
         var _a;
         return ((_a = this._config) === null || _a === void 0 ? void 0 : _a.daily_extended_name_attr) || '';
+    }
+    get _option_today_decimals() {
+        var _a;
+        return ((_a = this._config) === null || _a === void 0 ? void 0 : _a.option_today_decimals) === true; // default off
+    }
+    get _option_pressure_decimals() {
+        var _a;
+        return ((_a = this._config) === null || _a === void 0 ? void 0 : _a.option_pressure_decimals) || null;
     }
     get _option_static_icons() {
         var _a;
@@ -11403,7 +11420,25 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
     `;
     }
     _optionSlotsEditor() {
-        return $ `Coming Soon`;
+        return $ `
+      <div class="side-by-side">
+        <div>
+          <mwc-formfield .label=${'Todays Temperature Decimals'}>
+            <mwc-switch .checked=${this._option_today_decimals !== false} .configValue=${'option_today_decimals'}
+              @change=${this._valueChanged}>
+            </mwc-switch>
+          </mwc-formfield>
+        </div>
+        <ha-select label="Pressure Decimals (optional)" .configValue=${'option_pressure_decimals'}
+          .value=${this._option_pressure_decimals ? this._option_pressure_decimals.toString() : null} @closed=${(ev) => ev.stopPropagation()} @selected=${this._valueChangedNumber}>
+          <mwc-list-item></mwc-list-item>
+          <mwc-list-item value="0">0</mwc-list-item>
+          <mwc-list-item value="1">1</mwc-list-item>
+          <mwc-list-item value="2">2</mwc-list-item>
+          <mwc-list-item value="3">3</mwc-list-item>
+        </ha-select>
+      </div>
+    `;
     }
     _sectionDailyForecastEditor() {
         if (this._daily_extended_use_attr === true) {

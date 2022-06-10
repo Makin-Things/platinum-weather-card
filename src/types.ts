@@ -13,6 +13,7 @@ export type sectionType = typeof sectionNames[number];
 export type layoutOrientation = "horizontal" | "vertical";
 export type layoutDays = 1 | 2 | 3 | 4 | 5 | 6 | 7;
 export type extendedDays = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
+export type pressureDecimals = 0 | 1 | 2 | 3;
 export type iconSets = 'old' | 'new' | 'hybrid';
 export type timeFormat = 'system' | '12hour' | '24hour';
 
@@ -101,6 +102,8 @@ export interface WeatherCardConfig extends LovelaceCardConfig {
   daily_extended_use_attr?: boolean;
   daily_extended_name_attr?: string;
 
+  option_today_decimals?: boolean;
+  option_pressure_decimals?: pressureDecimals;
 
   option_locale?: string;
   option_static_icons?: boolean;

@@ -699,8 +699,7 @@ export class WeatherCard extends LitElement {
 
   get slotPressure(): TemplateResult {
     const pressure = this.currentPressure;
-    const units = pressure !== "---" ? html`<div class="slot-text unit">${this._config.pressure_units ? this._config.pressure_units : this.getUOM('air_pressure')}
-</div>` : html``;
+    const units = pressure !== "---" ? html`<div class="slot-text unit">${this._config.pressure_units ? this._config.pressure_units : this.getUOM('air_pressure')}</div>` : html``;
     return html`
       <li>
         <div class="slot">
@@ -714,7 +713,7 @@ export class WeatherCard extends LitElement {
   }
 
   get slotDaytimeHigh(): TemplateResult {
-    const digits = this._config.show_decimals_today === true ? 1 : 0;
+    const digits = this._config.option_today_decimals === true ? 1 : 0;
     const temp = this._config.entity_daytime_high ? (Number(this.hass.states[this._config.entity_daytime_high].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
     const units = temp !== "---" ? html`<div class="unitc">${this.getUOM('temperature')}</div>` : html``;
     return html`
@@ -731,7 +730,7 @@ export class WeatherCard extends LitElement {
   }
 
   get slotDaytimeLow(): TemplateResult {
-    const digits = this._config.show_decimals_today === true ? 1 : 0;
+    const digits = this._config.option_today_decimals === true ? 1 : 0;
     const temp = this._config.entity_daytime_low ? (Number(this.hass.states[this._config.entity_daytime_low].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
     const units = temp !== "---" ? html`<div class="unitc">${this.getUOM('temperature')}</div>` : html``;
     return html`
@@ -748,8 +747,9 @@ export class WeatherCard extends LitElement {
   }
 
   get slotTempNext(): TemplateResult {
+    const digits = this._config.option_today_decimals === true ? 1 : 0;
     const icon = this._config.entity_temp_next_label ? this.hass.states[this._config.entity_temp_next_label].state.includes("Min") ? "mdi:thermometer-low" : "mdi:thermometer-high" : "mdi:help-box";
-    const temp = this._config.entity_temp_next ? this.hass.states[this._config.entity_temp_next].state : "---";
+    const temp = this._config.entity_temp_next ? (Number(this.hass.states[this._config.entity_temp_next].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
     const label = this._config.entity_temp_next_label ? this.hass.states[this._config.entity_temp_next_label].state : "";
     const units = temp !== "---" ? html`<div class="slot-text unitc">${this.getUOM('temperature')}</div>` : html``;
     return html`
@@ -766,8 +766,9 @@ export class WeatherCard extends LitElement {
   }
 
   get slotTempFollowing(): TemplateResult {
+    const digits = this._config.option_today_decimals === true ? 1 : 0;
     const icon = this._config.entity_temp_following_label ? this.hass.states[this._config.entity_temp_following_label].state.includes("Min") ? "mdi:thermometer-low" : "mdi:thermometer-high" : "mdi:help-box";
-    const temp = this._config.entity_temp_following ? this.hass.states[this._config.entity_temp_following].state : "---";
+    const temp = this._config.entity_temp_following ? (Number(this.hass.states[this._config.entity_temp_following].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
     const label = this._config.entity_temp_following_label ? this.hass.states[this._config.entity_temp_following_label].state : "";
     const units = temp !== "---" ? html`<div class="slot-text unitc">${this.getUOM('temperature')}</div>` : html``;
     return html`
@@ -965,7 +966,7 @@ export class WeatherCard extends LitElement {
 
   get currentPressure(): string {
     const entity = this._config.entity_pressure;
-    var places = this._config.show_decimals_pressure ? Math.max(Math.min(this._config.show_decimals_pressure, 3), 0) : 0;
+    var places = this._config.option_pressure_decimals ? Math.max(Math.min(this._config.option_pressure_decimals, 3), 0) : 0;
     return entity && this.hass.states[entity]
       ? (Number(this.hass.states[entity].state)).toLocaleString(this.locale, { minimumFractionDigits: places, maximumFractionDigits: places }) : '---';
   }
