@@ -2060,6 +2060,8 @@ var mdiPencil = "M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35
  * SPDX-License-Identifier: BSD-3-Clause
  */function e$1(e){return class extends e{createRenderRoot(){const e=this.constructor,{registry:s,elementDefinitions:n,shadowRootOptions:o}=e;n&&!s&&(e.registry=new CustomElementRegistry,Object.entries(n).forEach((([t,s])=>e.registry.define(t,s))));const i=this.renderOptions.creationScope=this.attachShadow({...o,customElements:e.registry});return i$5(i,this.constructor.elementStyles),i}}}
 
+const sectionNames = ['title', 'overview', 'extended', 'slots', 'daily_forecast'];
+
 /**
  * @license
  * Copyright 2016 Google Inc.
@@ -10484,8 +10486,32 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
     setConfig(config) {
         console.info(`editor setConfig`);
         this._config = config;
+        let changed = false;
         if (this._section_order === null) {
-            this._config = Object.assign(Object.assign({}, this._config), { ['section_order']: ['title', 'overview', 'extended', 'slots', 'daily_forecast'] });
+            this._config = Object.assign(Object.assign({}, this._config), { ['section_order']: sectionNames });
+            changed = true;
+        }
+        else {
+            // check for extra entries
+            this._config.section_order.forEach((section) => {
+                var _a, _b;
+                if (!(sectionNames.includes(section))) {
+                    const idx = (_a = this._config) === null || _a === void 0 ? void 0 : _a.section_order.indexOf(section);
+                    if (idx !== undefined && idx !== -1) {
+                        (_b = this._config) === null || _b === void 0 ? void 0 : _b.section_order.splice(idx, 1);
+                    }
+                    changed = true;
+                }
+            });
+            // check for missing entries
+            sectionNames.forEach((section) => {
+                if (this._config && !(this._config.section_order.includes(section))) {
+                    this._config.section_order.push(section);
+                    changed = true;
+                }
+            });
+        }
+        if (changed) {
             ne(this, 'config-changed', { config: this._config });
         }
         this.loadCardHelpers();

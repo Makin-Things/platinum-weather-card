@@ -7,10 +7,12 @@ declare global {
   }
 }
 
+export const sectionNames = ['title', 'overview', 'extended', 'slots', 'daily_forecast'];
+export type sectionType = typeof sectionNames[number];
+
 export type layoutOrientation = "horizontal" | "vertical";
 export type layoutDays = 1 | 2 | 3 | 4 | 5 | 6 | 7;
 export type extendedDays = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
-export type configSlots = 'title' | 'overview' | 'extended' | 'slots' | 'daily_forecast';
 export type iconSets = 'old' | 'new' | 'hybrid';
 export type timeFormat = 'system' | '12hour' | '24hour';
 
@@ -18,7 +20,7 @@ export type timeFormat = 'system' | '12hour' | '24hour';
 export interface WeatherCardConfig extends LovelaceCardConfig {
   type: string;
   card_config_version?: number;
-  section_order: configSlots[];
+  section_order: sectionType[];
   show_section_title?: boolean;
   show_section_main?: boolean;
   show_section_extended?: boolean;

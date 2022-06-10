@@ -8,7 +8,7 @@ import { mdiPencil, mdiArrowDown, mdiArrowUp, mdiBacteria } from '@mdi/js';
 //import { mdiPencil, mdiArrowDown, mdiArrowUp, mdiSquareEditOutline } from '@mdi/js';
 
 import { ScopedRegistryHost } from '@lit-labs/scoped-registry-mixin';
-import { WeatherCardConfig, layoutOrientation, layoutDays, extendedDays, configSlots, iconSets, timeFormat } from './types';
+import { WeatherCardConfig, layoutOrientation, layoutDays, extendedDays, sectionType, iconSets, timeFormat, sectionNames } from './types';
 import { customElement, property, state } from 'lit/decorators';
 import { formfieldDefinition } from '../elements/formfield';
 import { selectDefinition } from '../elements/select';
@@ -38,11 +38,34 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
   public setConfig(config: WeatherCardConfig): void {
     console.info(`editor setConfig`);
     this._config = config;
+    let changed = false;
     if (this._section_order === null) {
       this._config = {
         ...this._config,
-        ['section_order']: ['title', 'overview', 'extended', 'slots', 'daily_forecast'],
+        ['section_order']: sectionNames,
       }
+      changed = true;
+    } else {
+      // check for extra entries
+      this._config.section_order.forEach((section: sectionType) => {
+        if (!(sectionNames.includes(section))) {
+          const idx = this._config?.section_order.indexOf(section);
+          if (idx !== undefined && idx !== -1) {
+            this._config?.section_order.splice(idx, 1);
+          }
+          changed = true;
+        }
+      });
+      // check for missing entries
+      sectionNames.forEach((section: sectionType) => {
+        if (this._config && !(this._config.section_order.includes(section))) {
+          this._config.section_order.push(section);
+          changed = true;
+        }
+      });
+    }
+
+    if (changed) {
       fireEvent(this, 'config-changed', { config: this._config });
     }
 
@@ -105,7 +128,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     return true;
   }
 
-  get _section_order(): configSlots[] | null {
+  get _section_order(): sectionType[] | null {
     return this._config?.section_order || null;
   }
 
