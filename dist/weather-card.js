@@ -1422,11 +1422,11 @@ let WeatherCard = class WeatherCard extends s$1 {
     }
     get iconSunny() {
         const iconStyle = this.iconStyle;
-        return (iconStyle === "true") ? `sunny-${this.dayOrNight}` : (iconStyle === "hybrid") ? `sunny-${this.dayOrNight}` : `sunny-${this.dayOrNight}`;
+        return (iconStyle === "true") ? `${this.dayOrNight}` : (iconStyle === "hybrid") ? `sunny-${this.dayOrNight}` : `sunny-${this.dayOrNight}`;
     }
     get iconClear() {
         const iconStyle = this.iconStyle;
-        return (iconStyle === "true") ? `clear-${this.dayOrNight}` : (iconStyle === "hybrid") ? `sunny-${this.dayOrNight}` : `clear-${this.dayOrNight}`;
+        return (iconStyle === "true") ? `${this.dayOrNight}` : (iconStyle === "hybrid") ? `sunny-${this.dayOrNight}` : `clear-${this.dayOrNight}`;
     }
     get iconMostlySunny() {
         const iconStyle = this.iconStyle;
