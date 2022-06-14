@@ -199,7 +199,7 @@ export class WeatherCard extends LitElement {
 
     const apparentTemp = html`
       <div class="apparent-temp">
-        <div class="apparent">${this.localeTextfeelsLike} <span
+        <div class="apparent">${this.localeTextFeelsLike} <span
             id="apparent-temp-text">${this.currentApparentTemperature}</span>
         </div>
         <div class="apparentc"> ${this.getUOM('temperature')}</div>
@@ -575,17 +575,21 @@ export class WeatherCard extends LitElement {
   // slots - calculates the specific slot value
   slotValue(slot: string, value: string | undefined): TemplateResult {
     switch (value) {
-      case 'pop': return this.slotPopForecast;
+      case 'pop': return this.slotPop;
       case 'popforecast': return this.slotPopForecast;
       case 'possible_today': return this.slotPossibleToday;
       case 'possible_tomorrow': return this.slotPossibleTomorrow;
       case 'rainfall': return this.slotRainfall;
       case 'humidity': return this.slotHumidity;
       case 'pressure': return this.slotPressure;
-      case 'daytime_high': return this.slotDaytimeHigh;
-      case 'daytime_low': return this.slotDaytimeLow;
+      case 'observed_max': return this.slotObservedMax;
+      case 'observed_min': return this.slotObservedMin;
+      case 'forecast_max': return this.slotForecastMax;
+      case 'forecast_min': return this.slotForecastMin;
       case 'temp_next': return this.slotTempNext;
       case 'temp_following': return this.slotTempFollowing;
+      case 'temp_maximums': return this.slotTempMaximums;
+      case 'temp_minimums': return this.slotTempMinimums;
       case 'uv_summary': return this.slotUvSummary;
       case 'fire_summary': return this.slotFireSummary;
       case 'wind': return this.slotWind;
@@ -603,8 +607,8 @@ export class WeatherCard extends LitElement {
 
     // If no value can be matched pass back a default for the slot
     switch (slot) {
-      case 'l1': return this.slotDaytimeHigh;
-      case 'l2': return this.slotDaytimeLow;
+      case 'l1': return this.slotForecastMax;
+      case 'l2': return this.slotForecastMin;
       case 'l3': return this.slotWind;
       case 'l4': return this.slotPressure;
       case 'l5': return this.slotSunNext;
@@ -660,6 +664,21 @@ export class WeatherCard extends LitElement {
     `;
   }
 
+  get slotPop(): TemplateResult {
+    const pop = this._config.entity_pop ? Math.round(Number(this.hass.states[this._config.entity_pop].state)) : "---";
+    const pop_units = pop !== "---" ? html`<div class="slot-text unit">%</div>` : html``;
+    return html`
+      <li>
+        <div class="slot">
+          <div class="slot-icon">
+            <ha-icon icon="mdi:weather-rainy"></ha-icon>
+          </div>
+          <div class="slot-text pop-text">${pop}</div>${pop_units}<div class="slot-text"></div>
+        </div>
+      </li>
+    `;
+  }
+
   get slotPossibleToday(): TemplateResult {
     const pos = this._config.entity_possible_today ? this.hass.states[this._config.entity_possible_today].state : "---";
     const units = pos !== "---" ? html`<div class="slot-text unit">${this.getUOM('precipitation')}</div>` : html``;
@@ -668,7 +687,7 @@ export class WeatherCard extends LitElement {
         <div class="slot">
           <div class="slot-icon">
             <ha-icon icon="mdi:weather-rainy"></ha-icon>
-          </div>${this.localeTextposToday}&nbsp;<div class="slot-text possible_today-text">${pos}</div>${units}
+          </div>${this.localeTextPosToday}&nbsp;<div class="slot-text possible_today-text">${pos}</div>${units}
         </div>
       </li>
     `;
@@ -682,7 +701,7 @@ export class WeatherCard extends LitElement {
         <div class="slot">
           <div class="slot-icon">
             <ha-icon icon="mdi:weather-rainy"></ha-icon>
-          </div>${this.localeTextposTomorrow}&nbsp;<div class="slot-text possible_tomorrow-text">${pos}</div>${units}
+          </div>${this.localeTextPosTomorrow}&nbsp;<div class="slot-text possible_tomorrow-text">${pos}</div>${units}
         </div>
       </li>
     `;
@@ -732,9 +751,9 @@ export class WeatherCard extends LitElement {
     `;
   }
 
-  get slotDaytimeHigh(): TemplateResult {
+  get slotObservedMax(): TemplateResult {
     const digits = this._config.option_today_decimals === true ? 1 : 0;
-    const temp = this._config.entity_daytime_high ? (Number(this.hass.states[this._config.entity_daytime_high].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
+    const temp = this._config.entity_observed_max ? (Number(this.hass.states[this._config.entity_observed_max].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
     const units = temp !== "---" ? html`<div class="unitc">${this.getUOM('temperature')}</div>` : html``;
     return html`
       <li>
@@ -742,16 +761,16 @@ export class WeatherCard extends LitElement {
           <div class="slot-icon">
             <ha-icon icon="mdi:thermometer-high"></ha-icon>
           </div>
-          <div class="slot-text">${this.localeTextmaxToday}&nbsp;</div>
-          <div class="slot-text daytime-high-text">${temp}</div>${units}
+          <div class="slot-text">${this.localeTextObservedMax}&nbsp;</div>
+          <div class="slot-text observed-max-text">${temp}</div>${units}
         </div>
       </li>
     `;
   }
 
-  get slotDaytimeLow(): TemplateResult {
+  get slotObservedMin(): TemplateResult {
     const digits = this._config.option_today_decimals === true ? 1 : 0;
-    const temp = this._config.entity_daytime_low ? (Number(this.hass.states[this._config.entity_daytime_low].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
+    const temp = this._config.entity_observed_min ? (Number(this.hass.states[this._config.entity_observed_min].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
     const units = temp !== "---" ? html`<div class="unitc">${this.getUOM('temperature')}</div>` : html``;
     return html`
       <li>
@@ -759,8 +778,42 @@ export class WeatherCard extends LitElement {
           <div class="slot-icon">
             <ha-icon icon="mdi:thermometer-low"></ha-icon>
           </div>
-          <div class="slot-text">${this.localeTextminToday}&nbsp;</div>
-          <div class="slot-text daytime-low-text">${temp}</div>${units}
+          <div class="slot-text">${this.localeTextObservedMin}&nbsp;</div>
+          <div class="slot-text observed-min-text">${temp}</div>${units}
+        </div>
+      </li>
+    `;
+  }
+
+  get slotForecastMax(): TemplateResult {
+    const digits = this._config.option_today_decimals === true ? 1 : 0;
+    const temp = this._config.entity_forecast_max ? (Number(this.hass.states[this._config.entity_forecast_max].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
+    const units = temp !== "---" ? html`<div class="unitc">${this.getUOM('temperature')}</div>` : html``;
+    return html`
+      <li>
+        <div class="slot">
+          <div class="slot-icon">
+            <ha-icon icon="mdi:thermometer-high"></ha-icon>
+          </div>
+          <div class="slot-text">${this.localeTextForecastMax}&nbsp;</div>
+          <div class="slot-text forecast-max-text">${temp}</div>${units}
+        </div>
+      </li>
+    `;
+  }
+
+  get slotForecastMin(): TemplateResult {
+    const digits = this._config.option_today_decimals === true ? 1 : 0;
+    const temp = this._config.entity_forecast_min ? (Number(this.hass.states[this._config.entity_forecast_min].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
+    const units = temp !== "---" ? html`<div class="unitc">${this.getUOM('temperature')}</div>` : html``;
+    return html`
+      <li>
+        <div class="slot">
+          <div class="slot-icon">
+            <ha-icon icon="mdi:thermometer-low"></ha-icon>
+          </div>
+          <div class="slot-text">${this.localeTextForecastMin}&nbsp;</div>
+          <div class="slot-text forecast-min-text">${temp}</div>${units}
         </div>
       </li>
     `;
@@ -804,6 +857,48 @@ export class WeatherCard extends LitElement {
     `;
   }
 
+  get slotTempMaximums(): TemplateResult {
+    const digits = this._config.option_today_decimals === true ? 1 : 0;
+    const temp_obs = this._config.entity_observed_max ? (Number(this.hass.states[this._config.entity_observed_max].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
+    const temp_for = this._config.entity_forecast_max ? (Number(this.hass.states[this._config.entity_forecast_max].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
+    const units = temp_obs !== "---" ? html`<div class="unitc">${this.getUOM('temperature')}</div>` : html``;
+    return html`
+      <li>
+        <div class="slot">
+          <div class="slot-icon">
+            <ha-icon icon="mdi:thermometer-high"></ha-icon>
+          </div>
+          <div class="slot-text">${this.localeTextObsMax}&nbsp;</div>
+          <div class="slot-text observed-max-text">${temp_obs}</div>${units}
+          <div class="slot-text">&nbsp;(${this.localeTextFore}&nbsp;</div>
+          <div class="slot-text forecast-max-text">${temp_for}</div>${units}
+          <div class="slot-text">)</div>
+        </div>
+      </li>
+    `;
+  }
+
+  get slotTempMinimums(): TemplateResult {
+    const digits = this._config.option_today_decimals === true ? 1 : 0;
+    const temp_obs = this._config.entity_observed_min ? (Number(this.hass.states[this._config.entity_observed_min].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
+    const temp_for = this._config.entity_forecast_min ? (Number(this.hass.states[this._config.entity_forecast_min].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
+    const units = temp_obs !== "---" ? html`<div class="unitc">${this.getUOM('temperature')}</div>` : html``;
+    return html`
+      <li>
+        <div class="slot">
+          <div class="slot-icon">
+            <ha-icon icon="mdi:thermometer-low"></ha-icon>
+          </div>
+          <div class="slot-text">${this.localeTextObsMin}&nbsp;</div>
+          <div class="slot-text observed-min-text">${temp_obs}</div>${units}
+          <div class="slot-text">&nbsp;(${this.localeTextFore}&nbsp;</div>
+          <div class="slot-text forecast-min-text">${temp_for}</div>${units}
+          <div class="slot-text">)</div>
+        </div>
+      </li>
+    `;
+  }
+
   get slotUvSummary(): TemplateResult {
     const uv = this._config.entity_uv_alert_summary ? this.hass.states[this._config.entity_uv_alert_summary].state !== "unknown" ? this.hass.states[this._config.entity_uv_alert_summary].state : "n/a" : "---";
     return html`
@@ -812,7 +907,7 @@ export class WeatherCard extends LitElement {
           <div class="slot-icon">
             <ha-icon icon="mdi:weather-sunny"></ha-icon>
           </div>
-          <div class="slot-text daytime-uv-text">${this.localeTextuvRating} ${uv}</div>
+          <div class="slot-text daytime-uv-text">${this.localeTextUVRating} ${uv}</div>
         </div>
       </li>
     `;
@@ -826,7 +921,7 @@ export class WeatherCard extends LitElement {
           <div class="slot-icon">
             <ha-icon icon="mdi:fire"></ha-icon>
           </div>
-          <div class="slot-text fire-danger-text">${this.localeTextfireDanger} ${fire}</div>
+          <div class="slot-text fire-danger-text">${this.localeTextFireDanger} ${fire}</div>
         </div>
       </li>`;
   }
@@ -1439,7 +1534,7 @@ export class WeatherCard extends LitElement {
     }
   }
 
-  get localeTextfeelsLike(): string {
+  get localeTextFeelsLike(): string {
     switch (this.locale) {
       case 'it': return "Percepito";
       case 'fr': return "Ressenti";
@@ -1454,7 +1549,31 @@ export class WeatherCard extends LitElement {
     }
   }
 
-  get localeTextmaxToday(): string {
+  get localeTextObservedMax(): string {
+    switch (this.locale) {
+      default: return "Observed Max";
+    }
+  }
+
+  get localeTextObservedMin(): string {
+    switch (this.locale) {
+      default: return "Observed Min";
+    }
+  }
+
+  get localeTextObsMax(): string {
+    switch (this.locale) {
+      default: return "Obs Max";
+    }
+  }
+
+  get localeTextObsMin(): string {
+    switch (this.locale) {
+      default: return "Obs Min";
+    }
+  }
+
+  get localeTextForecastMax(): string {
     switch (this.locale) {
       case 'it': return "Max oggi";
       case 'fr': return "Max aujourd'hui";
@@ -1465,11 +1584,11 @@ export class WeatherCard extends LitElement {
       case 'da': return "Højeste i dag";
       case 'ru': return "Макс сегодня";
       case 'ua': return "Макс сьогодні";
-      default: return "Today's High";
+      default: return "Forecast Max";
     }
   }
 
-  get localeTextminToday(): string {
+  get localeTextForecastMin(): string {
     switch (this.locale) {
       case 'it': return "Min oggi";
       case 'fr': return "Min aujourd'hui";
@@ -1480,11 +1599,11 @@ export class WeatherCard extends LitElement {
       case 'da': return "Laveste i dag";
       case 'ru': return "мин сегодня";
       case 'ua': return "Мін сьогодні";
-      default: return "Today's Low";
+      default: return "Forecast Min";
     }
   }
 
-  get localeTextposToday(): string {
+  get localeTextPosToday(): string {
     switch (this.locale) {
       case 'it': return "Previsione";
       case 'fr': return "Prévoir";
@@ -1499,7 +1618,7 @@ export class WeatherCard extends LitElement {
     }
   }
 
-  get localeTextposTomorrow(): string {
+  get localeTextPosTomorrow(): string {
     switch (this.locale) {
       case 'it': return "Prev per domani";
       case 'fr': return "Prév demain";
@@ -1514,7 +1633,22 @@ export class WeatherCard extends LitElement {
     }
   }
 
-  get localeTextuvRating(): string {
+  get localeTextFore(): string {
+    switch (this.locale) {
+      case 'it': return "Prev";
+      case 'fr': return "Prév";
+      case 'de': return "Prog";
+      case 'nl': return "Prog";
+      case 'pl': return "Prog";
+      case 'he': return "תַחֲזִית";
+      case 'da': return "Prog";
+      case 'ru': return "Прогноз";
+      case 'ua': return "Прогноз";
+      default: return "Fore";
+    }
+  }
+
+  get localeTextUVRating(): string {
     switch (this.locale) {
       case 'it': return "UV";
       case 'fr': return "UV";
@@ -1529,7 +1663,7 @@ export class WeatherCard extends LitElement {
     }
   }
 
-  get localeTextfireDanger(): string {
+  get localeTextFireDanger(): string {
     switch (this.locale) {
       case 'it': return "Fuoco";
       case 'fr': return "Feu";

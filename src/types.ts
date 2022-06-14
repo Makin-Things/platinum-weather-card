@@ -63,8 +63,10 @@ export interface WeatherCardConfig extends LovelaceCardConfig {
   entity_temp_next_label?: string;
   entity_temp_following?: string;
   entity_temp_following_label?: string;
-  entity_daytime_high?: string;
-  entity_daytime_low?: string;
+  entity_forecast_max?: string;
+  entity_forecast_min?: string;
+  entity_observed_max?: string;
+  entity_observed_min?: string;
   entity_fire_danger?: string;
   entity_fire_danger_summary?: string;
   entity_pop?: string;

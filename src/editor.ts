@@ -110,6 +110,22 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
       delete tmpConfig['show_decimals_pressure'];
     }
 
+    if (tmpConfig.entity_daytime_high) {
+      tmpConfig['Entity_forecast_max'] = tmpConfig.entity_daytime_high;
+      delete tmpConfig['entity_daytime_high'];
+    }
+
+    if (tmpConfig.entity_daytime_low) {
+      tmpConfig['entity_forecast_min'] = tmpConfig.entity_daytime_low;
+      delete tmpConfig['entity_daytime_low'];
+    }
+
+    // Remane slot entries
+    for (const slot of ['slot_l1, slot_l2, slot_l3, slot_l4, slot_l5, slot_l6, slot_l7, slot_l8, slot_r1, slot_r2, slot_r3, slot_r4, slot_r5, slot_r6, slot_r7, slot_r8']) {
+      if (tmpConfig[slot] === 'daytime_high') tmpConfig[slot] = 'forecast_max';
+      if (tmpConfig[slot] === 'daytime_low') tmpConfig[slot] = 'forecast_min';
+    }
+
     // Remove unused entries
     const keysOfProps = keys<WeatherCardConfig>();
     for (const element in this._config) {
@@ -121,7 +137,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
 
     tmpConfig = {
       ...tmpConfig,
-      card_config_version: 2,
+      card_config_version: 3,
     }
 
     this._config = tmpConfig;
@@ -261,12 +277,20 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     return this._config?.slot_r8 || '';
   }
 
-  get _entity_daytime_high(): string {
-    return this._config?.entity_daytime_high || '';
+  get _entity_observed_max(): string {
+    return this._config?.entity_observed_max || '';
   }
 
-  get _entity_daytime_low(): string {
-    return this._config?.entity_daytime_low || '';
+  get _entity_observed_min(): string {
+    return this._config?.entity_observed_min || '';
+  }
+
+  get _entity_forecast_max(): string {
+    return this._config?.entity_forecast_max || '';
+  }
+
+  get _entity_forecast_min(): string {
+    return this._config?.entity_forecast_min || '';
   }
 
   get _entity_temp_next(): string {
@@ -469,8 +493,8 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     const entities = new Set();
     for (const slot of
       [
-        this._config?.slot_l1 || 'daytime_high' as string,
-        this._config?.slot_l2 || 'daytime_low' as string,
+        this._config?.slot_l1 || 'forecast_max' as string,
+        this._config?.slot_l2 || 'forecast_min' as string,
         this._config?.slot_l3 || 'wind' as string,
         this._config?.slot_l4 || 'pressure' as string,
         this._config?.slot_l5 || 'sun_next' as string,
@@ -487,17 +511,29 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
         this._config?.slot_r8 || 'remove' as string,
       ]) {
       switch (slot) {
-        case 'daytime_high':
-          entities.add('entity_daytime_high');
+        case 'observed_max':
+          entities.add('entity_observed_max');
           break;
-        case 'daytime_low':
-          entities.add('entity_daytime_low');
+        case 'observed_min':
+          entities.add('entity_observed_min');
+          break;
+        case 'forecast_max':
+          entities.add('entity_forecast_max');
+          break;
+        case 'forecast_min':
+          entities.add('entity_forecast_min');
           break;
         case 'temp_next':
           entities.add('entity_temp_next').add('entity_temp_next_label');
           break;
         case 'temp_following':
           entities.add('entity_temp_following').add('entity_temp_following_label');
+          break;
+        case 'temp_maximums':
+          entities.add('entity_forecast_max').add('entity_observed_max');
+          break;
+        case 'temp_minimums':
+          entities.add('entity_forecast_min').add('entity_observed_min');
           break;
         case 'wind':
           entities.add('entity_wind_bearing').add('entity_wind_speed').add('entity_wind_gust');
@@ -515,6 +551,8 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
           entities.add('entity_sun');
           break;
         case 'pop':
+          entities.add('entity_pop');
+          break;
         case 'popforecast':
           entities.add('entity_pop').add('entity_possible_today');
           break;
@@ -554,17 +592,31 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
       }
     }
 
-    const entity_daytime_high = entities.has("entity_daytime_high") ?
+    const entity_observed_max = entities.has("entity_observed_max") ?
       html`
-        <ha-entity-picker .hass=${this.hass} .configValue=${'entity_daytime_high'} .value=${this._entity_daytime_high}
-          name="entity_daytime_high" label="Entity Daytime High (optional)" allow-custom-entity @value-changed=${this._valueChangedPicker}>
+        <ha-entity-picker .hass=${this.hass} .configValue=${'entity_observed_max'} .value=${this._entity_observed_max}
+          name="entity_observed_max" label="Entity Observed Max (optional)" allow-custom-entity @value-changed=${this._valueChangedPicker}>
         </ha-entity-picker>
       ` : '';
 
-    const entity_daytime_low = entities.has("entity_daytime_low") ?
+    const entity_observed_min = entities.has("entity_observed_min") ?
       html`
-        <ha-entity-picker .hass=${this.hass} .configValue=${'entity_daytime_low'} .value=${this._entity_daytime_low}
-          name="entity_daytime_low" label="Entity Daytime Low (optional)" allow-custom-entity @value-changed=${this._valueChangedPicker}>
+        <ha-entity-picker .hass=${this.hass} .configValue=${'entity_observed_min'} .value=${this._entity_observed_min}
+          name="entity_observed_min" label="Entity Observed Min (optional)" allow-custom-entity @value-changed=${this._valueChangedPicker}>
+        </ha-entity-picker>
+      ` : '';
+
+    const entity_forecast_max = entities.has("entity_forecast_max") ?
+      html`
+        <ha-entity-picker .hass=${this.hass} .configValue=${'entity_forecast_max'} .value=${this._entity_forecast_max}
+          name="entity_forecast_max" label="Entity Forecast Max (optional)" allow-custom-entity @value-changed=${this._valueChangedPicker}>
+        </ha-entity-picker>
+      ` : '';
+
+    const entity_forecast_min = entities.has("entity_forecast_min") ?
+      html`
+        <ha-entity-picker .hass=${this.hass} .configValue=${'entity_forecast_min'} .value=${this._entity_forecast_min}
+          name="entity_forecast_min" label="Entity Forecast Min (optional)" allow-custom-entity @value-changed=${this._valueChangedPicker}>
         </ha-entity-picker>
       ` : '';
 
@@ -758,8 +810,10 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
       ` : '';
 
     return html`
-      ${entity_daytime_high}
-      ${entity_daytime_low}
+      ${entity_observed_max}
+      ${entity_observed_min}
+      ${entity_forecast_max}
+      ${entity_forecast_min}
       ${entity_temp_next}
       ${entity_temp_next_label}
       ${entity_temp_following}
@@ -796,7 +850,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
   protected async firstUpdated(): Promise<void> {
     if (this._config && this.hass) {
       console.info(`Card Config Version=${this._config.card_config_version || 'no version'}`);
-      if (this._config.card_config_version !== 2) {
+      if (this._config.card_config_version !== 3) {
         this._configCleanup();
       }
     }
@@ -968,14 +1022,18 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
       <mwc-list-item value="wind">Current wind conditions</mwc-list-item>
       <mwc-list-item value="wind_kt">Current wind conditions kts</mwc-list-item>
       <mwc-list-item value="visibility">Current visibility</mwc-list-item>
-      <mwc-list-item value="daytime_high">Today's forecast high</mwc-list-item>
-      <mwc-list-item value="daytime_low">Today's forecast low</mwc-list-item>
+      <mwc-list-item value="observed_max">Today's Observed max</mwc-list-item>
+      <mwc-list-item value="observed_min">Today's Observed min</mwc-list-item>
+      <mwc-list-item value="forecast_max">Today's Forecast max</mwc-list-item>
+      <mwc-list-item value="forecast_min">Today's Forecast min</mwc-list-item>
       <mwc-list-item value="temp_next">Next temp min/max</mwc-list-item>
       <mwc-list-item value="temp_following">Following temp min/max</mwc-list-item>
+      <mwc-list-item value="temp_maximums">Observed/forecast max</mwc-list-item>
+      <mwc-list-item value="temp_minimums">Observed/forecast min</mwc-list-item>
       <mwc-list-item value="sun_next">Next sun rise/set time</mwc-list-item>
       <mwc-list-item value="sun_following">Following sun rise/set time</mwc-list-item>
-      <mwc-list-item value="pop">pop</mwc-list-item>
-      <mwc-list-item value="popforecast">popforecast</mwc-list-item>
+      <mwc-list-item value="pop">Chance of rain</mwc-list-item>
+      <mwc-list-item value="popforecast">Rainfall forecast</mwc-list-item>
       <mwc-list-item value="possible_today">Today's forecast rainfall</mwc-list-item>
       <mwc-list-item value="possible_tomorrow">Tomorrow's forecast rainfall</mwc-list-item>
       <mwc-list-item value="uv_summary">Today's UV forecast</mwc-list-item>
