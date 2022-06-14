@@ -446,142 +446,132 @@ let WeatherCard = class WeatherCard extends s$1 {
       <div class="slot-section section">${slot_section}</div>
     `;
     }
-    _renderDailyForecastSection() {
-        var _a;
-        if (((_a = this._config) === null || _a === void 0 ? void 0 : _a.show_section_daily_forecast) === false)
-            return $ ``;
+    _renderHorizontalDailyForecastSection() {
         const htmlDays = [];
         const days = this._config.daily_forecast_days || 5;
-        if (this._config.daily_forecast_layout !== 'vertical') {
-            for (var i = 0; i < days; i++) {
-                const forecastDate = new Date();
-                forecastDate.setDate(forecastDate.getDate() + i + 1);
-                var start = this._config['entity_forecast_icon_1'] ? this._config['entity_forecast_icon_1'].match(/(\d+)(?!.*\d)/g) : false;
-                const iconEntity = this._config['entity_forecast_icon_1'] ? this._config['entity_forecast_icon_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
-                const url = new URL(('icons/' + (this._config.option_static_icons ? 'static' : 'animated') + '/' + (iconEntity && this.hass.states[iconEntity] ? this._weatherIcon(this.hass.states[iconEntity].state) : 'unknown') + '.svg').replace("-night", "-day"), import.meta.url);
-                const htmlIcon = $ `<i class="icon" style="background: none, url(${url.href}) no-repeat; background-size: contain;"></i><br>`;
-                start = this._config['entity_forecast_high_temp_1'] ? this._config['entity_forecast_high_temp_1'].match(/(\d+)(?!.*\d)/g) : false;
-                const maxEntity = start && this._config['entity_forecast_high_temp_1'] ? this._config['entity_forecast_high_temp_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
-                start = this._config['entity_forecast_low_temp_1'] ? this._config['entity_forecast_low_temp_1'].match(/(\d+)(?!.*\d)/g) : false;
-                const minEntity = start && this._config['entity_forecast_low_temp_1'] ? this._config['entity_forecast_low_temp_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
-                const tempUnit = $ `<div class="unitc">${this.getUOM("temperature")}</div>`;
-                const minMax = this._config.old_daily_format === true
-                    ?
-                        $ `
-              <div class="f-slot">
-                <div class="highTemp">${maxEntity && this.hass.states[maxEntity] ? Math.round(Number(this.hass.states[maxEntity].state)) : '---'}</div>
-                <div>${tempUnit}</div>
-              </div>
-              <br>
-              <div class="f-slot">
-                <div class="lowTemp">${minEntity && this.hass.states[minEntity] ? Math.round(Number(this.hass.states[minEntity].state)) : '---'}</div>
-                <div>${tempUnit}</div>
-              </div>`
-                    :
-                        this._config.tempformat === "highlow"
-                            ?
-                                $ `
-                    <div class="f-slot">
-                      <div class="highTemp">${maxEntity && this.hass.states[maxEntity] ?
-                                    Math.round(Number(this.hass.states[maxEntity].state)) : "---"}</div>
-                      <div class="slash">/</div>
-                      <div class="lowTemp">${minEntity && this.hass.states[minEntity] ?
-                                    Math.round(Number(this.hass.states[minEntity].state)) : "---"}</div>
-                      <div>${tempUnit}</div>
-                    </div>`
-                            :
-                                $ `
-                    <div class="f-slot">
-                      <div class="lowTemp">${minEntity && this.hass.states[minEntity] ?
-                                    Math.round(Number(this.hass.states[minEntity].state)) : "---"}</div>
-                      <div class="slash">/</div>
-                      <div class="highTemp">${maxEntity && this.hass.states[maxEntity] ?
-                                    Math.round(Number(this.hass.states[maxEntity].state)) : "---"}</div>
-                      <div>${tempUnit}</div>
-                    </div>`;
-                start = this._config['entity_pop_1'] ? this._config['entity_pop_1'].match(/(\d+)(?!.*\d)/g) : false;
-                const popEntity = start && this._config['entity_pop_1'] ? this._config['entity_pop_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
-                const pop = start ? $ `
-          <br><div class="f-slot"><div class="pop">${popEntity && this.hass.states[popEntity] ? Math.round(Number(this.hass.states[popEntity].state)) : "---"}</div><div class="unit">%</div></div>` : ``;
-                start = this._config['entity_pos_1'] ? this._config['entity_pos_1'].match(/(\d+)(?!.*\d)/g) : false;
-                const posEntity = start && this._config['entity_pos_1'] ? this._config['entity_pos_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
-                const pos = start ? $ `
-          <br><div class="f-slot"><div class="pos">${posEntity && this.hass.states[posEntity] ? this.hass.states[posEntity].state : "---"}</div><div class="unit">${this.getUOM('precipitation')}</div></div>` : ``;
-                start = this._config['entity_summary_1'] ? this._config['entity_summary_1'].match(/(\d+)(?!.*\d)/g) : false;
-                const tooltipEntity = start && this._config['entity_summary_1'] ? this._config['entity_summary_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
-                const tooltip = $ `<div class="fcasttooltiptext" id="fcast-summary-${i}">${this._config.tooltips && tooltipEntity ?
-                    this.hass.states[tooltipEntity] ? this.hass.states[tooltipEntity].state : "Config Error" : ""}</div>`;
-                htmlDays.push($ `
-          <div class="day-horiz fcasttooltip">
-            <span class="dayname">${forecastDate ? forecastDate.toLocaleDateString(this.locale, { weekday: 'short' }) :
-                    "---"}</span>
-            <br>${htmlIcon}
-            ${minMax}
-            ${pop}
-            ${pos}
-            ${tooltip}
+        for (var i = 0; i < days; i++) {
+            const forecastDate = new Date();
+            forecastDate.setDate(forecastDate.getDate() + i + 1);
+            var start = this._config['entity_forecast_icon_1'] ? this._config['entity_forecast_icon_1'].match(/(\d+)(?!.*\d)/g) : false;
+            const iconEntity = this._config['entity_forecast_icon_1'] ? this._config['entity_forecast_icon_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
+            const url = new URL(('icons/' + (this._config.option_static_icons ? 'static' : 'animated') + '/' + (iconEntity && this.hass.states[iconEntity] ? this._weatherIcon(this.hass.states[iconEntity].state) : 'unknown') + '.svg').replace("-night", "-day"), import.meta.url);
+            const htmlIcon = $ `<i class="icon" style="background: none, url(${url.href}) no-repeat; background-size: contain;"></i><br>`;
+            start = this._config['entity_forecast_high_temp_1'] ? this._config['entity_forecast_high_temp_1'].match(/(\d+)(?!.*\d)/g) : false;
+            const maxEntity = start && this._config['entity_forecast_high_temp_1'] ? this._config['entity_forecast_high_temp_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
+            start = this._config['entity_forecast_low_temp_1'] ? this._config['entity_forecast_low_temp_1'].match(/(\d+)(?!.*\d)/g) : false;
+            const minEntity = start && this._config['entity_forecast_low_temp_1'] ? this._config['entity_forecast_low_temp_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
+            const tempUnit = $ `<div class="unitc">${this.getUOM("temperature")}</div>`;
+            const minMax = this._config.old_daily_format === true
+                ?
+                    $ `
+          <div class="f-slot">
+            <div class="highTemp">${maxEntity && this.hass.states[maxEntity] ? Math.round(Number(this.hass.states[maxEntity].state)) : '---'}</div>
+            <div>${tempUnit}</div>
           </div>
-        `);
-            }
-            var daily_forecast_section = $ `
-        <div class="daily-forecast-horiz-section section">
-          ${htmlDays}
+          <br>
+          <div class="f-slot">
+            <div class="lowTemp">${minEntity && this.hass.states[minEntity] ? Math.round(Number(this.hass.states[minEntity].state)) : '---'}</div>
+            <div>${tempUnit}</div>
+          </div>`
+                :
+                    this._config.tempformat === "highlow"
+                        ?
+                            $ `
+            <div class="f-slot">
+              <div class="highTemp">${maxEntity && this.hass.states[maxEntity] ? Math.round(Number(this.hass.states[maxEntity].state)) : "---"}</div>
+              <div class="slash">/</div>
+              <div class="lowTemp">${minEntity && this.hass.states[minEntity] ? Math.round(Number(this.hass.states[minEntity].state)) : "---"}</div>
+              <div>${tempUnit}</div>
+            </div>`
+                        :
+                            $ `
+            <div class="f-slot">
+              <div class="lowTemp">${minEntity && this.hass.states[minEntity] ? Math.round(Number(this.hass.states[minEntity].state)) : "---"}</div>
+              <div class="slash">/</div>
+              <div class="highTemp">${maxEntity && this.hass.states[maxEntity] ? Math.round(Number(this.hass.states[maxEntity].state)) : "---"}</div>
+              <div>${tempUnit}</div>
+            </div>`;
+            start = this._config['entity_pop_1'] ? this._config['entity_pop_1'].match(/(\d+)(?!.*\d)/g) : false;
+            const popEntity = start && this._config['entity_pop_1'] ? this._config['entity_pop_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
+            const pop = start ? $ `<br><div class="f-slot"><div class="pop">${popEntity && this.hass.states[popEntity] ? Math.round(Number(this.hass.states[popEntity].state)) : "---"}</div><div class="unit">%</div></div>` : ``;
+            start = this._config['entity_pos_1'] ? this._config['entity_pos_1'].match(/(\d+)(?!.*\d)/g) : false;
+            const posEntity = start && this._config['entity_pos_1'] ? this._config['entity_pos_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
+            const pos = start ? $ `<br><div class="f-slot"><div class="pos">${posEntity && this.hass.states[posEntity] ? this.hass.states[posEntity].state : "---"}</div><div class="unit">${this.getUOM('precipitation')}</div></div>` : ``;
+            start = this._config['entity_summary_1'] ? this._config['entity_summary_1'].match(/(\d+)(?!.*\d)/g) : false;
+            const tooltipEntity = start && this._config['entity_summary_1'] ? this._config['entity_summary_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
+            const tooltip = $ `<div class="fcasttooltiptext" id="fcast-summary-${i}">${this._config.option_tooltips && tooltipEntity ? this.hass.states[tooltipEntity] ? this.hass.states[tooltipEntity].state : "---" : ""}</div>`;
+            htmlDays.push($ `
+        <div class="day-horiz fcasttooltip">
+          <span class="dayname">${forecastDate ? forecastDate.toLocaleDateString(this.locale, { weekday: 'short' }) :
+                "---"}</span>
+          <br>${htmlIcon}
+          ${minMax}
+          ${pop}
+          ${pos}
+          ${tooltip}
         </div>
-    `;
+      `);
         }
-        else {
-            for (var i = 0; i < days; i++) {
-                const forecastDate = new Date();
-                forecastDate.setDate(forecastDate.getDate() + i + 1);
-                var start = this._config['entity_forecast_icon_1'] ? this._config['entity_forecast_icon_1'].match(/(\d+)(?!.*\d)/g) : false;
-                const iconEntity = start && this._config['entity_forecast_icon_1'] ? this._config['entity_forecast_icon_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
-                if (!iconEntity || this.hass.states[iconEntity] === undefined || this.hass.states[iconEntity].state === 'unknown') { // Stop adding forecast days as soon as an undefined entity is encountered
-                    break;
-                }
-                const url = new URL(('icons/' + (this._config.option_static_icons ? 'static' : 'animated') + '/' + (this.hass.states[iconEntity] !== undefined ? this._weatherIcon(this.hass.states[iconEntity].state) : 'unknown') + '.svg').replace("-night", "-day"), import.meta.url);
-                const htmlIcon = $ `<i class="icon" style="background: none, url(${url.href}) no-repeat; background-size: contain;"></i><br>`;
-                start = this._config['entity_forecast_high_temp_1'] ? this._config['entity_forecast_high_temp_1'].match(/(\d+)(?!.*\d)/g) : false;
-                const maxEntity = start && this._config['entity_forecast_high_temp_1'] ? this._config['entity_forecast_high_temp_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
-                start = this._config['entity_forecast_low_temp_1'] ? this._config['entity_forecast_low_temp_1'].match(/(\d+)(?!.*\d)/g) : false;
-                const minEntity = start && this._config['entity_forecast_low_temp_1'] ? this._config['entity_forecast_low_temp_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
-                const tempUnit = $ `<div class="unitc">${this.getUOM("temperature")}</div>`;
-                const min = minEntity && this.hass.states[minEntity] ? $ `
-          <div class="temp-label">Min: </div>
-          <div class="low-temp">${Math.round(Number(this.hass.states[minEntity].state))}</div>${tempUnit}` : $ `---`;
-                const max = maxEntity && this.hass.states[maxEntity] ? $ `
-          <div class="temp-label">Max: </div>
-          <div class="high-temp">${Math.round(Number(this.hass.states[maxEntity].state))}</div>${tempUnit}` : $ `---`;
-                const minMax = this._config.tempformat === "highlow"
-                    ?
-                        $ `
-              <div class="f-slot">
-                <div class="highTemp">${maxEntity && this.hass.states[maxEntity] ?
-                            Math.round(Number(this.hass.states[maxEntity].state)) : "---"}</div>
-                <div class="slash">/</div>
-                <div class="lowTemp">${minEntity && this.hass.states[minEntity] ?
-                            Math.round(Number(this.hass.states[minEntity].state)) : "---"}</div>
-                <div>${tempUnit}</div>
-              </div>`
-                    :
-                        $ `
-              <div class="f-slot">${min}${max}</div>`;
-                start = this._config['entity_summary_1'] ? this._config['entity_summary_1'].match(/(\d+)(?!.*\d)/g) : false;
-                const summaryEntity = start && this._config['entity_summary_1'] ? this._config['entity_summary_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
-                const summary = start ? $ `
-          <br><div class="f-slot">${summaryEntity && this.hass.states[summaryEntity] ? this.hass.states[summaryEntity].state : "---"}</div>` : ``;
-                start = this._config['entity_pop_1'] ? this._config['entity_pop_1'].match(/(\d+)(?!.*\d)/g) : false;
-                const popEntity = start && this._config['entity_pop_1'] ? this._config['entity_pop_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
-                const pop = start ? $ `
-          <div class="f-slot"><div class="f-label">Chance of rain </div>
-          <div class="pop">${popEntity && this.hass.states[popEntity] ? Math.round(Number(this.hass.states[popEntity].state)) : "---"}</div><div class="unit">%</div></div>` : ``;
-                start = this._config['entity_pos_1'] ? this._config['entity_pos_1'].match(/(\d+)(?!.*\d)/g) : false;
-                const posEntity = start && this._config['entity_pos_1'] ? this._config['entity_pos_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
-                const pos = start ? $ `
-          <br><div class="f-slot"><div class="f-label">Possible rain </div>
-          <div class="pos">${posEntity && this.hass.states[posEntity] ? this.hass.states[posEntity].state : "---"}</div>
-          <div class="unit">${this.getUOM('precipitation')}</div></div>` : ``;
-                start = this._config['entity_extended_1'] && i < (this._config['daily_extended_forecast_days'] !== 0 ? this._config['daily_extended_forecast_days'] || 7 : 0) ? this._config['entity_extended_1'].match(/(\d+)(?!.*\d)/g) : false;
-                var extended = $ ``;
+        return $ `
+      <div class="daily-forecast-horiz-section section">
+        ${htmlDays}
+      </div>
+    `;
+    }
+    _renderVerticalDailyForecastSection() {
+        const htmlDays = [];
+        const days = this._config.daily_forecast_days || 5;
+        for (var i = 0; i < days; i++) {
+            const forecastDate = new Date();
+            forecastDate.setDate(forecastDate.getDate() + i + 1);
+            var start = this._config['entity_forecast_icon_1'] ? this._config['entity_forecast_icon_1'].match(/(\d+)(?!.*\d)/g) : false;
+            const iconEntity = start && this._config['entity_forecast_icon_1'] ? this._config['entity_forecast_icon_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
+            if (!iconEntity || this.hass.states[iconEntity] === undefined || this.hass.states[iconEntity].state === 'unknown') { // Stop adding forecast days as soon as an undefined entity is encountered
+                break;
+            }
+            const url = new URL(('icons/' + (this._config.option_static_icons ? 'static' : 'animated') + '/' + (this.hass.states[iconEntity] !== undefined ? this._weatherIcon(this.hass.states[iconEntity].state) : 'unknown') + '.svg').replace("-night", "-day"), import.meta.url);
+            const htmlIcon = $ `<i class="icon" style="background: none, url(${url.href}) no-repeat; background-size: contain;"></i><br>`;
+            start = this._config['entity_forecast_high_temp_1'] ? this._config['entity_forecast_high_temp_1'].match(/(\d+)(?!.*\d)/g) : false;
+            const maxEntity = start && this._config['entity_forecast_high_temp_1'] ? this._config['entity_forecast_high_temp_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
+            start = this._config['entity_forecast_low_temp_1'] ? this._config['entity_forecast_low_temp_1'].match(/(\d+)(?!.*\d)/g) : false;
+            const minEntity = start && this._config['entity_forecast_low_temp_1'] ? this._config['entity_forecast_low_temp_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
+            const tempUnit = $ `<div class="unitc">${this.getUOM("temperature")}</div>`;
+            const min = minEntity && this.hass.states[minEntity] ? $ `
+        <div class="temp-label">Min: </div>
+        <div class="low-temp">${Math.round(Number(this.hass.states[minEntity].state))}</div>${tempUnit}` : $ `---`;
+            const max = maxEntity && this.hass.states[maxEntity] ? $ `
+        <div class="temp-label">Max: </div>
+        <div class="high-temp">${Math.round(Number(this.hass.states[maxEntity].state))}</div>${tempUnit}` : $ `---`;
+            const minMax = this._config.tempformat === "highlow"
+                ?
+                    $ `
+          <div class="f-slot">
+            <div class="highTemp">${maxEntity && this.hass.states[maxEntity] ? Math.round(Number(this.hass.states[maxEntity].state)) : "---"}</div>
+            <div class="slash">/</div>
+            <div class="lowTemp">${minEntity && this.hass.states[minEntity] ? Math.round(Number(this.hass.states[minEntity].state)) : "---"}</div>
+            <div>${tempUnit}</div>
+          </div>`
+                :
+                    $ `
+          <div class="f-slot">${min}${max}</div>`;
+            start = this._config['entity_summary_1'] ? this._config['entity_summary_1'].match(/(\d+)(?!.*\d)/g) : false;
+            const summaryEntity = start && this._config['entity_summary_1'] ? this._config['entity_summary_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
+            const summary = start ? $ `
+        <br><div class="f-slot">${summaryEntity && this.hass.states[summaryEntity] ? this.hass.states[summaryEntity].state : "---"}</div>` : ``;
+            start = this._config['entity_pop_1'] ? this._config['entity_pop_1'].match(/(\d+)(?!.*\d)/g) : false;
+            const popEntity = start && this._config['entity_pop_1'] ? this._config['entity_pop_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
+            const pop = start ? $ `
+        <div class="f-slot"><div class="f-label">Chance of rain </div>
+        <div class="pop">${popEntity && this.hass.states[popEntity] ? Math.round(Number(this.hass.states[popEntity].state)) : "---"}</div><div class="unit">%</div></div>` : ``;
+            start = this._config['entity_pos_1'] ? this._config['entity_pos_1'].match(/(\d+)(?!.*\d)/g) : false;
+            const posEntity = start && this._config['entity_pos_1'] ? this._config['entity_pos_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
+            const pos = start ? $ `
+        <br><div class="f-slot"><div class="f-label">Possible rain </div>
+        <div class="pos">${posEntity && this.hass.states[posEntity] ? this.hass.states[posEntity].state : "---"}</div>
+        <div class="unit">${this.getUOM('precipitation')}</div></div>` : ``;
+            start = this._config['entity_extended_1'] && i < (this._config['daily_extended_forecast_days'] !== 0 ? this._config['daily_extended_forecast_days'] || 7 : 0) ? this._config['entity_extended_1'].match(/(\d+)(?!.*\d)/g) : false;
+            var extended = $ ``;
+            if (this._config['option_daily_show_extended'] === true) {
                 if (this._config['daily_extended_use_attr'] === true) {
                     start = this._config['entity_extended_1'] ? this._config['entity_extended_1'].match(/(\d+)(?!.*\d)/g) : false;
                     const extendedEntity = start && this._config['entity_extended_1'] ? this._config['entity_extended_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
@@ -594,37 +584,48 @@ let WeatherCard = class WeatherCard extends s$1 {
                     extended = start ? $ `<div class="f-extended">${extendedEntity && this.hass.states[extendedEntity] ? this.hass.states[extendedEntity].state :
                         "---"}</div>` : $ ``;
                 }
-                htmlDays.push($ `
-          <div class="day-vert fcasttooltip">
-            <div class="day-vert-top">
-              <div class="day-vert-dayicon">
-                <span class="dayname">${forecastDate ? forecastDate.toLocaleDateString(this.locale, { weekday: 'short' }) : "---"}</span>
-                <br>${htmlIcon}
-              </div>
-              <div class="day-vert-values">
-                ${minMax}
-                ${summary}
-              </div>
-              <div class="day-vert-values">
-                ${pop}
-                ${pos}
-              </div>
+            }
+            htmlDays.push($ `
+        <div class="day-vert fcasttooltip">
+          <div class="day-vert-top">
+            <div class="day-vert-dayicon">
+              <span class="dayname">${forecastDate ? forecastDate.toLocaleDateString(this.locale, { weekday: 'short' }) : "---"}</span>
+              <br>${htmlIcon}
             </div>
-            <div class="day-vert-bottom">
-              ${extended}
+            <div class="day-vert-values">
+              ${minMax}
+              ${summary}
+            </div>
+            <div class="day-vert-values">
+              ${pop}
+              ${pos}
             </div>
           </div>
-        `);
-            }
-            var daily_forecast_section = $ `
-        <div class="daily-forecast-vert-section section">
-          ${htmlDays}
+          <div class="day-vert-bottom">
+            ${extended}
+          </div>
         </div>
-    `;
+      `);
         }
         return $ `
-      <div>${daily_forecast_section}</div>
+      <div class="daily-forecast-vert-section section">
+        ${htmlDays}
+      </div>
     `;
+    }
+    _renderDailyForecastSection() {
+        var _a;
+        if (((_a = this._config) === null || _a === void 0 ? void 0 : _a.show_section_daily_forecast) === false)
+            return $ ``;
+        if (this._config.daily_forecast_layout !== 'vertical') {
+            return this._renderHorizontalDailyForecastSection();
+        }
+        else {
+            return this._renderVerticalDailyForecastSection();
+        }
+        // return html`
+        //   <div>${daily_forecast_section}</div>
+        // `;
     }
     render() {
         const htmlCode = [];
@@ -1044,7 +1045,7 @@ let WeatherCard = class WeatherCard extends s$1 {
       </li>`;
     }
     get slotWind() {
-        const beaufort = this._config.entity_wind_speed && this._config.show_beaufort ? $ `<div class="slot-text"></div>BFT: ${this.currentBeaufort} -&nbsp;</div>` : "";
+        const beaufort = this._config.entity_wind_speed && this._config.option_show_beaufort ? $ `<div class="slot-text"></div>BFT: ${this.currentBeaufort} -&nbsp;</div>` : "";
         const bearing = this._config.entity_wind_bearing ? $ `<div class="slot-text">${this.currentWindBearing}&nbsp;</div>` : "";
         const units = $ `<div class="slot-text unit">${this.getUOM('length')}/h</div>`;
         const speed = this._config.entity_wind_speed ? $ `<div class="slot-text">${this.currentWindSpeed}</div>${units}&nbsp;` : "";
@@ -1061,7 +1062,7 @@ let WeatherCard = class WeatherCard extends s$1 {
     `;
     }
     get slotWindKt() {
-        const beaufort = this._config.entity_wind_speed_kt && this._config.show_beaufort ? $ `<div class="slot-text"></div>BFT: ${this.currentBeaufortKt} -&nbsp;</div>` : "";
+        const beaufort = this._config.entity_wind_speed_kt && this._config.option_show_beaufort ? $ `<div class="slot-text"></div>BFT: ${this.currentBeaufortKt} -&nbsp;</div>` : "";
         const bearing = this._config.entity_wind_bearing ? $ `<div class="slot-text">${this.currentWindBearing}&nbsp;</div>` : "";
         const units = $ `<div class="slot-text unit">Kt</div>`;
         const speed = this._config.entity_wind_speed_kt ? $ `<div class="slot-text">${this.currentWindSpeedKt}</div>${units}&nbsp;` : "";
@@ -1826,7 +1827,7 @@ let WeatherCard = class WeatherCard extends s$1 {
         const tooltipCaretSize = this._config.tooltip_caret_size || "5";
         const tooltipWidth = this._config.tooltip_width || "200";
         // const tooltipLeftOffset = this._config.tooltip_left_offset || "-12";
-        const tooltipVisible = this._config.tooltips ? "visible" : "hidden";
+        const tooltipVisible = this._config.option_tooltips ? "visible" : "hidden";
         // const tempTopMargin = this._config.temp_top_margin || "0px";
         const tempFontWeight = this._config.temp_font_weight || "300";
         const tempFontSize = this._config.temp_font_size || "4em";
@@ -10688,6 +10689,14 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
             tmpConfig['option_pressure_decimals'] = tmpConfig.show_decimals_pressure;
             delete tmpConfig['show_decimals_pressure'];
         }
+        if (tmpConfig.tooltips) {
+            tmpConfig['option_tooltips'] = tmpConfig.tooltips;
+            delete tmpConfig['tooltips'];
+        }
+        if (tmpConfig.show_beaufort) {
+            tmpConfig['option_show_beaufort'] = tmpConfig.show_beaufort;
+            delete tmpConfig['show_beaufort'];
+        }
         if (tmpConfig.entity_daytime_high) {
             tmpConfig['Entity_forecast_max'] = tmpConfig.entity_daytime_high;
             delete tmpConfig['entity_daytime_high'];
@@ -10704,7 +10713,7 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
                 tmpConfig[slot] = 'forecast_min';
         }
         // Remove unused entries
-        const keysOfProps = ["type", "card_config_version", "section_order", "show_section_title", "show_section_main", "show_section_extended", "show_section_slots", "show_section_daily_forecast", "text_card_title", "entity_update_time", "text_update_time_prefix", "entity_temperature", "entity_apparent_temp", "entity_current_conditions", "entity_current_text", "show_decimals", "show_separator", "entity_daily_summary", "extended_use_attr", "extended_name_attr", "slot_l1", "slot_l2", "slot_l3", "slot_l4", "slot_l5", "slot_l6", "slot_r1", "slot_r2", "slot_r3", "slot_r4", "slot_r5", "slot_r6", "entity_humidity", "entity_pressure", "entity_visibility", "entity_wind_bearing", "entity_wind_speed", "entity_wind_gust", "entity_wind_speed_kt", "entity_wind_gust_kt", "entity_temp_next", "entity_temp_next_label", "entity_temp_following", "entity_temp_following_label", "entity_forecast_max", "entity_forecast_min", "entity_observed_max", "entity_observed_min", "entity_fire_danger", "entity_fire_danger_summary", "entity_pop", "entity_possible_today", "entity_sun", "entity_uv_alert_summary", "entity_rainfall", "entity_todays_fire_danger", "entity_todays_uv_forecast", "custom1_value", "custom1_icon", "custom1_units", "custom2_value", "custom2_icon", "custom2_units", "custom3_value", "custom3_icon", "custom3_units", "custom4_value", "custom4_icon", "custom4_units", "entity_forecast_icon_1", "entity_pop_1", "entity_pos_1", "entity_summary_1", "entity_forecast_low_temp_1", "entity_forecast_high_temp_1", "entity_extended_1", "daily_forecast_layout", "daily_forecast_days", "daily_extended_forecast_days", "daily_extended_use_attr", "daily_extended_name_attr", "option_today_decimals", "option_pressure_decimals", "option_locale", "option_static_icons", "option_icon_set", "option_time_format", "show_decimals_today", "old_daily_format", "show_beaufort", "index", "view_index"];
+        const keysOfProps = ["type", "card_config_version", "section_order", "show_section_title", "show_section_main", "show_section_extended", "show_section_slots", "show_section_daily_forecast", "text_card_title", "entity_update_time", "text_update_time_prefix", "entity_temperature", "entity_apparent_temp", "entity_current_conditions", "entity_current_text", "show_decimals", "show_separator", "entity_daily_summary", "extended_use_attr", "extended_name_attr", "slot_l1", "slot_l2", "slot_l3", "slot_l4", "slot_l5", "slot_l6", "slot_r1", "slot_r2", "slot_r3", "slot_r4", "slot_r5", "slot_r6", "entity_humidity", "entity_pressure", "entity_visibility", "entity_wind_bearing", "entity_wind_speed", "entity_wind_gust", "entity_wind_speed_kt", "entity_wind_gust_kt", "entity_temp_next", "entity_temp_next_label", "entity_temp_following", "entity_temp_following_label", "entity_forecast_max", "entity_forecast_min", "entity_observed_max", "entity_observed_min", "entity_fire_danger", "entity_fire_danger_summary", "entity_pop", "entity_possible_today", "entity_sun", "entity_uv_alert_summary", "entity_rainfall", "entity_todays_fire_danger", "entity_todays_uv_forecast", "custom1_value", "custom1_icon", "custom1_units", "custom2_value", "custom2_icon", "custom2_units", "custom3_value", "custom3_icon", "custom3_units", "custom4_value", "custom4_icon", "custom4_units", "entity_forecast_icon_1", "entity_pop_1", "entity_pos_1", "entity_summary_1", "entity_forecast_low_temp_1", "entity_forecast_high_temp_1", "entity_extended_1", "daily_forecast_layout", "daily_forecast_days", "daily_extended_forecast_days", "daily_extended_use_attr", "daily_extended_name_attr", "option_today_decimals", "option_pressure_decimals", "option_daily_show_extended", "option_locale", "option_static_icons", "option_icon_set", "option_time_format", "option_tooltips", "old_daily_format", "option_show_beaufort", "index", "view_index"];
         for (const element in this._config) {
             if (!keysOfProps.includes(element)) {
                 console.info(`removing ${element}`);
@@ -11033,6 +11042,10 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
         var _a;
         return ((_a = this._config) === null || _a === void 0 ? void 0 : _a.daily_extended_name_attr) || '';
     }
+    get _option_daily_show_extended() {
+        var _a;
+        return ((_a = this._config) === null || _a === void 0 ? void 0 : _a.option_daily_show_extended) === true; // default off
+    }
     get _option_today_decimals() {
         var _a;
         return ((_a = this._config) === null || _a === void 0 ? void 0 : _a.option_today_decimals) === true; // default off
@@ -11040,6 +11053,10 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
     get _option_pressure_decimals() {
         var _a;
         return ((_a = this._config) === null || _a === void 0 ? void 0 : _a.option_pressure_decimals) || null;
+    }
+    get _option_tooltips() {
+        var _a;
+        return ((_a = this._config) === null || _a === void 0 ? void 0 : _a.option_tooltips) === true; // default off
     }
     get _option_static_icons() {
         var _a;
@@ -11743,8 +11760,9 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
           <mwc-list-item value="3">3</mwc-list-item>
           <mwc-list-item value="4">4</mwc-list-item>
           <mwc-list-item value="5">5</mwc-list-item>
-          ${this._daily_forecast_layout === 'vertical' ? $ `<mwc-list-item value="6">6</mwc-list-item>
-          <mwc-list-item value="7">7</mwc-list-item>` : $ ``}
+          ${this._daily_forecast_layout === 'vertical' ? $ `
+            <mwc-list-item value="6">6</mwc-list-item>
+            <mwc-list-item value="7">7</mwc-list-item>` : $ ``}
         </ha-select>
         ${this._daily_forecast_layout === 'vertical' ? $ `<ha-select label="Daily Extended Days (optional)"
           .configValue=${'daily_extended_forecast_days'} .value=${this._daily_extended_forecast_days !== null ?
@@ -11760,6 +11778,22 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
           <mwc-list-item value="7">7</mwc-list-item>
         </ha-select>` : $ `<div></div>`}
       </div>
+
+        <div class="side-by-side">
+          <div>
+            ${this._daily_forecast_layout !== 'vertical' ? $ `
+              <mwc-formfield .label=${'Enable forecast tooltips'}>
+                <mwc-switch .checked = ${this._option_tooltips !== false} .configValue = ${'option_tooltips'} @change=${this._valueChanged}>
+                </mwc-switch>
+              </mwc-formfield>` : $ `
+              <mwc-formfield .label=${'Show extended forecast'}>
+                <mwc-switch .checked = ${this._option_daily_show_extended !== false} .configValue = ${'option_daily_show_extended'} @change=${this._valueChanged}>
+                </mwc-switch>
+              </mwc-formfield>
+              `}
+          </div>
+          <div></div>
+        </div>
     `;
     }
     _optionGlobalOptionsEditor() {
@@ -11767,13 +11801,11 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
       <div class="side-by-side">
         <div>
           <mwc-formfield .label=${'Show static Icons'}>
-            <mwc-switch .checked=${this._option_static_icons !== false} .configValue=${'option_static_icons'}
-              @change=${this._valueChanged}>
+            <mwc-switch .checked=${this._option_static_icons !== false} .configValue=${'option_static_icons'} @change=${this._valueChanged}>
             </mwc-switch>
           </mwc-formfield>
         </div>
-        <ha-select label="Icon Set (optional)" .configValue=${'option_icon_set'} .value=${this._option_icon_set} @closed=${(ev) => ev.stopPropagation()}
-          @selected=${this._valueChanged}>
+        <ha-select label="Icon Set (optional)" .configValue=${'option_icon_set'} .value=${this._option_icon_set} @closed=${(ev) => ev.stopPropagation()} @selected=${this._valueChanged}>
           <mwc-list-item></mwc-list-item>
           <mwc-list-item value="new">New</mwc-list-item>
           <mwc-list-item value="hybrid">Hybrid</mwc-list-item>
@@ -11781,8 +11813,7 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
         </ha-select>
       </div>
       <div class="side-by-side">
-        <ha-select label="Time Format (optional)" .configValue=${'option_time_format'} .value=${this._option_time_format} @closed=${(ev) => ev.stopPropagation()}
-          @selected=${this._valueChanged}>
+        <ha-select label="Time Format (optional)" .configValue=${'option_time_format'} .value=${this._option_time_format} @closed=${(ev) => ev.stopPropagation()} @selected=${this._valueChanged}>
           <mwc-list-item></mwc-list-item>
           <mwc-list-item value="system">System</mwc-list-item>
           <mwc-list-item value="12hour">12 hour</mwc-list-item>
@@ -11865,8 +11896,7 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
                 return $ `
           <div class="section-flex edit-title-section">
             <mwc-formfield .label=${`Title Section`}>
-              <mwc-switch .checked=${this._show_section_title !== false} .configValue=${'show_section_title'}
-                @change=${this._valueChanged}>
+              <mwc-switch .checked=${this._show_section_title !== false} .configValue=${'show_section_title'} @change=${this._valueChanged}>
               </mwc-switch>
             </mwc-formfield>
             <div>
@@ -11884,8 +11914,7 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
                 return $ `
           <div class="section-flex edit-overview-section">
             <mwc-formfield .label=${`Overview Section`}>
-              <mwc-switch .checked=${this._show_section_overview !== false} .configValue=${'show_section_overview'}
-                @change=${this._valueChanged}>
+              <mwc-switch .checked = ${this._show_section_overview !== false} .configValue = ${'show_section_overview'} @change=${this._valueChanged}>
               </mwc-switch>
             </mwc-formfield>
             <div>
@@ -11904,8 +11933,7 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
                 return $ `
           <div class="section-flex edit-extended-section">
             <mwc-formfield .label=${`Extended Section`}>
-              <mwc-switch .checked=${this._show_section_extended !== false} .configValue=${'show_section_extended'}
-                @change=${this._valueChanged}>
+              <mwc-switch .checked=${this._show_section_extended !== false} .configValue=${'show_section_extended'} @change=${this._valueChanged}>
               </mwc-switch>
             </mwc-formfield>
             <div>
@@ -11923,8 +11951,7 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
                 return $ `
           <div class="section-flex edit-slots-section">
             <mwc-formfield .label=${`Slots Section`}>
-              <mwc-switch .checked=${this._show_section_slots !== false} .configValue=${'show_section_slots'}
-                @change=${this._valueChanged}>
+              <mwc-switch .checked = ${this._show_section_slots !== false} .configValue = ${'show_section_slots'} @change=${this._valueChanged}>
               </mwc-switch>
             </mwc-formfield>
             <div>
@@ -11943,8 +11970,7 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
                 return $ `
           <div class="section-flex edit-daily-forecast-section">
             <mwc-formfield .label=${`Daily Forecast Section`}>
-              <mwc-switch .checked=${this._show_section_daily_forecast !== false} .configValue=${'show_section_daily_forecast'}
-                @change=${this._valueChanged}>
+              <mwc-switch .checked=${this._show_section_daily_forecast !== false} .configValue=${'show_section_daily_forecast'} @change=${this._valueChanged}>
               </mwc-switch>
             </mwc-formfield>
             <div>
@@ -11966,8 +11992,7 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
             </mwc-formfield>
             <div>
               <div class="no-icon"></div>
-              <ha-icon-button class="edit-icon" .value=${'option_global_options'} .path=${mdiApplicationEditOutline}
-                @click="${this._editSubmenu}">
+              <ha-icon-button class="edit-icon" .value=${'option_global_options'} .path=${mdiApplicationEditOutline} @click="${this._editSubmenu}">
               </ha-icon-button>
             </div>
           </div>

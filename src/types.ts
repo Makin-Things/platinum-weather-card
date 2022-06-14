@@ -107,11 +107,13 @@ export interface WeatherCardConfig extends LovelaceCardConfig {
   option_today_decimals?: boolean;
   option_pressure_decimals?: pressureDecimals;
 
+  option_daily_show_extended?: boolean;
+
   option_locale?: string;
   option_static_icons?: boolean;
   option_icon_set?: iconSets;
   option_time_format?: timeFormat;
-  show_decimals_today?: boolean;
+  option_tooltips?: boolean;
   old_daily_format?: boolean;
-  show_beaufort?: boolean;
+  option_show_beaufort?: boolean;
 }
