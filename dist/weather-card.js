@@ -1418,115 +1418,115 @@ let WeatherCard = class WeatherCard extends s$1 {
         return this._config.entity_sun && this.hass.states[this._config.entity_sun] !== undefined ? transformDayNight[this.hass.states[this._config.entity_sun].state] : 'day';
     }
     get iconStyle() {
-        return (this._config.option_icon_set) ? this._config.option_icon_set : `old`;
+        return (this._config.option_icon_set) ? this._config.option_icon_set : 'old';
     }
     get iconSunny() {
         const iconStyle = this.iconStyle;
-        return (iconStyle === "true") ? `${this.dayOrNight}` : (iconStyle === "hybrid") ? `sunny-${this.dayOrNight}` : `sunny-${this.dayOrNight}`;
+        return (iconStyle === 'old') ? `${this.dayOrNight}` : (iconStyle === 'hybrid') ? `sunny-${this.dayOrNight}` : `sunny-${this.dayOrNight}`;
     }
     get iconClear() {
         const iconStyle = this.iconStyle;
-        return (iconStyle === "true") ? `${this.dayOrNight}` : (iconStyle === "hybrid") ? `sunny-${this.dayOrNight}` : `clear-${this.dayOrNight}`;
+        return (iconStyle === 'old') ? `${this.dayOrNight}` : (iconStyle === 'hybrid') ? `sunny-${this.dayOrNight}` : `clear-${this.dayOrNight}`;
     }
     get iconMostlySunny() {
         const iconStyle = this.iconStyle;
-        return (iconStyle === "true") ? `fair-${this.dayOrNight}` : (iconStyle === "hybrid") ? `fair-${this.dayOrNight}` : `fair-${this.dayOrNight}`;
+        return (iconStyle === 'old') ? `fair-${this.dayOrNight}` : (iconStyle === 'hybrid') ? `fair-${this.dayOrNight}` : `fair-${this.dayOrNight}`;
     }
     get iconPartlyCloudy() {
         const iconStyle = this.iconStyle;
-        return (iconStyle === "true") ? `cloudy-${this.dayOrNight}-3` : (iconStyle === "hybrid") ? `cloudy-${this.dayOrNight}-3` : `partly-cloudy-${this.dayOrNight}`;
+        return (iconStyle === 'old') ? `cloudy-${this.dayOrNight}-3` : (iconStyle === 'hybrid') ? `cloudy-${this.dayOrNight}-3` : `partly-cloudy-${this.dayOrNight}`;
     }
     get iconCloudy() {
         const iconStyle = this.iconStyle;
-        return (iconStyle === "true") ? `cloudy-original` : (iconStyle === "hybrid") ? `cloudy-original` : `cloudy`;
+        return (iconStyle === 'old') ? `cloudy-original` : (iconStyle === 'hybrid') ? `cloudy-original` : `cloudy`;
     }
     get iconHazy() {
         const iconStyle = this.iconStyle;
-        return (iconStyle === "true") ? `cloudy-${this.dayOrNight}-1` : (iconStyle === "hybrid") ? `haze` : `haze`;
+        return (iconStyle === 'old') ? `cloudy-${this.dayOrNight}-1` : (iconStyle === 'hybrid') ? `haze` : `haze`;
     }
     get iconFrost() {
         const iconStyle = this.iconStyle;
-        return (iconStyle === "true") ? `cloudy-${this.dayOrNight}-1` : (iconStyle === "hybrid") ? `cloudy-${this.dayOrNight}-1` : `cloudy-${this.dayOrNight}-1`;
+        return (iconStyle === 'old') ? `cloudy-${this.dayOrNight}-1` : (iconStyle === 'hybrid') ? `cloudy-${this.dayOrNight}-1` : `cloudy-${this.dayOrNight}-1`;
     }
     get iconLightRain() {
         const iconStyle = this.iconStyle;
-        return (iconStyle === "true") ? `rainy-1` : (iconStyle === "hybrid") ? `rainy-1-${this.dayOrNight}` : `rainy-1-${this.dayOrNight}`;
+        return (iconStyle === 'old') ? `rainy-1` : (iconStyle === 'hybrid') ? `rainy-1-${this.dayOrNight}` : `rainy-1-${this.dayOrNight}`;
     }
     get iconWindy() {
         const iconStyle = this.iconStyle;
-        return (iconStyle === "true") ? `cloudy-original` : (iconStyle === "hybrid") ? `wind` : `wind`;
+        return (iconStyle === 'old') ? `cloudy-original` : (iconStyle === 'hybrid') ? `wind` : `wind`;
     }
     get iconFog() {
         const iconStyle = this.iconStyle;
-        return (iconStyle === "true") ? `cloudy-original` : (iconStyle === "hybrid") ? `fog` : `fog`;
+        return (iconStyle === 'old') ? `cloudy-original` : (iconStyle === 'hybrid') ? `fog` : `fog`;
     }
     get iconShowers() {
         const iconStyle = this.iconStyle;
-        return (iconStyle === "true") ? `rainy-1` : (iconStyle === "hybrid") ? `rainy-1-${this.dayOrNight}` : `rainy-1-${this.dayOrNight}`;
+        return (iconStyle === 'old') ? `rainy-1` : (iconStyle === 'hybrid') ? `rainy-1-${this.dayOrNight}` : `rainy-1-${this.dayOrNight}`;
     }
     get iconRain() {
         const iconStyle = this.iconStyle;
-        return (iconStyle === "true") ? `rainy-5` : (iconStyle === "hybrid") ? `rainy-5` : `rain`;
+        return (iconStyle === 'old') ? `rainy-5` : (iconStyle === 'hybrid') ? `rainy-5` : `rain`;
     }
     get iconDust() {
         const iconStyle = this.iconStyle;
-        return (iconStyle === "true") ? `cloudy-${this.dayOrNight}-1` : (iconStyle === "hybrid") ? `haze` : `haze`;
+        return (iconStyle === 'old') ? `cloudy-${this.dayOrNight}-1` : (iconStyle === 'hybrid') ? `haze` : `haze`;
     }
     get iconSnow() {
         const iconStyle = this.iconStyle;
-        return (iconStyle === "true") ? `snowy-6` : (iconStyle === "hybrid") ? `snowy-6` : `snow`;
+        return (iconStyle === 'old') ? `snowy-6` : (iconStyle === 'hybrid') ? `snowy-6` : `snow`;
     }
     get iconSnowRain() {
         const iconStyle = this.iconStyle;
-        return (iconStyle === "true") ? `snowy-6` : (iconStyle === "hybrid") ? `rain-and-snow-mix` : `rain-and-snow-mix`;
+        return (iconStyle === 'old') ? `snowy-6` : (iconStyle === 'hybrid') ? `rain-and-snow-mix` : `rain-and-snow-mix`;
     }
     get iconStorm() {
         const iconStyle = this.iconStyle;
-        return (iconStyle === "true") ? `scattered-thunderstorms` : (iconStyle === "hybrid") ? `scattered-thunderstorms` : `scattered-thunderstorms`;
+        return (iconStyle === 'old') ? `scattered-thunderstorms` : (iconStyle === 'hybrid') ? `scattered-thunderstorms` : `scattered-thunderstorms`;
     }
     get iconLightShowers() {
         const iconStyle = this.iconStyle;
-        return (iconStyle === "true") ? `rainy-2` : (iconStyle === "hybrid") ? `rainy-2` : `rainy-2`;
+        return (iconStyle === 'old') ? `rainy-2` : (iconStyle === 'hybrid') ? `rainy-2` : `rainy-2`;
     }
     get iconHeavyShowers() {
         const iconStyle = this.iconStyle;
-        return (iconStyle === "true") ? `rainy-6` : (iconStyle === "hybrid") ? `rainy-6` : `rainy-6`;
+        return (iconStyle === 'old') ? `rainy-6` : (iconStyle === 'hybrid') ? `rainy-6` : `rainy-6`;
     }
     get iconCyclone() {
         const iconStyle = this.iconStyle;
-        return (iconStyle === "true") ? `tornado` : (iconStyle === "hybrid") ? `tornado` : `tornado`;
+        return (iconStyle === 'old') ? `tornado` : (iconStyle === 'hybrid') ? `tornado` : `tornado`;
     }
     get iconClearDay() {
         const iconStyle = this.iconStyle;
-        return (iconStyle === "true") ? `day` : (iconStyle === "hybrid") ? `day` : `clear-day`;
+        return (iconStyle === 'old') ? `day` : (iconStyle === 'hybrid') ? `day` : `clear-day`;
     }
     get iconClearNight() {
         const iconStyle = this.iconStyle;
-        return (iconStyle === "true") ? `night` : (iconStyle === "hybrid") ? `night` : `clear-night`;
+        return (iconStyle === 'old') ? `night` : (iconStyle === 'hybrid') ? `night` : `clear-night`;
     }
     get iconSleet() {
         const iconStyle = this.iconStyle;
-        return (iconStyle === "true") ? `rainy-2` : (iconStyle === "hybrid") ? `rain-and-sleet-mix` : `rain-and-sleet-mix`;
+        return (iconStyle === 'old') ? `rainy-2` : (iconStyle === 'hybrid') ? `rain-and-sleet-mix` : `rain-and-sleet-mix`;
     }
     get iconPartlyCloudyDay() {
         const iconStyle = this.iconStyle;
-        return (iconStyle === "true") ? `cloudy-day-3` : (iconStyle === "hybrid") ? `cloudy-day-3` : `partly-cloudy-day`;
+        return (iconStyle === 'old') ? `cloudy-day-3` : (iconStyle === 'hybrid') ? `cloudy-day-3` : `partly-cloudy-day`;
     }
     get iconPartlyCloudyNight() {
         const iconStyle = this.iconStyle;
-        return (iconStyle === "true") ? `cloudy-night-3` : (iconStyle === "hybrid") ? `cloudy-night-3` : `partly-cloudy-night`;
+        return (iconStyle === 'old') ? `cloudy-night-3` : (iconStyle === 'hybrid') ? `cloudy-night-3` : `partly-cloudy-night`;
     }
     get iconHail() {
         const iconStyle = this.iconStyle;
-        return (iconStyle === "true") ? `rainy-7` : (iconStyle === "hybrid") ? `rainy-7` : `rainy-7`;
+        return (iconStyle === 'old') ? `rainy-7` : (iconStyle === 'hybrid') ? `rainy-7` : `rainy-7`;
     }
     get iconLightning() {
         const iconStyle = this.iconStyle;
-        return (iconStyle === "true") ? `thunder` : (iconStyle === "hybrid") ? `thunder` : `thunder`;
+        return (iconStyle === 'old') ? `thunder` : (iconStyle === 'hybrid') ? `thunder` : `thunder`;
     }
     get iconWindyVariant() {
         const iconStyle = this.iconStyle;
-        return (iconStyle === "true") ? `cloudy-${this.dayOrNight}-3` : (iconStyle === "hybrid") ? `cloudy-${this.dayOrNight}-3` : `cloudy-${this.dayOrNight}-3`;
+        return (iconStyle === 'old') ? `cloudy-${this.dayOrNight}-3` : (iconStyle === 'hybrid') ? `cloudy-${this.dayOrNight}-3` : `cloudy-${this.dayOrNight}-3`;
     }
     get locale() {
         try {
