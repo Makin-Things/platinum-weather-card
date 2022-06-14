@@ -221,6 +221,14 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     return this._config?.slot_l6 || '';
   }
 
+  get _slot_l7(): string {
+    return this._config?.slot_l7 || '';
+  }
+
+  get _slot_l8(): string {
+    return this._config?.slot_l8 || '';
+  }
+
   get _slot_r1(): string {
     return this._config?.slot_r1 || '';
   }
@@ -243,6 +251,14 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
 
   get _slot_r6(): string {
     return this._config?.slot_r6 || '';
+  }
+
+  get _slot_r7(): string {
+    return this._config?.slot_r7 || '';
+  }
+
+  get _slot_r8(): string {
+    return this._config?.slot_r8 || '';
   }
 
   get _entity_daytime_high(): string {
@@ -458,13 +474,17 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
         this._config?.slot_l3 || 'wind' as string,
         this._config?.slot_l4 || 'pressure' as string,
         this._config?.slot_l5 || 'sun_next' as string,
-        this._config?.slot_l6 || 'sun_next' as string,
+        this._config?.slot_l6 || 'remove' as string,
+        this._config?.slot_l7 || 'remove' as string,
+        this._config?.slot_l8 || 'remove' as string,
         this._config?.slot_r1 || 'pop' as string,
         this._config?.slot_r2 || 'humidity' as string,
         this._config?.slot_r3 || 'uv_summary' as string,
         this._config?.slot_r4 || 'fire_summary' as string,
         this._config?.slot_r5 || 'sun_following' as string,
-        this._config?.slot_r6 || 'sun_next' as string,
+        this._config?.slot_r6 || 'remove' as string,
+        this._config?.slot_r7 || 'remove' as string,
+        this._config?.slot_r8 || 'remove' as string,
       ]) {
       switch (slot) {
         case 'daytime_high':
@@ -1024,6 +1044,26 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
           ${slotValues}
         </ha-select>
         <ha-select label="Slot Right 6 (optional)" .configValue=${'slot_r6'} .value=${this._slot_r6}
+          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}>
+          ${slotValues}
+        </ha-select>
+      </div>
+      <div class="side-by-side">
+        <ha-select label="Slot Left 7 (optional)" .configValue=${'slot_l7'} .value=${this._slot_l7}
+          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}>
+          ${slotValues}
+        </ha-select>
+        <ha-select label="Slot Right 7 (optional)" .configValue=${'slot_r7'} .value=${this._slot_r7}
+          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}>
+          ${slotValues}
+        </ha-select>
+      </div>
+      <div class="side-by-side">
+        <ha-select label="Slot Left 8 (optional)" .configValue=${'slot_l8'} .value=${this._slot_l8}
+          @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}>
+          ${slotValues}
+        </ha-select>
+        <ha-select label="Slot Right 8 (optional)" .configValue=${'slot_r8'} .value=${this._slot_r8}
           @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}>
           ${slotValues}
         </ha-select>

@@ -258,10 +258,10 @@ export class WeatherCard extends LitElement {
       <div>
         <ul class="variations-ugly">
           <li>
-            <ul class="slot-list">${this.slotL1}${this.slotL2}${this.slotL3}${this.slotL4}${this.slotL5}${this.slotL6}</ul>
+            <ul class="slot-list">${this.slotL1}${this.slotL2}${this.slotL3}${this.slotL4}${this.slotL5}${this.slotL6}${this.slotL7}${this.slotL8}</ul>
           </li>
           <li>
-            <ul class="slot-list">${this.slotR1}${this.slotR2}${this.slotR3}${this.slotR4}${this.slotR5}${this.slotR6}</ul>
+            <ul class="slot-list">${this.slotR1}${this.slotR2}${this.slotR3}${this.slotR4}${this.slotR5}${this.slotR6}${this.slotR7}${this.slotR8}</ul>
           </li>
         </ul>
       </div>
@@ -270,12 +270,12 @@ export class WeatherCard extends LitElement {
         <ul class="variations">
           <li class="slot-list-item-1">
             <ul class="slot-list">
-              ${this.slotL1}${this.slotL2}${this.slotL3}${this.slotL4}${this.slotL5}${this.slotL6}
+              ${this.slotL1}${this.slotL2}${this.slotL3}${this.slotL4}${this.slotL5}${this.slotL6}${this.slotL7}${this.slotL8}
             </ul>
           </li>
           <li>
             <ul class="slot-list">
-              ${this.slotR1}${this.slotR2}${this.slotR3}${this.slotR4}${this.slotR5}${this.slotR6}
+              ${this.slotR1}${this.slotR2}${this.slotR3}${this.slotR4}${this.slotR5}${this.slotR6}${this.slotR7}${this.slotR8}
             </ul>
           </li>
         </ul>
@@ -532,6 +532,14 @@ export class WeatherCard extends LitElement {
     return this.slotValue('l6', this._config.slot_l6);
   }
 
+  get slotL7(): TemplateResult {
+    return this.slotValue('l7', this._config.slot_l7);
+  }
+
+  get slotL8(): TemplateResult {
+    return this.slotValue('l8', this._config.slot_l8);
+  }
+
   get slotR1(): TemplateResult {
     return this.slotValue('r1', this._config.slot_r1);
   }
@@ -554,6 +562,14 @@ export class WeatherCard extends LitElement {
 
   get slotR6(): TemplateResult {
     return this.slotValue('r6', this._config.slot_r6);
+  }
+
+  get slotR7(): TemplateResult {
+    return this.slotValue('r7', this._config.slot_r7);
+  }
+
+  get slotR8(): TemplateResult {
+    return this.slotValue('r8', this._config.slot_r8);
   }
 
   // slots - calculates the specific slot value
@@ -593,12 +609,16 @@ export class WeatherCard extends LitElement {
       case 'l4': return this.slotPressure;
       case 'l5': return this.slotSunNext;
       case 'l6': return this.slotRemove;
+      case 'l7': return this.slotRemove;
+      case 'l8': return this.slotRemove;
       case 'r1': return this.slotPopForecast;
       case 'r2': return this.slotHumidity;
       case 'r3': return this.slotUvSummary;
       case 'r4': return this.slotFireSummary;
       case 'r5': return this.slotSunFollowing;
       case 'r6': return this.slotRemove;
+      case 'r7': return this.slotRemove;
+      case 'r8': return this.slotRemove;
     }
     return this.slotEmpty;
   }

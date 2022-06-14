@@ -419,10 +419,10 @@ let WeatherCard = class WeatherCard extends s$1 {
       <div>
         <ul class="variations-ugly">
           <li>
-            <ul class="slot-list">${this.slotL1}${this.slotL2}${this.slotL3}${this.slotL4}${this.slotL5}${this.slotL6}</ul>
+            <ul class="slot-list">${this.slotL1}${this.slotL2}${this.slotL3}${this.slotL4}${this.slotL5}${this.slotL6}${this.slotL7}${this.slotL8}</ul>
           </li>
           <li>
-            <ul class="slot-list">${this.slotR1}${this.slotR2}${this.slotR3}${this.slotR4}${this.slotR5}${this.slotR6}</ul>
+            <ul class="slot-list">${this.slotR1}${this.slotR2}${this.slotR3}${this.slotR4}${this.slotR5}${this.slotR6}${this.slotR7}${this.slotR8}</ul>
           </li>
         </ul>
       </div>
@@ -431,12 +431,12 @@ let WeatherCard = class WeatherCard extends s$1 {
         <ul class="variations">
           <li class="slot-list-item-1">
             <ul class="slot-list">
-              ${this.slotL1}${this.slotL2}${this.slotL3}${this.slotL4}${this.slotL5}${this.slotL6}
+              ${this.slotL1}${this.slotL2}${this.slotL3}${this.slotL4}${this.slotL5}${this.slotL6}${this.slotL7}${this.slotL8}
             </ul>
           </li>
           <li>
             <ul class="slot-list">
-              ${this.slotR1}${this.slotR2}${this.slotR3}${this.slotR4}${this.slotR5}${this.slotR6}
+              ${this.slotR1}${this.slotR2}${this.slotR3}${this.slotR4}${this.slotR5}${this.slotR6}${this.slotR7}${this.slotR8}
             </ul>
           </li>
         </ul>
@@ -681,6 +681,12 @@ let WeatherCard = class WeatherCard extends s$1 {
     get slotL6() {
         return this.slotValue('l6', this._config.slot_l6);
     }
+    get slotL7() {
+        return this.slotValue('l7', this._config.slot_l7);
+    }
+    get slotL8() {
+        return this.slotValue('l8', this._config.slot_l8);
+    }
     get slotR1() {
         return this.slotValue('r1', this._config.slot_r1);
     }
@@ -698,6 +704,12 @@ let WeatherCard = class WeatherCard extends s$1 {
     }
     get slotR6() {
         return this.slotValue('r6', this._config.slot_r6);
+    }
+    get slotR7() {
+        return this.slotValue('r7', this._config.slot_r7);
+    }
+    get slotR8() {
+        return this.slotValue('r8', this._config.slot_r8);
     }
     // slots - calculates the specific slot value
     slotValue(slot, value) {
@@ -735,12 +747,16 @@ let WeatherCard = class WeatherCard extends s$1 {
             case 'l4': return this.slotPressure;
             case 'l5': return this.slotSunNext;
             case 'l6': return this.slotRemove;
+            case 'l7': return this.slotRemove;
+            case 'l8': return this.slotRemove;
             case 'r1': return this.slotPopForecast;
             case 'r2': return this.slotHumidity;
             case 'r3': return this.slotUvSummary;
             case 'r4': return this.slotFireSummary;
             case 'r5': return this.slotSunFollowing;
             case 'r6': return this.slotRemove;
+            case 'r7': return this.slotRemove;
+            case 'r8': return this.slotRemove;
         }
         return this.slotEmpty;
     }
@@ -10650,6 +10666,14 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
         var _a;
         return ((_a = this._config) === null || _a === void 0 ? void 0 : _a.slot_l6) || '';
     }
+    get _slot_l7() {
+        var _a;
+        return ((_a = this._config) === null || _a === void 0 ? void 0 : _a.slot_l7) || '';
+    }
+    get _slot_l8() {
+        var _a;
+        return ((_a = this._config) === null || _a === void 0 ? void 0 : _a.slot_l8) || '';
+    }
     get _slot_r1() {
         var _a;
         return ((_a = this._config) === null || _a === void 0 ? void 0 : _a.slot_r1) || '';
@@ -10673,6 +10697,14 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
     get _slot_r6() {
         var _a;
         return ((_a = this._config) === null || _a === void 0 ? void 0 : _a.slot_r6) || '';
+    }
+    get _slot_r7() {
+        var _a;
+        return ((_a = this._config) === null || _a === void 0 ? void 0 : _a.slot_r7) || '';
+    }
+    get _slot_r8() {
+        var _a;
+        return ((_a = this._config) === null || _a === void 0 ? void 0 : _a.slot_r8) || '';
     }
     get _entity_daytime_high() {
         var _a;
@@ -10879,7 +10911,7 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
         return ((_a = this._config) === null || _a === void 0 ? void 0 : _a.option_locale) || '';
     }
     get _optional_entities() {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r;
         const entities = new Set();
         for (const slot of [
             ((_a = this._config) === null || _a === void 0 ? void 0 : _a.slot_l1) || 'daytime_high',
@@ -10887,13 +10919,17 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
             ((_c = this._config) === null || _c === void 0 ? void 0 : _c.slot_l3) || 'wind',
             ((_d = this._config) === null || _d === void 0 ? void 0 : _d.slot_l4) || 'pressure',
             ((_e = this._config) === null || _e === void 0 ? void 0 : _e.slot_l5) || 'sun_next',
-            ((_f = this._config) === null || _f === void 0 ? void 0 : _f.slot_l6) || 'sun_next',
-            ((_g = this._config) === null || _g === void 0 ? void 0 : _g.slot_r1) || 'pop',
-            ((_h = this._config) === null || _h === void 0 ? void 0 : _h.slot_r2) || 'humidity',
-            ((_j = this._config) === null || _j === void 0 ? void 0 : _j.slot_r3) || 'uv_summary',
-            ((_k = this._config) === null || _k === void 0 ? void 0 : _k.slot_r4) || 'fire_summary',
-            ((_l = this._config) === null || _l === void 0 ? void 0 : _l.slot_r5) || 'sun_following',
-            ((_m = this._config) === null || _m === void 0 ? void 0 : _m.slot_r6) || 'sun_next',
+            ((_f = this._config) === null || _f === void 0 ? void 0 : _f.slot_l6) || 'remove',
+            ((_g = this._config) === null || _g === void 0 ? void 0 : _g.slot_l7) || 'remove',
+            ((_h = this._config) === null || _h === void 0 ? void 0 : _h.slot_l8) || 'remove',
+            ((_j = this._config) === null || _j === void 0 ? void 0 : _j.slot_r1) || 'pop',
+            ((_k = this._config) === null || _k === void 0 ? void 0 : _k.slot_r2) || 'humidity',
+            ((_l = this._config) === null || _l === void 0 ? void 0 : _l.slot_r3) || 'uv_summary',
+            ((_m = this._config) === null || _m === void 0 ? void 0 : _m.slot_r4) || 'fire_summary',
+            ((_o = this._config) === null || _o === void 0 ? void 0 : _o.slot_r5) || 'sun_following',
+            ((_p = this._config) === null || _p === void 0 ? void 0 : _p.slot_r6) || 'remove',
+            ((_q = this._config) === null || _q === void 0 ? void 0 : _q.slot_r7) || 'remove',
+            ((_r = this._config) === null || _r === void 0 ? void 0 : _r.slot_r8) || 'remove',
         ]) {
             switch (slot) {
                 case 'daytime_high':
@@ -11412,6 +11448,26 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
           ${slotValues}
         </ha-select>
         <ha-select label="Slot Right 6 (optional)" .configValue=${'slot_r6'} .value=${this._slot_r6}
+          @selected=${this._valueChanged} @closed=${(ev) => ev.stopPropagation()}>
+          ${slotValues}
+        </ha-select>
+      </div>
+      <div class="side-by-side">
+        <ha-select label="Slot Left 7 (optional)" .configValue=${'slot_l7'} .value=${this._slot_l7}
+          @selected=${this._valueChanged} @closed=${(ev) => ev.stopPropagation()}>
+          ${slotValues}
+        </ha-select>
+        <ha-select label="Slot Right 7 (optional)" .configValue=${'slot_r7'} .value=${this._slot_r7}
+          @selected=${this._valueChanged} @closed=${(ev) => ev.stopPropagation()}>
+          ${slotValues}
+        </ha-select>
+      </div>
+      <div class="side-by-side">
+        <ha-select label="Slot Left 8 (optional)" .configValue=${'slot_l8'} .value=${this._slot_l8}
+          @selected=${this._valueChanged} @closed=${(ev) => ev.stopPropagation()}>
+          ${slotValues}
+        </ha-select>
+        <ha-select label="Slot Right 8 (optional)" .configValue=${'slot_r8'} .value=${this._slot_r8}
           @selected=${this._valueChanged} @closed=${(ev) => ev.stopPropagation()}>
           ${slotValues}
         </ha-select>
