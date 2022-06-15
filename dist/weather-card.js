@@ -574,7 +574,7 @@ let WeatherCard = class WeatherCard extends s$1 {
             if (this._config['option_daily_show_extended'] === true) {
                 if (this._config['daily_extended_use_attr'] === true) {
                     start = this._config['entity_extended_1'] ? this._config['entity_extended_1'].match(/(\d+)(?!.*\d)/g) : false;
-                    const extendedEntity = start && this._config['entity_extended_1'] ? this._config['entity_extended_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
+                    const extendedEntity = start && this._config['entity_extended_1'] ? this._config['entity_extended_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : this._config['entity_extended_1'];
                     start = this._config['daily_extended_name_attr'] && i < (this._config['daily_extended_forecast_days'] !== 0 ? this._config['daily_extended_forecast_days'] || 7 : 0) ? this._config['daily_extended_name_attr'].match(/(\d+)(?!.*\d)/g) : false;
                     const attribute = start == null && extendedEntity && this._config['daily_extended_name_attr'] ? this.hass.states[extendedEntity].attributes[this._config['daily_extended_name_attr']] : start && this._config['daily_extended_name_attr'] && extendedEntity ? this._config['daily_extended_name_attr'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)).toLowerCase().split(".").reduce((retval, value) => retval !== undefined ? retval[value] : undefined, this.hass.states[extendedEntity].attributes) : undefined;
                     extended = attribute ? $ `<div class="f-extended">${attribute}</div>` : $ ``;
@@ -10624,6 +10624,7 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
         super(...arguments);
         this._subElementEditor = undefined;
         this._initialized = false;
+        this._config_version = 4;
     }
     setConfig(config) {
         console.info(`editor setConfig`);
@@ -10720,7 +10721,7 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
                 delete tmpConfig[element];
             }
         }
-        tmpConfig = Object.assign(Object.assign({}, tmpConfig), { card_config_version: 3 });
+        tmpConfig = Object.assign(Object.assign({}, tmpConfig), { card_config_version: this._config_version });
         this._config = tmpConfig;
         ne(this, 'config-changed', { config: this._config });
     }
@@ -11406,7 +11407,7 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
     async firstUpdated() {
         if (this._config && this.hass) {
             console.info(`Card Config Version=${this._config.card_config_version || 'no version'}`);
-            if (this._config.card_config_version !== 3) {
+            if (this._config.card_config_version !== this._config_version) {
                 this._configCleanup();
             }
         }
@@ -11525,7 +11526,7 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
     }
     _sectionExtendedEditor() {
         if (this._extended_use_attr === true) {
-            this.hass !== undefined ? this.hass.states[this._entity_daily_summary].attributes : [];
+            this.hass !== undefined && this.hass.states[this._entity_daily_summary] !== undefined ? this.hass.states[this._entity_daily_summary].attributes : [];
         }
         return $ `
       <ha-entity-picker .hass=${this.hass} .configValue=${'entity_daily_summary'} .value=${this._entity_daily_summary}
