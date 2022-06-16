@@ -2126,12 +2126,7 @@ let WeatherCard = class WeatherCard extends s$1 {
       }
       .temp-label {
         font-weight: 300;
-        /* padding-left: 0.5em; */
       }
-      /* .f-slot .temp-label:first-of-type {
-        width: 100%;
-        padding-left: 0;
-      } */
       .f-label {
         padding-right: 0.5em;
       }
@@ -2181,9 +2176,6 @@ let WeatherCard = class WeatherCard extends s$1 {
       .fcasttooltip:hover .fcasttooltiptext {
         visibility: ${o$6(tooltipVisible)};
       }
-      /* .section:hover {
-        border: 1px solid red;
-      } */
     `;
     }
 };

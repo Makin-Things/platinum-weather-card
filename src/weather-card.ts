@@ -2039,12 +2039,7 @@ export class WeatherCard extends LitElement {
       }
       .temp-label {
         font-weight: 300;
-        /* padding-left: 0.5em; */
       }
-      /* .f-slot .temp-label:first-of-type {
-        width: 100%;
-        padding-left: 0;
-      } */
       .f-label {
         padding-right: 0.5em;
       }
@@ -2094,9 +2089,6 @@ export class WeatherCard extends LitElement {
       .fcasttooltip:hover .fcasttooltiptext {
         visibility: ${unsafeCSS(tooltipVisible)};
       }
-      /* .section:hover {
-        border: 1px solid red;
-      } */
     `;
   }
 }
