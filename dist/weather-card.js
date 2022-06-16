@@ -387,15 +387,18 @@ let WeatherCard = class WeatherCard extends s$1 {
             return $ ``;
         const extendedEntity = this._config['entity_daily_summary'] || '';
         var extended = [];
-        if (this._config['extended_use_attr'] === true) {
-            if (this._config['extended_name_attr'] !== undefined) {
-                const attribute = this._config['extended_name_attr'].toLowerCase().split(".").reduce((retval, value) => retval !== undefined ? retval[value] : undefined, this.hass.states[extendedEntity].attributes);
-                if (attribute !== undefined)
-                    extended.push($ `${attribute}`);
+        if (this.hass.states[extendedEntity] !== undefined) {
+            if (this._config['extended_use_attr'] === true) {
+                if (this._config['extended_name_attr'] !== undefined) {
+                    const attribute = this._config['extended_name_attr'].toLowerCase().split(".").reduce((retval, value) => retval !== undefined ? retval[value] : undefined, this.hass.states[extendedEntity].attributes);
+                    if (attribute !== undefined)
+                        extended.push($ `${attribute}`);
+                }
             }
-        }
-        else {
-            extended.push($ `${this.hass.states[extendedEntity] !== undefined ? this.hass.states[extendedEntity].state : ""}`);
+            else {
+                if (this.hass.states[extendedEntity] !== undefined)
+                    extended.push($ `${this.hass.states[extendedEntity].state}`);
+            }
         }
         extended.push($ `${this._config['entity_todays_uv_forecast'] && this.hass.states[this._config['entity_todays_uv_forecast']] &&
             this.hass.states[this._config['entity_todays_uv_forecast']].state !== "unknown" ? " " +
@@ -575,9 +578,11 @@ let WeatherCard = class WeatherCard extends s$1 {
                 if (this._config['daily_extended_use_attr'] === true) {
                     start = this._config['entity_extended_1'] ? this._config['entity_extended_1'].match(/(\d+)(?!.*\d)/g) : false;
                     const extendedEntity = start && this._config['entity_extended_1'] ? this._config['entity_extended_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : this._config['entity_extended_1'];
-                    start = this._config['daily_extended_name_attr'] && i < (this._config['daily_extended_forecast_days'] !== 0 ? this._config['daily_extended_forecast_days'] || 7 : 0) ? this._config['daily_extended_name_attr'].match(/(\d+)(?!.*\d)/g) : false;
-                    const attribute = start == null && extendedEntity && this._config['daily_extended_name_attr'] ? this.hass.states[extendedEntity].attributes[this._config['daily_extended_name_attr']] : start && this._config['daily_extended_name_attr'] && extendedEntity ? this._config['daily_extended_name_attr'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)).toLowerCase().split(".").reduce((retval, value) => retval !== undefined ? retval[value] : undefined, this.hass.states[extendedEntity].attributes) : undefined;
-                    extended = attribute ? $ `<div class="f-extended">${attribute}</div>` : $ ``;
+                    if (extendedEntity && this.hass.states[extendedEntity] !== undefined) {
+                        start = this._config['daily_extended_name_attr'] && i < (this._config['daily_extended_forecast_days'] !== 0 ? this._config['daily_extended_forecast_days'] || 7 : 0) ? this._config['daily_extended_name_attr'].match(/(\d+)(?!.*\d)/g) : false;
+                        const attribute = start == null && extendedEntity && this._config['daily_extended_name_attr'] ? this.hass.states[extendedEntity].attributes[this._config['daily_extended_name_attr']] : start && this._config['daily_extended_name_attr'] && extendedEntity ? this._config['daily_extended_name_attr'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)).toLowerCase().split(".").reduce((retval, value) => retval !== undefined ? retval[value] : undefined, this.hass.states[extendedEntity].attributes) : undefined;
+                        extended = attribute ? $ `<div class="f-extended">${attribute}</div>` : $ ``;
+                    }
                 }
                 else {
                     const extendedEntity = start && this._config['entity_extended_1'] ? this._config['entity_extended_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
@@ -11695,7 +11700,7 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
     }
     _sectionDailyForecastEditor() {
         if (this._daily_extended_use_attr === true) {
-            this.hass !== undefined ? this.hass.states[this._entity_extended_1].attributes : [];
+            this.hass !== undefined && this.hass.states[this._entity_extended_1] !== undefined ? this.hass.states[this._entity_extended_1].attributes : [];
         }
         return $ `
       <ha-entity-picker .hass=${this.hass} .configValue=${'entity_forecast_icon_1'} .value=${this._entity_forecast_icon_1}

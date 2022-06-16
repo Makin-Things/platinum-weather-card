@@ -227,13 +227,15 @@ export class WeatherCard extends LitElement {
 
     const extendedEntity = this._config['entity_daily_summary'] || '';
     var extended: TemplateResult[] = [];
-    if (this._config['extended_use_attr'] === true) {
-      if (this._config['extended_name_attr'] !== undefined) {
-        const attribute = this._config['extended_name_attr'].toLowerCase().split(".").reduce((retval, value) => retval !== undefined ? retval[value] : undefined, this.hass.states[extendedEntity].attributes);
-        if (attribute !== undefined) extended.push(html`${attribute}`);
+    if (this.hass.states[extendedEntity] !== undefined) {
+      if (this._config['extended_use_attr'] === true) {
+        if (this._config['extended_name_attr'] !== undefined) {
+          const attribute = this._config['extended_name_attr'].toLowerCase().split(".").reduce((retval, value) => retval !== undefined ? retval[value] : undefined, this.hass.states[extendedEntity].attributes);
+          if (attribute !== undefined) extended.push(html`${attribute}`);
+        }
+      } else {
+        if (this.hass.states[extendedEntity] !== undefined) extended.push(html`${this.hass.states[extendedEntity].state}`);
       }
-    } else {
-      extended.push(html`${this.hass.states[extendedEntity] !== undefined ? this.hass.states[extendedEntity].state : ""}`);
     }
     extended.push(html`${this._config['entity_todays_uv_forecast'] && this.hass.states[this._config['entity_todays_uv_forecast']] &&
       this.hass.states[this._config['entity_todays_uv_forecast']].state !== "unknown" ? " " +
@@ -420,9 +422,11 @@ export class WeatherCard extends LitElement {
         if (this._config['daily_extended_use_attr'] === true) {
           start = this._config['entity_extended_1'] ? this._config['entity_extended_1'].match(/(\d+)(?!.*\d)/g) : false;
           const extendedEntity = start && this._config['entity_extended_1'] ? this._config['entity_extended_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : this._config['entity_extended_1'];
-          start = this._config['daily_extended_name_attr'] && i < (this._config['daily_extended_forecast_days'] !== 0 ? this._config['daily_extended_forecast_days'] || 7 : 0) ? this._config['daily_extended_name_attr'].match(/(\d+)(?!.*\d)/g) : false;
-          const attribute = start == null && extendedEntity && this._config['daily_extended_name_attr'] ? this.hass.states[extendedEntity].attributes[this._config['daily_extended_name_attr']] : start && this._config['daily_extended_name_attr'] && extendedEntity ? this._config['daily_extended_name_attr'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)).toLowerCase().split(".").reduce((retval, value) => retval !== undefined ? retval[value] : undefined, this.hass.states[extendedEntity].attributes) : undefined;
-          extended = attribute ? html`<div class="f-extended">${attribute}</div>` : html``;
+          if (extendedEntity && this.hass.states[extendedEntity] !== undefined) {
+            start = this._config['daily_extended_name_attr'] && i < (this._config['daily_extended_forecast_days'] !== 0 ? this._config['daily_extended_forecast_days'] || 7 : 0) ? this._config['daily_extended_name_attr'].match(/(\d+)(?!.*\d)/g) : false;
+            const attribute = start == null && extendedEntity && this._config['daily_extended_name_attr'] ? this.hass.states[extendedEntity].attributes[this._config['daily_extended_name_attr']] : start && this._config['daily_extended_name_attr'] && extendedEntity ? this._config['daily_extended_name_attr'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)).toLowerCase().split(".").reduce((retval, value) => retval !== undefined ? retval[value] : undefined, this.hass.states[extendedEntity].attributes) : undefined;
+            extended = attribute ? html`<div class="f-extended">${attribute}</div>` : html``;
+          }
         } else {
           const extendedEntity = start && this._config['entity_extended_1'] ? this._config['entity_extended_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
           extended = start ? html`<div class="f-extended">${extendedEntity && this.hass.states[extendedEntity] ? this.hass.states[extendedEntity].state :

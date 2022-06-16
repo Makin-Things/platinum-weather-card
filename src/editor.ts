@@ -1174,7 +1174,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
   private _sectionDailyForecastEditor(): TemplateResult {
     const attr_names: TemplateResult[] = [];
     if (this._daily_extended_use_attr === true) {
-      const attrs = this.hass !== undefined ? this.hass.states[this._entity_extended_1].attributes : [];
+      const attrs = this.hass !== undefined && this.hass.states[this._entity_extended_1] !== undefined ? this.hass.states[this._entity_extended_1].attributes : [];
       for (const element in attrs) {
         attr_names.push(html`<mwc-list-item value="${element}">${element}</mwc-list-item>`);
       }
