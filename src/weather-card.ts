@@ -389,18 +389,8 @@ export class WeatherCard extends LitElement {
       const max = maxEntity && this.hass.states[maxEntity] ? html`
         <div class="temp-label">Max: </div>
         <div class="high-temp">${Math.round(Number(this.hass.states[maxEntity].state))}</div>${tempUnit}` : html`---`;
-      const minMax = this._config.tempformat === "highlow"
-        ?
-        html`
-          <div class="f-slot">
-            <div class="highTemp">${maxEntity && this.hass.states[maxEntity] ? Math.round(Number(this.hass.states[maxEntity].state)) : "---"}</div>
-            <div class="slash">/</div>
-            <div class="lowTemp">${minEntity && this.hass.states[minEntity] ? Math.round(Number(this.hass.states[minEntity].state)) : "---"}</div>
-            <div>${tempUnit}</div>
-          </div>`
-        :
-        html`
-          <div class="f-slot">${min}${max}</div>`;
+      const minMax = html`
+          <div class="f-slot f-slot-minmax"><div class="day-vert-minmax">${min}</div><div class="day-vert-minmax">${max}</div></div>`;
       start = this._config['entity_summary_1'] ? this._config['entity_summary_1'].match(/(\d+)(?!.*\d)/g) : false;
       const summaryEntity = start && this._config['entity_summary_1'] ? this._config['entity_summary_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
       const summary = start ? html`
@@ -1984,6 +1974,11 @@ export class WeatherCard extends LitElement {
         padding-left: 1em;
         margin-top: 1.5em;
       }
+      .day-vert-minmax {
+        width: 50%;
+        display: flex;
+        float: left;
+      }
       .day-vert-bottom {
         text-align: left;
         float: left;
@@ -2005,6 +2000,9 @@ export class WeatherCard extends LitElement {
         display: inline-table;
         height: 24px;
         font-weight: 300;
+      }
+      .f-slot-minmax {
+        width: 100%;
       }
       .f-extended {
         display: inline-table;
@@ -2040,13 +2038,13 @@ export class WeatherCard extends LitElement {
         text-align: right;
       }
       .temp-label {
-        width: 2em;
         font-weight: 300;
-        padding-left: 0.5em;
+        /* padding-left: 0.5em; */
       }
-      .f-slot .temp-label:first-of-type {
+      /* .f-slot .temp-label:first-of-type {
+        width: 100%;
         padding-left: 0;
-      }
+      } */
       .f-label {
         padding-right: 0.5em;
       }

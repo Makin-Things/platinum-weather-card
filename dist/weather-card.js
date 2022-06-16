@@ -545,18 +545,8 @@ let WeatherCard = class WeatherCard extends s$1 {
             const max = maxEntity && this.hass.states[maxEntity] ? $ `
         <div class="temp-label">Max: </div>
         <div class="high-temp">${Math.round(Number(this.hass.states[maxEntity].state))}</div>${tempUnit}` : $ `---`;
-            const minMax = this._config.tempformat === "highlow"
-                ?
-                    $ `
-          <div class="f-slot">
-            <div class="highTemp">${maxEntity && this.hass.states[maxEntity] ? Math.round(Number(this.hass.states[maxEntity].state)) : "---"}</div>
-            <div class="slash">/</div>
-            <div class="lowTemp">${minEntity && this.hass.states[minEntity] ? Math.round(Number(this.hass.states[minEntity].state)) : "---"}</div>
-            <div>${tempUnit}</div>
-          </div>`
-                :
-                    $ `
-          <div class="f-slot">${min}${max}</div>`;
+            const minMax = $ `
+          <div class="f-slot f-slot-minmax"><div class="day-vert-minmax">${min}</div><div class="day-vert-minmax">${max}</div></div>`;
             start = this._config['entity_summary_1'] ? this._config['entity_summary_1'].match(/(\d+)(?!.*\d)/g) : false;
             const summaryEntity = start && this._config['entity_summary_1'] ? this._config['entity_summary_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
             const summary = start ? $ `
@@ -2071,6 +2061,11 @@ let WeatherCard = class WeatherCard extends s$1 {
         padding-left: 1em;
         margin-top: 1.5em;
       }
+      .day-vert-minmax {
+        width: 50%;
+        display: flex;
+        float: left;
+      }
       .day-vert-bottom {
         text-align: left;
         float: left;
@@ -2092,6 +2087,9 @@ let WeatherCard = class WeatherCard extends s$1 {
         display: inline-table;
         height: 24px;
         font-weight: 300;
+      }
+      .f-slot-minmax {
+        width: 100%;
       }
       .f-extended {
         display: inline-table;
@@ -2127,13 +2125,13 @@ let WeatherCard = class WeatherCard extends s$1 {
         text-align: right;
       }
       .temp-label {
-        width: 2em;
         font-weight: 300;
-        padding-left: 0.5em;
+        /* padding-left: 0.5em; */
       }
-      .f-slot .temp-label:first-of-type {
+      /* .f-slot .temp-label:first-of-type {
+        width: 100%;
         padding-left: 0;
-      }
+      } */
       .f-label {
         padding-right: 0.5em;
       }
