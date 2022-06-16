@@ -11326,7 +11326,7 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
           label="Custom 1 Value (optional)" allow-custom-entity @value-changed=${this._valueChangedPicker}>
         </ha-entity-picker>
         <div class="side-by-side">
-          <ha-icon-picker .hass=${this.hass} .configValue=${'custom1_icon'} .value=${this._custom1_icon} name="custom1_icon"
+          <ha-icon-picker .configValue=${'custom1_icon'} .value=${this._custom1_icon} name="custom1_icon"
             label="Custom 1 Icon (optional)" @value-changed=${this._valueChanged}>
           </ha-icon-picker>
           <mwc-textfield label="Custom 1 Units (optional)" .value=${this._custom1_units} .configValue=${'custom1_units'} @input=${this._valueChanged}>
@@ -11339,7 +11339,7 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
           label="Custom 2 Value (optional)" allow-custom-entity @value-changed=${this._valueChangedPicker}>
         </ha-entity-picker>
         <div class="side-by-side">
-          <ha-icon-picker .hass=${this.hass} .configValue=${'custom2_icon'} .value=${this._custom2_icon} name="custom2_icon"
+          <ha-icon-picker .configValue=${'custom2_icon'} .value=${this._custom2_icon} name="custom2_icon"
             label="Custom 2 Icon (optional)" @value-changed=${this._valueChanged}>
           </ha-icon-picker>
           <mwc-textfield label="Custom 2 Units (optional)" .value=${this._custom2_units} .configValue=${'custom2_units'} @input=${this._valueChanged}>
@@ -11352,7 +11352,7 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
           label="Custom 3 Value (optional)" allow-custom-entity @value-changed=${this._valueChangedPicker}>
         </ha-entity-picker>
         <div class="side-by-side">
-          <ha-icon-picker .hass=${this.hass} .configValue=${'custom3_icon'} .value=${this._custom3_icon} name="custom3_icon"
+          <ha-icon-picker .configValue=${'custom3_icon'} .value=${this._custom3_icon} name="custom3_icon"
             label="Custom 3 Icon (optional)" @value-changed=${this._valueChanged}>
           </ha-icon-picker>
           <mwc-textfield label="Custom 3 Units (optional)" .value=${this._custom3_units} .configValue=${'custom3_units'} @input=${this._valueChanged}>
@@ -11365,7 +11365,7 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
           label="Custom 4 Value (optional)" allow-custom-entity @value-changed=${this._valueChangedPicker}>
         </ha-entity-picker>
         <div class="side-by-side">
-          <ha-icon-picker .hass=${this.hass} .configValue=${'custom4_icon'} .value=${this._custom4_icon} name="custom4_icon"
+          <ha-icon-picker .configValue=${'custom4_icon'} .value=${this._custom4_icon} name="custom4_icon"
             label="Custom 4 Icon (optional)" @value-changed=${this._valueChanged}>
           </ha-icon-picker>
           <mwc-textfield label="Custom 4 Units (optional)" .value=${this._custom4_units} .configValue=${'custom4_units'} @input=${this._valueChanged}>
@@ -12102,6 +12102,7 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
                 this._config = Object.assign(Object.assign({}, this._config), { [target.configValue]: target.checked !== undefined ? target.checked : target.value });
             }
         }
+        console.info("_valueChanged");
         ne(this, 'config-changed', { config: this._config });
     }
     _valueChangedNumber(ev) {
