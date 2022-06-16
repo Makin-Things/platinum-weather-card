@@ -1967,15 +1967,18 @@ export class WeatherCard extends LitElement {
         padding-bottom: 8px;
       }
       .day-vert-top {
+        display: flex;
         float: left;
         width: 100%;
       }
       .day-vert-dayicon {
+        width: 50px;
         text-align: left;
         float: left;
         margin-bottom: -8px;
       }
       .day-vert-values {
+        flex: 1;
         text-align: left;
         float: left;
         padding-left: 1em;
