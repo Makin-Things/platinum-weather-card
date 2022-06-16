@@ -1968,6 +1968,7 @@ export class WeatherCard extends LitElement {
       }
       .day-vert-top {
         float: left;
+        width: 100%;
       }
       .day-vert-dayicon {
         text-align: left;

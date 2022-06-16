@@ -2055,6 +2055,7 @@ let WeatherCard = class WeatherCard extends s$1 {
       }
       .day-vert-top {
         float: left;
+        width: 100%;
       }
       .day-vert-dayicon {
         text-align: left;
