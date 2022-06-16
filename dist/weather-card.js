@@ -12042,6 +12042,7 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
                 this._config = Object.assign(Object.assign({}, this._config), { [target.configValue]: target.value });
             }
             else {
+                console.info(`Deleting - ${target.configValue}`);
                 delete this._config[target.configValue];
             }
         }

@@ -1538,6 +1538,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
           [target.configValue]: target.value,
         };
       } else {
+        console.info(`Deleting - ${target.configValue}`);
         delete this._config[target.configValue];
       }
     }
