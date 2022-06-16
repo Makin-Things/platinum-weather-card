@@ -66,10 +66,14 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     }
 
     if (changed) {
-      fireEvent(this, 'config-changed', { config: this._config });
+      fireEvent(this, 'config-changed', { config: this.sortObjectByKeys(this._config) });
     }
 
     this.loadCardHelpers();
+  }
+
+  private sortObjectByKeys(object: { [x: string]: any; }) {
+    return Object.keys(object).sort().reduce((r, k) => (r[k] = object[k], r), {});
   }
 
   private _configCleanup() {
@@ -153,7 +157,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
 
     this._config = tmpConfig;
 
-    fireEvent(this, 'config-changed', { config: this._config });
+    fireEvent(this, 'config-changed', { config: this.sortObjectByKeys(this._config) });
   }
 
   protected shouldUpdate(): boolean {
@@ -1537,7 +1541,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
         delete this._config[target.configValue];
       }
     }
-    fireEvent(this, 'config-changed', { config: this._config });
+    fireEvent(this, 'config-changed', { config: this.sortObjectByKeys(this._config) });
   }
 
   private _editSubmenu(ev): void {
@@ -1559,7 +1563,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
         [this._config['section_order'][slot], this._config['section_order'][slot - 1]] = [this._config['section_order'][slot - 1], this._config['section_order'][slot]];
       }
     }
-    fireEvent(this, 'config-changed', { config: this._config });
+    fireEvent(this, 'config-changed', { config: this.sortObjectByKeys(this._config) });
   }
 
   private _moveDown(ev): void {
@@ -1574,7 +1578,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
         [this._config['section_order'][slot], this._config['section_order'][slot + 1]] = [this._config['section_order'][slot + 1], this._config['section_order'][slot]];
       }
     }
-    fireEvent(this, 'config-changed', { config: this._config });
+    fireEvent(this, 'config-changed', { config: this.sortObjectByKeys(this._config) });
   }
 
   private _valueChanged(ev): void {
@@ -1597,8 +1601,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
         };
       }
     }
-    console.info("_valueChanged");
-    fireEvent(this, 'config-changed', { config: this._config });
+    fireEvent(this, 'config-changed', { config: this.sortObjectByKeys(this._config) });
   }
 
   private _valueChangedNumber(ev): void {
@@ -1619,18 +1622,8 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
         };
       }
     }
-    fireEvent(this, 'config-changed', { config: this._config });
+    fireEvent(this, 'config-changed', { config: this.sortObjectByKeys(this._config) });
   }
-
-  // private _valueChangedString(ev: CustomEvent): void {
-  //   const config = ev.detail.value;
-
-  //   if (config.icon_height && !config.icon_height.endsWith("px")) {
-  //     config.icon_height += "px";
-  //   }
-
-  //   fireEvent(this, "config-changed", { config });
-  // }
 
   static styles: CSSResultGroup = css`
     :host {

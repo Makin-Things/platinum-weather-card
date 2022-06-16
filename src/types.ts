@@ -1,4 +1,4 @@
-import { LovelaceCard, LovelaceCardConfig, LovelaceCardEditor, TimeFormat } from 'custom-card-helpers';
+import { LovelaceCard, LovelaceCardConfig, LovelaceCardEditor } from 'custom-card-helpers';
 
 declare global {
   interface HTMLElementTagNameMap {
@@ -45,12 +45,16 @@ export interface WeatherCardConfig extends LovelaceCardConfig {
   slot_l4?: string;
   slot_l5?: string;
   slot_l6?: string;
+  slot_l7?: string;
+  slot_l8?: string;
   slot_r1?: string;
   slot_r2?: string;
   slot_r3?: string;
   slot_r4?: string;
   slot_r5?: string;
   slot_r6?: string;
+  slot_r7?: string;
+  slot_r8?: string;
   entity_humidity?: string;
   entity_pressure?: string;
   entity_visibility?: string;

@@ -10660,9 +10660,12 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
             });
         }
         if (changed) {
-            ne(this, 'config-changed', { config: this._config });
+            ne(this, 'config-changed', { config: this.sortObjectByKeys(this._config) });
         }
         this.loadCardHelpers();
+    }
+    sortObjectByKeys(object) {
+        return Object.keys(object).sort().reduce((r, k) => (r[k] = object[k], r), {});
     }
     _configCleanup() {
         console.info(`configCleanup`);
@@ -10719,7 +10722,7 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
                 tmpConfig[slot] = 'forecast_min';
         }
         // Remove unused entries
-        const keysOfProps = ["type", "card_config_version", "section_order", "show_section_title", "show_section_main", "show_section_extended", "show_section_slots", "show_section_daily_forecast", "text_card_title", "entity_update_time", "text_update_time_prefix", "entity_temperature", "entity_apparent_temp", "entity_current_conditions", "entity_current_text", "show_decimals", "show_separator", "entity_daily_summary", "extended_use_attr", "extended_name_attr", "slot_l1", "slot_l2", "slot_l3", "slot_l4", "slot_l5", "slot_l6", "slot_r1", "slot_r2", "slot_r3", "slot_r4", "slot_r5", "slot_r6", "entity_humidity", "entity_pressure", "entity_visibility", "entity_wind_bearing", "entity_wind_speed", "entity_wind_gust", "entity_wind_speed_kt", "entity_wind_gust_kt", "entity_temp_next", "entity_temp_next_label", "entity_temp_following", "entity_temp_following_label", "entity_forecast_max", "entity_forecast_min", "entity_observed_max", "entity_observed_min", "entity_fire_danger", "entity_fire_danger_summary", "entity_pop", "entity_possible_today", "entity_sun", "entity_uv_alert_summary", "entity_rainfall", "entity_todays_fire_danger", "entity_todays_uv_forecast", "custom1_value", "custom1_icon", "custom1_units", "custom2_value", "custom2_icon", "custom2_units", "custom3_value", "custom3_icon", "custom3_units", "custom4_value", "custom4_icon", "custom4_units", "entity_forecast_icon_1", "entity_pop_1", "entity_pos_1", "entity_summary_1", "entity_forecast_low_temp_1", "entity_forecast_high_temp_1", "entity_extended_1", "daily_forecast_layout", "daily_forecast_days", "daily_extended_forecast_days", "daily_extended_use_attr", "daily_extended_name_attr", "option_today_decimals", "option_pressure_decimals", "option_daily_show_extended", "option_locale", "option_static_icons", "option_icon_set", "option_time_format", "option_tooltips", "old_daily_format", "option_show_beaufort", "index", "view_index"];
+        const keysOfProps = ["type", "card_config_version", "section_order", "show_section_title", "show_section_main", "show_section_extended", "show_section_slots", "show_section_daily_forecast", "text_card_title", "entity_update_time", "text_update_time_prefix", "entity_temperature", "entity_apparent_temp", "entity_current_conditions", "entity_current_text", "show_decimals", "show_separator", "entity_daily_summary", "extended_use_attr", "extended_name_attr", "slot_l1", "slot_l2", "slot_l3", "slot_l4", "slot_l5", "slot_l6", "slot_l7", "slot_l8", "slot_r1", "slot_r2", "slot_r3", "slot_r4", "slot_r5", "slot_r6", "slot_r7", "slot_r8", "entity_humidity", "entity_pressure", "entity_visibility", "entity_wind_bearing", "entity_wind_speed", "entity_wind_gust", "entity_wind_speed_kt", "entity_wind_gust_kt", "entity_temp_next", "entity_temp_next_label", "entity_temp_following", "entity_temp_following_label", "entity_forecast_max", "entity_forecast_min", "entity_observed_max", "entity_observed_min", "entity_fire_danger", "entity_fire_danger_summary", "entity_pop", "entity_possible_today", "entity_sun", "entity_uv_alert_summary", "entity_rainfall", "entity_todays_fire_danger", "entity_todays_uv_forecast", "custom1_value", "custom1_icon", "custom1_units", "custom2_value", "custom2_icon", "custom2_units", "custom3_value", "custom3_icon", "custom3_units", "custom4_value", "custom4_icon", "custom4_units", "entity_forecast_icon_1", "entity_pop_1", "entity_pos_1", "entity_summary_1", "entity_forecast_low_temp_1", "entity_forecast_high_temp_1", "entity_extended_1", "daily_forecast_layout", "daily_forecast_days", "daily_extended_forecast_days", "daily_extended_use_attr", "daily_extended_name_attr", "option_today_decimals", "option_pressure_decimals", "option_daily_show_extended", "option_locale", "option_static_icons", "option_icon_set", "option_time_format", "option_tooltips", "old_daily_format", "option_show_beaufort", "index", "view_index"];
         for (const element in this._config) {
             if (!keysOfProps.includes(element)) {
                 console.info(`removing ${element}`);
@@ -10728,7 +10731,7 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
         }
         tmpConfig = Object.assign(Object.assign({}, tmpConfig), { card_config_version: this._config_version });
         this._config = tmpConfig;
-        ne(this, 'config-changed', { config: this._config });
+        ne(this, 'config-changed', { config: this.sortObjectByKeys(this._config) });
     }
     shouldUpdate() {
         if (!this._initialized) {
@@ -12048,7 +12051,7 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
                 delete this._config[target.configValue];
             }
         }
-        ne(this, 'config-changed', { config: this._config });
+        ne(this, 'config-changed', { config: this.sortObjectByKeys(this._config) });
     }
     _editSubmenu(ev) {
         if (ev.currentTarget) {
@@ -12068,7 +12071,7 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
                 [this._config['section_order'][slot], this._config['section_order'][slot - 1]] = [this._config['section_order'][slot - 1], this._config['section_order'][slot]];
             }
         }
-        ne(this, 'config-changed', { config: this._config });
+        ne(this, 'config-changed', { config: this.sortObjectByKeys(this._config) });
     }
     _moveDown(ev) {
         if (!this._config || !this.hass) {
@@ -12082,7 +12085,7 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
                 [this._config['section_order'][slot], this._config['section_order'][slot + 1]] = [this._config['section_order'][slot + 1], this._config['section_order'][slot]];
             }
         }
-        ne(this, 'config-changed', { config: this._config });
+        ne(this, 'config-changed', { config: this.sortObjectByKeys(this._config) });
     }
     _valueChanged(ev) {
         if (!this._config || !this.hass) {
@@ -12102,8 +12105,7 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
                 this._config = Object.assign(Object.assign({}, this._config), { [target.configValue]: target.checked !== undefined ? target.checked : target.value });
             }
         }
-        console.info("_valueChanged");
-        ne(this, 'config-changed', { config: this._config });
+        ne(this, 'config-changed', { config: this.sortObjectByKeys(this._config) });
     }
     _valueChangedNumber(ev) {
         if (!this._config || !this.hass) {
@@ -12121,17 +12123,10 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
                 this._config = Object.assign(Object.assign({}, this._config), { [target.configValue]: Number(target.value) });
             }
         }
-        ne(this, 'config-changed', { config: this._config });
+        ne(this, 'config-changed', { config: this.sortObjectByKeys(this._config) });
     }
 };
 WeatherCardEditor.elementDefinitions = Object.assign(Object.assign(Object.assign(Object.assign({ "ha-card": customElements.get("ha-card") }, textfieldDefinition), selectDefinition), switchDefinition), formfieldDefinition);
-// private _valueChangedString(ev: CustomEvent): void {
-//   const config = ev.detail.value;
-//   if (config.icon_height && !config.icon_height.endsWith("px")) {
-//     config.icon_height += "px";
-//   }
-//   fireEvent(this, "config-changed", { config });
-// }
 WeatherCardEditor.styles = r$4 `
     :host {
       display: block;
