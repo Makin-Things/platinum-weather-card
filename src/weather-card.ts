@@ -1995,7 +1995,8 @@ export class WeatherCard extends LitElement {
         text-indent: -9999px;
       }
       .f-slot {
-        display: inline-table;
+        display: inline-flex;
+        /* display: inline-table; */
         height: 24px;
         font-weight: 300;
       }
@@ -2007,6 +2008,7 @@ export class WeatherCard extends LitElement {
         font-size: 13px;
         font-weight: 300;
         padding-top: 8px;
+        line-height:20px;
       }
       .extended-section .f-extended {
         padding-top: 0;
@@ -2042,12 +2044,12 @@ export class WeatherCard extends LitElement {
         padding-right: 0.5em;
       }
       .pop {
-        display: table-cell;
+        /* display: table-cell; */
         font-weight: 300;
         color: var(--primary-text-color);
       }
       .pos {
-        display: table-cell;
+        /* display: table-cell; */
         font-weight: 300;
         color: var(--primary-text-color);
       }

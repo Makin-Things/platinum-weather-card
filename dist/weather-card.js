@@ -2072,7 +2072,8 @@ let WeatherCard = class WeatherCard extends s$1 {
         text-indent: -9999px;
       }
       .f-slot {
-        display: inline-table;
+        display: inline-flex;
+        /* display: inline-table; */
         height: 24px;
         font-weight: 300;
       }
@@ -2084,6 +2085,7 @@ let WeatherCard = class WeatherCard extends s$1 {
         font-size: 13px;
         font-weight: 300;
         padding-top: 8px;
+        line-height:20px;
       }
       .extended-section .f-extended {
         padding-top: 0;
@@ -2119,12 +2121,12 @@ let WeatherCard = class WeatherCard extends s$1 {
         padding-right: 0.5em;
       }
       .pop {
-        display: table-cell;
+        /* display: table-cell; */
         font-weight: 300;
         color: var(--primary-text-color);
       }
       .pos {
-        display: table-cell;
+        /* display: table-cell; */
         font-weight: 300;
         color: var(--primary-text-color);
       }
