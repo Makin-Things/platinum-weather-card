@@ -1996,6 +1996,7 @@ export class WeatherCard extends LitElement {
       }
       .f-slot {
         display: inline-flex;
+        overflow: hidden;
         /* display: inline-table; */
         height: 24px;
         font-weight: 300;

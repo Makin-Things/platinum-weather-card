@@ -2073,6 +2073,7 @@ let WeatherCard = class WeatherCard extends s$1 {
       }
       .f-slot {
         display: inline-flex;
+        overflow: hidden;
         /* display: inline-table; */
         height: 24px;
         font-weight: 300;
