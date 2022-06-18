@@ -3,14 +3,14 @@
 import { LitElement, html, TemplateResult, css, PropertyValues, CSSResult, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators';
 import { HomeAssistant, LovelaceCardEditor, getLovelace } from 'custom-card-helpers';
-
+import { getLocale } from './helpers';
+import { myComputeStateDisplay } from './compute_state_display';
 import type { timeFormat, WeatherCardConfig } from './types';
 import { CARD_VERSION } from './const';
-import { localize } from './localize/localize';
 
 /* eslint no-console: 0 */
 console.info(
-  `%c  MAKIN-THINGS-WEATHER-CARD  \n%c  ${localize('common.version')} ${CARD_VERSION}             `,
+  `%c  MAKIN-THINGS-WEATHER-CARD  \n%c  Version ${CARD_VERSION}             `,
   'color: orange; font-weight: bold; background: black',
   'color: white; font-weight: bold; background: dimgray',
 );
@@ -44,6 +44,10 @@ export class WeatherCard extends LitElement {
   private _error: string[] = [];
 
   public getCardSize(): number {
+
+    console.info(`Tempate Test String:${myComputeStateDisplay(this.hass.localize, this.hass.states['sensor.template_test_string'], getLocale(this.hass))}`);
+    console.info(`Tempate Test Number:${myComputeStateDisplay(this.hass.localize, this.hass.states['sensor.template_test_number'], getLocale(this.hass))}`);
+
     console.info(`getCardSize`);
     var cardHeight = 16;
     cardHeight += this._config.show_section_title === true ? 56 : 0;
@@ -58,7 +62,7 @@ export class WeatherCard extends LitElement {
   public setConfig(config: WeatherCardConfig): void {
     // TODO Check for required fields and that they are of the proper format
     if (!config) {
-      throw new Error(localize('common.invalid_configuration'));
+      throw new Error('Invalid configuration');
     }
 
     if (config.test_gui) {
@@ -193,7 +197,7 @@ export class WeatherCard extends LitElement {
     const currentTemp = html`
       <div class="current-temp">
         <div class="temp" id="current-temp-text">${this.currentTemperature}</div>
-        <div class="tempc">${this.getUOM('temperature')}</div>
+        <div class="unit-temp-big">${this.getUOM('temperature')}</div>
       </div>
     `;
 
@@ -202,7 +206,7 @@ export class WeatherCard extends LitElement {
         <div class="apparent">${this.localeTextFeelsLike} <span
             id="apparent-temp-text">${this.currentApparentTemperature}</span>
         </div>
-        <div class="apparentc"> ${this.getUOM('temperature')}</div>
+        <div class="unit-temp-small"> ${this.getUOM('temperature')}</div>
       </div>
     `;
 
@@ -304,7 +308,7 @@ export class WeatherCard extends LitElement {
       const maxEntity = start && this._config['entity_forecast_high_temp_1'] ? this._config['entity_forecast_high_temp_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
       start = this._config['entity_forecast_low_temp_1'] ? this._config['entity_forecast_low_temp_1'].match(/(\d+)(?!.*\d)/g) : false;
       const minEntity = start && this._config['entity_forecast_low_temp_1'] ? this._config['entity_forecast_low_temp_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
-      const tempUnit = html`<div class="unitc">${this.getUOM("temperature")}</div>`;
+      const tempUnit = html`<div class="unit-temp-small">${this.getUOM("temperature")}</div>`;
       const minMax = this._config.old_daily_format === true
         ?
         html`
@@ -382,7 +386,7 @@ export class WeatherCard extends LitElement {
       const maxEntity = start && this._config['entity_forecast_high_temp_1'] ? this._config['entity_forecast_high_temp_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
       start = this._config['entity_forecast_low_temp_1'] ? this._config['entity_forecast_low_temp_1'].match(/(\d+)(?!.*\d)/g) : false;
       const minEntity = start && this._config['entity_forecast_low_temp_1'] ? this._config['entity_forecast_low_temp_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
-      const tempUnit = html`<div class="unitc">${this.getUOM("temperature")}</div>`;
+      const tempUnit = html`<div class="unit-temp-small">${this.getUOM("temperature")}</div>`;
       const min = minEntity && this.hass.states[minEntity] ? html`
         <div class="temp-label">Min: </div>
         <div class="low-temp">${Math.round(Number(this.hass.states[minEntity].state))}</div>${tempUnit}` : html`---`;
@@ -753,7 +757,7 @@ export class WeatherCard extends LitElement {
   get slotObservedMax(): TemplateResult {
     const digits = this._config.option_today_decimals === true ? 1 : 0;
     const temp = this._config.entity_observed_max ? (Number(this.hass.states[this._config.entity_observed_max].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
-    const units = temp !== "---" ? html`<div class="unitc">${this.getUOM('temperature')}</div>` : html``;
+    const units = temp !== "---" ? html`<div class="unit-temp-small">${this.getUOM('temperature')}</div>` : html``;
     return html`
       <li>
         <div class="slot">
@@ -770,7 +774,7 @@ export class WeatherCard extends LitElement {
   get slotObservedMin(): TemplateResult {
     const digits = this._config.option_today_decimals === true ? 1 : 0;
     const temp = this._config.entity_observed_min ? (Number(this.hass.states[this._config.entity_observed_min].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
-    const units = temp !== "---" ? html`<div class="unitc">${this.getUOM('temperature')}</div>` : html``;
+    const units = temp !== "---" ? html`<div class="unit-temp-small">${this.getUOM('temperature')}</div>` : html``;
     return html`
       <li>
         <div class="slot">
@@ -787,7 +791,7 @@ export class WeatherCard extends LitElement {
   get slotForecastMax(): TemplateResult {
     const digits = this._config.option_today_decimals === true ? 1 : 0;
     const temp = this._config.entity_forecast_max ? (Number(this.hass.states[this._config.entity_forecast_max].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
-    const units = temp !== "---" ? html`<div class="unitc">${this.getUOM('temperature')}</div>` : html``;
+    const units = temp !== "---" ? html`<div class="unit-temp-small">${this.getUOM('temperature')}</div>` : html``;
     return html`
       <li>
         <div class="slot">
@@ -804,7 +808,7 @@ export class WeatherCard extends LitElement {
   get slotForecastMin(): TemplateResult {
     const digits = this._config.option_today_decimals === true ? 1 : 0;
     const temp = this._config.entity_forecast_min ? (Number(this.hass.states[this._config.entity_forecast_min].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
-    const units = temp !== "---" ? html`<div class="unitc">${this.getUOM('temperature')}</div>` : html``;
+    const units = temp !== "---" ? html`<div class="unit-temp-small">${this.getUOM('temperature')}</div>` : html``;
     return html`
       <li>
         <div class="slot">
@@ -823,7 +827,7 @@ export class WeatherCard extends LitElement {
     const icon = this._config.entity_temp_next_label ? this.hass.states[this._config.entity_temp_next_label].state.includes("Min") ? "mdi:thermometer-low" : "mdi:thermometer-high" : "mdi:help-box";
     const temp = this._config.entity_temp_next ? (Number(this.hass.states[this._config.entity_temp_next].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
     const label = this._config.entity_temp_next_label ? this.hass.states[this._config.entity_temp_next_label].state : "";
-    const units = temp !== "---" ? html`<div class="slot-text unitc">${this.getUOM('temperature')}</div>` : html``;
+    const units = temp !== "---" ? html`<div class="slot-text unit-temp-small">${this.getUOM('temperature')}</div>` : html``;
     return html`
       <li>
         <div class="slot">
@@ -842,7 +846,7 @@ export class WeatherCard extends LitElement {
     const icon = this._config.entity_temp_following_label ? this.hass.states[this._config.entity_temp_following_label].state.includes("Min") ? "mdi:thermometer-low" : "mdi:thermometer-high" : "mdi:help-box";
     const temp = this._config.entity_temp_following ? (Number(this.hass.states[this._config.entity_temp_following].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
     const label = this._config.entity_temp_following_label ? this.hass.states[this._config.entity_temp_following_label].state : "";
-    const units = temp !== "---" ? html`<div class="slot-text unitc">${this.getUOM('temperature')}</div>` : html``;
+    const units = temp !== "---" ? html`<div class="slot-text unit-temp-small">${this.getUOM('temperature')}</div>` : html``;
     return html`
       <li>
         <div class="slot">
@@ -860,7 +864,7 @@ export class WeatherCard extends LitElement {
     const digits = this._config.option_today_decimals === true ? 1 : 0;
     const temp_obs = this._config.entity_observed_max ? (Number(this.hass.states[this._config.entity_observed_max].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
     const temp_for = this._config.entity_forecast_max ? (Number(this.hass.states[this._config.entity_forecast_max].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
-    const units = temp_obs !== "---" ? html`<div class="unitc">${this.getUOM('temperature')}</div>` : html``;
+    const units = temp_obs !== "---" ? html`<div class="unit-temp-small">${this.getUOM('temperature')}</div>` : html``;
     return html`
       <li>
         <div class="slot">
@@ -881,7 +885,7 @@ export class WeatherCard extends LitElement {
     const digits = this._config.option_today_decimals === true ? 1 : 0;
     const temp_obs = this._config.entity_observed_min ? (Number(this.hass.states[this._config.entity_observed_min].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
     const temp_for = this._config.entity_forecast_min ? (Number(this.hass.states[this._config.entity_forecast_min].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
-    const units = temp_obs !== "---" ? html`<div class="unitc">${this.getUOM('temperature')}</div>` : html``;
+    const units = temp_obs !== "---" ? html`<div class="unit-temp-small">${this.getUOM('temperature')}</div>` : html``;
     return html`
       <li>
         <div class="slot">
@@ -1818,7 +1822,7 @@ export class WeatherCard extends LitElement {
         position: relative;
         line-height: 74%;
       }
-      .tempc {
+      .unit-temp-big {
         display: table-cell;
         vertical-align: top;
         font-weight: ${unsafeCSS(tempFontWeight)};
@@ -1830,21 +1834,23 @@ export class WeatherCard extends LitElement {
       .apparent-temp {
         display: table-row;
         margin-left: auto;
-        padding: 8px 0px;
+        height: 24px;
       }
       .apparent {
         display: table-cell;
         color: var(--primary-text-color);
+        font-weight: 300;
         position: relative;
-        line-height: 80%;
+        line-height: 24px;
       }
-      .apparentc {
+      .unit-temp-small {
         display: table-cell;
         vertical-align: top;
         font-size: 0.75em;
         color: var(--primary-text-color);
         position: relative;
-        line-height: 80%;
+        line-height: 1em;
+        padding-top: 6px;
       }
       .line {
         margin-top : 7px;
@@ -1913,14 +1919,6 @@ export class WeatherCard extends LitElement {
         display: table-cell;
         position: relative;
       }
-      .unitc {
-        display: table-cell;
-        position: relative;
-        vertical-align: top;
-        font-size: 0.75em;
-        line-height: 80%;
-        padding-top: 7px;
-      }
       .daily-forecast-horiz-section {
         display: flex;
         flex-flow: row wrap;
@@ -1937,7 +1935,7 @@ export class WeatherCard extends LitElement {
         text-align: center;
         color: var(--primary-text-color);
         border-right: .1em solid #d9d9d9;
-        line-height: 1.5;
+        line-height: 24px;
         box-sizing: border-box;
       }
       .daily-forecast-vert-section {
@@ -1950,7 +1948,7 @@ export class WeatherCard extends LitElement {
         flex: 1;
         color: var(--primary-text-color);
         border-top: .1em solid #d9d9d9;
-        line-height: 1.5;
+        line-height: 24px;
         box-sizing: border-box;
         padding-left: 8px;
         padding-right: 8px;
