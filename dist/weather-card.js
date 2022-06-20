@@ -544,7 +544,7 @@ let WeatherCard = class WeatherCard extends s$1 {
             start = this._config['entity_summary_1'] ? this._config['entity_summary_1'].match(/(\d+)(?!.*\d)/g) : false;
             const summaryEntity = start && this._config['entity_summary_1'] ? this._config['entity_summary_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
             const summary = start ? $ `
-        <br><div class="f-slot">${summaryEntity && this.hass.states[summaryEntity] ? this.hass.states[summaryEntity].state : "---"}</div>` : ``;
+        <div class="f-slot">${summaryEntity && this.hass.states[summaryEntity] ? this.hass.states[summaryEntity].state : "---"}</div>` : ``;
             start = this._config['entity_pop_1'] ? this._config['entity_pop_1'].match(/(\d+)(?!.*\d)/g) : false;
             const popEntity = start && this._config['entity_pop_1'] ? this._config['entity_pop_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
             const pop = start ? $ `
@@ -553,7 +553,7 @@ let WeatherCard = class WeatherCard extends s$1 {
             start = this._config['entity_pos_1'] ? this._config['entity_pos_1'].match(/(\d+)(?!.*\d)/g) : false;
             const posEntity = start && this._config['entity_pos_1'] ? this._config['entity_pos_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
             const pos = start ? $ `
-        <br><div class="f-slot"><div class="f-label">Possible rain </div>
+        <div class="f-slot"><div class="f-label">Possible rain </div>
         <div class="pos">${posEntity && this.hass.states[posEntity] ? this.hass.states[posEntity].state : "---"}</div>
         <div class="unit">${this.getUOM('precipitation')}</div></div>` : ``;
             start = this._config['entity_extended_1'] && i < (this._config['daily_extended_forecast_days'] !== 0 ? this._config['daily_extended_forecast_days'] || 7 : 0) ? this._config['entity_extended_1'].match(/(\d+)(?!.*\d)/g) : false;
@@ -2037,7 +2037,7 @@ let WeatherCard = class WeatherCard extends s$1 {
         width: 100%;
       }
       .day-vert-dayicon {
-        width: 50px;
+        width: 40px;
         text-align: left;
         float: left;
         margin-bottom: -8px;
@@ -2051,7 +2051,7 @@ let WeatherCard = class WeatherCard extends s$1 {
       }
       .day-vert-minmax {
         width: 50%;
-        display: flex;
+        display: table-cell;
         float: left;
       }
       .day-vert-bottom {
@@ -2072,9 +2072,8 @@ let WeatherCard = class WeatherCard extends s$1 {
         text-indent: -9999px;
       }
       .f-slot {
-        display: inline-flex;
+        display: table;
         overflow: hidden;
-        /* display: inline-table; */
         height: 24px;
         font-weight: 300;
       }
@@ -2116,20 +2115,24 @@ let WeatherCard = class WeatherCard extends s$1 {
         text-align: right;
       }
       .temp-label {
+        display: table-cell;
         font-weight: 300;
       }
       .f-label {
-        padding-right: 0.5em;
+        display: table-cell;
+        white-space: nowrap;
+        padding-right: 0.2em;
       }
       .pop {
-        /* display: table-cell; */
+        display: table-cell;
         font-weight: 300;
         color: var(--primary-text-color);
       }
       .pos {
-        /* display: table-cell; */
+        display: table-cell;
         font-weight: 300;
         color: var(--primary-text-color);
+        white-space: nowrap;
       }
       .fcasttooltip {
         position: relative;

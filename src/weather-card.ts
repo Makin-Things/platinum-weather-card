@@ -398,7 +398,7 @@ export class WeatherCard extends LitElement {
       start = this._config['entity_summary_1'] ? this._config['entity_summary_1'].match(/(\d+)(?!.*\d)/g) : false;
       const summaryEntity = start && this._config['entity_summary_1'] ? this._config['entity_summary_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
       const summary = start ? html`
-        <br><div class="f-slot">${summaryEntity && this.hass.states[summaryEntity] ? this.hass.states[summaryEntity].state : "---"}</div>` : ``;
+        <div class="f-slot">${summaryEntity && this.hass.states[summaryEntity] ? this.hass.states[summaryEntity].state : "---"}</div>` : ``;
       start = this._config['entity_pop_1'] ? this._config['entity_pop_1'].match(/(\d+)(?!.*\d)/g) : false;
       const popEntity = start && this._config['entity_pop_1'] ? this._config['entity_pop_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
       const pop = start ? html`
@@ -407,7 +407,7 @@ export class WeatherCard extends LitElement {
       start = this._config['entity_pos_1'] ? this._config['entity_pos_1'].match(/(\d+)(?!.*\d)/g) : false;
       const posEntity = start && this._config['entity_pos_1'] ? this._config['entity_pos_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
       const pos = start ? html`
-        <br><div class="f-slot"><div class="f-label">Possible rain </div>
+        <div class="f-slot"><div class="f-label">Possible rain </div>
         <div class="pos">${posEntity && this.hass.states[posEntity] ? this.hass.states[posEntity].state : "---"}</div>
         <div class="unit">${this.getUOM('precipitation')}</div></div>` : ``;
       start = this._config['entity_extended_1'] && i < (this._config['daily_extended_forecast_days'] !== 0 ? this._config['daily_extended_forecast_days'] || 7 : 0) ? this._config['entity_extended_1'].match(/(\d+)(?!.*\d)/g) : false;
@@ -1960,7 +1960,7 @@ export class WeatherCard extends LitElement {
         width: 100%;
       }
       .day-vert-dayicon {
-        width: 50px;
+        width: 40px;
         text-align: left;
         float: left;
         margin-bottom: -8px;
@@ -1974,7 +1974,7 @@ export class WeatherCard extends LitElement {
       }
       .day-vert-minmax {
         width: 50%;
-        display: flex;
+        display: table-cell;
         float: left;
       }
       .day-vert-bottom {
@@ -1995,9 +1995,8 @@ export class WeatherCard extends LitElement {
         text-indent: -9999px;
       }
       .f-slot {
-        display: inline-flex;
+        display: table;
         overflow: hidden;
-        /* display: inline-table; */
         height: 24px;
         font-weight: 300;
       }
@@ -2039,20 +2038,24 @@ export class WeatherCard extends LitElement {
         text-align: right;
       }
       .temp-label {
+        display: table-cell;
         font-weight: 300;
       }
       .f-label {
-        padding-right: 0.5em;
+        display: table-cell;
+        white-space: nowrap;
+        padding-right: 0.2em;
       }
       .pop {
-        /* display: table-cell; */
+        display: table-cell;
         font-weight: 300;
         color: var(--primary-text-color);
       }
       .pos {
-        /* display: table-cell; */
+        display: table-cell;
         font-weight: 300;
         color: var(--primary-text-color);
+        white-space: nowrap;
       }
       .fcasttooltip {
         position: relative;
