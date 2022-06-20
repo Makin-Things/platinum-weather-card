@@ -461,12 +461,12 @@ let WeatherCard = class WeatherCard extends s$1 {
             const minMax = this._config.old_daily_format === true
                 ?
                     $ `
-          <div class="f-slot">
+          <div class="f-slot-horiz">
             <div class="highTemp">${maxEntity && this.hass.states[maxEntity] ? Math.round(Number(this.hass.states[maxEntity].state)) : '---'}</div>
             <div>${tempUnit}</div>
           </div>
           <br>
-          <div class="f-slot">
+          <div class="f-slot-horiz">
             <div class="lowTemp">${minEntity && this.hass.states[minEntity] ? Math.round(Number(this.hass.states[minEntity].state)) : '---'}</div>
             <div>${tempUnit}</div>
           </div>`
@@ -474,7 +474,7 @@ let WeatherCard = class WeatherCard extends s$1 {
                     this._config.tempformat === "highlow"
                         ?
                             $ `
-            <div class="f-slot">
+            <div class="f-slot-horiz">
               <div class="highTemp">${maxEntity && this.hass.states[maxEntity] ? Math.round(Number(this.hass.states[maxEntity].state)) : "---"}</div>
               <div class="slash">/</div>
               <div class="lowTemp">${minEntity && this.hass.states[minEntity] ? Math.round(Number(this.hass.states[minEntity].state)) : "---"}</div>
@@ -482,7 +482,7 @@ let WeatherCard = class WeatherCard extends s$1 {
             </div>`
                         :
                             $ `
-            <div class="f-slot">
+            <div class="f-slot-horiz">
               <div class="lowTemp">${minEntity && this.hass.states[minEntity] ? Math.round(Number(this.hass.states[minEntity].state)) : "---"}</div>
               <div class="slash">/</div>
               <div class="highTemp">${maxEntity && this.hass.states[maxEntity] ? Math.round(Number(this.hass.states[maxEntity].state)) : "---"}</div>
@@ -490,10 +490,10 @@ let WeatherCard = class WeatherCard extends s$1 {
             </div>`;
             start = this._config['entity_pop_1'] ? this._config['entity_pop_1'].match(/(\d+)(?!.*\d)/g) : false;
             const popEntity = start && this._config['entity_pop_1'] ? this._config['entity_pop_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
-            const pop = start ? $ `<br><div class="f-slot"><div class="pop">${popEntity && this.hass.states[popEntity] ? Math.round(Number(this.hass.states[popEntity].state)) : "---"}</div><div class="unit">%</div></div>` : ``;
+            const pop = start ? $ `<br><div class="f-slot-horiz"><div class="pop">${popEntity && this.hass.states[popEntity] ? Math.round(Number(this.hass.states[popEntity].state)) : "---"}</div><div class="unit">%</div></div>` : ``;
             start = this._config['entity_pos_1'] ? this._config['entity_pos_1'].match(/(\d+)(?!.*\d)/g) : false;
             const posEntity = start && this._config['entity_pos_1'] ? this._config['entity_pos_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
-            const pos = start ? $ `<br><div class="f-slot"><div class="pos">${posEntity && this.hass.states[posEntity] ? this.hass.states[posEntity].state : "---"}</div><div class="unit">${this.getUOM('precipitation')}</div></div>` : ``;
+            const pos = start ? $ `<br><div class="f-slot-horiz"><div class="pos">${posEntity && this.hass.states[posEntity] ? this.hass.states[posEntity].state : "---"}</div><div class="unit">${this.getUOM('precipitation')}</div></div>` : ``;
             start = this._config['entity_summary_1'] ? this._config['entity_summary_1'].match(/(\d+)(?!.*\d)/g) : false;
             const tooltipEntity = start && this._config['entity_summary_1'] ? this._config['entity_summary_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
             const tooltip = $ `<div class="fcasttooltiptext" id="fcast-summary-${i}">${this._config.option_tooltips && tooltipEntity ? this.hass.states[tooltipEntity] ? this.hass.states[tooltipEntity].state : "---" : ""}</div>`;
@@ -540,20 +540,20 @@ let WeatherCard = class WeatherCard extends s$1 {
         <div class="temp-label">Max: </div>
         <div class="high-temp">${Math.round(Number(this.hass.states[maxEntity].state))}</div>${tempUnit}` : $ `---`;
             const minMax = $ `
-          <div class="f-slot f-slot-minmax"><div class="day-vert-minmax">${min}</div><div class="day-vert-minmax">${max}</div></div>`;
+          <div class="f-slot-vert f-slot-minmax"><div class="day-vert-minmax">${min}</div><div class="day-vert-minmax">${max}</div></div>`;
             start = this._config['entity_summary_1'] ? this._config['entity_summary_1'].match(/(\d+)(?!.*\d)/g) : false;
             const summaryEntity = start && this._config['entity_summary_1'] ? this._config['entity_summary_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
             const summary = start ? $ `
-        <div class="f-slot">${summaryEntity && this.hass.states[summaryEntity] ? this.hass.states[summaryEntity].state : "---"}</div>` : ``;
+        <div class="f-slot-vert">${summaryEntity && this.hass.states[summaryEntity] ? this.hass.states[summaryEntity].state : "---"}</div>` : ``;
             start = this._config['entity_pop_1'] ? this._config['entity_pop_1'].match(/(\d+)(?!.*\d)/g) : false;
             const popEntity = start && this._config['entity_pop_1'] ? this._config['entity_pop_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
             const pop = start ? $ `
-        <div class="f-slot"><div class="f-label">Chance of rain </div>
+        <div class="f-slot-vert"><div class="f-label">Chance of rain </div>
         <div class="pop">${popEntity && this.hass.states[popEntity] ? Math.round(Number(this.hass.states[popEntity].state)) : "---"}</div><div class="unit">%</div></div>` : ``;
             start = this._config['entity_pos_1'] ? this._config['entity_pos_1'].match(/(\d+)(?!.*\d)/g) : false;
             const posEntity = start && this._config['entity_pos_1'] ? this._config['entity_pos_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
             const pos = start ? $ `
-        <div class="f-slot"><div class="f-label">Possible rain </div>
+        <div class="f-slot-vert"><div class="f-label">Possible rain </div>
         <div class="pos">${posEntity && this.hass.states[posEntity] ? this.hass.states[posEntity].state : "---"}</div>
         <div class="unit">${this.getUOM('precipitation')}</div></div>` : ``;
             start = this._config['entity_extended_1'] && i < (this._config['daily_extended_forecast_days'] !== 0 ? this._config['daily_extended_forecast_days'] || 7 : 0) ? this._config['entity_extended_1'].match(/(\d+)(?!.*\d)/g) : false;
@@ -2071,7 +2071,13 @@ let WeatherCard = class WeatherCard extends s$1 {
         background-repeat: no-repeat;
         text-indent: -9999px;
       }
-      .f-slot {
+      .f-slot-horiz {
+        display: inline-table;
+        overflow: hidden;
+        height: 24px;
+        font-weight: 300;
+      }
+      .f-slot-vert {
         display: table;
         overflow: hidden;
         height: 24px;
