@@ -12076,7 +12076,7 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
             const target = ev.currentTarget;
             if (this._config['section_order']) {
                 const slot = this._config['section_order'].findIndex(t => t === target.value);
-                console.info(`MoveUp ${slot}`);
+                console.info(`MoveDown ${slot}`);
                 [this._config['section_order'][slot], this._config['section_order'][slot + 1]] = [this._config['section_order'][slot + 1], this._config['section_order'][slot]];
             }
         }
