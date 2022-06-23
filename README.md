@@ -8,6 +8,7 @@ A highly configurable weather card with a graphical configuration.
 ![Maintenance](https://img.shields.io/maintenance/yes/2022?style=for-the-badge)
 
 # Support
+![application-edit-outline](https://user-images.githubusercontent.com/91187456/175180510-7e1c1845-2291-445e-a613-080fb2ae87b3.svg)
 
 Hey dude! Help me out for a couple of :beers: or a :coffee:!
 
