@@ -382,6 +382,10 @@ export class WeatherCard extends LitElement {
       }
       const url = new URL(('icons/' + (this._config.option_static_icons ? 'static' : 'animated') + '/' + (this.hass.states[iconEntity] !== undefined ? this._weatherIcon(this.hass.states[iconEntity].state) : 'unknown') + '.svg').replace("-night", "-day"), import.meta.url);
       const htmlIcon = html`<i class="icon" style="background: none, url(${url.href}) no-repeat; background-size: contain;"></i><br>`;
+      start = this._config['entity_summary_1'] ? this._config['entity_summary_1'].match(/(\d+)(?!.*\d)/g) : false;
+      const summaryEntity = start && this._config['entity_summary_1'] ? this._config['entity_summary_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
+      const summary = start ? html`
+        <div class="f-summary-vert">${summaryEntity && this.hass.states[summaryEntity] ? this.hass.states[summaryEntity].state : "---"}</div>` : ``;
       start = this._config['entity_forecast_high_temp_1'] ? this._config['entity_forecast_high_temp_1'].match(/(\d+)(?!.*\d)/g) : false;
       const maxEntity = start && this._config['entity_forecast_high_temp_1'] ? this._config['entity_forecast_high_temp_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
       start = this._config['entity_forecast_low_temp_1'] ? this._config['entity_forecast_low_temp_1'].match(/(\d+)(?!.*\d)/g) : false;
@@ -395,10 +399,6 @@ export class WeatherCard extends LitElement {
         <div class="high-temp">${Math.round(Number(this.hass.states[maxEntity].state))}</div>${tempUnit}` : html`---`;
       const minMax = html`
           <div class="f-slot-vert f-slot-minmax"><div class="day-vert-minmax">${min}</div><div class="day-vert-minmax">${max}</div></div>`;
-      start = this._config['entity_summary_1'] ? this._config['entity_summary_1'].match(/(\d+)(?!.*\d)/g) : false;
-      const summaryEntity = start && this._config['entity_summary_1'] ? this._config['entity_summary_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
-      const summary = start ? html`
-        <div class="f-slot-vert">${summaryEntity && this.hass.states[summaryEntity] ? this.hass.states[summaryEntity].state : "---"}</div>` : ``;
       start = this._config['entity_pop_1'] ? this._config['entity_pop_1'].match(/(\d+)(?!.*\d)/g) : false;
       const popEntity = start && this._config['entity_pop_1'] ? this._config['entity_pop_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
       const pop = start ? html`
@@ -435,9 +435,9 @@ export class WeatherCard extends LitElement {
               <span class="dayname">${forecastDate ? forecastDate.toLocaleDateString(this.locale, { weekday: 'short' }) : "---"}</span>
               <br>${htmlIcon}
             </div>
+            ${summary}
             <div class="day-vert-values">
               ${minMax}
-              ${summary}
             </div>
             <div class="day-vert-values">
               ${pop}
@@ -1970,7 +1970,7 @@ export class WeatherCard extends LitElement {
         text-align: left;
         float: left;
         padding-left: 1em;
-        margin-top: 1.5em;
+        margin-top: 2em;
       }
       .day-vert-minmax {
         width: 50%;
@@ -1999,6 +1999,12 @@ export class WeatherCard extends LitElement {
         overflow: hidden;
         height: 24px;
         font-weight: 300;
+      }
+      .f-summary-vert {
+        position: absolute;
+        padding-left: 54px;
+        font-weight: 400;
+        overflow: hidden;
       }
       .f-slot-vert {
         display: table;
