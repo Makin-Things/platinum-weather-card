@@ -34,7 +34,7 @@ There has been a lot of reused code, but this card has effectively been rewritte
 
 # Concepts
 
-The card now has sections within the card, any of these sections can be enabled/disabled and reordered to suit your individual needs. Each section also has its own configuration pages (<picture><source media="(prefers-color-scheme: dark)" srcset="icons/pencil-dark.png"><source media="(prefers-color-scheme: light)" srcset="icons/pencil-light.png"><img></picture> for the selection of entities to use, and <picture><source media="(prefers-color-scheme: dark)" srcset="icons/application-edit-outline-dark.png"><source media="(prefers-color-scheme: light)" srcset="icons/application-edit-outline-light.png"><img></picture> for control display and styling).
+The card now has sections within the card, any of these sections can be enabled/disabled and reordered to suit your individual needs. Each section also has its own configuration pages (<picture><source media="(prefers-color-scheme: dark)" srcset="icons/pencil-dark.png"><source media="(prefers-color-scheme: light)" srcset="icons/pencil-light.png"><img src="icons/pencil-dark.png"></picture> for the selection of entities to use, and <picture><source media="(prefers-color-scheme: dark)" srcset="icons/application-edit-outline-dark.png"><source media="(prefers-color-scheme: light)" srcset="icons/application-edit-outline-light.png"><img src="icons/application-edit-outline-dark.png"></picture> for control display and styling).
 
 TODO [Include an image with some markup]
 
