@@ -34,7 +34,7 @@ There has been a lot of reused code, but this card has effectively been rewritte
 
 # Concepts
 
-The card now has sections within the card, any of these sections can be enabled/disabled and reordered to suit your individual needs. Each section also has its own configuration pages (<picture><source media="(prefers-color-scheme: dark)" srcset="https://github.com/Makin-Things/makin-things-weather-card/raw/master/icons/pencil-dark.png"><source media="(prefers-color-scheme: light)" srcset="https://github.com/Makin-Things/makin-things-weather-card/raw/master/icons/pencil-light.png"><img src="https://github.com/Makin-Things/makin-things-weather-card/raw/master/icons/pencil-dark.png"></picture> for the selection of entities to use, and <picture><source media="(prefers-color-scheme: dark)" srcset="https://github.com/Makin-Things/makin-things-weather-card/raw/master/icons/application-edit-outline-dark.png"><source media="(prefers-color-scheme: light)" srcset="https://github.com/Makin-Things/makin-things-weather-card/raw/master/icons/application-edit-outline-light.png"><img src="https://github.com/Makin-Things/makin-things-weather-card/raw/master/icons/application-edit-outline-dark.png"></picture> for control display and styling).
+The card has sections within the card, any of these sections can be enabled/disabled and reordered to suit your individual needs. Each section has its own configuration pages for the selection of entities and for control display and styling.
 
 TODO [Include an image with some markup]
 
