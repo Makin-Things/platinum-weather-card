@@ -11541,20 +11541,21 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
         name="entity_daily_summary" label="Entity Daily Summary (required)" allow-custom-entity
         @value-changed=${this._valueChangedPicker}>
       </ha-entity-picker>
-      <div class="side-by-side">
-        <div>
-          <mwc-formfield .label=${'Use Attribute'}>
-            <mwc-switch .checked=${this._extended_use_attr !== false} .configValue=${'extended_use_attr'}
-              @change=${this._valueChanged}>
-            </mwc-switch>
-          </mwc-formfield>
-        </div>
-        ${this._extended_use_attr === true ? $ `<ha-entity-attribute-picker .hass=${this.hass} .entityId=${this._entity_daily_summary}
-          .configValue=${'extended_name_attr'} .value=${this._extended_name_attr} name="extended_name_attr" label="Attribute (optional)"
-          allow-custom-value
-          @value-changed=${this._valueChangedPicker}>
-        </ha-entity-attribute-picker>` : $ ``}
-      </div>
+      ${this._entity_daily_summary !== '' ? $ `
+        <div class="side-by-side">
+          <div>
+            <mwc-formfield .label=${'Use Attribute'}>
+              <mwc-switch .checked=${this._extended_use_attr !== false} .configValue=${'extended_use_attr'}
+                @change=${this._valueChanged}>
+              </mwc-switch>
+            </mwc-formfield>
+          </div>
+          ${this._entity_daily_summary !== '' && this._extended_use_attr === true ? $ `<ha-entity-attribute-picker .hass=${this.hass} .entityId=${this._entity_daily_summary}
+            .configValue=${'extended_name_attr'} .value=${this._extended_name_attr} name="extended_name_attr" label="Attribute (optional)"
+            allow-custom-value
+            @value-changed=${this._valueChangedPicker}>
+          </ha-entity-attribute-picker>` : $ ``}
+        </div>` : $ ``}
       <ha-entity-picker .hass=${this.hass} .configValue=${'entity_todays_uv_forecast'} .value=${this._entity_todays_uv_forecast}
         name="entity_todays_uv_forecast" label="Entity Today's UV Forecast (optional)" allow-custom-entity
         @value-changed=${this._valueChangedPicker}>
@@ -11728,25 +11729,29 @@ let WeatherCardEditor = class WeatherCardEditor extends e$1(s$1) {
       <ha-entity-picker .hass=${this.hass} .configValue=${'entity_pos_1'} .value=${this._entity_pos_1} name="entity_pos_1"
         label="Entity Forecast Possible 1 (optional)" allow-custom-entity @value-changed=${this._valueChangedPicker}>
       </ha-entity-picker>
-      ${this._daily_forecast_layout === 'vertical' ? $ `<ha-entity-picker .hass=${this.hass} .configValue=${'entity_extended_1'}
-        .value=${this._entity_extended_1} name="entity_extended_1" label="Entity Forecast Extended 1 (optional)"
-        allow-custom-entity
-        @value-changed=${this._valueChangedPicker}>
-      </ha-entity-picker>
-      <div class="side-by-side">
-        <div>
-          <mwc-formfield .label=${'Use Attribute'}>
-            <mwc-switch .checked=${this._daily_extended_use_attr !== false} .configValue=${'daily_extended_use_attr'}
-              @change=${this._valueChanged}>
-            </mwc-switch>
-          </mwc-formfield>
-        </div>
-        ${this._daily_extended_use_attr === true ? $ `<ha-entity-attribute-picker .hass=${this.hass} .entityId=${this._entity_extended_1}
-          .configValue=${'daily_extended_name_attr'} .value=${this._daily_extended_name_attr} name="daily_extended_name_attr" label="Attribute (optional)"
-          allow-custom-value
+      ${this._daily_forecast_layout === 'vertical' ? $ `
+        <ha-entity-picker .hass=${this.hass} .configValue=${'entity_extended_1'}
+          .value=${this._entity_extended_1} name="entity_extended_1" label="Entity Forecast Extended 1 (optional)"
+          allow-custom-entity
           @value-changed=${this._valueChangedPicker}>
-        </ha-entity-attribute-picker>` : $ ``}
-      </div>` : ``}
+        </ha-entity-picker>
+        ${this._entity_extended_1 !== '' ? $ `
+          <div class="side-by-side">
+            <div>
+              <mwc-formfield .label=${'Use Attribute'}>
+                <mwc-switch .checked=${this._daily_extended_use_attr !== false} .configValue=${'daily_extended_use_attr'}
+                  @change=${this._valueChanged}>
+                </mwc-switch>
+              </mwc-formfield>
+            </div>
+            ${this._entity_extended_1 !== '' && this._daily_extended_use_attr === true ? $ `
+              <ha-entity-attribute-picker .hass=${this.hass} .entityId=${this._entity_extended_1}
+                .configValue=${'daily_extended_name_attr'} .value=${this._daily_extended_name_attr} name="daily_extended_name_attr" label="Attribute (optional)"
+                allow-custom-value
+                @value-changed=${this._valueChangedPicker}>
+              </ha-entity-attribute-picker>` : $ ``}
+          </div>` : $ ``}
+      ` : ``}
     `;
     }
     _optionDailyForecastEditor() {
