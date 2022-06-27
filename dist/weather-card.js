@@ -1939,11 +1939,8 @@ let WeatherCard = class WeatherCard extends s$1 {
       }
       .current-text {
         font-size: ${o$7(currentTextFontSize)};
-        overflow: hidden;
-        white-space: nowrap;
         text-align: ${o$7(currentTextAlignment)};
         line-height: 1.2em;
-        padding-top: 8px;
       }
       .variations {
         display: flex;

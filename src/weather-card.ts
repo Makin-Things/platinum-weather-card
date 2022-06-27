@@ -1862,11 +1862,8 @@ export class WeatherCard extends LitElement {
       }
       .current-text {
         font-size: ${unsafeCSS(currentTextFontSize)};
-        overflow: hidden;
-        white-space: nowrap;
         text-align: ${unsafeCSS(currentTextAlignment)};
         line-height: 1.2em;
-        padding-top: 8px;
       }
       .variations {
         display: flex;
