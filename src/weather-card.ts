@@ -212,7 +212,8 @@ export class WeatherCard extends LitElement {
 
     const separator = this._config.show_separator === true ? html`<hr class=line>` : ``;
 
-    const currentText = (this._config.entity_current_text) && (this.hass.states[this._config.entity_current_text]) ? this.hass.states[this._config.entity_current_text].state ?? '---' : '---';
+    const currentText = (this._config.entity_current_text) && (this.hass.states[this._config.entity_current_text]) ?
+      html`<div class="current-text">${this.hass.states[this._config.entity_current_text].state}</div>` ?? html`<div class="current-text">---</div>` : html``;
 
     return html`
       <div class="overview-section section">
@@ -220,7 +221,7 @@ export class WeatherCard extends LitElement {
           <div class="top-left">${biggerIcon}</div>
           <div class="currentTemps">${currentTemp}${apparentTemp}</div>
         </div>
-        <div class="current-text">${currentText}</div>
+        ${currentText}
         ${separator}
       </div>
     `;
