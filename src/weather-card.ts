@@ -431,11 +431,13 @@ export class WeatherCard extends LitElement {
       htmlDays.push(html`
         <div class="day-vert fcasttooltip">
           <div class="day-vert-top">
-            <div class="day-vert-dayicon">
-              <span class="dayname">${forecastDate ? forecastDate.toLocaleDateString(this.locale, { weekday: 'short' }) : "---"}</span>
-              <br>${htmlIcon}
-            </div>
+            <div class="dayname-vert">${forecastDate ? forecastDate.toLocaleDateString(this.locale, { weekday: 'short' }) : "---"}</div>
             ${summary}
+          </div>
+          <div class="day-vert-middle">
+            <div class="day-vert-dayicon">
+              ${htmlIcon}
+            </div>
             <div class="day-vert-values">
               ${minMax}
             </div>
@@ -1956,8 +1958,16 @@ export class WeatherCard extends LitElement {
       }
       .day-vert-top {
         display: flex;
+        width: 100%;
+      }
+      .day-vert-middle {
+        display: flex;
         float: left;
         width: 100%;
+      }
+      .day-vert-bottom {
+        text-align: left;
+        float: left;
       }
       .day-vert-dayicon {
         width: 40px;
@@ -1970,18 +1980,19 @@ export class WeatherCard extends LitElement {
         text-align: left;
         float: left;
         padding-left: 1em;
-        margin-top: 2em;
+        padding-top: 0.5em;
       }
       .day-vert-minmax {
         width: 50%;
         display: table-cell;
         float: left;
       }
-      .day-vert-bottom {
-        text-align: left;
-        float: left;
-      }
       .dayname {
+        text-transform: uppercase;
+      }
+      .dayname-vert {
+        min-width: 40px;
+        max-width: 40px;
         text-transform: uppercase;
       }
       .icon {
@@ -2001,10 +2012,8 @@ export class WeatherCard extends LitElement {
         font-weight: 300;
       }
       .f-summary-vert {
-        position: absolute;
-        padding-left: 54px;
+        padding-left: 1em;
         font-weight: 400;
-        overflow: hidden;
       }
       .f-slot-vert {
         display: table;
