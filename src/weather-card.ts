@@ -827,7 +827,7 @@ export class WeatherCard extends LitElement {
 
   get slotTempNext(): TemplateResult {
     const digits = this._config.option_today_decimals === true ? 1 : 0;
-    const icon = this._config.entity_temp_next_label ? this.hass.states[this._config.entity_temp_next_label].state.includes("Min") ? "mdi:thermometer-low" : "mdi:thermometer-high" : "mdi:help-box";
+    const icon = this._config.entity_temp_next_label ? this.hass.states[this._config.entity_temp_next_label].state.toLowerCase().includes("min") || this.hass.states[this._config.entity_temp_next_label].state.toLowerCase().includes("low") ? "mdi:thermometer-low" : "mdi:thermometer-high" : "mdi:help-box";
     const temp = this._config.entity_temp_next ? (Number(this.hass.states[this._config.entity_temp_next].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
     const label = this._config.entity_temp_next_label ? this.hass.states[this._config.entity_temp_next_label].state : "";
     const units = temp !== "---" ? html`<div class="slot-text unit-temp-small">${this.getUOM('temperature')}</div>` : html``;
@@ -846,7 +846,7 @@ export class WeatherCard extends LitElement {
 
   get slotTempFollowing(): TemplateResult {
     const digits = this._config.option_today_decimals === true ? 1 : 0;
-    const icon = this._config.entity_temp_following_label ? this.hass.states[this._config.entity_temp_following_label].state.includes("Min") ? "mdi:thermometer-low" : "mdi:thermometer-high" : "mdi:help-box";
+    const icon = this._config.entity_temp_following_label ? this.hass.states[this._config.entity_temp_following_label].state.toLowerCase().includes("min") || this.hass.states[this._config.entity_temp_following_label].state.toLowerCase().includes("low") ? "mdi:thermometer-low" : "mdi:thermometer-high" : "mdi:help-box";
     const temp = this._config.entity_temp_following ? (Number(this.hass.states[this._config.entity_temp_following].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
     const label = this._config.entity_temp_following_label ? this.hass.states[this._config.entity_temp_following_label].state : "";
     const units = temp !== "---" ? html`<div class="slot-text unit-temp-small">${this.getUOM('temperature')}</div>` : html``;
