@@ -14,6 +14,7 @@ jobs:
       # Build
       - name: Build the file
         run: |
+          rm -rf /home/runner/work/platinum-weather-card/platinum-weather-card/node_modules
           cd /home/runner/work/platinum-weather-card/platinum-weather-card
           npm install
           npm run build
