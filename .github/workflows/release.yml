@@ -18,6 +18,7 @@ jobs:
           cd /home/runner/work/platinum-weather-card/platinum-weather-card
           npm install
           npm run build
+          ls -R /home/runner/work/platinum-weather-card/platinum-weather-card/dist
 
       # Upload build file to the releas as an asset.
       - name: Upload zip to release
