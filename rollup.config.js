@@ -47,7 +47,7 @@ export default [
     output: {
       dir: 'dist',
       format: 'es',
-      inlineDynamicImports: true,
+      // inlineDynamicImports: true,
     },
     plugins: [...plugins],
   },
