@@ -16,7 +16,7 @@ jobs:
       - uses: actions/checkout@v1
       - name: Build
         run: |
-          rm -rf /home/runner/work/pplatinum-weather-card/platinum-weather-card/node_modules
+          rm -rf /home/runner/work/platinum-weather-card/platinum-weather-card/node_modules
           npm install
           npm run build
-          ls -R /home/runner/work/pplatinum-weather-card/platinum-weather-card/dist
+          ls -R /home/runner/work/platinum-weather-card/platinum-weather-card/dist
