@@ -96,6 +96,6 @@ I think we need to make it clear that this should not be used, but just added fo
 
 TODO [Detail the options when in yaml mode]
 
-[license-shield]: https://img.shields.io/github/license/makin-things/bom-radar-card.svg?style=for-the-badge
-[releases-shield]: https://img.shields.io/github/release/makin-things/weather-card.svg?style=for-the-badge
-[releases]: https://github.com/makin-things/weather-card/releases
+[license-shield]: https://img.shields.io/github/license/makin-things/platinum-weather-card.svg?style=for-the-badge
+[releases-shield]: https://img.shields.io/github/release/makin-things/platinum-weather-card.svg?style=for-the-badge
+[releases]: https://github.com/makin-things/platinum-weather-card/releases
