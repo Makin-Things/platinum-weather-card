@@ -15,7 +15,7 @@ Hey dude! Help me out for a couple of :beers: or a :coffee:!
 
 # Current Status
 
-Currently this is in an alpha stage, but feedback is welcome. Feel free to raise github issues. I am particularly keen to get feedback from people that are not from Australian or the USA (we have those covered pretty well in a private chat group, but still log issues).
+Currently this is in a beta stage, but feedback is welcome. Feel free to raise github issues. I am particularly keen to get feedback from people that are not from Australian or the USA (we have those covered pretty well in a private chat group, but still log issues).
 
 ---
 
