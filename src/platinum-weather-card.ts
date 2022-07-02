@@ -10,7 +10,7 @@ import { CARD_VERSION } from './const';
 
 /* eslint no-console: 0 */
 console.info(
-  `%c  MAKIN-THINGS-WEATHER-CARD  \n%c  Version ${CARD_VERSION}             `,
+  `%c  PLATINUM-WEATHER-CARD  \n%c  Version ${CARD_VERSION}             `,
   'color: orange; font-weight: bold; background: black',
   'color: white; font-weight: bold; background: dimgray',
 );
@@ -18,17 +18,17 @@ console.info(
 // This puts your card into the UI card picker dialog
 (window as any).customCards = (window as any).customCards || [];
 (window as any).customCards.push({
-  type: 'weather-card',
-  name: 'Weather Card',
-  description: 'A Weather Card that has a GUI configuration',
+  type: 'platinum-weather-card',
+  name: 'Platinum Weather Card',
+  description: 'An fully customisable weather card with a GUI configuration',
 });
 
 // TODO Name your custom element
-@customElement('weather-card')
+@customElement('platinum-weather-card')
 export class WeatherCard extends LitElement {
   public static async getConfigElement(): Promise<LovelaceCardEditor> {
     await import('./editor');
-    return document.createElement('weather-card-editor');
+    return document.createElement('platinum-weather-card-editor');
   }
 
   public static getStubConfig(): Record<string, unknown> {

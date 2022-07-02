@@ -193,13 +193,13 @@ const myComputeStateDisplay = (localize, stateObj, locale) => {
 const CARD_VERSION = '2.0.0a';
 
 /* eslint no-console: 0 */
-console.info(`%c  MAKIN-THINGS-WEATHER-CARD  \n%c  Version ${CARD_VERSION}             `, 'color: orange; font-weight: bold; background: black', 'color: white; font-weight: bold; background: dimgray');
+console.info(`%c  PLATINUM-WEATHER-CARD  \n%c  Version ${CARD_VERSION}             `, 'color: orange; font-weight: bold; background: black', 'color: white; font-weight: bold; background: dimgray');
 // This puts your card into the UI card picker dialog
 window.customCards = window.customCards || [];
 window.customCards.push({
-    type: 'weather-card',
-    name: 'Weather Card',
-    description: 'A Weather Card that has a GUI configuration',
+    type: 'platinum-weather-card',
+    name: 'Platinum Weather Card',
+    description: 'An fully customisable weather card with a GUI configuration',
 });
 // TODO Name your custom element
 let WeatherCard = class WeatherCard extends s$1 {
@@ -209,7 +209,7 @@ let WeatherCard = class WeatherCard extends s$1 {
     }
     static async getConfigElement() {
         await Promise.resolve().then(function () { return editor; });
-        return document.createElement('weather-card-editor');
+        return document.createElement('platinum-weather-card-editor');
     }
     static getStubConfig() {
         return {};
@@ -2199,7 +2199,7 @@ __decorate([
     t$2()
 ], WeatherCard.prototype, "_config", void 0);
 WeatherCard = __decorate([
-    n$1('weather-card')
+    n$1('platinum-weather-card')
 ], WeatherCard);
 
 // Material Design Icons v6.7.96
@@ -12216,7 +12216,7 @@ __decorate([
     t$2()
 ], WeatherCardEditor.prototype, "_subElementEditor", void 0);
 WeatherCardEditor = __decorate([
-    n$1('weather-card-editor')
+    n$1('platinum-weather-card-editor')
 ], WeatherCardEditor);
 
 var editor = /*#__PURE__*/Object.freeze({

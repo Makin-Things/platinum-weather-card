@@ -2,7 +2,7 @@ import { LovelaceCard, LovelaceCardConfig, LovelaceCardEditor } from 'custom-car
 
 declare global {
   interface HTMLElementTagNameMap {
-    'weather-card-editor': LovelaceCardEditor;
+    'platinum-weather-card-editor': LovelaceCardEditor;
     'hui-error-card': LovelaceCard;
   }
 }

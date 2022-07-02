@@ -14,7 +14,7 @@ import { selectDefinition } from '../elements/select';
 import { switchDefinition } from '../elements/switch';
 import { textfieldDefinition } from '../elements/textfield';
 
-@customElement('weather-card-editor')
+@customElement('platinum-weather-card-editor')
 export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements LovelaceCardEditor {
   @property({ attribute: false }) public hass?: HomeAssistant;
 
