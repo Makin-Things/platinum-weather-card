@@ -25,7 +25,7 @@ TODO [The above will be removed from the readme before the first release (or at 
 
 This is a fully customisble weather card with a graphical configuration. The aim is that this card usable by people everywhere and be able to deal with your sensors no matter what integration provides them.
 
-![Platinum Weather card](https://raw.githubusercontent.com/makin-things/platinum-weather-card/master/images/platinum-weather-card.png)
+![Platinum Weather card](https://raw.githubusercontent.com/Makin-Things/platinum-weather-card/master/images/platinum-weather-card.png)
 
 The design goals for the card are:
 
