@@ -10,7 +10,7 @@ import { CARD_VERSION } from './const';
 
 /* eslint no-console: 0 */
 console.info(
-  `%c  PLATINUM-WEATHER-CARD  \n%c  Version ${CARD_VERSION}             `,
+  `%c  PLATINUM-WEATHER-CARD  \n%c  Version ${CARD_VERSION}          `,
   'color: orange; font-weight: bold; background: black',
   'color: white; font-weight: bold; background: dimgray',
 );
@@ -164,10 +164,11 @@ export class WeatherCard extends LitElement {
       const d = new Date(this.hass.states[this._config.entity_update_time].state);
       switch (this.timeFormat) {
         case '12hour':
-          updateTime = d.toLocaleString(this.locale, { hour: 'numeric', minute: '2-digit', hour12: true }).replace(" ", "") + ", " + d.toLocaleDateString(this.locale, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).replace(",", "");
+          console.log(`Locale=${this.locale || navigator.language}`);
+          updateTime = d.toLocaleString(this.locale || navigator.language, { hour: 'numeric', minute: '2-digit', hour12: true }).replace(" ", "") + ", " + d.toLocaleDateString(this.locale, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).replace(",", "");
           break;
         case '24hour':
-          updateTime = d.toLocaleString(this.locale, { hour: '2-digit', minute: '2-digit', hour12: false }) + ", " + d.toLocaleDateString(this.locale, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).replace(",", "");
+          updateTime = d.toLocaleString(this.locale || navigator.language, { hour: '2-digit', minute: '2-digit', hour12: false }) + ", " + d.toLocaleDateString(this.locale, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).replace(",", "");
           break;
         case 'system':
           updateTime = d.toLocaleTimeString(navigator.language, { timeStyle: 'short' }).replace(" ", "") + ", " + d.toLocaleDateString(navigator.language).replace(",", "");
