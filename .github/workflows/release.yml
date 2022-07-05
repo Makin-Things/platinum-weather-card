@@ -22,31 +22,12 @@ jobs:
           ls -R /home/runner/work/platinum-weather-card/platinum-weather-card/dist
 
       # Upload build file to the releas as an asset.
-      # - name: Upload javascript to release
-      #   uses: svenstaro/upload-release-action@v2
+      - name: Upload javascript to release
+        uses: svenstaro/upload-release-action@v2
 
-      #   with:
-      #     repo_token: ${{ secrets.GITHUB_TOKEN }}
-      #     file: /home/runner/work/platinum-weather-card/platinum-weather-card/dist/platinum-weather-card.js
-      #     tag: ${{ github.ref }}
-      #     overwrite: true
-
-      # - name: Upload javascript to release
-      #   uses: svenstaro/upload-release-action@v2
-
-      #   with:
-      #     repo_token: ${{ secrets.GITHUB_TOKEN }}
-      #     file: /home/runner/work/platinum-weather-card/platinum-weather-card/dist/icons/animated/*
-      #     tag: ${{ github.ref }}
-      #     overwrite: true
-      #     file_glob: true
-
-      # - name: Upload javascript to release
-      #   uses: svenstaro/upload-release-action@v2
-
-      #   with:
-      #     repo_token: ${{ secrets.GITHUB_TOKEN }}
-      #     file: /home/runner/work/platinum-weather-card/platinum-weather-card/dist/icons/static/*
-      #     tag: ${{ github.ref }}
-      #     overwrite: true
-      #     file_glob: true
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: /home/runner/work/platinum-weather-card/platinum-weather-card/dist/*
+          tag: ${{ github.ref }}
+          overwrite: true
+          file_glob: true
