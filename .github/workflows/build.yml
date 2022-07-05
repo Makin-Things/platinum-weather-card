@@ -10,37 +10,12 @@ on:
 
 jobs:
   build:
-    name: Build Master
+    name: Test build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v1
       - name: Build
         run: |
-          rm -rf /home/runner/work/platinum-weather-card/platinum-weather-card/node_modules
           npm install
-          npm run lint && npm run rollup -c rollup.config.js
+          npm run build
           ls -R /home/runner/work/platinum-weather-card/platinum-weather-card/dist
-      - name: Add files
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add -f dist/*.js
-      - name: Commit changes
-        id: can_commit
-        run: |-
-          commit_result=$(git commit -m "Add changes to dist" -a | tr -d '\n' || true)
-          echo "::set-output name=commit_result::$commit_result"
-      - name: Nothing to commit
-        id: nothing_committed
-        if: contains(steps.can_commit.outputs.commit_result, 'nothing to commit')
-        run: echo "No changes found. Skipping push."
-      - name: Push changes
-        if: contains(steps.can_commit.outputs.commit_result, 'nothing to commit') == false
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.head_ref }}
-      - name: HACS validation
-        uses: 'hacs/action@main'
-        with:
-          category: 'plugin'
