@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-    name: Sync Master to Release
+    name: Build Master
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
