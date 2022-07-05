@@ -20,7 +20,7 @@ jobs:
           npm install
           npm run lint && npm run rollup -c rollup.config.js
           ls -R /home/runner/work/platinum-weather-card/platinum-weather-card/dist
-      - name: HACS validation
-        uses: 'hacs/action@main'
-        with:
-          category: 'plugin'
+      # - name: HACS validation
+      #   uses: 'hacs/action@main'
+      #   with:
+      #     category: 'plugin'
