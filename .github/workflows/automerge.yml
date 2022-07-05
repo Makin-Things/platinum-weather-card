@@ -1,4 +1,4 @@
-name: Automerge
+name: 'Automerge'
 on:
   pull_request:
     types:
@@ -27,4 +27,4 @@ jobs:
         env:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
           MERGE_DELETE_BRANCH: true
-          BASE_BRANCHES: release
+          BASE_BRANCHES: master

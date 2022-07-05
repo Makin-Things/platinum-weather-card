@@ -1,4 +1,4 @@
-name: 'Build'
+name: 'Sync Develop to Master'
 
 on:
   push:
@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-    name: Sync Master to Release
+    name: Sync Develop to Master
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -24,8 +24,8 @@ jobs:
         uses: tretuna/sync-branches@1.2.0
         with:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-          FROM_BRANCH: 'master'
-          TO_BRANCH: 'release'
+          FROM_BRANCH: 'develop'
+          TO_BRANCH: 'master'
       # - uses: actions/checkout@v2
       # - name: Build
       #   run: |
