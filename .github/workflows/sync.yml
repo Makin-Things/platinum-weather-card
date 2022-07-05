@@ -26,3 +26,9 @@ jobs:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
           FROM_BRANCH: 'develop'
           TO_BRANCH: 'master'
+      - name: Label the pull request to ignore for release note generation
+        uses: actions-ecosystem/action-add-labels@v1
+        with:
+          labels: automerge
+          repo: ${{ github.repository }}
+          number: ${{ steps.pull.outputs.PULL_REQUEST_NUMBER }}
