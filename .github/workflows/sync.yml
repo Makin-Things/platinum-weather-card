@@ -3,10 +3,10 @@ name: 'Sync Develop to Master'
 on:
   push:
     branches:
-      - master
+      - develop
   pull_request:
     branches:
-      - master
+      - develop
 
 jobs:
   build:
