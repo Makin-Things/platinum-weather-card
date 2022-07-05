@@ -20,10 +20,6 @@ jobs:
           npm install
           npm run lint && npm run rollup -c rollup.config.js
           ls -R /home/runner/work/platinum-weather-card/platinum-weather-card/dist
-      - name: HACS validation
-        uses: 'hacs/action@main'
-        with:
-          category: 'plugin'
       - name: Add files
         run: |
           git config --local user.email "action@github.com"
@@ -44,3 +40,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ github.head_ref }}
+      - name: HACS validation
+        uses: 'hacs/action@main'
+        with:
+          category: 'plugin'
