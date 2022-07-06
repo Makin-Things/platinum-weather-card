@@ -146,27 +146,27 @@ export class WeatherCard extends LitElement {
           for (var _i = 1; _i <= days; _i++) {
             switch (entityName) {
               case 'entity_forecast_icon_1':
-                if (entity.attributes.forecast[_i].condition === undefined) {
+                if (entity.attributes.forecast[_i] && entity.attributes.forecast[_i].condition === undefined) {
                   this._error.push(`'${entityName} attribute forecast[${_i}].condition not found`);
                 }
                 break
               case 'entity_forecast_low_temp_1':
-                if (entity.attributes.forecast[_i].templow === undefined) {
+                if (entity.attributes.forecast[_i] && entity.attributes.forecast[_i].templow === undefined) {
                   this._error.push(`'${entityName} attribute forecast[${_i}].templow not found`);
                 }
                 break
               case 'entity_forecast_high_temp_1':
-                if (entity.attributes.forecast[_i].temperature === undefined) {
+                if (entity.attributes.forecast[_i] && entity.attributes.forecast[_i].temperature === undefined) {
                   this._error.push(`'${entityName} attribute forecast[${_i}].temperature not found`);
                 }
                 break;
               case 'entity_pop_1':
-                if (entity.attributes.forecast[_i].precipitation_probability === undefined) {
+                if (entity.attributes.forecast[_i] && entity.attributes.forecast[_i].precipitation_probability === undefined) {
                   this._error.push(`'${entityName} attribute forecast[${_i}].precipitation_probability not found`);
                 }
                 break;
               case 'entity_pos_1':
-                if (entity.attributes.forecast[_i].precipitation === undefined) {
+                if (entity.attributes.forecast[_i] && entity.attributes.forecast[_i].precipitation === undefined) {
                   this._error.push(`'${entityName} attribute forecast[${_i}].precipitation not found`);
                 }
                 break;
@@ -346,6 +346,9 @@ export class WeatherCard extends LitElement {
       if (this._config['entity_forecast_icon_1']?.match('^weather.')) {
         // using a weather domain entity
         const iconEntity = this._config['entity_forecast_icon_1'];
+        if (this.hass.states[iconEntity].attributes.forecast[i + 1] === undefined || this.hass.states[iconEntity].attributes.forecast[i + 1].condition === undefined) {
+          break;
+        }
         const url = new URL(((this._config.option_static_icons ? 's-' : 'a-') + (iconEntity && this.hass.states[iconEntity].attributes.forecast[i].condition ? this._weatherIcon(this.hass.states[iconEntity].attributes.forecast[i].condition) : 'unknown') + '.svg').replace("-night", "-day"), import.meta.url);
         htmlIcon = html`<i class="icon" style="background: none, url(${url.href}) no-repeat; background-size: contain;"></i><br>`;
       } else {
@@ -455,7 +458,7 @@ export class WeatherCard extends LitElement {
       if (this._config['entity_forecast_icon_1']?.match('^weather.')) {
         // using a weather domain entity
         const iconEntity = this._config['entity_forecast_icon_1'];
-        if (this.hass.states[iconEntity].attributes.forecast[i + 1].condition === undefined) {
+        if (this.hass.states[iconEntity].attributes.forecast[i + 1] === undefined || this.hass.states[iconEntity].attributes.forecast[i + 1].condition === undefined) {
           break;
         }
         const url = new URL(((this._config.option_static_icons ? 's-' : 'a-') + (iconEntity && this.hass.states[iconEntity].attributes.forecast[i].condition ? this._weatherIcon(this.hass.states[iconEntity].attributes.forecast[i].condition) : 'unknown') + '.svg').replace("-night", "-day"), import.meta.url);
@@ -1208,9 +1211,15 @@ export class WeatherCard extends LitElement {
   get currentTemperature(): string {
     const entity = this._config.entity_temperature;
     return entity && this.hass.states[entity]
-      ? this._config.show_decimals !== true
-        ? String(Math.round(Number(this.hass.states[entity].state)))
-        : Number(this.hass.states[entity].state).toLocaleString(this.locale)
+      ? entity.match('^weather.') === null
+        ? this._config.show_decimals !== true
+          ? String(Math.round(Number(this.hass.states[entity].state)))
+          : Number(this.hass.states[entity].state).toLocaleString(this.locale)
+        : this.hass.states[entity].attributes.temperature !== undefined
+          ? this._config.show_decimals !== true
+            ? String(Math.round(Number(this.hass.states[entity].attributes.temperature)))
+            : Number(this.hass.states[entity].attributes.temperature).toLocaleString(this.locale)
+          : '---'
       : '---';
   }
 
