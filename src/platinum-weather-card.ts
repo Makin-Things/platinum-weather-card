@@ -4,7 +4,7 @@ import { LitElement, html, TemplateResult, css, PropertyValues, CSSResult, unsaf
 import { customElement, property, state } from 'lit/decorators';
 import { HomeAssistant, LovelaceCardEditor, getLovelace } from 'custom-card-helpers';
 import { getLocale } from './helpers';
-import { myComputeStateDisplay } from './compute_state_display';
+import { entityComputeStateDisplay, stringComputeStateDisplay } from './compute_state_display';
 import type { timeFormat, WeatherCardConfig } from './types';
 import { CARD_VERSION } from './const';
 
@@ -45,8 +45,8 @@ export class WeatherCard extends LitElement {
 
   public getCardSize(): number {
 
-    console.info(`Tempate Test String:${myComputeStateDisplay(this.hass.localize, this.hass.states['sensor.template_test_string'], getLocale(this.hass))}`);
-    console.info(`Tempate Test Number:${myComputeStateDisplay(this.hass.localize, this.hass.states['sensor.template_test_number'], getLocale(this.hass))}`);
+    console.info(`Tempate Test String:${entityComputeStateDisplay(this.hass.localize, this.hass.states['sensor.template_test_string'], getLocale(this.hass))}`);
+    console.info(`Tempate Test Number:${entityComputeStateDisplay(this.hass.localize, this.hass.states['sensor.template_test_number'], getLocale(this.hass))}`);
 
     console.info(`getCardSize`);
     var cardHeight = 16;
@@ -252,7 +252,7 @@ export class WeatherCard extends LitElement {
     const separator = this._config.show_separator === true ? html`<hr class=line>` : ``;
 
     const currentText = (this._config.entity_current_text) && (this.hass.states[this._config.entity_current_text]) ?
-      html`<div class="current-text">${this.hass.states[this._config.entity_current_text].state}</div>` ?? html`<div class="current-text">---</div>` : html``;
+      html`<div class="current-text">${entityComputeStateDisplay(this.hass.localize, this.hass.states[this._config.entity_current_text], getLocale(this.hass))}</div>` ?? html`<div class="current-text">---</div>` : html``;
 
     return html`
       <div class="overview-section section">
@@ -404,6 +404,7 @@ export class WeatherCard extends LitElement {
 
       var pop: TemplateResult;
       var pos: TemplateResult;
+      var tooltip: TemplateResult;
       if (this._config['entity_pop_1']?.match('^weather.')) {
         const popEntity = this._config['entity_pop_1'];
         pop = popEntity ? html`<br><div class="f-slot-horiz"><div class="pop">${this.hass.states[popEntity] && this.hass.states[popEntity].attributes.forecast[i + 1].precipitation_probability !== undefined ? Math.round(Number(this.hass.states[popEntity].attributes.forecast[i + 1].precipitation_probability)) : "---"}</div><div class="unit">%</div></div>` : html``;
@@ -420,9 +421,14 @@ export class WeatherCard extends LitElement {
         const posEntity = start && this._config['entity_pos_1'] ? this._config['entity_pos_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
         pos = start ? html`<br><div class="f-slot-horiz"><div class="pos">${posEntity && this.hass.states[posEntity] ? this.hass.states[posEntity].state : "---"}</div><div class="unit">${this.getUOM('precipitation')}</div></div>` : html``;
       }
-      start = this._config['entity_summary_1'] ? this._config['entity_summary_1'].match(/(\d+)(?!.*\d)/g) : false;
-      const tooltipEntity = start && this._config['entity_summary_1'] ? this._config['entity_summary_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
-      const tooltip = html`<div class="fcasttooltiptext" id="fcast-summary-${i}">${this._config.option_tooltips && tooltipEntity ? this.hass.states[tooltipEntity] ? this.hass.states[tooltipEntity].state : "---" : ""}</div>`;
+      if (this._config['entity_summary_1']?.match('^weather.')) {
+        const tooltipEntity = this._config['entity_summary_1'];
+        tooltip = html`<div class="fcasttooltiptext" id="fcast-summary-${i}">${this.hass.states[tooltipEntity] && this.hass.states[tooltipEntity].attributes.forecast[i + 1].condition !== undefined ? stringComputeStateDisplay(this.hass.localize, this.hass.states[tooltipEntity].attributes.forecast[i + 1].condition) : "---"}</div>`;
+      } else {
+        start = this._config['entity_summary_1'] ? this._config['entity_summary_1'].match(/(\d+)(?!.*\d)/g) : false;
+        const tooltipEntity = start && this._config['entity_summary_1'] ? this._config['entity_summary_1'].replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
+        tooltip = html`<div class="fcasttooltiptext" id="fcast-summary-${i}">${this._config.option_tooltips && tooltipEntity ? this.hass.states[tooltipEntity] ? this.hass.states[tooltipEntity].state : "---" : ""}</div>`;
+      }
 
       htmlDays.push(html`
         <div class="day-horiz fcasttooltip">

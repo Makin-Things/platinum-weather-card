@@ -5,10 +5,10 @@ const UNAVAILABLE = 'unavailable';
 const UNKNOWN = 'unknown';
 
 function computeDomain(entityId: string): string {
-    return entityId.substr(0, entityId.indexOf('.'));
+    return entityId.split('.')[0];
 }
 
-export const myComputeStateDisplay = (
+export const entityComputeStateDisplay = (
     localize: LocalizeFunc,
     stateObj: HassEntity,
     locale: FrontendLocaleData,
@@ -61,5 +61,18 @@ export const myComputeStateDisplay = (
         localize(`component.${domain}.state._.${stateObj.state}`) ||
         // We don't know! Return the raw state.
         stateObj.state
+    );
+};
+
+export const stringComputeStateDisplay = (
+    localize: LocalizeFunc,
+    stringObj: string,
+): string | undefined => {
+
+    return (
+        // Return default translation
+        localize(`component.weather.state._.${stringObj}`) ||
+        // We don't know! Return the raw state.
+        stringObj
     );
 };
