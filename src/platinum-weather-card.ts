@@ -1938,7 +1938,7 @@ export class WeatherCard extends LitElement {
     const tooltipBorderColor = this._config.tooltip_border_color || "rgb(255,161,0)";
     const tooltipBorderWidth = this._config.tooltip_border_width || "1";
     const tooltipCaretSize = this._config.tooltip_caret_size || "5";
-    const tooltipWidth = this._config.tooltip_width || "200";
+    const tooltipWidth = this._config.tooltip_width || "110";
     // const tooltipLeftOffset = this._config.tooltip_left_offset || "-12";
     const tooltipVisible = this._config.option_tooltips ? "visible" : "hidden";
     // const tempTopMargin = this._config.temp_top_margin || "0px";
