@@ -15,15 +15,15 @@ Hey dude! Help me out for a couple of :beers: or a :coffee:!
 
 # Current Status
 
-Currently this is in a beta stage, but feedback is welcome. Feel free to raise github issues. I am particularly keen to get feedback from people that are not from Australian or the USA (we have those covered pretty well in a private chat group, but still log issues).
+Currently this is in a beta stage, but feedback is welcome. Feel free to raise github issues. I am particularly keen to get feedback from people that are not from Australian or the USA (we have those covered pretty well in a private chat group, but still log issues). If anyone wants to help with documentation (expecially if it's a how to set things up using different weather integration please raise an issue so we can talk about how to include it).
 
 ---
 
 TODO [The above will be removed from the readme before the first release (or at least updated).]
 
-# Description
+# Overview
 
-This is a fully customisble weather card with a graphical configuration. The aim is that this card usable by people everywhere and be able to deal with your sensors no matter what integration provides them.
+This is a fully customisble weather card with a graphical configuration. It has been patterned after the original Dark-Sky animated weather card (https://github.com/iammexx/home-assistant-config/tree/master/ui/darksky), and a forked variant, the BOM Weather Card (https://github.com/DavidFW1960/bom-weather-card). The aim is that this card is usable by people everywhere and be able to deal with your sensors no matter what integration(s) provides them. To get the most from the card you may need to look at what various weather integrations provide on top of the standard weather entity.
 
 ![Platinum Weather card](https://raw.githubusercontent.com/Makin-Things/platinum-weather-card/master/images/platinum-weather-card.png)
 
@@ -32,17 +32,20 @@ The design goals for the card are:
 - Totally configurable with a gui editor (no more yaml)
 - Provide an upgrade path from @DavidFW1960 custom-weather-card (we are working very closely to ensure this works)
 - A ridiculous amount of flexibilty as we can not possibbly guess everyone's use case
-- TODO [I need to go back and find our orininal design goals to check I have added everything here]
 
-There has been a lot of reused code, but this card has effectively been rewritten from the ground up to make it more flexible.
+There has been a lot of code reused, but this card has effectively been rewritten from the ground up to make it more flexible.
+
+# Installation
+
+This plugin is now part of the default HACS store. Install card from HACS the same way you do for other plugins. After installing the card you can add as many instances of the card the the dashboard as you desire. Due to the complexities of the card (icons/split code for performance) it is not recommended you do a manual install (also you don't get automatic updates offered, basically use HACS!).
 
 # Concepts
 
 The card has sections within the card, any of these sections can be enabled/disabled and reordered to suit your individual needs. Each section has its own configuration pages for the selection of entities and for control display and styling.
 
-TODO [Include an image with some markup]
+![Platinum Weather card](https://raw.githubusercontent.com/Makin-Things/platinum-weather-card/master/images/all-sections-highlighted.png)
 
-We understand everyone's use case may be different, the default settings are aimed at maintaining compatibiltiy with the old bom/custom weather card that we are aiming to deprecate.
+We understand everyone's use case may be different, the default settings are aimed at maintaining compatibiltiy with the old bom/custom/darksky weather card that we are aiming to deprecate.
 There is no reason that all of your weather date needs to be show on a single card, this card allows you to have multiple cards with different configurations to achieve what you want.
 
 TODO [Suggest ways to best use multiple cards]
