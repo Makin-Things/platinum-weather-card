@@ -45,7 +45,7 @@ The card has sections within the card, any of these sections can be enabled/disa
 
 ![Platinum Weather card](https://raw.githubusercontent.com/Makin-Things/platinum-weather-card/master/images/all-sections-highlighted.png)
 
-We understand everyone's use case may be different, the default settings are aimed at maintaining compatibiltiy with the old bom/custom/darksky weather card that we are aiming to deprecate.
+It is understood that everyone's use case may be different (and you may have limited data depending on the weather integration you are using), the default settings are aimed at maintaining compatibiltiy with the old bom/custom/darksky weather card that we are aiming to deprecate.
 There is no reason that all of your weather date needs to be show on a single card, this card allows you to have multiple cards with different configurations to achieve what you want.
 
 TODO [Suggest ways to best use multiple cards]
