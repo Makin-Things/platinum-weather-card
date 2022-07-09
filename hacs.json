@@ -1,4 +1,5 @@
 {
   "name": "Platinum Weather Card",
-  "render_readme": true
+  "render_readme": true,
+  "hide_default_branch": true
 }
