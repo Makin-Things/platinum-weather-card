@@ -117,6 +117,10 @@ TODO [Detail the options when in yaml mode]
   <img alt="Shows an illustrated sun in light color mode and a moon with stars in dark color mode."  width="24">
 </picture>
 
+<img src="https://raw.githubusercontent.com/Makin-Things/platinum-weather-card/master/images/pencil-current.svg" width="24">
+
+<img src="https://raw.githubusercontent.com/Makin-Things/platinum-weather-card/master/images/pencil.svg" width="24">
+
 [license-shield]: https://img.shields.io/github/license/makin-things/platinum-weather-card.svg?style=for-the-badge
 [releases-shield]: https://img.shields.io/github/release/makin-things/platinum-weather-card.svg?style=for-the-badge
 [releases]: https://github.com/makin-things/platinum-weather-card/releases
