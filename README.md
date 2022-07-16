@@ -112,8 +112,8 @@ I think we need to make it clear that this should not be used, but just added fo
 TODO [Detail the options when in yaml mode]
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Makin-Things/platinum-weather-card/master/images/pencil-white.svg">
   <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/Makin-Things/platinum-weather-card/master/images/pencil-black.svg">
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Makin-Things/platinum-weather-card/master/images/pencil-white.svg">
   <img alt="Shows an illustrated sun in light color mode and a moon with stars in dark color mode."  width="24">
 </picture>
 
