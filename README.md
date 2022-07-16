@@ -48,7 +48,7 @@ The card has sections within the card, any of these sections can be enabled/disa
 It is understood that everyone's use case may be different (and you may have limited data depending on the weather integration you are using), the default settings are aimed at maintaining compatibiltiy with the old bom/custom/darksky weather card that we are aiming to deprecate.
 There is no reason that all of your weather date needs to be show on a single card, this card allows you to have multiple cards with different configurations to achieve what you want.
 
-TODO [Suggest ways to best use multiple cards]
+Rather than putting everything in one gigantic card it is possible to create a few smaller cards, with each having a lot of options of disabled. For example you could choose to put observations on one card and forecast information on another.
 
 # Sections
 
@@ -61,7 +61,13 @@ TODO [In all of these sections add and explanation of individual settings]
 
 This section as the name suggest adds a title section so that the card can be named and a timestamp diplayed.
 
-TODO [include image of section]
+![Platinum Weather card](https://raw.githubusercontent.com/Makin-Things/platinum-weather-card/master/images/title-section-highlighted.png)
+
+| Option name        | Type   | Description                                                                                    |
+| ------------------ | ------ | ---------------------------------------------------------------------------------------------- |
+| Card Title         | String | The Text that should be displayed as the cards title                                           |
+| Entity Update Time | Entity | Defines the entity to use for the timestamp. The entities state MUST provide a valid timestamp |
+| Update Time Preix  | String | Optional text to include as a prefix to the timestamp                                          |
 
 ## Overview Section
 
