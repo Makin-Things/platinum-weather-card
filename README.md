@@ -59,7 +59,7 @@ TODO [In all of these sections add and explanation of individual settings]
 
 ## Title Section
 
-This section as the name suggest adds a title section so that the card can be named and a timestamp diplayed.
+This section as the name suggests, adds a title section to the card that provides a name and a timestamp.
 
 ![Platinum Weather card](https://raw.githubusercontent.com/Makin-Things/platinum-weather-card/master/images/title-section-highlighted.png)
 
