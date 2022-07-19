@@ -37,7 +37,7 @@ There has been a lot of code reused, but this card has effectively been rewritte
 
 # Installation
 
-This plugin is now part of the default HACS store. Install card from HACS the same way you do for other plugins. After installing the card you can add as many instances of the card the the dashboard as you desire. Due to the complexities of the card (icons/split code for performance) it is not recommended you do a manual install (also you don't get automatic updates offered, basically use HACS!).
+This plugin is now part of the default HACS store. Install card from HACS (note that it requires HACS 1.26.0 or greater) the same way you do for other plugins. After installing the card you can add as many instances of the card the the dashboard as you desire. Due to the complexities of the card (icons/split code for performance) it is not recommended you do a manual install (also you don't get automatic updates offered, basically use HACS!).
 
 # Concepts
 
@@ -116,10 +116,6 @@ TODO [Detail the options when in yaml mode]
   <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Makin-Things/platinum-weather-card/master/images/pencil-white.svg">
   <img alt="Shows an illustrated sun in light color mode and a moon with stars in dark color mode."  width="24">
 </picture>
-
-<img src="https://raw.githubusercontent.com/Makin-Things/platinum-weather-card/master/images/pencil-current.svg" width="24">
-
-<img src="https://raw.githubusercontent.com/Makin-Things/platinum-weather-card/master/images/pencil.svg" width="24">
 
 [license-shield]: https://img.shields.io/github/license/makin-things/platinum-weather-card.svg?style=for-the-badge
 [releases-shield]: https://img.shields.io/github/release/makin-things/platinum-weather-card.svg?style=for-the-badge
