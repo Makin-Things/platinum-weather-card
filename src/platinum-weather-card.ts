@@ -597,25 +597,27 @@ export class WeatherCard extends LitElement {
     if (this._checkForErrors()) htmlCode.push(this._showConfigWarning(this._error));
 
     const sections: TemplateResult[] = [];
-    this._config.section_order.forEach(section => {
-      switch (section) {
-        case 'title':
-          sections.push(this._renderTitleSection());
-          break;
-        case 'overview':
-          sections.push(this._renderOverviewSection());
-          break;
-        case 'extended':
-          sections.push(this._renderExtendedSection());
-          break;
-        case 'slots':
-          sections.push(this._renderSlotsSection());
-          break;
-        case 'daily_forecast':
-          sections.push(this._renderDailyForecastSection());
-          break;
-      }
-    });
+    if (this._config.section_order !== undefined) {
+      this._config.section_order.forEach(section => {
+        switch (section) {
+          case 'title':
+            sections.push(this._renderTitleSection());
+            break;
+          case 'overview':
+            sections.push(this._renderOverviewSection());
+            break;
+          case 'extended':
+            sections.push(this._renderExtendedSection());
+            break;
+          case 'slots':
+            sections.push(this._renderSlotsSection());
+            break;
+          case 'daily_forecast':
+            sections.push(this._renderDailyForecastSection());
+            break;
+        }
+      });
+    }
 
     htmlCode.push(html`
       <style>
