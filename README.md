@@ -65,11 +65,11 @@ This section as the name suggests, adds a title section to the card that provide
 
 ![Platinum Weather card](https://raw.githubusercontent.com/Makin-Things/platinum-weather-card/master/images/title-section-highlighted.png)
 
-| Option name        | Type   | Description                                                                                    |
-| ------------------ | ------ | ---------------------------------------------------------------------------------------------- |
-| Card Title         | String | The Text that should be displayed as the cards title                                           |
-| Entity Update Time | Entity | Defines the entity to use for the timestamp. The entities state MUST provide a valid timestamp |
-| Update Time Preix  | String | Optional text to include as a prefix to the timestamp                                          |
+| Option name        | Type   | Description                                                                                                                                          |
+| ------------------ | ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Card Title         | String | The Text that should be displayed as the cards title                                                                                                 |
+| Entity Update Time | Entity | Defines the entity to use for the timestamp. The entities state MUST provide a valid timestamp in RFC 3339 format (ie. `yyyy-mm-ddThh:mm:ss+offset`) |
+| Update Time Preix  | String | Optional text to include as a prefix to the timestamp                                                                                                |
 
 ## Overview Section
 
