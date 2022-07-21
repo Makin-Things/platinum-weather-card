@@ -4,7 +4,7 @@
 
 | Condition                                                                 | Day                                                                                                            | Night                                   | Notes |
 | ------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | --------------------------------------- | ----- |
-| sunny                                                                     | ![sunny-day](https://raw.githubusercontent.com/Makin-Things/platinum-weather-card/master/dist/a-sunny-day.svg) | sunny-night                             |
+| sunny                                                                     | sunny-day![](https://raw.githubusercontent.com/Makin-Things/platinum-weather-card/master/dist/a-sunny-day.svg) | sunny-night                             |
 | clear                                                                     | clear-day                                                                                                      | clear-night                             |
 | mostly-sunny<br>mostly_sunny                                              | fair-day<br>&nbsp;                                                                                             | fair-<br>&nbsp;                         |
 | partly-cloudy<br>partly_cloudy<br>partlycloudy                            | partly-cloudy-day<br>&nbsp;<br>&nbsp;                                                                          | partly-cloudy-night<br>&nbsp;<br>&nbsp; |
