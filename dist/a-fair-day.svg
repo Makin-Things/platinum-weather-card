@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="50" height="50" version="1.1" viewbox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
+<svg width="64" height="64" version="1.1" viewbox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
  <defs>
   <filter id="blur" x="-.58861" y="-.83408" width="2.1772" height="3.1166">
    <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
@@ -167,7 +167,7 @@
 }
         ]]></style>
  </defs>
- <g transform="translate(2,-4)" filter="url(#blur)">
+ <g transform="translate(9 3)" filter="url(#blur)">
   <g transform="translate(20,10)">
    <g transform="translate(0,16)">
     <g class="am-weather-sun" style="-moz-animation-duration:9s;-moz-animation-iteration-count:infinite;-moz-animation-name:am-weather-sun;-moz-animation-timing-function:linear;-ms-animation-duration:9s;-ms-animation-iteration-count:infinite;-ms-animation-name:am-weather-sun;-ms-animation-timing-function:linear;-webkit-animation-duration:9s;-webkit-animation-iteration-count:infinite;-webkit-animation-name:am-weather-sun;-webkit-animation-timing-function:linear">
