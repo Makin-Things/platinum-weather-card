@@ -1,4 +1,4 @@
-# Icons used int the Platinum Weather Card
+# Icons used in the Platinum Weather Card
 
 ## New/Animated
 
