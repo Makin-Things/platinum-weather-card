@@ -775,7 +775,7 @@ export class WeatherCard extends LitElement {
     const pop = this._config.entity_pop
       ? this._config.entity_pop.match('^weather.') === null
         ? Math.round(Number(this.hass.states[this._config.entity_pop].state))
-        : this.hass.states[this._config.entity_pop].attributes.forecast[0].precipitation_probability !== undefined
+        : this.hass.states[this._config.entity_pop] !== undefined && this.hass.states[this._config.entity_pop].attributes.forecast[0].precipitation_probability !== undefined
           ? Math.round(Number(this.hass.states[this._config.entity_pop].attributes.forecast[0].precipitation_probability))
           : '---'
       : "---";
@@ -783,7 +783,7 @@ export class WeatherCard extends LitElement {
     const pos = this._config.entity_possible_today
       ? this._config.entity_possible_today.match('^weather.') === null
         ? this.hass.states[this._config.entity_possible_today].state
-        : this.hass.states[this._config.entity_possible_today].attributes.forecast[0].precipitation !== undefined
+        : this.hass.states[this._config.entity_possible_today] !== undefined && this.hass.states[this._config.entity_possible_today].attributes.forecast[0].precipitation !== undefined
           ? this.hass.states[this._config.entity_possible_today].attributes.forecast[0].precipitation
           : '---'
       : "---";
@@ -805,7 +805,7 @@ export class WeatherCard extends LitElement {
     const pop = this._config.entity_pop
       ? this._config.entity_pop.match('^weather.') === null
         ? Math.round(Number(this.hass.states[this._config.entity_pop].state))
-        : this.hass.states[this._config.entity_pop].attributes.forecast[0].precipitation_probability !== undefined
+        : this.hass.states[this._config.entity_pop] !== undefined && this.hass.states[this._config.entity_pop].attributes.forecast[0].precipitation_probability !== undefined
           ? Math.round(Number(this.hass.states[this._config.entity_pop].attributes.forecast[0].precipitation_probability))
           : '---'
       : "---";
@@ -826,7 +826,7 @@ export class WeatherCard extends LitElement {
     const pos = this._config.entity_possible_today
       ? this._config.entity_possible_today.match('^weather.') === null
         ? this.hass.states[this._config.entity_possible_today].state
-        : this.hass.states[this._config.entity_possible_today].attributes.forecast[0].precipitation !== undefined
+        : this.hass.states[this._config.entity_possible_today] !== undefined && this.hass.states[this._config.entity_possible_today].attributes.forecast[0].precipitation !== undefined
           ? this.hass.states[this._config.entity_possible_today].attributes.forecast[0].precipitation
           : '---'
       : "---";
@@ -846,7 +846,7 @@ export class WeatherCard extends LitElement {
     const pos = this._config.entity_possible_tomorrow
       ? this._config.entity_possible_tomorrow.match('^weather.') === null
         ? this.hass.states[this._config.entity_possible_tomorrow].state
-        : this.hass.states[this._config.entity_possible_tomorrow].attributes.forecast[1].precipitation !== undefined
+        : this.hass.states[this._config.entity_possible_tomorrow] !== undefined && this.hass.states[this._config.entity_possible_tomorrow].attributes.forecast[1].precipitation !== undefined
           ? this.hass.states[this._config.entity_possible_tomorrow].attributes.forecast[1].precipitation
           : '---'
       : "---";
@@ -945,7 +945,7 @@ export class WeatherCard extends LitElement {
     const temp = this._config.entity_forecast_max
       ? this._config.entity_forecast_max.match('^weather.') === null
         ? (Number(this.hass.states[this._config.entity_forecast_max].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits })
-        : this.hass.states[this._config.entity_forecast_max].attributes.forecast[0].temperature !== undefined
+        : this.hass.states[this._config.entity_forecast_max] !== undefined && this.hass.states[this._config.entity_forecast_max].attributes.forecast[0].temperature !== undefined
           ? (Number(this.hass.states[this._config.entity_forecast_max].attributes.forecast[0].temperature)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits })
           : '---'
       : "---";
@@ -968,7 +968,7 @@ export class WeatherCard extends LitElement {
     const temp = this._config.entity_forecast_min
       ? this._config.entity_forecast_min.match('^weather.') === null
         ? (Number(this.hass.states[this._config.entity_forecast_min].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits })
-        : this.hass.states[this._config.entity_forecast_min].attributes.forecast[0].templow !== undefined
+        : this.hass.states[this._config.entity_forecast_min] !== undefined && this.hass.states[this._config.entity_forecast_min].attributes.forecast[0].templow !== undefined
           ? (Number(this.hass.states[this._config.entity_forecast_min].attributes.forecast[0].templow)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits })
           : '---'
       : "---";
@@ -1980,6 +1980,9 @@ export class WeatherCard extends LitElement {
         border: 1px solid transparent;
         padding-top: 8px;
         padding-bottom: 8px;
+      }
+      .title-section {
+        padding-left: 8px;
       }
       .extended-section {
         padding-left: 8px;

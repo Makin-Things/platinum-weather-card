@@ -955,6 +955,51 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     `;
   }
 
+  // New code to display icons conditions
+  //=====================================
+  //   <div class="icon-side-by-side">
+  //   <div class="condition_icon"><img src="http://127.0.0.1:5123/a-rainy-2.svg" height="48px"/>
+  //     <div class="condition_icon_big"><img src="http://127.0.0.1:5123/a-rainy-2.svg" height="96px"/></div>
+  //   </div>
+  //   <div class="icon-condition">
+  //     <mwc-textfield label="Rainy 2" .value=${""} .configValue=${''}
+  //       @input=${this._valueChanged}>
+  //     </mwc-textfield>
+  //   </div>
+  // </div>
+  // <div class="icon-side-by-side">
+  //   <div class="condition_icon"><img src="http://127.0.0.1:5123/a-rainy-5.svg" height="48px"/>
+  //     <div class="condition_icon_big"><img src="http://127.0.0.1:5123/a-rainy-5.svg" height="96px"/></div>
+  //   </div>
+  //   <div class="icon-condition">
+  //     <mwc-textfield label="Rainy 5" .value=${""} .configValue=${''}
+  //       @input=${this._valueChanged}>
+  //     </mwc-textfield>
+  //   </div>
+  // </div>
+  // <div class="icon-side-by-side">
+  //   <div class="condition_icon"><img src="http://127.0.0.1:5123/a-rainy-6.svg" height="48px"/>
+  //     <div class="condition_icon_big"><img src="http://127.0.0.1:5123/a-rainy-6.svg" height="96px"/></div>
+  //   </div>
+  //   <div class="icon-condition">
+  //     <mwc-textfield label="Rainy 6" .value=${""} .configValue=${''}
+  //       @input=${this._valueChanged}>
+  //     </mwc-textfield>
+  //   </div>
+  // </div>
+  // <div class="icon-side-by-side">
+  //   <div class="condition_icon"><img src="http://127.0.0.1:5123/a-rainy-7.svg" height="48px"/>
+  //     <div class="condition_icon_big"><img src="http://127.0.0.1:5123/a-rainy-7.svg" height="96px"/></div>
+  //   </div>
+  //   <div class="icon-condition">
+  //     <mwc-textfield label="Rainy 7" .value=${""} .configValue=${''}
+  //       @input=${this._valueChanged}>
+  //     </mwc-textfield>
+  //   </div>
+  // </div>
+
+
+
   private _sectionOverviewEditor(): TemplateResult {
     return html`
       <ha-entity-picker .hass=${this.hass} .configValue=${'entity_temperature'} .value=${this._entity_temperature} .includeDomains=${['sensor', 'weather']}
@@ -1681,8 +1726,41 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     .side-by-side :not(:last-child) {
       padding-right: 4px;
     }
+    .icon-side-by-side {
+      display: flex;
+    }
+    .icon-condition {
+      flex-grow: 1;
+    }
     .no-switch {
       padding-left: 48px;
+    }
+    .condition_icon {
+      position: relative;
+    }
+    .condition_icon .condition_icon_big {
+      visibility: hidden;
+      width: 96px;
+      background-color: var(--card-background-color);
+      border-radius: 6px;
+      border-style: solid;
+      border-width: 2px;
+      /* Position the tooltip */
+      position: absolute;
+      z-index: 1;
+      bottom: -50%;
+      left: 60%;
+      -webkit-transform: translateX(0%); /* Safari iOS */
+      transform: translateX(-40%);
+    }
+    .condition_icon .condition_icon_big:after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+      }
+    .condition_icon:hover .condition_icon_big {
+      visibility: visible
     }
   `;
 }
