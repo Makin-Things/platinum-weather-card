@@ -230,6 +230,7 @@ export class WeatherCard extends LitElement {
     const weatherIcon = this._weatherIcon(this.currentConditions);
     const url = new URL((this._config.option_static_icons ? 's-' : 'a-') + weatherIcon + '.svg', import.meta.url);
     const hoverText = weatherIcon !== 'unknown' ? '' : `Unknown condition\n${this.currentConditions}`;
+    const unknownDiv = weatherIcon !== 'unknown' ? html`` : html`<div class="unknown-condition">${this.currentConditions}</div>`;
     const biggerIcon = html`<div class="big-icon"><img src="${url.href}" width="100%" height="100%" title="${hoverText}"></div>`;
 
     const currentTemp = html`
@@ -257,7 +258,7 @@ export class WeatherCard extends LitElement {
     return html`
       <div class="overview-section section">
         <div class="overview-top">
-          <div class="top-left">${biggerIcon}</div>
+          <div class="top-left">${biggerIcon}${unknownDiv}</div>
           <div class="currentTemps">${currentTemp}${apparentTemp}</div>
         </div>
         ${currentText}
@@ -2009,6 +2010,11 @@ export class WeatherCard extends LitElement {
         position: relative;
         left: -8px;
         top: -20px;
+      }
+      .unknown-condition {
+        position: relative;
+        top: -60px;
+        left: 16px;
       }
       .currentTemps {
         display: flex;
