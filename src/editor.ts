@@ -36,7 +36,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
   };
 
   public setConfig(config: WeatherCardConfig): void {
-    console.info(`editor setConfig`);
+    // console.info(`editor setConfig`);
     this._config = config;
     let changed = false;
     if (this._section_order === null) {
@@ -77,7 +77,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
   }
 
   private _configCleanup() {
-    console.info(`configCleanup`);
+    // console.info(`configCleanup`);
     if (!this._config || !this.hass) {
       return;
     }
@@ -145,7 +145,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     const keysOfProps = keys<WeatherCardConfig>();
     for (const element in this._config) {
       if (!keysOfProps.includes(element)) {
-        console.info(`removing ${element}`);
+        // console.info(`removing ${element}`);
         delete tmpConfig[element];
       }
     }
@@ -872,7 +872,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
 
   protected async firstUpdated(): Promise<void> {
     if (this._config && this.hass) {
-      console.info(`Card Config Version=${this._config.card_config_version || 'no version'}`);
+      // console.info(`Card Config Version=${this._config.card_config_version || 'no version'}`);
       if (this._config.card_config_version !== this._config_version) {
         this._configCleanup();
       }
@@ -1579,7 +1579,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
           [target.configValue]: target.value,
         };
       } else {
-        console.info(`Deleting - ${target.configValue}`);
+        // console.info(`Deleting - ${target.configValue}`);
         delete this._config[target.configValue];
       }
     }
@@ -1599,10 +1599,10 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     }
     if (ev.currentTarget) {
       const target = ev.currentTarget;
-      if (this._config['section_order']) {
-        const slot = this._config['section_order'].findIndex(t => t === target.value)
-        console.info(`MoveUp ${slot}`);
-        [this._config['section_order'][slot], this._config['section_order'][slot - 1]] = [this._config['section_order'][slot - 1], this._config['section_order'][slot]];
+      if (this._config.section_order) {
+        const slot = this._config.section_order.findIndex(t => t === target.value);
+        // console.info(`MoveUp ${slot}`);
+        [this._config.section_order[slot], this._config.section_order[slot - 1]] = [this._config.section_order[slot - 1], this._config.section_order[slot]];
       }
     }
     fireEvent(this, 'config-changed', { config: this.sortObjectByKeys(this._config) });
@@ -1614,10 +1614,10 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     }
     if (ev.currentTarget) {
       const target = ev.currentTarget;
-      if (this._config['section_order']) {
-        const slot = this._config['section_order'].findIndex(t => t === target.value)
-        console.info(`MoveDown ${slot}`);
-        [this._config['section_order'][slot], this._config['section_order'][slot + 1]] = [this._config['section_order'][slot + 1], this._config['section_order'][slot]];
+      if (this._config.section_order) {
+        const slot = this._config.section_order.findIndex(t => t === target.value);
+        // console.info(`MoveDown ${slot}`);
+        [this._config.section_order[slot], this._config.section_order[slot + 1]] = [this._config.section_order[slot + 1], this._config.section_order[slot]];
       }
     }
     fireEvent(this, 'config-changed', { config: this.sortObjectByKeys(this._config) });

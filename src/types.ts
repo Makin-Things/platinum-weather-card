@@ -23,7 +23,7 @@ export interface WeatherCardConfig extends LovelaceCardConfig {
   card_config_version?: number;
   section_order: sectionType[];
   show_section_title?: boolean;
-  show_section_main?: boolean;
+  show_section_overview?: boolean;
   show_section_extended?: boolean;
   show_section_slots?: boolean;
   show_section_daily_forecast?: boolean;
