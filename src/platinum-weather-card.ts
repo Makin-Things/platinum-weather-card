@@ -100,7 +100,7 @@ export class WeatherCard extends LitElement {
     if (this._config.show_section_daily_forecast !== false) {
       if (this._config.daily_forecast_layout !== 'vertical') {
         // Horizontal layout
-        cardHeight += 164;
+        cardHeight += 146;
       } else {
         // Vertical layout
         // Add the stats part of each day
@@ -114,7 +114,7 @@ export class WeatherCard extends LitElement {
 
     // Now calculate an estimated cardsize
     const cardSize = Math.ceil(cardHeight / 50);
-    console.info(`CardHeight=${cardHeight} CardSize=${cardSize}`);
+    console.info(`Title=${this._config.text_card_title} CardHeight=${cardHeight} CardSize=${cardSize}`);
     return cardSize;
   }
 
@@ -411,7 +411,7 @@ export class WeatherCard extends LitElement {
           break;
         }
         const url = new URL(((this._config.option_static_icons ? 's-' : 'a-') + (iconEntity && this.hass.states[iconEntity].attributes.forecast[i].condition ? this._weatherIcon(this.hass.states[iconEntity].attributes.forecast[i].condition) : 'unknown') + '.svg').replace("-night", "-day"), import.meta.url);
-        htmlIcon = html`<li><i class="icon" style="background: none, url(${url.href}) no-repeat; background-size: contain;"></i></li>>`;
+        htmlIcon = html`<li class="f-slot-horiz-icon"><i class="icon" style="background: none, url(${url.href}) no-repeat; background-size: contain;"></i></li>`;
       } else {
         // using sensor domain entities
         var start = this._config.entity_forecast_icon_1 ? this._config.entity_forecast_icon_1.match(/(\d+)(?!.*\d)/g) : false;
@@ -435,13 +435,13 @@ export class WeatherCard extends LitElement {
       const minMax = this._config.old_daily_format === true
         ?
         html`
-          <li>
+          <li class="f-slot-horiz-text">
             <span>
               <div class="slot-text highTemp">${maxTemp ? Math.round(Number(maxTemp)) : '---'}</div>
               ${tempUnit}
             </span>
           </li>
-          <li>
+          <li class="f-slot-horiz-text">
             <span>
               <div class="slot-text lowTemp">${minTemp ? Math.round(Number(minTemp)) : '---'}</div>
               ${tempUnit}
@@ -451,7 +451,7 @@ export class WeatherCard extends LitElement {
         this._config.tempformat === "highlow"
           ?
           html`
-            <li>
+            <li class="f-slot-horiz-text">
               <span>
                 <div class="slot-text highTemp">${maxTemp ? Math.round(Number(maxTemp)) : "---"}</div>
                 <div class="slot-text slash">/</div>
@@ -461,7 +461,7 @@ export class WeatherCard extends LitElement {
             </li>`
           :
           html`
-            <li>
+            <li class="f-slot-horiz-text">
               <span>
                 <div class="slot-text lowTemp">${minTemp ? Math.round(Number(minTemp)) : "---"}</div>
                 <div class="slot-text slash">/</div>
@@ -483,19 +483,19 @@ export class WeatherCard extends LitElement {
       var tooltip: TemplateResult;
       if (this._config.entity_pop_1?.match('^weather.')) {
         const popEntity = this._config.entity_pop_1;
-        pop = popEntity ? html`<li><div class="slot-text pop">${this.hass.states[popEntity] && this.hass.states[popEntity].attributes.forecast[i + 1].precipitation_probability !== undefined ? Math.round(Number(this.hass.states[popEntity].attributes.forecast[i + 1].precipitation_probability)) : "---"}</div><div class="unit">%</div></li>` : html``;
+        pop = popEntity ? html`<li class="f-slot-horiz-text"><div class="slot-text pop">${this.hass.states[popEntity] && this.hass.states[popEntity].attributes.forecast[i + 1].precipitation_probability !== undefined ? Math.round(Number(this.hass.states[popEntity].attributes.forecast[i + 1].precipitation_probability)) : "---"}</div><div class="unit">%</div></li>` : html``;
       } else {
         start = this._config.entity_pop_1 ? this._config.entity_pop_1.match(/(\d+)(?!.*\d)/g) : false;
         const popEntity = start && this._config.entity_pop_1 ? this._config.entity_pop_1.replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
-        pop = start ? html`<li><span><div class="slot-text pop">${popEntity && this.hass.states[popEntity] ? Math.round(Number(this.hass.states[popEntity].state)) : "---"}</div><div class="unit">%</div></span></li>` : html``;
+        pop = start ? html`<li class="f-slot-horiz-text"><span><div class="slot-text pop">${popEntity && this.hass.states[popEntity] ? Math.round(Number(this.hass.states[popEntity].state)) : "---"}</div><div class="unit">%</div></span></li>` : html``;
       }
       if (this._config.entity_pos_1?.match('^weather.')) {
         const posEntity = this._config.entity_pos_1;
-        pos = posEntity ? html`<li><span><div class="pos">${this.hass.states[posEntity] && this.hass.states[posEntity].attributes.forecast[i + 1].precipitation !== undefined ? this.hass.states[posEntity].attributes.forecast[i + 1].precipitation : "---"}</div><div class="unit">${this.getUOM('precipitation')}</div></span></li>` : html``;
+        pos = posEntity ? html`<li class="f-slot-horiz-text"><span><div class="pos">${this.hass.states[posEntity] && this.hass.states[posEntity].attributes.forecast[i + 1].precipitation !== undefined ? this.hass.states[posEntity].attributes.forecast[i + 1].precipitation : "---"}</div><div class="unit">${this.getUOM('precipitation')}</div></span></li>` : html``;
       } else {
         start = this._config.entity_pos_1 ? this._config.entity_pos_1.match(/(\d+)(?!.*\d)/g) : false;
         const posEntity = start && this._config.entity_pos_1 ? this._config.entity_pos_1.replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
-        pos = start ? html`<li><span><div class="pos">${posEntity && this.hass.states[posEntity] ? this.hass.states[posEntity].state : "---"}</div><div class="unit">${this.getUOM('precipitation')}</div></span></li>` : html``;
+        pos = start ? html`<li class="f-slot-horiz-text"><span><div class="pos">${posEntity && this.hass.states[posEntity] ? this.hass.states[posEntity].state : "---"}</div><div class="unit">${this.getUOM('precipitation')}</div></span></li>` : html``;
       }
       if (this._config.entity_summary_1?.match('^weather.')) {
         const tooltipEntity = this._config.entity_summary_1;
@@ -509,7 +509,7 @@ export class WeatherCard extends LitElement {
       htmlDays.push(html`
         <div class="day-horiz fcasttooltip">
           <ul class="f-slot-horiz">
-            <li><span class="dayname">${forecastDate ? forecastDate.toLocaleDateString(this.locale, { weekday: 'short' }) : "---"}</span></li>
+            <li class="f-slot-horiz-text"><span class="dayname">${forecastDate ? forecastDate.toLocaleDateString(this.locale, { weekday: 'short' }) : "---"}</span></li>
             ${htmlIcon}
             ${minMax}
             ${pop}
@@ -576,12 +576,15 @@ export class WeatherCard extends LitElement {
       }
       const tempUnit = html`<div class="unit-temp-small">${this.getUOM("temperature")}</div>`;
       const min = minTemp ? html`
-        <div class="temp-label">Min: </div>
-        <div class="low-temp">${Math.round(Number(minTemp))}</div>${tempUnit}` : html`---`;
+        <div class="f-slot-vert">
+          <div class="temp-label">Min: </div>
+          <div class="low-temp">${Math.round(Number(minTemp))}</div>${tempUnit}
+        </div>` : html`---`;
       const max = maxTemp ? html`
-        <div class="temp-label">Max: </div>
-        <div class="high-temp">${Math.round(Number(maxTemp))}</div>${tempUnit}` : html`---`;
-      const minMax = html`<div class="f-slot-vert f-slot-minmax"><div class="day-vert-minmax">${min}</div><div class="day-vert-minmax">${max}</div></div>`;
+        <div class="f-slot-vert">
+          <div class="temp-label">Max: </div>
+          <div class="high-temp">${Math.round(Number(maxTemp))}</div>${tempUnit}
+        </div>` : html`---`;
       if (this._config.entity_pop_1?.match('^weather.')) {
         const popEntity = this._config.entity_pop_1;
         pop = popEntity ? html`<div class="f-slot-vert"><div class="f-label">Chance of rain </div>
@@ -633,10 +636,11 @@ export class WeatherCard extends LitElement {
             <div class="day-vert-dayicon">
               ${htmlIcon}
             </div>
-            <div class="day-vert-values">
-              ${minMax}
+            <div class="day-vert-temps">
+              ${min}
+              ${max}
             </div>
-            <div class="day-vert-values">
+            <div class="day-vert-rain">
               ${pop}
               ${pos}
             </div>
@@ -2153,7 +2157,7 @@ export class WeatherCard extends LitElement {
       }
       .slot-list-item-1 {
         min-width:50%;
-        padding-right: 16px;
+        padding-right: 8px;
       }
       .slot-list {
         list-style: none;
@@ -2249,17 +2253,19 @@ export class WeatherCard extends LitElement {
         float: left;
         margin-bottom: -8px;
       }
-      .day-vert-values {
+      .day-vert-temps {
         flex: 1;
         text-align: left;
         float: left;
         padding-left: 1em;
         padding-top: 0.5em;
       }
-      .day-vert-minmax {
-        width: 50%;
-        display: table-cell;
+      .day-vert-rain {
+        flex: 2;
+        text-align: left;
         float: left;
+        padding-left: 1em;
+        padding-top: 0.5em;
       }
       .dayname {
         text-transform: uppercase;
@@ -2289,8 +2295,11 @@ export class WeatherCard extends LitElement {
         margin-block-start: 0;
         margin-block-end: -12px;
       }
-      .f-slot-horiz li {
-        height:24px;
+      .f-slot-horiz-text {
+        height:20px;
+      }
+      .f-slot-horiz-icon {
+        height:50px;
       }
       .f-summary-vert {
         padding-left: 1em;
@@ -2330,17 +2339,18 @@ export class WeatherCard extends LitElement {
       .high-temp {
         display: table-cell;
         font-weight: bold;
-        width: 1.5em;
+        width: 21px;
         text-align: right;
       }
       .low-temp {
         display: table-cell;
         font-weight: 300;
-        width: 1.5em;
+        width: 21px;
         text-align: right;
       }
       .temp-label {
         display: table-cell;
+        width: 32px;
         font-weight: 300;
       }
       .f-label {
