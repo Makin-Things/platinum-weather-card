@@ -404,8 +404,8 @@ export class WeatherCard extends LitElement {
       const forecastDate = new Date();
       forecastDate.setDate(forecastDate.getDate() + i + 1);
       var htmlIcon: TemplateResult;
-      var maxTemp: string | number | undefined;
-      var minTemp: string | number | undefined;
+      var maxTemp: string | undefined;
+      var minTemp: string | undefined;
       if (this._config.entity_forecast_icon_1?.match('^weather.')) {
         // using a weather domain entity
         const iconEntity = this._config.entity_forecast_icon_1;
@@ -474,13 +474,6 @@ export class WeatherCard extends LitElement {
               </span>
             </li>
           `;
-      // html`
-      //   <div class="f-slot-horiz">
-      //     <div class="lowTemp">${minTemp ? Math.round(Number(minTemp)) : "---"}</div>
-      //     <div class="slash">/</div>
-      //     <div class="highTemp">${maxTemp ? Math.round(Number(maxTemp)) : "---"}</div>
-      //     <div>${tempUnit}</div>
-      //   </div>`;
 
       var pop: TemplateResult;
       var pos: TemplateResult;
@@ -533,26 +526,6 @@ export class WeatherCard extends LitElement {
     `;
   }
 
-  private _getForecastPropFromWeather(forecast: Array<any>, date: Date, propKey:string){
-    const day = date.toISOString().substring(0, 10);
-    const forecastForThisDay = forecast.filter(o=> o.datetime?.substring(0, 10) === day);
-    if(forecastForThisDay.length === 1) {
-      return forecastForThisDay[0][propKey];
-    }
-    else if(forecastForThisDay.length === 2) {
-      const dayForecast = forecastForThisDay.find(o=> o.daytime === true);
-      const nightForecast = forecastForThisDay.find(o=> o.daytime === false);
-
-      //Get low temp from night forecast
-      if(propKey === 'templow'){
-        return nightForecast['temperature'];
-      }
-      return dayForecast[propKey];
-    }
-
-    return undefined;
-  }
-
   private _renderVerticalDailyForecastSection(): TemplateResult {
     const htmlDays: TemplateResult[] = [];
     const days = this._config.daily_forecast_days || 5;
@@ -561,8 +534,8 @@ export class WeatherCard extends LitElement {
       const forecastDate = new Date();
       forecastDate.setDate(forecastDate.getDate() + i + 1);
       var htmlIcon: TemplateResult;
-      var maxTemp: string | number | undefined;
-      var minTemp: string | number | undefined;
+      var maxTemp: string | undefined;
+      var minTemp: string | undefined;
       var pop: TemplateResult;
       var pos: TemplateResult;
       if (this._config.entity_forecast_icon_1?.match('^weather.')) {
@@ -688,6 +661,26 @@ export class WeatherCard extends LitElement {
         ${htmlDays}
       </div>
     `;
+  }
+
+  private _getForecastPropFromWeather(forecast: Array<any>, date: Date, propKey: string): string | undefined {
+    const day = date.toISOString().substring(0, 10);
+    const forecastForThisDay = forecast.filter(o => o.datetime?.substring(0, 10) === day);
+    if (forecastForThisDay.length === 1) {
+      return String(forecastForThisDay[0][propKey]);
+    }
+    else if (forecastForThisDay.length === 2) {
+      const dayForecast = forecastForThisDay.find(o => o.daytime === true);
+      const nightForecast = forecastForThisDay.find(o => o.daytime === false);
+
+      //Get low temp from night forecast
+      if (propKey === 'templow') {
+        return String(nightForecast['temperature']);
+      }
+      return String(dayForecast[propKey]);
+    }
+
+    return undefined;
   }
 
   private _renderDailyForecastSection(): TemplateResult {
