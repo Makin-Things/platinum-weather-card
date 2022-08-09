@@ -7,7 +7,7 @@ import { keys } from 'ts-transformer-keys';
 import { mdiPencil, mdiArrowDown, mdiArrowUp, mdiApplicationEditOutline } from '@mdi/js';
 
 import { ScopedRegistryHost } from '@lit-labs/scoped-registry-mixin';
-import { WeatherCardConfig, layoutOrientation, layoutDays, extendedDays, sectionType, iconSets, timeFormat, sectionNames, pressureDecimals } from './types';
+import { WeatherCardConfig, layoutOverview, layoutOrientation, layoutDays, extendedDays, sectionType, iconSets, timeFormat, sectionNames, pressureDecimals } from './types';
 import { customElement, property, state } from 'lit/decorators';
 import { formfieldDefinition } from '../elements/formfield';
 import { selectDefinition } from '../elements/select';
@@ -182,6 +182,10 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
 
   get _text_update_time_prefix(): string {
     return this._config?.text_update_time_prefix || '';
+  }
+
+  get _overview_layout(): layoutOverview | '' {
+    return this._config?.overview_layout || '';
   }
 
   get _entity_temperature(): string {
@@ -955,51 +959,6 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     `;
   }
 
-  // New code to display icons conditions
-  //=====================================
-  //   <div class="icon-side-by-side">
-  //   <div class="condition_icon"><img src="http://127.0.0.1:5123/a-rainy-2.svg" height="48px"/>
-  //     <div class="condition_icon_big"><img src="http://127.0.0.1:5123/a-rainy-2.svg" height="96px"/></div>
-  //   </div>
-  //   <div class="icon-condition">
-  //     <mwc-textfield label="Rainy 2" .value=${""} .configValue=${''}
-  //       @input=${this._valueChanged}>
-  //     </mwc-textfield>
-  //   </div>
-  // </div>
-  // <div class="icon-side-by-side">
-  //   <div class="condition_icon"><img src="http://127.0.0.1:5123/a-rainy-5.svg" height="48px"/>
-  //     <div class="condition_icon_big"><img src="http://127.0.0.1:5123/a-rainy-5.svg" height="96px"/></div>
-  //   </div>
-  //   <div class="icon-condition">
-  //     <mwc-textfield label="Rainy 5" .value=${""} .configValue=${''}
-  //       @input=${this._valueChanged}>
-  //     </mwc-textfield>
-  //   </div>
-  // </div>
-  // <div class="icon-side-by-side">
-  //   <div class="condition_icon"><img src="http://127.0.0.1:5123/a-rainy-6.svg" height="48px"/>
-  //     <div class="condition_icon_big"><img src="http://127.0.0.1:5123/a-rainy-6.svg" height="96px"/></div>
-  //   </div>
-  //   <div class="icon-condition">
-  //     <mwc-textfield label="Rainy 6" .value=${""} .configValue=${''}
-  //       @input=${this._valueChanged}>
-  //     </mwc-textfield>
-  //   </div>
-  // </div>
-  // <div class="icon-side-by-side">
-  //   <div class="condition_icon"><img src="http://127.0.0.1:5123/a-rainy-7.svg" height="48px"/>
-  //     <div class="condition_icon_big"><img src="http://127.0.0.1:5123/a-rainy-7.svg" height="96px"/></div>
-  //   </div>
-  //   <div class="icon-condition">
-  //     <mwc-textfield label="Rainy 7" .value=${""} .configValue=${''}
-  //       @input=${this._valueChanged}>
-  //     </mwc-textfield>
-  //   </div>
-  // </div>
-
-
-
   private _sectionOverviewEditor(): TemplateResult {
     return html`
       <ha-entity-picker .hass=${this.hass} .configValue=${'entity_temperature'} .value=${this._entity_temperature} .includeDomains=${['sensor', 'weather']}
@@ -1021,6 +980,16 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
 
   private _optionOverviewEditor(): TemplateResult {
     return html`
+      <div class="side-by-side">
+        <ha-select label="Overview Layout (optional)" .configValue=${'overview_layout'}
+          .value=${this._overview_layout} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()} @selected=${this._valueChanged}>
+          <mwc-list-item></mwc-list-item>
+          <mwc-list-item value="complete">complete</mwc-list-item>
+          <mwc-list-item value="observations">observations</mwc-list-item>
+          <mwc-list-item value="forecast">forecast</mwc-list-item>
+        </ha-select>
+        <div></div>
+      </div>
       <div class="side-by-side">
         <div>
           <mwc-formfield .label=${'Show temperature decimals'}>

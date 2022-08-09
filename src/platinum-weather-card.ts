@@ -52,15 +52,19 @@ export class WeatherCard extends LitElement {
     // Start with the value of the top/bottom borders (minimum card height)
     var cardHeight = 16;
 
-    // Add the bits for the title section
-    if (this._config.show_section_title === true) {
+    // Add the bits for the title section (don't add anything if the overview is set to observations)
+    if ((this._config.show_section_title === true) && (this._config.overview_layout !== 'observations')) {
       cardHeight += this._config.text_card_title !== undefined ? 37 : 0;
       cardHeight += this._config.entity_update_time !== undefined ? 21 : 0;
     }
 
     // Add the bits for the overview section
     if (this._config.show_section_overview !== false) {
-      cardHeight += this._config.entity_current_text !== undefined ? 153 : 128;
+      if (this._config.overview_layout === 'observations') {
+        cardHeight += 90;
+      } else {
+        cardHeight += this._config.entity_current_text !== undefined ? 153 : 128;
+      }
     }
 
     // Add the bits for the extended section
@@ -277,8 +281,11 @@ export class WeatherCard extends LitElement {
       updateTime = '---';
     }
 
+    console.info(`offsetWidth=${this}`);
+    const stack = (this._config?.show_section_overview !== false) && (this._config.overview_layout === 'observations') ? ' stacked' : '';
+
     return html`
-      <div class="title-section section">
+      <div class="title-section section${stack}">
         ${this._config.text_card_title ? html`<div class="card-header">${this._config.text_card_title}</div>` : html``}
         ${this._config.entity_update_time ? html`<div class="updated">${this._config.text_update_time_prefix ?
         this._config.text_update_time_prefix + ' ' : ''}${updateTime}</div>` : html``}
@@ -286,7 +293,7 @@ export class WeatherCard extends LitElement {
     `;
   }
 
-  private _renderOverviewSection(): TemplateResult {
+  private _renderCompleteOverviewSection(): TemplateResult {
     if (this._config?.show_section_overview === false) return html``;
 
     const weatherIcon = this._weatherIcon(this.currentConditions);
@@ -327,6 +334,99 @@ export class WeatherCard extends LitElement {
         ${separator}
       </div>
     `;
+  }
+
+  private _renderObservationsOverviewSection(): TemplateResult {
+    if (this._config?.show_section_overview === false) return html``;
+
+    const currentTemp = html`
+      <div class="current-temp">
+        <div class="temp" id="current-temp-text">${this.currentTemperature}</div>
+        <div class="unit-temp-big">${this.getUOM('temperature')}</div>
+      </div>
+    `;
+
+    const apparent = this.currentApparentTemperature;
+    const apparentTemp = apparent != '' ? html`
+      <div class="apparent-temp">
+        <div class="apparent">${this.localeTextFeelsLike} <span
+            id="apparent-temp-text">${apparent}</span>
+        </div>
+        <div class="unit-temp-small"> ${this.getUOM('temperature')}</div>
+      </div>
+    ` : html``;
+
+    const separator = this._config.show_separator === true ? html`<hr class=line>` : ``;
+
+    return html`
+      <div class="overview-section section">
+        <div class="overview-top">
+          <div class="top-left-obs"></div>
+          <div class="currentTemps">${currentTemp}${apparentTemp}</div>
+        </div>
+        ${separator}
+      </div>
+    `;
+  }
+
+  private _renderForecastOverviewSection(): TemplateResult {
+    if (this._config?.show_section_overview === false) return html``;
+
+    const weatherIcon = this._weatherIcon(this.currentConditions);
+    const url = new URL((this._config.option_static_icons ? 's-' : 'a-') + weatherIcon + '.svg', import.meta.url);
+    const hoverText = weatherIcon !== 'unknown' ? '' : `Unknown condition\n${this.currentConditions}`;
+    const unknownDiv = weatherIcon !== 'unknown' ? html`` : html`<div class="unknown-condition">${this.currentConditions}</div>`;
+    const biggerIcon = html`<div class="big-icon"><img src="${url.href}" width="100%" height="100%" title="${hoverText}"></div>`;
+
+    const currentTemp = html`
+      <div class="current-temp">
+        <div class="temp" id="current-temp-text">${this.currentTemperature}</div>
+        <div class="unit-temp-big">${this.getUOM('temperature')}</div>
+      </div>
+    `;
+
+    const apparent = this.currentApparentTemperature;
+    const apparentTemp = apparent != '' ? html`
+      <div class="apparent-temp">
+        <div class="apparent">${this.localeTextFeelsLike} <span
+            id="apparent-temp-text">${apparent}</span>
+        </div>
+        <div class="unit-temp-small"> ${this.getUOM('temperature')}</div>
+      </div>
+    ` : html``;
+
+    const separator = this._config.show_separator === true ? html`<hr class=line>` : ``;
+
+    const currentText = (this._config.entity_current_text) && (this.hass.states[this._config.entity_current_text]) ?
+      html`<div class="current-text">${entityComputeStateDisplay(this.hass.localize, this.hass.states[this._config.entity_current_text], getLocale(this.hass))}</div>` ?? html`<div class="current-text">---</div>` : html``;
+
+    return html`
+      <div class="overview-section section">
+        <div class="overview-top">
+          <div class="top-left">${biggerIcon}${unknownDiv}</div>
+          <div class="currentTemps">${currentTemp}${apparentTemp}</div>
+        </div>
+        ${currentText}
+        ${separator}
+      </div>
+    `;
+  }
+
+  private _renderOverviewSection(): TemplateResult {
+    if (this._config?.show_section_overview === false) return html``;
+
+    const layout = this._config.overview_layout || 'complete';
+    switch (layout) {
+      case 'observations':
+        return this._renderObservationsOverviewSection();
+        break;
+      case 'forecast':
+        return this._renderForecastOverviewSection();
+        break;
+      case 'complete':
+      default:
+        return this._renderCompleteOverviewSection();
+    }
   }
 
   private _renderExtendedSection(): TemplateResult {
@@ -691,10 +791,6 @@ export class WeatherCard extends LitElement {
     } else {
       return this._renderVerticalDailyForecastSection();
     }
-
-    // return html`
-    //   <div>${daily_forecast_section}</div>
-    // `;
   }
 
   protected render(): TemplateResult | void {
@@ -1311,27 +1407,27 @@ export class WeatherCard extends LitElement {
       : '---';
   }
 
+  // const digits = this._config.option_today_decimals === true ? 1 : 0;
+  // const temp = this._config.entity_observed_max ? (Number(this.hass.states[this._config.entity_observed_max].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
+
+
   get currentTemperature(): string {
     const entity = this._config.entity_temperature;
+    const digits = this._config.show_decimals === true ? 1 : 0;
     return entity && this.hass.states[entity]
       ? entity.match('^weather.') === null
-        ? this._config.show_decimals !== true
-          ? String(Math.round(Number(this.hass.states[entity].state)))
-          : Number(this.hass.states[entity].state).toLocaleString(this.locale)
+        ? (Number(this.hass.states[entity].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits })
         : this.hass.states[entity].attributes.temperature !== undefined
-          ? this._config.show_decimals !== true
-            ? String(Math.round(Number(this.hass.states[entity].attributes.temperature)))
-            : Number(this.hass.states[entity].attributes.temperature).toLocaleString(this.locale)
+          ? (Number(this.hass.states[entity].attributes.temperature)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits })
           : '---'
       : '---';
   }
 
   get currentApparentTemperature(): string {
     const entity = this._config.entity_apparent_temp;
+    const digits = this._config.show_decimals === true ? 1 : 0;
     return entity && this.hass.states[entity]
-      ? this._config.show_decimals !== true
-        ? String(Math.round(Number(this.hass.states[entity].state)))
-        : Number(this.hass.states[entity].state).toLocaleString(this.locale)
+      ? (Number(this.hass.states[entity].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits })
       : '';
   }
 
@@ -2093,10 +2189,17 @@ export class WeatherCard extends LitElement {
         justify-content: space-between;
         flex-wrap: nowrap;
       }
+      .stacked {
+        position: absolute;
+      }
       .top-left {
         display: flex;
         flex-direction: column;
-        height: 8em;
+        height: 112px;
+      }
+      .top-left-obs {
+        display: flex;
+        flex-direction: column;
       }
       .big-icon {
         height: 140px;
@@ -2115,6 +2218,7 @@ export class WeatherCard extends LitElement {
         align-self: flex-start;
         flex-direction: column;
         padding: 0px 10px;
+        height: 74px;
       }
       .current-temp {
         display: table-row;

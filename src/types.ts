@@ -10,6 +10,7 @@ declare global {
 export const sectionNames = ['title', 'overview', 'extended', 'slots', 'daily_forecast'];
 export type sectionType = typeof sectionNames[number];
 
+export type layoutOverview = "complete" | "observations" | "forecast";
 export type layoutOrientation = "horizontal" | "vertical";
 export type layoutDays = 1 | 2 | 3 | 4 | 5 | 6 | 7;
 export type extendedDays = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
@@ -27,6 +28,7 @@ export interface WeatherCardConfig extends LovelaceCardConfig {
   show_section_extended?: boolean;
   show_section_slots?: boolean;
   show_section_daily_forecast?: boolean;
+  overview_layout?: layoutOverview;
   text_card_title?: string;
   entity_update_time?: string;
   text_update_time_prefix?: string;
