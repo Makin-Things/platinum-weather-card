@@ -43,7 +43,9 @@ This plugin is now part of the default HACS store. Install card from HACS (note 
 
 You MUST have already configured at least one weather integration to provde data for the card to use. As with all cards they only visualise data from backend entities. There are numerous weather integrations available in both the core and HACS. You will need to find one that is best suited to your location (some countries have multiple options with varying degrees of accuracy). It is possible to use entities from multiple integrations (it may require the use of template sensors to extract what you need).
 When you first create a card it will show nothing until you go select the entities you want to use in the GUI config, so a card that looks like this is not an error, but just needs configuring.
+
 ![Unconfigured card](https://raw.githubusercontent.com/Makin-Things/platinum-weather-card/master/images/unconfigured-card.png)
+
 Most of the configuration should be reasonably obvious, but the following sections give more details. It is recommended that you at least have a read of both the 'Concepts' and 'Sections'. After that it is more of a reference for the various parts of the card if you need more information.
 
 # Concepts
