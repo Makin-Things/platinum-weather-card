@@ -2,8 +2,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { LitElement, html, TemplateResult, css, PropertyValues, CSSResult, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators';
-import { HomeAssistant, LovelaceCardEditor, getLovelace } from 'custom-card-helpers';
-import { getLocale, debounce, installResizeObserver } from './helpers';
+import { HomeAssistant, LovelaceCardEditor, getLovelace, debounce } from 'custom-card-helpers';
+import ResizeObserver from 'resize-observer-polyfill';
+import { getLocale } from './helpers';
 import { entityComputeStateDisplay, stringComputeStateDisplay } from './compute_state_display';
 import type { timeFormat, WeatherCardConfig } from './types';
 import { CARD_VERSION } from './const';
@@ -25,7 +26,7 @@ console.info(
 
 // TODO Name your custom element
 @customElement('platinum-weather-card')
-export class WeatherCard extends LitElement {
+export class PlatinumWeatherCard extends LitElement {
   public static async getConfigElement(): Promise<LovelaceCardEditor> {
     await import('./editor');
     return document.createElement('platinum-weather-card-editor');
@@ -41,21 +42,11 @@ export class WeatherCard extends LitElement {
 
   @state() private _config!: WeatherCardConfig;
 
-  private _resizeObserver?: ResizeObserver;
+  private _resizeObserver!: ResizeObserver;
+
   @state() private _cardWidth = 492;
 
   private _error: string[] = [];
-
-  public connectedCallback(): void {
-    super.connectedCallback();
-    this.updateComplete.then(() => this._attachObserver());
-  }
-
-  public disconnectedCallback(): void {
-    if (this._resizeObserver) {
-      this._resizeObserver.disconnect();
-    }
-  }
 
   public getCardSize(): number {
 
@@ -132,7 +123,7 @@ export class WeatherCard extends LitElement {
 
     // Now calculate an estimated cardsize
     const cardSize = Math.ceil(cardHeight / 50);
-    console.info(`Title=${this._config.text_card_title} CardHeight=${cardHeight} CardSize=${cardSize}`);
+    // console.info(`Title=${this._config.text_card_title} CardHeight=${cardHeight} CardSize=${cardSize}`);
     return cardSize;
   }
 
@@ -205,31 +196,36 @@ export class WeatherCard extends LitElement {
   }
 
   protected firstUpdated(): void {
-    this._attachObserver();
     this._resize();
+    this._attachObserver();
     console.info(`Initial cardwdith = ${this._cardWidth}`);
   }
 
-  private async _attachObserver(): Promise<void> {
+  private _attachObserver() {
     if (!this._resizeObserver) {
-      await installResizeObserver();
       this._resizeObserver = new ResizeObserver(
         debounce(() => this._resize(), 250, false)
       );
-      // Watch for changes in size
-      const card = this.shadowRoot?.querySelector("ha-card");
-      // If we show an error or warning there is no ha-card
-      if (!card) {
-        return;
-      }
-      this._resizeObserver.observe(card);
     }
+    // Watch for changes in size
+    const card = this.shadowRoot?.querySelector('ha-card');
+    // If we show an error or warning there is no ha-card
+    if (!card) {
+      return;
+    }
+    // this._resizeObserver.observe(card);
+    this._resizeObserver.observe(this);
   }
 
   private _resize() {
+    if (!this.isConnected) {
+      return;
+    }
+
     const card = this.shadowRoot?.querySelector('ha-card');
     if (!card) return;
     this._cardWidth = card.getBoundingClientRect().width;
+    console.info(`Resize cardwdith = ${this._cardWidth}`);
   }
 
   private _checkForErrors(): boolean {
@@ -323,7 +319,6 @@ export class WeatherCard extends LitElement {
       updateTime = '---';
     }
 
-    console.info(`width=${this._cardWidth}`);
     const stack = (this._config?.show_section_overview !== false) && (this._config.overview_layout === 'observations') && (this._cardWidth >= 480) ? ' stacked' : '';
 
     return html`
