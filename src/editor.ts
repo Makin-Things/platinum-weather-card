@@ -176,8 +176,20 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     return this._config?.text_card_title || '';
   }
 
+  get _text_card_title_2(): string {
+    return this._config?.text_card_title_2 || '';
+  }
+
   get _entity_update_time(): string {
     return this._config?.entity_update_time || '';
+  }
+
+  get _update_time_use_attr(): boolean {
+    return this._config?.update_time_use_attr === true; // default off
+  }
+
+  get _update_time_name_attr(): string {
+    return this._config?.update_time_name_attr || '';
   }
 
   get _text_update_time_prefix(): string {
@@ -948,37 +960,52 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     }
   }
 
-  private _sectionTitleEditor(): TemplateResult {
+  private _sectionOverviewEditor(): TemplateResult {
     return html`
-      <mwc-textfield label="Card Title (optional)" .value=${this._text_card_title} .configValue=${'text_card_title'}
+      <mwc-textfield label="Card Title Line 1 (optional)" .value=${this._text_card_title} .configValue=${'text_card_title'}
+        @input=${this._valueChanged}>
+      </mwc-textfield>
+      <mwc-textfield label="Card Title Line 2 (optional)" .value=${this._text_card_title_2} .configValue=${'text_card_title_2'}
         @input=${this._valueChanged}>
       </mwc-textfield>
       <ha-entity-picker .hass=${this.hass} .configValue=${'entity_update_time'} .value=${this._entity_update_time} .includeDomains=${['sensor']}
         name="entity_update_time" label="Entity Update Time (optional)" allow-custom-entity
         @value-changed=${this._valueChangedPicker}>
       </ha-entity-picker>
+      ${this._entity_update_time !== '' ? html`
+      <div class="side-by-side">
+        <div>
+          <mwc-formfield .label=${'Use Attribute'}>
+            <mwc-switch .checked=${this._update_time_use_attr !== false} .configValue=${'update_time_use_attr'}
+              @change=${this._valueChanged}>
+            </mwc-switch>
+          </mwc-formfield>
+        </div>
+        ${this._entity_update_time !== '' && this._update_time_use_attr === true ? html`<ha-entity-attribute-picker .hass=${this.hass} .entityId=${this._entity_update_time}
+          .configValue=${'update_time_name_attr'} .value=${this._update_time_name_attr} name="update_time_name_attr" label="Attribute (optional)"
+          allow-custom-value
+          @value-changed=${this._valueChangedPicker}>
+        </ha-entity-attribute-picker>` : html``}
+      </div>` : html``}
       <mwc-textfield label="Update Time Prefix (optional)" .value=${this._text_update_time_prefix}
         .configValue=${'text_update_time_prefix'} @input=${this._valueChanged}>
       </mwc-textfield>
-    `;
-  }
-
-  private _sectionOverviewEditor(): TemplateResult {
-    return html`
-      <ha-entity-picker .hass=${this.hass} .configValue=${'entity_temperature'} .value=${this._entity_temperature} .includeDomains=${['sensor', 'weather']}
-        name="entity_temperature" label="Entity Current Temperature (required)" allow-custom-entity
-        @value-changed=${this._valueChangedPicker}>
-      </ha-entity-picker>
-      <ha-entity-picker .hass=${this.hass} .configValue=${'entity_apparent_temp'} .value=${this._entity_apparent_temp} .includeDomains=${['sensor']}
-        name="entity_apparent_temp" label="Entity Apparent Temperature (optional)" allow-custom-entity
-        @value-changed=${this._valueChangedPicker}>
-      </ha-entity-picker>
-      <ha-entity-picker .hass=${this.hass} .configValue=${'entity_current_conditions'} .value=${this._entity_current_conditions} .includeDomains=${['sensor', 'weather']}
-        name="entity_current_condition" label="Entity Current Conditions (required)" allow-custom-entity @value-changed=${this._valueChangedPicker}>
-      </ha-entity-picker>
-      <ha-entity-picker .hass=${this.hass} .configValue=${'entity_current_text'} .value=${this._entity_current_text} .includeDomains=${['sensor', 'weather']}
-        name="entity_current_text" label="Entity Current Text (optional)" allow-custom-entity @value-changed=${this._valueChangedPicker}>
-      </ha-entity-picker>
+      ${this._overview_layout !== 'forecast' ?
+        html`<ha-entity-picker .hass=${this.hass} .configValue=${'entity_temperature'} .value=${this._entity_temperature} .includeDomains=${['sensor', 'weather']}
+          name="entity_temperature" label="Entity Current Temperature (required)" allow-custom-entity
+          @value-changed=${this._valueChangedPicker}>
+        </ha-entity-picker>
+        <ha-entity-picker .hass=${this.hass} .configValue=${'entity_apparent_temp'} .value=${this._entity_apparent_temp} .includeDomains=${['sensor']}
+          name="entity_apparent_temp" label="Entity Apparent Temperature (optional)" allow-custom-entity
+          @value-changed=${this._valueChangedPicker}>
+      </ha-entity-picker>` : html``};
+      ${this._overview_layout !== 'observations' ?
+        html`<ha-entity-picker .hass=${this.hass} .configValue=${'entity_current_conditions'} .value=${this._entity_current_conditions} .includeDomains=${['sensor', 'weather']}
+          name="entity_current_condition" label="Entity Current Conditions (required)" allow-custom-entity @value-changed=${this._valueChangedPicker}>
+          </ha-entity-picker>
+          <ha-entity-picker .hass=${this.hass} .configValue=${'entity_current_text'} .value=${this._entity_current_text} .includeDomains=${['sensor', 'weather']}
+            name="entity_current_text" label="Entity Current Text (optional)" allow-custom-entity @value-changed=${this._valueChangedPicker}>
+          </ha-entity-picker>` : html``}
     `;
   }
 
@@ -1353,9 +1380,6 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
       `,
     ];
     switch (this._subElementEditor) {
-      case 'section_title':
-        subel.push(this._sectionTitleEditor());
-        break;
       case 'section_overview':
         subel.push(this._sectionOverviewEditor());
         break;
@@ -1388,10 +1412,6 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     this._subElementEditor = undefined;
   }
 
-  get _show_section_title(): boolean {
-    return this._config?.show_section_title === true; // default off
-  }
-
   get _show_section_overview(): boolean {
     return this._config?.show_section_overview !== false; //default on
   }
@@ -1410,24 +1430,6 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
 
   private getConfigBlock(block: string, first: boolean, last: boolean): TemplateResult {
     switch (block) {
-      case 'title':
-        return html`
-          <div class="section-flex edit-title-section">
-            <mwc-formfield .label=${`Title Section`}>
-              <mwc-switch .checked=${this._show_section_title !== false} .configValue=${'show_section_title'} @change=${this._valueChanged}>
-              </mwc-switch>
-            </mwc-formfield>
-            <div>
-              <ha-icon-button class="down-icon" .value=${'title'} .path=${mdiArrowDown} .disabled=${last} @click="${this._moveDown}">
-              </ha-icon-button>
-              <ha-icon-button class="up-icon" .value=${'title'} .path=${mdiArrowUp} .disabled=${first} @click="${this._moveUp}">
-              </ha-icon-button>
-              <ha-icon-button class="edit-icon" .value=${'section_title'} .path=${mdiPencil} @click="${this._editSubmenu}">
-              </ha-icon-button>
-              <div class="no-icon"></div>
-            </div>
-          </div>
-        `;
       case 'overview':
         return html`
           <div class="section-flex edit-overview-section">

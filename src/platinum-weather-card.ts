@@ -57,16 +57,15 @@ export class PlatinumWeatherCard extends LitElement {
     // Start with the value of the top/bottom borders (minimum card height)
     var cardHeight = 16;
 
-    // Add the bits for the title section (don't add anything if the overview is set to observations)
-    if ((this._config.show_section_title === true) && (this._config.overview_layout !== 'observations')) {
-      cardHeight += this._config.text_card_title !== undefined ? 37 : 0;
-      cardHeight += this._config.entity_update_time !== undefined ? 21 : 0;
-    }
-
     // Add the bits for the overview section
     if (this._config.show_section_overview !== false) {
+      if (this._config.overview_layout !== 'observations') {
+        cardHeight += this._config.text_card_title !== undefined ? 37 : 0;
+        cardHeight += this._config.text_card_title_2 !== undefined ? 37 : 0;
+        cardHeight += this._config.entity_update_time !== undefined ? 21 : 0;
+      }
       if (this._config.overview_layout === 'observations') {
-        cardHeight += 90;
+        cardHeight += 80;
       } else {
         cardHeight += this._config.entity_current_text !== undefined ? 153 : 128;
       }
@@ -123,7 +122,6 @@ export class PlatinumWeatherCard extends LitElement {
 
     // Now calculate an estimated cardsize
     const cardSize = Math.ceil(cardHeight / 50);
-    // console.info(`Title=${this._config.text_card_title} CardHeight=${cardHeight} CardSize=${cardSize}`);
     return cardSize;
   }
 
@@ -297,37 +295,38 @@ export class PlatinumWeatherCard extends LitElement {
     return this._error.length !== 0;
   }
 
-  private _renderTitleSection(): TemplateResult {
-    if ((this._config?.show_section_title !== true) || ((this._config.text_card_title === undefined) && (this._config.entity_update_time == undefined))) return html``;
 
-    var updateTime: string;
+
+  private _renderUpdateTime(): TemplateResult {
     if ((this._config.entity_update_time) && (this.hass.states[this._config.entity_update_time]) && (this.hass.states[this._config.entity_update_time].state !== undefined)) {
-      const d = new Date(this.hass.states[this._config.entity_update_time].state);
-      switch (this.timeFormat) {
-        case '12hour':
-          // console.info(`Locale=${this.locale || navigator.language}`);
-          updateTime = d.toLocaleString(this.locale || navigator.language, { hour: 'numeric', minute: '2-digit', hour12: true }).replace(" ", "") + ", " + d.toLocaleDateString(this.locale, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).replace(",", "");
-          break;
-        case '24hour':
-          updateTime = d.toLocaleString(this.locale || navigator.language, { hour: '2-digit', minute: '2-digit', hour12: false }) + ", " + d.toLocaleDateString(this.locale, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).replace(",", "");
-          break;
-        case 'system':
-          updateTime = d.toLocaleTimeString(navigator.language, { timeStyle: 'short' }).replace(" ", "") + ", " + d.toLocaleDateString(navigator.language).replace(",", "");
-          break;
+      if (this._config.update_time_use_attr === true) {
+        if (this._config.update_time_name_attr !== undefined) {
+          const attribute = this._config.update_time_name_attr.toLowerCase().split(".").reduce((retval, value) => retval !== undefined ? retval[value] : undefined, this.hass.states[this._config.entity_update_time].attributes);
+          if (attribute !== undefined) {
+            const d = new Date(`${attribute}`);
+            switch (this.timeFormat) {
+              case '12hour':
+                return html`${d.toLocaleString(this.locale || navigator.language, { hour: 'numeric', minute: '2-digit', hour12: true }).replace(" ", "") + ", " + d.toLocaleDateString(this.locale, { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }).replace(",", "")}`;
+              case '24hour':
+                return html`${d.toLocaleString(this.locale || navigator.language, { hour: '2-digit', minute: '2-digit', hour12: false }) + ", " + d.toLocaleDateString(this.locale, { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }).replace(",", "")}`;
+              case 'system':
+                return html`${d.toLocaleTimeString(navigator.language, { timeStyle: 'short' }).replace(" ", "") + ", " + d.toLocaleDateString(navigator.language).replace(",", "")}`;
+            }
+          }
+        }
+      } else {
+        const d = new Date(this.hass.states[this._config.entity_update_time].state);
+        switch (this.timeFormat) {
+          case '12hour':
+            return html`${d.toLocaleString(this.locale || navigator.language, { hour: 'numeric', minute: '2-digit', hour12: true }).replace(" ", "") + ", " + d.toLocaleDateString(this.locale, { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }).replace(",", "")}`;
+          case '24hour':
+            return html`${d.toLocaleString(this.locale || navigator.language, { hour: '2-digit', minute: '2-digit', hour12: false }) + ", " + d.toLocaleDateString(this.locale, { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }).replace(",", "")}`;
+          case 'system':
+            return html`${d.toLocaleTimeString(navigator.language, { timeStyle: 'short' }).replace(" ", "") + ", " + d.toLocaleDateString(navigator.language).replace(",", "")}`;
+        }
       }
-    } else {
-      updateTime = '---';
     }
-
-    const stack = (this._config?.show_section_overview !== false) && (this._config.overview_layout === 'observations') && (this._cardWidth >= 480) ? ' stacked' : '';
-
-    return html`
-      <div class="title-section section${stack}">
-        ${this._config.text_card_title ? html`<div class="card-header">${this._config.text_card_title}</div>` : html``}
-        ${this._config.entity_update_time ? html`<div class="updated">${this._config.text_update_time_prefix ?
-        this._config.text_update_time_prefix + ' ' : ''}${updateTime}</div>` : html``}
-      </div>
-    `;
+    return html`---`;
   }
 
   private _renderCompleteOverviewSection(): TemplateResult {
@@ -361,6 +360,9 @@ export class PlatinumWeatherCard extends LitElement {
 
     return html`
       <div class="overview-section section">
+        ${this._config.text_card_title ? html`<div class="card-header">${this._config.text_card_title}</div>` : html``}
+        ${this._config.text_card_title_2 ? html`<div class="card-header">${this._config.text_card_title_2}</div>` : html``}
+        ${this._config.entity_update_time ? html`<div class="updated">${this._config.text_update_time_prefix ? this._config.text_update_time_prefix + ' ' : ''}${this._renderUpdateTime()}</div>` : html``}
         <div class="overview-top">
           <div class="top-left">${biggerIcon}${unknownDiv}</div>
           <div class="currentTemps">${currentTemp}${apparentTemp}</div>
@@ -373,6 +375,8 @@ export class PlatinumWeatherCard extends LitElement {
 
   private _renderObservationsOverviewSection(): TemplateResult {
     if (this._config?.show_section_overview === false) return html``;
+
+    const stack = (this._cardWidth >= 344) ? ' stacked' : '';
 
     const currentTemp = html`
       <div class="current-temp">
@@ -392,6 +396,11 @@ export class PlatinumWeatherCard extends LitElement {
     const separator = this._config.show_separator === true ? html`<hr class=line>` : ``;
 
     return html`
+      <div class="overview-section section${stack}">
+        ${this._config.text_card_title ? html`<div class="card-header">${this._config.text_card_title}</div>` : html``}
+        ${this._config.text_card_title_2 ? html`<div class="card-header">${this._config.text_card_title_2}</div>` : html``}
+        ${this._config.entity_update_time ? html`<div class="updated">${this._config.text_update_time_prefix ? this._config.text_update_time_prefix + ' ' : ''}${this._renderUpdateTime()}</div>` : html``}
+      </div>
       <div class="overview-section section">
         <div class="overview-top">
           <div class="top-left-obs"></div>
@@ -411,33 +420,20 @@ export class PlatinumWeatherCard extends LitElement {
     const unknownDiv = weatherIcon !== 'unknown' ? html`` : html`<div class="unknown-condition">${this.currentConditions}</div>`;
     const biggerIcon = html`<div class="big-icon"><img src="${url.href}" width="100%" height="100%" title="${hoverText}"></div>`;
 
-    const currentTemp = html`
-      <div class="current-temp">
-        <div class="temp" id="current-temp-text">${this.currentTemperature}</div>
-        <div class="unit-temp-big">${this.getUOM('temperature')}</div>
-      </div>
-    `;
-
-    const apparent = this.currentApparentTemperature;
-    const apparentTemp = apparent != '' ? html`
-      <div class="apparent-temp">
-        <div class="apparent">${this.localeTextFeelsLike}&nbsp;${apparent}</div>
-        <div class="unit-temp-small"> ${this.getUOM('temperature')}</div>
-      </div>
-    ` : html``;
-
     const separator = this._config.show_separator === true ? html`<hr class=line>` : ``;
 
     const currentText = (this._config.entity_current_text) && (this.hass.states[this._config.entity_current_text]) ?
-      html`<div class="current-text">${entityComputeStateDisplay(this.hass.localize, this.hass.states[this._config.entity_current_text], getLocale(this.hass))}</div>` ?? html`<div class="current-text">---</div>` : html``;
+      html`<div class="current-text-right">${entityComputeStateDisplay(this.hass.localize, this.hass.states[this._config.entity_current_text], getLocale(this.hass))}</div>` ?? html`<div class="current-text-right">---</div>` : html``;
 
     return html`
       <div class="overview-section section">
+        ${this._config.text_card_title ? html`<div class="card-header">${this._config.text_card_title}</div>` : html``}
+        ${this._config.text_card_title_2 ? html`<div class="card-header">${this._config.text_card_title_2}</div>` : html``}
+        ${this._config.entity_update_time ? html`<div class="updated">${this._config.text_update_time_prefix ? this._config.text_update_time_prefix + ' ' : ''}${this._renderUpdateTime()}</div>` : html``}
         <div class="overview-top">
           <div class="top-left">${biggerIcon}${unknownDiv}</div>
-          <div class="currentTemps">${currentTemp}${apparentTemp}</div>
+          ${currentText}
         </div>
-        ${currentText}
         ${separator}
       </div>
     `;
@@ -832,9 +828,6 @@ export class PlatinumWeatherCard extends LitElement {
     if (this._config.section_order !== undefined) {
       this._config.section_order.forEach(section => {
         switch (section) {
-          case 'title':
-            sections.push(this._renderTitleSection());
-            break;
           case 'overview':
             sections.push(this._renderOverviewSection());
             break;
@@ -2293,6 +2286,16 @@ export class PlatinumWeatherCard extends LitElement {
         font-size: ${unsafeCSS(currentTextFontSize)};
         text-align: ${unsafeCSS(currentTextAlignment)};
         line-height: 25px;
+      }
+      .current-text-right {
+        font-size: ${unsafeCSS(currentTextFontSize)};
+        text-align: ${unsafeCSS(currentTextAlignment)};
+        width: 100%;
+        align-items: center;
+        display: flex;
+        justify-content: center;
+        line-height: 25px;
+        margin-left: -40px;
       }
       .variations {
         display: flex;
