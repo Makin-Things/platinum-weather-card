@@ -998,7 +998,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
         <ha-entity-picker .hass=${this.hass} .configValue=${'entity_apparent_temp'} .value=${this._entity_apparent_temp} .includeDomains=${['sensor']}
           name="entity_apparent_temp" label="Entity Apparent Temperature" allow-custom-entity
           @value-changed=${this._valueChangedPicker}>
-      </ha-entity-picker>` : html``};
+      </ha-entity-picker>` : html``}
       ${this._overview_layout !== 'observations' ?
         html`<ha-entity-picker .hass=${this.hass} .configValue=${'entity_current_conditions'} .value=${this._entity_current_conditions} .includeDomains=${['sensor', 'weather']}
           name="entity_current_condition" label="Entity Current Conditions" allow-custom-entity @value-changed=${this._valueChangedPicker}>
