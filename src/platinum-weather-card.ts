@@ -2238,7 +2238,7 @@ export class PlatinumWeatherCard extends LitElement {
         display: flex;
         align-self: flex-start;
         flex-direction: column;
-        height: 74px;
+        height: 64px;
       }
       .current-temp {
         display: table-row;
