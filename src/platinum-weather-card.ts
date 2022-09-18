@@ -2209,13 +2209,6 @@ export class PlatinumWeatherCard extends LitElement {
         padding-top: 8px;
         padding-bottom: 8px;
       }
-      .title-section {
-        padding-left: 8px;
-      }
-      .extended-section {
-        padding-left: 8px;
-        padding-right: 8px;
-      }
       .updated {
         font-size: 0.9em;
         font-weight: 300;
@@ -2254,7 +2247,6 @@ export class PlatinumWeatherCard extends LitElement {
         display: flex;
         align-self: flex-start;
         flex-direction: column;
-        padding: 0px 10px;
         height: 74px;
       }
       .current-temp {
@@ -2395,8 +2387,6 @@ export class PlatinumWeatherCard extends LitElement {
         border-top: 1px solid #d9d9d9;
         line-height: 24px;
         box-sizing: border-box;
-        padding-left: 8px;
-        padding-right: 8px;
         padding-bottom: 8px;
       }
       .day-vert-top {
