@@ -105,9 +105,9 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
       delete tmpConfig['locale'];
     }
 
-    if (tmpConfig.option_today_decimals) {
-      tmpConfig['option_today_decimals'] = tmpConfig.option_today_decimals;
-      delete tmpConfig['option_today_decimals'];
+    if (tmpConfig.option_today_temperature_decimals) {
+      tmpConfig['option_today_temperature_decimals'] = tmpConfig.show_today_decimals;
+      delete tmpConfig['show_today_decimals'];
     }
 
     if (tmpConfig.show_decimals_pressure) {
@@ -488,8 +488,12 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     return this._config?.option_daily_show_extended === true; // default off
   }
 
-  get _option_today_decimals(): boolean {
-    return this._config?.option_today_decimals === true; // default off
+  get _option_today_temperature_decimals(): boolean {
+    return this._config?.option_today_temperature_decimals === true; // default off
+  }
+
+  get _option_today_rainfall_decimals(): boolean {
+    return this._config?.option_today_rainfall_decimals === true; // default off
   }
 
   get _option_pressure_decimals(): pressureDecimals | null {
@@ -1170,7 +1174,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
       <div class="side-by-side">
         <div>
           <mwc-formfield .label=${'Todays Temperature Decimals'}>
-            <mwc-switch .checked=${this._option_today_decimals !== false} .configValue=${'option_today_decimals'}
+            <mwc-switch .checked=${this._option_today_temperature_decimals !== false} .configValue=${'option_today_temperature_decimals'}
               @change=${this._valueChanged}>
             </mwc-switch>
           </mwc-formfield>
@@ -1183,6 +1187,17 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
           <mwc-list-item value="2">2</mwc-list-item>
           <mwc-list-item value="3">3</mwc-list-item>
         </ha-select>
+      </div>
+      <div class="side-by-side">
+        <div>
+          <mwc-formfield .label=${'Todays Rainfall Decimals'}>
+            <mwc-switch .checked=${this._option_today_rainfall_decimals !== false} .configValue=${'option_today_rainfall_decimals'}
+              @change=${this._valueChanged}>
+            </mwc-switch>
+          </mwc-formfield>
+        </div>
+        <div>
+        </div>
       </div>
     `;
   }

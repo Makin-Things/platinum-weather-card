@@ -1135,7 +1135,7 @@ export class PlatinumWeatherCard extends LitElement {
   }
 
   get slotObservedMax(): TemplateResult {
-    const digits = this._config.option_today_decimals === true ? 1 : 0;
+    const digits = this._config.option_today_temperature_decimals === true ? 1 : 0;
     const temp = this._config.entity_observed_max ? (Number(this.hass.states[this._config.entity_observed_max].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
     const units = temp !== "---" ? html`<div class="unit-temp-small">${this.getUOM('temperature')}</div>` : html``;
     return html`
@@ -1152,7 +1152,7 @@ export class PlatinumWeatherCard extends LitElement {
   }
 
   get slotObservedMin(): TemplateResult {
-    const digits = this._config.option_today_decimals === true ? 1 : 0;
+    const digits = this._config.option_today_temperature_decimals === true ? 1 : 0;
     const temp = this._config.entity_observed_min ? (Number(this.hass.states[this._config.entity_observed_min].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
     const units = temp !== "---" ? html`<div class="unit-temp-small">${this.getUOM('temperature')}</div>` : html``;
     return html`
@@ -1169,7 +1169,7 @@ export class PlatinumWeatherCard extends LitElement {
   }
 
   get slotForecastMax(): TemplateResult {
-    const digits = this._config.option_today_decimals === true ? 1 : 0;
+    const digits = this._config.option_today_temperature_decimals === true ? 1 : 0;
     const temp = this._config.entity_forecast_max
       ? this._config.entity_forecast_max.match('^weather.') === null
         ? (Number(this.hass.states[this._config.entity_forecast_max].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits })
@@ -1192,7 +1192,7 @@ export class PlatinumWeatherCard extends LitElement {
   }
 
   get slotForecastMin(): TemplateResult {
-    const digits = this._config.option_today_decimals === true ? 1 : 0;
+    const digits = this._config.option_today_temperature_decimals === true ? 1 : 0;
     const temp = this._config.entity_forecast_min
       ? this._config.entity_forecast_min.match('^weather.') === null
         ? (Number(this.hass.states[this._config.entity_forecast_min].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits })
@@ -1215,7 +1215,7 @@ export class PlatinumWeatherCard extends LitElement {
   }
 
   get slotTempNext(): TemplateResult {
-    const digits = this._config.option_today_decimals === true ? 1 : 0;
+    const digits = this._config.option_today_temperature_decimals === true ? 1 : 0;
     const icon = this._config.entity_temp_next_label ? this.hass.states[this._config.entity_temp_next_label].state.toLowerCase().includes("min") || this.hass.states[this._config.entity_temp_next_label].state.toLowerCase().includes("low") ? "mdi:thermometer-low" : "mdi:thermometer-high" : "mdi:help-box";
     const temp = this._config.entity_temp_next ? (Number(this.hass.states[this._config.entity_temp_next].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
     const label = this._config.entity_temp_next_label ? this.hass.states[this._config.entity_temp_next_label].state : "";
@@ -1234,7 +1234,7 @@ export class PlatinumWeatherCard extends LitElement {
   }
 
   get slotTempFollowing(): TemplateResult {
-    const digits = this._config.option_today_decimals === true ? 1 : 0;
+    const digits = this._config.option_today_temperature_decimals === true ? 1 : 0;
     const icon = this._config.entity_temp_following_label ? this.hass.states[this._config.entity_temp_following_label].state.toLowerCase().includes("min") || this.hass.states[this._config.entity_temp_following_label].state.toLowerCase().includes("low") ? "mdi:thermometer-low" : "mdi:thermometer-high" : "mdi:help-box";
     const temp = this._config.entity_temp_following ? (Number(this.hass.states[this._config.entity_temp_following].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
     const label = this._config.entity_temp_following_label ? this.hass.states[this._config.entity_temp_following_label].state : "";
@@ -1253,7 +1253,7 @@ export class PlatinumWeatherCard extends LitElement {
   }
 
   get slotTempMaximums(): TemplateResult {
-    const digits = this._config.option_today_decimals === true ? 1 : 0;
+    const digits = this._config.option_today_temperature_decimals === true ? 1 : 0;
     const temp_obs = this._config.entity_observed_max ? (Number(this.hass.states[this._config.entity_observed_max].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
     const temp_for = this._config.entity_forecast_max ? (Number(this.hass.states[this._config.entity_forecast_max].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
     const units = temp_obs !== "---" ? html`<div class="unit-temp-small">${this.getUOM('temperature')}</div>` : html``;
@@ -1274,7 +1274,7 @@ export class PlatinumWeatherCard extends LitElement {
   }
 
   get slotTempMinimums(): TemplateResult {
-    const digits = this._config.option_today_decimals === true ? 1 : 0;
+    const digits = this._config.option_today_temperature_decimals === true ? 1 : 0;
     const temp_obs = this._config.entity_observed_min ? (Number(this.hass.states[this._config.entity_observed_min].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
     const temp_for = this._config.entity_forecast_min ? (Number(this.hass.states[this._config.entity_forecast_min].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
     const units = temp_obs !== "---" ? html`<div class="unit-temp-small">${this.getUOM('temperature')}</div>` : html``;
@@ -1444,10 +1444,6 @@ export class PlatinumWeatherCard extends LitElement {
       : '---';
   }
 
-  // const digits = this._config.option_today_decimals === true ? 1 : 0;
-  // const temp = this._config.entity_observed_max ? (Number(this.hass.states[this._config.entity_observed_max].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
-
-
   get currentTemperature(): string {
     const entity = this._config.entity_temperature;
     const digits = this._config.show_decimals === true ? 1 : 0;
@@ -1481,8 +1477,9 @@ export class PlatinumWeatherCard extends LitElement {
 
   get currentRainfall(): string {
     const entity = this._config.entity_rainfall;
+    const digits = this._config.option_today_rainfall_decimals === true ? 1 : 0;
     return entity && this.hass.states[entity]
-      ? (Number(this.hass.states[entity].state)).toLocaleString(this.locale) : '---';
+      ? (Number(this.hass.states[entity].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : '---';
   }
 
   get currentPressure(): string {
@@ -2286,11 +2283,11 @@ export class PlatinumWeatherCard extends LitElement {
       .unit-temp-small {
         display: table-cell;
         vertical-align: top;
-        font-size: 0.75em;
+        font-size: 10.5px;
         color: var(--primary-text-color);
         position: relative;
-        line-height: 1em;
-        padding-top: 6px;
+        line-height: 14px;
+        padding-top: 3.5px;
       }
       .line {
         margin-top : 7px;
