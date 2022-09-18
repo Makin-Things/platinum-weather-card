@@ -349,9 +349,7 @@ export class PlatinumWeatherCard extends LitElement {
     const apparent = this.currentApparentTemperature;
     const apparentTemp = apparent != '' ? html`
       <div class="apparent-temp">
-        <div class="apparent">${this.localeTextFeelsLike} <span
-            id="apparent-temp-text">${apparent}</span>
-        </div>
+        <div class="apparent">${this.localeTextFeelsLike}&nbsp;${apparent}</div>
         <div class="unit-temp-small"> ${this.getUOM('temperature')}</div>
       </div>
     ` : html``;
@@ -386,9 +384,7 @@ export class PlatinumWeatherCard extends LitElement {
     const apparent = this.currentApparentTemperature;
     const apparentTemp = apparent != '' ? html`
       <div class="apparent-temp">
-        <div class="apparent">${this.localeTextFeelsLike} <span
-            id="apparent-temp-text">${apparent}</span>
-        </div>
+        <div class="apparent">${this.localeTextFeelsLike}&nbsp;${apparent}</div>
         <div class="unit-temp-small"> ${this.getUOM('temperature')}</div>
       </div>
     ` : html``;
@@ -425,9 +421,7 @@ export class PlatinumWeatherCard extends LitElement {
     const apparent = this.currentApparentTemperature;
     const apparentTemp = apparent != '' ? html`
       <div class="apparent-temp">
-        <div class="apparent">${this.localeTextFeelsLike} <span
-            id="apparent-temp-text">${apparent}</span>
-        </div>
+        <div class="apparent">${this.localeTextFeelsLike}&nbsp;${apparent}</div>
         <div class="unit-temp-small"> ${this.getUOM('temperature')}</div>
       </div>
     ` : html``;
@@ -2287,7 +2281,8 @@ export class PlatinumWeatherCard extends LitElement {
         color: var(--primary-text-color);
         position: relative;
         line-height: 14px;
-        padding-top: 3.5px;
+        padding-top: 3.6px;
+        padding-left: 1px;
       }
       .line {
         margin-top : 7px;
@@ -2339,6 +2334,7 @@ export class PlatinumWeatherCard extends LitElement {
       .unit {
         font-size: 0.8em;
         display: table-cell;
+        padding-left: 1px;
       }
       .slot {
         display: table-row;
