@@ -68,11 +68,11 @@ On the cards main configuration dialog, use the switch to completely remove a se
 TODO [All of these bits will need better expanations re: details]
 TODO [In all of these sections add and explanation of individual settings]
 
-## Title Section
+## Overview Section
 
-This section as the name suggests, adds a title section to the card that provides a name and a timestamp.
+This section as the name suggests, adds an overview section to the card.
 
-![Platinum Weather card](https://raw.githubusercontent.com/Makin-Things/platinum-weather-card/master/images/title-section-highlighted.png)
+![Platinum Weather card](https://raw.githubusercontent.com/Makin-Things/platinum-weather-card/master/images/overview-section-highlighted.png)
 
 | Option name        | Type   | Description                                                                                                                                          |
 | ------------------ | ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
