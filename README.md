@@ -74,17 +74,36 @@ This section as the name suggests, adds an overview section to the card.
 
 ![Platinum Weather card](https://raw.githubusercontent.com/Makin-Things/platinum-weather-card/master/images/overview-section-highlighted.png)
 
-| Option name        | Type   | Description                                                                                                                                          |
-| ------------------ | ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Card Title         | String | The Text that should be displayed as the cards title                                                                                                 |
-| Entity Update Time | Entity | Defines the entity to use for the timestamp. The entities state MUST provide a valid timestamp in RFC 3339 format (ie. `yyyy-mm-ddThh:mm:ss+offset`) |
-| Update Time Preix  | String | Optional text to include as a prefix to the timestamp                                                                                                |
+There are 3 different layout options to choose from for the overview section. There are 'complete', 'observations' and 'forecast'.
 
-## Overview Section
+<caption>Complete</caption>
 
-This section shows the main large section that was previously at the top of the card. TODO [rewite this].
+![Platinum Weather card](https://raw.githubusercontent.com/Makin-Things/platinum-weather-card/master/images/overview-section-complete.png 'Complete')
 
-TODO [include image of section]
+<caption>Observations</caption>
+
+![Platinum Weather card](https://raw.githubusercontent.com/Makin-Things/platinum-weather-card/master/images/overview-section-observations.png 'Observations')
+
+<caption>Forecast</caption>
+
+![Platinum Weather card](https://raw.githubusercontent.com/Makin-Things/platinum-weather-card/master/images/overview-section-forecast.png 'Forecast')
+
+The fields available to fill in will be altered based on the layout chosen.
+
+| Option name                           | Type    | Description                                                                                                                                                     |
+| ------------------------------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Card Title Line 1                     | String  | Optional text that should be displayed as the cards title                                                                                                       |
+| Card Title Line 2                     | String  | Optional text that should be displayed as the cards title                                                                                                       |
+| Entity Update Time                    | Entity  | Optionally defines the entity to use for the timestamp. The entities state MUST provide a valid timestamp in RFC 3339 format (ie. `yyyy-mm-ddThh:mm:ss+offset`) |
+| &nbsp;&nbsp;&nbsp;&nbsp;Use Attribute | Boolean | If this is enabled you will then be able to choose an attribute of the above entity to use for the timestamp                                                    |
+| &nbsp;&nbsp;&nbsp;&nbsp;Attribute     | String  | The attribute that contains the timestamp                                                                                                                       |
+| Update Time Preix                     | String  | Optional text to include as a prefix to the timestamp                                                                                                           |
+| Entity Current Temperature            | Entity  | The entity that contains the current temperature                                                                                                                |
+| Entity Apparent Temperature           | Entity  | An optional entity that contains the apparent 'feels like' temperature                                                                                          |
+| Entity Current Conditions             | Entity  | The entity that contains the name of the icon display                                                                                                           |
+| Entity Current Text                   | Entity  | The entity that contains the short headline weather forecast. This should be limited to an entity that will contain only a few words                            |
+
+The various entity fields can either be a sensor that provides the value in its state, or in the case where the integration being used simply provides a sensor in the weather.\* domain you can just select that entity and the correct attribute will be used.
 
 ## Extended Section
 
