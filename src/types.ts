@@ -10,7 +10,7 @@ declare global {
 export const sectionNames = ['overview', 'extended', 'slots', 'daily_forecast'];
 export type sectionType = typeof sectionNames[number];
 
-export type layoutOverview = "complete" | "observations" | "forecast";
+export type layoutOverview = "complete" | "observations" | "forecast" | "title only";
 export type layoutOrientation = "horizontal" | "vertical";
 export type layoutDays = 1 | 2 | 3 | 4 | 5 | 6 | 7;
 export type extendedDays = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;

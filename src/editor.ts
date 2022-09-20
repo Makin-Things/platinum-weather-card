@@ -1018,6 +1018,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
           <mwc-list-item value="complete">complete</mwc-list-item>
           <mwc-list-item value="observations">observations</mwc-list-item>
           <mwc-list-item value="forecast">forecast</mwc-list-item>
+          <mwc-list-item value="title only">title only</mwc-list-item>
         </ha-select>
         <div></div>
       </div>

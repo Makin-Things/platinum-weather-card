@@ -64,10 +64,12 @@ export class PlatinumWeatherCard extends LitElement {
         cardHeight += this._config.text_card_title_2 !== undefined ? 37 : 0;
         cardHeight += this._config.entity_update_time !== undefined ? 21 : 0;
       }
-      if (this._config.overview_layout === 'observations') {
-        cardHeight += 80;
-      } else {
-        cardHeight += this._config.entity_current_text !== undefined ? 153 : 128;
+      if (this._config.overview_layout !== 'title only') {
+        if (this._config.overview_layout === 'observations') {
+          cardHeight += 80;
+        } else {
+          cardHeight += this._config.entity_current_text !== undefined ? 153 : 128;
+        }
       }
     }
 
@@ -411,6 +413,20 @@ export class PlatinumWeatherCard extends LitElement {
     `;
   }
 
+  private _renderTitleOnlyOverviewSection(): TemplateResult {
+    if (this._config?.show_section_overview === false) return html``;
+
+    const separator = this._config.show_separator === true ? html`<hr class=line>` : ``;
+
+    return html`
+      <div class="overview-section section">
+        ${this._config.text_card_title ? html`<div class="card-header">${this._config.text_card_title}</div>` : html``}
+        ${this._config.text_card_title_2 ? html`<div class="card-header">${this._config.text_card_title_2}</div>` : html``}
+        ${this._config.entity_update_time ? html`<div class="updated">${this._config.text_update_time_prefix ? this._config.text_update_time_prefix + ' ' : ''}${this._renderUpdateTime()}</div>` : html``}
+        ${separator}
+      </div>
+    `;
+  }
   private _renderForecastOverviewSection(): TemplateResult {
     if (this._config?.show_section_overview === false) return html``;
 
@@ -446,10 +462,10 @@ export class PlatinumWeatherCard extends LitElement {
     switch (layout) {
       case 'observations':
         return this._renderObservationsOverviewSection();
-        break;
       case 'forecast':
         return this._renderForecastOverviewSection();
-        break;
+      case 'title only':
+        return this._renderTitleOnlyOverviewSection();
       case 'complete':
       default:
         return this._renderCompleteOverviewSection();
