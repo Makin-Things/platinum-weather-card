@@ -53,77 +53,21 @@ export class PlatinumWeatherCard extends LitElement {
     // console.info(`Tempate Test String:${entityComputeStateDisplay(this.hass.localize, this.hass.states['sensor.template_test_string'], getLocale(this.hass))}`);
     // console.info(`Tempate Test Number:${entityComputeStateDisplay(this.hass.localize, this.hass.states['sensor.template_test_number'], getLocale(this.hass))}`);
 
+    // Get the heights of each section
+    const overiewSectionHeight = this._getCardSizeOverviewSection();
+    const extendedSectionHeight = this._getCardSizeExtendedSection();
+    const slotsSectionHeight = this._getCardSizeSlotsSection();
+    const dailyForecastSectionHeight = this._getCardSizeDailyForecastSection();
+
     // Estimate the card height in pixels
-    // Start with the value of the top/bottom borders (minimum card height)
-    var cardHeight = 16;
-
-    // Add the bits for the overview section
-    if (this._config.show_section_overview !== false) {
-      if (this._config.overview_layout !== 'observations') {
-        cardHeight += this._config.text_card_title !== undefined ? 37 : 0;
-        cardHeight += this._config.text_card_title_2 !== undefined ? 37 : 0;
-        cardHeight += this._config.entity_update_time !== undefined ? 21 : 0;
-      }
-      if (this._config.overview_layout !== 'title only') {
-        if (this._config.overview_layout === 'observations') {
-          cardHeight += 80;
-        } else {
-          cardHeight += this._config.entity_current_text !== undefined ? 153 : 128;
-        }
-      }
-    }
-
-    // Add the bits for the extended section
-    if (this._config.show_section_extended !== false) {
-      // Add the basic margins
-      cardHeight += 17;
-      // this is a guess. assume 2 lines of text and add an extra 1 if uv or fire danger is added
-      cardHeight += this._config.entity_daily_summary ? 40 : 0;
-      cardHeight += (this._config.entity_todays_uv_forecast !== undefined) || (this._config.entity_todays_fire_danger !== undefined) ? 20 : 0;
-    }
-
-    // Add the bits for the slots section
-    if (this._config.show_section_slots !== false) {
-      // Calculate the max number of slots in both left and right
-      var slotsLeft =
-        (this._config.slot_l1 !== 'remove' ? 1 : 0) +
-        (this._config.slot_l2 !== 'remove' ? 1 : 0) +
-        (this._config.slot_l3 !== 'remove' ? 1 : 0) +
-        (this._config.slot_l4 !== 'remove' ? 1 : 0) +
-        (this._config.slot_l5 !== 'remove' ? 1 : 0) +
-        ((this._config.slot_l6 !== undefined) && (this._config.slot_l6 !== 'remove') ? 1 : 0) +
-        ((this._config.slot_l7 !== undefined) && (this._config.slot_l7 !== 'remove') ? 1 : 0) +
-        ((this._config.slot_l8 !== undefined) && (this._config.slot_l8 !== 'remove') ? 1 : 0);
-      var slotsRight =
-        (this._config.slot_r1 !== 'remove' ? 1 : 0) +
-        (this._config.slot_r2 !== 'remove' ? 1 : 0) +
-        (this._config.slot_r3 !== 'remove' ? 1 : 0) +
-        (this._config.slot_r4 !== 'remove' ? 1 : 0) +
-        (this._config.slot_r5 !== 'remove' ? 1 : 0) +
-        ((this._config.slot_r6 !== undefined) && (this._config.slot_r6 !== 'remove') ? 1 : 0) +
-        ((this._config.slot_r7 !== undefined) && (this._config.slot_r7 !== 'remove') ? 1 : 0) +
-        ((this._config.slot_r8 !== undefined) && (this._config.slot_r8 !== 'remove') ? 1 : 0);
-      cardHeight += 16 + Math.max(slotsLeft, slotsRight) * 24;
-    }
-
-    // Add the bits for the daily forecast section
-    if (this._config.show_section_daily_forecast !== false) {
-      if (this._config.daily_forecast_layout !== 'vertical') {
-        // Horizontal layout
-        cardHeight += 146;
-      } else {
-        // Vertical layout
-        // Add the stats part of each day
-        cardHeight += 18 + (this._config.daily_forecast_days || 5) * 88;
-        // Add the guess for the extended forecast text (guess at 2 lines per forecast)
-        if (this._config.daily_extended_forecast_days !== 0) {
-          cardHeight += Math.min(this._config.daily_forecast_days || 5, this._config.daily_extended_forecast_days || 7) * (11 + 38);
-        }
-      }
-    }
+    // Start with the value of the top/bottom borders (minimum card height) and add all the section heights
+    const cardHeight = 16 + overiewSectionHeight + extendedSectionHeight + slotsSectionHeight + dailyForecastSectionHeight;
 
     // Now calculate an estimated cardsize
     const cardSize = Math.ceil(cardHeight / 50);
+
+    console.info(`Card Size=${cardSize} Card Height=${cardHeight} Overview=${overiewSectionHeight} Extended=${extendedSectionHeight} Slots=${slotsSectionHeight} DailyForecast=${dailyForecastSectionHeight}`);
+
     return cardSize;
   }
 
@@ -455,6 +399,25 @@ export class PlatinumWeatherCard extends LitElement {
     `;
   }
 
+  private _getCardSizeOverviewSection(): number {
+    var sectionHeight = 0;
+    if (this._config.show_section_overview !== false) {
+      if (this._config.overview_layout !== 'observations') {
+        sectionHeight += this._config.text_card_title !== undefined ? 37 : 0;
+        sectionHeight += this._config.text_card_title_2 !== undefined ? 37 : 0;
+        sectionHeight += this._config.entity_update_time !== undefined ? 21 : 0;
+      }
+      if (this._config.overview_layout !== 'title only') {
+        if (this._config.overview_layout === 'observations') {
+          sectionHeight += 80;
+        } else {
+          sectionHeight += this._config.entity_current_text !== undefined ? 153 : 128;
+        }
+      }
+    }
+    return sectionHeight;
+  }
+
   private _renderOverviewSection(): TemplateResult {
     if (this._config?.show_section_overview === false) return html``;
 
@@ -470,6 +433,18 @@ export class PlatinumWeatherCard extends LitElement {
       default:
         return this._renderCompleteOverviewSection();
     }
+  }
+
+  private _getCardSizeExtendedSection(): number {
+    var sectionHeight = 0;
+    if (this._config.show_section_extended !== false) {
+      // Add the basic margins
+      sectionHeight += 17;
+      // this is a guess. assume 2 lines of text and add an extra 1 if uv or fire danger is added
+      sectionHeight += this._config.entity_daily_summary ? 40 : 0;
+      sectionHeight += (this._config.entity_todays_uv_forecast !== undefined) || (this._config.entity_todays_fire_danger !== undefined) ? 20 : 0;
+    }
+    return sectionHeight;
   }
 
   private _renderExtendedSection(): TemplateResult {
@@ -501,6 +476,33 @@ export class PlatinumWeatherCard extends LitElement {
         </div>
       </div>
     `;
+  }
+
+  private _getCardSizeSlotsSection(): number {
+    var sectionHeight = 0;
+    if (this._config.show_section_slots !== false) {
+      // Calculate the max number of slots in both left and right
+      var slotsLeft =
+        (this._config.slot_l1 !== 'remove' ? 1 : 0) +
+        (this._config.slot_l2 !== 'remove' ? 1 : 0) +
+        (this._config.slot_l3 !== 'remove' ? 1 : 0) +
+        (this._config.slot_l4 !== 'remove' ? 1 : 0) +
+        (this._config.slot_l5 !== 'remove' ? 1 : 0) +
+        ((this._config.slot_l6 !== undefined) && (this._config.slot_l6 !== 'remove') ? 1 : 0) +
+        ((this._config.slot_l7 !== undefined) && (this._config.slot_l7 !== 'remove') ? 1 : 0) +
+        ((this._config.slot_l8 !== undefined) && (this._config.slot_l8 !== 'remove') ? 1 : 0);
+      var slotsRight =
+        (this._config.slot_r1 !== 'remove' ? 1 : 0) +
+        (this._config.slot_r2 !== 'remove' ? 1 : 0) +
+        (this._config.slot_r3 !== 'remove' ? 1 : 0) +
+        (this._config.slot_r4 !== 'remove' ? 1 : 0) +
+        (this._config.slot_r5 !== 'remove' ? 1 : 0) +
+        ((this._config.slot_r6 !== undefined) && (this._config.slot_r6 !== 'remove') ? 1 : 0) +
+        ((this._config.slot_r7 !== undefined) && (this._config.slot_r7 !== 'remove') ? 1 : 0) +
+        ((this._config.slot_r8 !== undefined) && (this._config.slot_r8 !== 'remove') ? 1 : 0);
+      sectionHeight += 16 + Math.max(slotsLeft, slotsRight) * 24;
+    }
+    return sectionHeight;
   }
 
   private _renderSlotsSection(): TemplateResult {
@@ -824,6 +826,25 @@ export class PlatinumWeatherCard extends LitElement {
     }
 
     return undefined;
+  }
+
+  private _getCardSizeDailyForecastSection(): number {
+    var sectionHeight = 0;
+    if (this._config.show_section_daily_forecast !== false) {
+      if (this._config.daily_forecast_layout !== 'vertical') {
+        // Horizontal layout
+        sectionHeight += 146;
+      } else {
+        // Vertical layout
+        // Add the stats part of each day
+        sectionHeight += 18 + (this._config.daily_forecast_days || 5) * 88;
+        // Add the guess for the extended forecast text (guess at 2 lines per forecast)
+        if (this._config.daily_extended_forecast_days !== 0) {
+          sectionHeight += Math.min(this._config.daily_forecast_days || 5, this._config.daily_extended_forecast_days || 7) * (11 + 38);
+        }
+      }
+    }
+    return sectionHeight;
   }
 
   private _renderDailyForecastSection(): TemplateResult {
