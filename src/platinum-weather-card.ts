@@ -403,7 +403,7 @@ export class PlatinumWeatherCard extends LitElement {
     var sectionHeight = 0;
     if (this._config.show_section_overview !== false) {
       if (this._config.overview_layout === 'observations') {
-        return 80;
+        return 76;
       } else {
         sectionHeight = 16;
         sectionHeight += this._config.text_card_title !== undefined ? 20 : 0;
@@ -2229,12 +2229,12 @@ export class PlatinumWeatherCard extends LitElement {
         display: flex;
         align-self: flex-start;
         flex-direction: column;
-        height: 64px;
+        height: 60px;
       }
       .current-temp {
         display: table-row;
         margin-left: auto;
-        padding: 4px 0px;
+        padding: 2px 0px;
       }
       .temp {
         display:table-cell;
