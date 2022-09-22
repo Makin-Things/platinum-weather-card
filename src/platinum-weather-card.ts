@@ -402,17 +402,16 @@ export class PlatinumWeatherCard extends LitElement {
   private _getCardSizeOverviewSection(): number {
     var sectionHeight = 0;
     if (this._config.show_section_overview !== false) {
-      if (this._config.overview_layout !== 'observations') {
-        sectionHeight += this._config.text_card_title !== undefined ? 37 : 0;
-        sectionHeight += this._config.text_card_title_2 !== undefined ? 37 : 0;
-        sectionHeight += this._config.entity_update_time !== undefined ? 21 : 0;
+      if (this._config.overview_layout === 'observations') {
+        return 80;
+      } else {
+        sectionHeight = 16;
+        sectionHeight += this._config.text_card_title !== undefined ? 20 : 0;
+        sectionHeight += this._config.text_card_title_2 !== undefined ? 20 : 0;
+        sectionHeight += this._config.entity_update_time !== undefined ? 20 : 0;
       }
       if (this._config.overview_layout !== 'title only') {
-        if (this._config.overview_layout === 'observations') {
-          sectionHeight += 80;
-        } else {
-          sectionHeight += this._config.entity_current_text !== undefined ? 153 : 128;
-        }
+        sectionHeight += (this._config.overview_layout !== 'forecast') && (this._config.entity_current_text !== undefined) ? 145 : 120;
       }
     }
     return sectionHeight;
@@ -439,7 +438,7 @@ export class PlatinumWeatherCard extends LitElement {
     var sectionHeight = 0;
     if (this._config.show_section_extended !== false) {
       // Add the basic margins
-      sectionHeight += 17;
+      sectionHeight += 16;
       // this is a guess. assume 2 lines of text and add an extra 1 if uv or fire danger is added
       sectionHeight += this._config.entity_daily_summary ? 40 : 0;
       sectionHeight += (this._config.entity_todays_uv_forecast !== undefined) || (this._config.entity_todays_fire_danger !== undefined) ? 20 : 0;
@@ -837,10 +836,10 @@ export class PlatinumWeatherCard extends LitElement {
       } else {
         // Vertical layout
         // Add the stats part of each day
-        sectionHeight += 18 + (this._config.daily_forecast_days || 5) * 88;
+        sectionHeight += 18 + (this._config.daily_forecast_days || 5) * 87;
         // Add the guess for the extended forecast text (guess at 2 lines per forecast)
         if (this._config.daily_extended_forecast_days !== 0) {
-          sectionHeight += Math.min(this._config.daily_forecast_days || 5, this._config.daily_extended_forecast_days || 7) * (11 + 38);
+          sectionHeight += Math.min(this._config.daily_forecast_days || 5, this._config.daily_extended_forecast_days || 7) * 48;
         }
       }
     }
