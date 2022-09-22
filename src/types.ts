@@ -30,7 +30,7 @@ export interface WeatherCardConfig extends LovelaceCardConfig {
   text_card_title?: string;
   text_card_title_2?: string;
   entity_update_time?: string;
-  updat_time_use_attr?: boolean;
+  update_time_use_attr?: boolean;
   update_time_name_attr?: string;
   text_update_time_prefix?: string;
   entity_temperature?: string;
