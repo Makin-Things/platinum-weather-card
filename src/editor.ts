@@ -7,7 +7,7 @@ import { keys } from 'ts-transformer-keys';
 import { mdiPencil, mdiArrowDown, mdiArrowUp, mdiApplicationEditOutline } from '@mdi/js';
 
 import { ScopedRegistryHost } from '@lit-labs/scoped-registry-mixin';
-import { WeatherCardConfig, layoutOverview, layoutOrientation, layoutDays, extendedDays, sectionType, iconSets, timeFormat, sectionNames, pressureDecimals } from './types';
+import { WeatherCardConfig, layoutOverview, layoutOrientation, layoutDays, extendedDays, sectionType, timeFormat, sectionNames, pressureDecimals } from './types';
 import { customElement, property, state } from 'lit/decorators';
 import { formfieldDefinition } from '../elements/formfield';
 import { selectDefinition } from '../elements/select';
@@ -25,7 +25,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
   @state() private _subElementEditor: string | undefined = undefined;
 
   private _initialized = false;
-  private _config_version = 4;
+  private _config_version = 5;
 
   static elementDefinitions = {
     "ha-card": customElements.get("ha-card"),  // This works because ha-card is ALWAYS loaded before custom cards (for now)
@@ -83,11 +83,6 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     let tmpConfig = { ...this._config };
 
     // Rename options
-    if (tmpConfig.old_icon) {
-      tmpConfig['option_icon_set'] = tmpConfig.old_icon === 'false' ? 'new' : tmpConfig.old_icon === 'hybrid' ? 'hybrid' : 'old';
-      delete tmpConfig['old_icon'];
-    }
-
     if (tmpConfig.static_icons) {
       tmpConfig['option_static_icons'] = tmpConfig.static_icons;
       delete tmpConfig['static_icons'];
@@ -515,10 +510,6 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
 
   get _option_static_icons(): boolean {
     return this._config?.option_static_icons === true; // default off
-  }
-
-  get _option_icon_set(): iconSets | null {
-    return this._config?.option_icon_set ?? null;
   }
 
   get _option_time_format(): timeFormat | null {
@@ -1344,12 +1335,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
             </mwc-switch>
           </mwc-formfield>
         </div>
-        <ha-select label="Icon Set" .configValue=${'option_icon_set'} .value=${this._option_icon_set} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()} @selected=${this._valueChanged}>
-          <mwc-list-item></mwc-list-item>
-          <mwc-list-item value="new">New</mwc-list-item>
-          <mwc-list-item value="hybrid">Hybrid</mwc-list-item>
-          <mwc-list-item value="old">Old</mwc-list-item>
-        </ha-select>
+        <div></div>
       </div>
       <div class="side-by-side">
         <ha-select label="Time Format" .configValue=${'option_time_format'} .value=${this._option_time_format} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()} @selected=${this._valueChanged}>

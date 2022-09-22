@@ -2210,23 +2210,21 @@ export class PlatinumWeatherCard extends LitElement {
       .top-left {
         display: flex;
         flex-direction: column;
-        height: 112px;
+        height: 120px;
       }
       .top-left-obs {
         display: flex;
         flex-direction: column;
       }
       .big-icon {
-        height: 140px;
+        height: 120px;
         width: 140px;
         position: relative;
-        left: -8px;
-        top: -20px;
       }
       .unknown-condition {
         position: relative;
-        top: -60px;
-        left: 16px;
+        top: -30px;
+        text-align: center;
       }
       .currentTemps {
         display: flex;
@@ -2428,8 +2426,8 @@ export class PlatinumWeatherCard extends LitElement {
         text-transform: uppercase;
       }
       .icon {
-        width: 50px;
-        height: 50px;
+        width: 49px;
+        height: 42px;
         margin: auto;
         display: inline-block;
         background-size: contain;

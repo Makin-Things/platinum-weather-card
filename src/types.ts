@@ -15,7 +15,6 @@ export type layoutOrientation = "horizontal" | "vertical";
 export type layoutDays = 1 | 2 | 3 | 4 | 5 | 6 | 7;
 export type extendedDays = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
 export type pressureDecimals = 0 | 1 | 2 | 3;
-export type iconSets = 'old' | 'new' | 'hybrid';
 export type timeFormat = 'system' | '12hour' | '24hour';
 
 // TODO Add your configuration elements here for type-checking
@@ -120,7 +119,6 @@ export interface WeatherCardConfig extends LovelaceCardConfig {
 
   option_locale?: string;
   option_static_icons?: boolean;
-  option_icon_set?: iconSets;
   option_time_format?: timeFormat;
   option_tooltips?: boolean;
   old_daily_format?: boolean;
