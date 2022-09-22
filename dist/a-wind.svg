@@ -1,18 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="64" height="64" version="1.1" xmlns="http://www.w3.org/2000/svg">
- <style><![CDATA[#e8jzlygv3knn3_ts {animation: e8jzlygv3knn3_ts__ts 5000ms linear infinite normal forwards}@keyframes e8jzlygv3knn3_ts__ts { 0% {transform: translate(0px,0px) scale(0.800000,1)} 20% {transform: translate(0px,0px) scale(0.800000,1)} 30% {transform: translate(0px,0px) scale(1.090000,1)} 38% {transform: translate(0px,0px) scale(1,1)} 44% {transform: translate(0px,0px) scale(1.110000,1)} 64% {transform: translate(0px,0px) scale(1.110000,1)} 80% {transform: translate(0px,0px) scale(1,1)} 100% {transform: translate(0px,0px) scale(0.800000,1)} }#e8jzlygv3knn4_ts {animation: e8jzlygv3knn4_ts__ts 5000ms linear infinite normal forwards}@keyframes e8jzlygv3knn4_ts__ts { 0% {transform: translate(0px,0px) scale(0.800000,1)} 20% {transform: translate(0px,0px) scale(0.800000,1)} 30% {transform: translate(0px,0px) scale(1.090000,1)} 38% {transform: translate(0px,0px) scale(1,1)} 44% {transform: translate(0px,0px) scale(1.110000,1)} 64% {transform: translate(0px,0px) scale(1.110000,1)} 80% {transform: translate(0px,0px) scale(1,1)} 100% {transform: translate(0px,0px) scale(0.800000,1)} }#e8jzlygv3knn5_ts {animation: e8jzlygv3knn5_ts__ts 5000ms linear infinite normal forwards}@keyframes e8jzlygv3knn5_ts__ts { 0% {transform: translate(0px,0px) scale(0.800000,1)} 20% {transform: translate(0px,0px) scale(0.800000,1)} 30% {transform: translate(0px,0px) scale(1.090000,1)} 38% {transform: translate(0px,0px) scale(1,1)} 44% {transform: translate(0px,0px) scale(1.110000,1)} 64% {transform: translate(0px,0px) scale(1.110000,1)} 80% {transform: translate(0px,0px) scale(1,1)} 100% {transform: translate(0px,0px) scale(0.800000,1)} }]]></style>
- <g class="layer" transform="matrix(.08 0 0 .08 5.5621 -3.8133)" stroke-width="12.5">
-  <title>Layer 1</title>
-  <g transform="scale(.9 1)" stroke-width="12.5">
-   <g id="e8jzlygv3knn3_ts" transform="scale(.8 1)">
-    <path d="m410.99 502.67h-192c-8.832 0-16 7.168-16 16s7.168 16 16 16h192c8.832 0 16 7.2 16 16s-7.168 16-16 16-16 7.168-16 16 7.168 16 16 16c26.464 0 48-21.536 48-48s-21.536-48-48-48z" fill="#57a0ee" stroke-width="156.25"/>
-   </g>
-   <g id="e8jzlygv3knn4_ts" transform="scale(.8 1)">
-    <path d="m218.99 342.67h288c26.464 0 48-21.536 48-48s-21.536-48-48-48c-8.832 0-16 7.168-16 16s7.168 16 16 16 16 7.2 16 16-7.168 16-16 16h-288c-8.832 0-16 7.168-16 16s7.168 16 16 16z" fill="#57a0ee" stroke-width="156.25"/>
-   </g>
-   <g id="e8jzlygv3knn5_ts" transform="scale(.8 1)">
-    <path d="m634.99 278.67c-8.832 0-16 7.168-16 16s7.168 16 16 16c26.464 0 48 21.536 48 48s-21.536 48-48 48h-416c-8.832 0-16 7.168-16 16s7.168 16 16 16h416c44.096 0 80-35.872 80-80s-35.904-80-80-80z" fill="#57a0ee" stroke-width="156.25"/>
-   </g>
+<svg width="56" height="48" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="blur" x="-.24684" y="-.27097" width="1.4937" height="1.6939">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
+      <feOffset dx="0" dy="4" result="offsetblur" />
+      <feComponentTransfer>
+        <feFuncA slope="0.05" type="linear" />
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+  <g transform="translate(16 -2)" filter="url(#blur)">
+    <g class="am-weather-wind" transform="translate(-16,10)" fill="none" stroke="#57A0EE" stroke-linecap="round"
+      stroke-width="2">
+      <path stroke-dasharray="150 10" d="M25.5 5A4 4 0 1 1 29 11H10">
+        <animate attributeName="stroke-dashoffset" dur="3s" repeatCount="indefinite" values="0; 160" begin="0s" />
+      </path>
+      <path stroke-dasharray="144 16"
+        d="M39.5 11A4 4 0 1 1 43 17H6">
+        <animate attributeName="stroke-dashoffset" dur="3s" repeatCount="indefinite" values="0; 160" begin="0.5s" />
+      </path>
+      <path stroke-dasharray="150 10"
+        d="M28.5 29A4 4 0 1 0 32 23H15">
+        <animate attributeName="stroke-dashoffset" dur="3s" repeatCount="indefinite" values="0; 160" begin="0.25s" />
+      </path>
+    </g>
   </g>
- </g>
 </svg>

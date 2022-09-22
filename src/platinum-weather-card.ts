@@ -1773,7 +1773,7 @@ export class PlatinumWeatherCard extends LitElement {
   // get the icon that matches the current conditions
   private _weatherIcon(conditions: string): string {
     switch (conditions) {
-      case 'sunny': return this.iconSunny;
+      case 'sunny':
       case 'clear': return this.iconClear;
       case 'mostly-sunny':
       case 'mostly_sunny': return this.iconMostlySunny;
@@ -1841,144 +1841,108 @@ export class PlatinumWeatherCard extends LitElement {
     return this._config.entity_sun && this.hass.states[this._config.entity_sun] !== undefined ? transformDayNight[this.hass.states[this._config.entity_sun].state] : 'day';
   }
 
-  get iconStyle(): string {
-    return (this._config.option_icon_set) ? this._config.option_icon_set : 'old';
-  }
-
-  get iconSunny(): string {
-    const iconStyle = this.iconStyle;
-    return (iconStyle === 'old') ? `${this.dayOrNight}` : (iconStyle === 'hybrid') ? `sunny-${this.dayOrNight}` : `sunny-${this.dayOrNight}`;
-  }
-
   get iconClear(): string {
-    const iconStyle = this.iconStyle;
-    return (iconStyle === 'old') ? `${this.dayOrNight}` : (iconStyle === 'hybrid') ? `sunny-${this.dayOrNight}` : `clear-${this.dayOrNight}`;
+    return `clear-${this.dayOrNight}`;
   }
 
   get iconMostlySunny(): string {
-    const iconStyle = this.iconStyle;
-    return (iconStyle === 'old') ? `fair-${this.dayOrNight}` : (iconStyle === 'hybrid') ? `fair-${this.dayOrNight}` : `fair-${this.dayOrNight}`;
+    return `cloudy-1-${this.dayOrNight}`;
   }
 
   get iconPartlyCloudy(): string {
-    const iconStyle = this.iconStyle;
-    return (iconStyle === 'old') ? `cloudy-${this.dayOrNight}-3` : (iconStyle === 'hybrid') ? `cloudy-${this.dayOrNight}-3` : `partly-cloudy-${this.dayOrNight}`;
+    return `cloudy-2-${this.dayOrNight}`;
   }
 
   get iconCloudy(): string {
-    const iconStyle = this.iconStyle;
-    return (iconStyle === 'old') ? `cloudy-original` : (iconStyle === 'hybrid') ? `cloudy-original` : `cloudy`;
+    return `cloudy`;
   }
 
   get iconHazy(): string {
-    const iconStyle = this.iconStyle;
-    return (iconStyle === 'old') ? `cloudy-${this.dayOrNight}-1` : (iconStyle === 'hybrid') ? `haze` : `haze`;
+    return `haze-${this.dayOrNight}`;
   }
 
   get iconFrost(): string {
-    const iconStyle = this.iconStyle;
-    return (iconStyle === 'old') ? `cloudy-${this.dayOrNight}-1` : (iconStyle === 'hybrid') ? `cloudy-${this.dayOrNight}-1` : `cloudy-${this.dayOrNight}-1`;
+    return `frost-${this.dayOrNight}`;
   }
 
   get iconLightRain(): string {
-    const iconStyle = this.iconStyle;
-    return (iconStyle === 'old') ? `rainy-1` : (iconStyle === 'hybrid') ? `rainy-1-${this.dayOrNight}` : `rainy-1-${this.dayOrNight}`;
+    return `rainy-2-${this.dayOrNight}`;
   }
 
   get iconWindy(): string {
-    const iconStyle = this.iconStyle;
-    return (iconStyle === 'old') ? `cloudy-original` : (iconStyle === 'hybrid') ? `wind` : `wind`;
+    return `wind`;
   }
 
   get iconFog(): string {
-    const iconStyle = this.iconStyle;
-    return (iconStyle === 'old') ? `cloudy-original` : (iconStyle === 'hybrid') ? `fog` : `fog`;
+    return `fog-${this.dayOrNight}`;
   }
 
   get iconShowers(): string {
-    const iconStyle = this.iconStyle;
-    return (iconStyle === 'old') ? `rainy-1` : (iconStyle === 'hybrid') ? `rainy-1-${this.dayOrNight}` : `rainy-1-${this.dayOrNight}`;
+    return `rainy-1-${this.dayOrNight}`;
   }
 
   get iconRain(): string {
-    const iconStyle = this.iconStyle;
-    return (iconStyle === 'old') ? `rainy-5` : (iconStyle === 'hybrid') ? `rainy-5` : `rain`;
+    return `rainy-3-${this.dayOrNight}`;
   }
 
   get iconDust(): string {
-    const iconStyle = this.iconStyle;
-    return (iconStyle === 'old') ? `cloudy-${this.dayOrNight}-1` : (iconStyle === 'hybrid') ? `haze` : `haze`;
+    return `dust`;
   }
 
   get iconSnow(): string {
-    const iconStyle = this.iconStyle;
-    return (iconStyle === 'old') ? `snowy-6` : (iconStyle === 'hybrid') ? `snowy-6` : `snow`;
+    return `snowy-3-${this.dayOrNight}`;
   }
 
   get iconSnowRain(): string {
-    const iconStyle = this.iconStyle;
-    return (iconStyle === 'old') ? `snowy-6` : (iconStyle === 'hybrid') ? `rain-and-snow-mix` : `rain-and-snow-mix`;
+    return `snow-and-sleet-mix`;
   }
 
   get iconStorm(): string {
-    const iconStyle = this.iconStyle;
-    return (iconStyle === 'old') ? `scattered-thunderstorms` : (iconStyle === 'hybrid') ? `scattered-thunderstorms` : `scattered-thunderstorms`;
+    return `scattered-thunderstorms-${this.dayOrNight}`;
   }
 
   get iconLightShowers(): string {
-    const iconStyle = this.iconStyle;
-    return (iconStyle === 'old') ? `rainy-2` : (iconStyle === 'hybrid') ? `rainy-2` : `rainy-2`;
+    return `rainy-1-${this.dayOrNight}`;
   }
 
   get iconHeavyShowers(): string {
-    const iconStyle = this.iconStyle;
-    return (iconStyle === 'old') ? `rainy-6` : (iconStyle === 'hybrid') ? `rainy-6` : `rainy-6`;
+    return `rainy-2-${this.dayOrNight}`;
   }
 
-
   get iconCyclone(): string {
-    const iconStyle = this.iconStyle;
-    return (iconStyle === 'old') ? `tornado` : (iconStyle === 'hybrid') ? `tornado` : `tornado`;
+    return `tropical-storm`;
   }
 
   get iconClearDay(): string {
-    const iconStyle = this.iconStyle;
-    return (iconStyle === 'old') ? `day` : (iconStyle === 'hybrid') ? `day` : `clear-day`;
+    return `clear-day`;
   }
 
   get iconClearNight(): string {
-    const iconStyle = this.iconStyle;
-    return (iconStyle === 'old') ? `night` : (iconStyle === 'hybrid') ? `night` : `clear-night`;
+    return `clear-night`;
   }
 
   get iconSleet(): string {
-    const iconStyle = this.iconStyle;
-    return (iconStyle === 'old') ? `rainy-2` : (iconStyle === 'hybrid') ? `rain-and-sleet-mix` : `rain-and-sleet-mix`;
+    return `rain-and-sleet-mix`;
   }
 
   get iconPartlyCloudyDay(): string {
-    const iconStyle = this.iconStyle;
-    return (iconStyle === 'old') ? `cloudy-day-3` : (iconStyle === 'hybrid') ? `cloudy-day-3` : `partly-cloudy-day`;
+    return `cloudy-1-day`;
   }
 
   get iconPartlyCloudyNight(): string {
-    const iconStyle = this.iconStyle;
-    return (iconStyle === 'old') ? `cloudy-night-3` : (iconStyle === 'hybrid') ? `cloudy-night-3` : `partly-cloudy-night`;
+    return `cloudy-1-night`;
   }
 
   get iconHail(): string {
-    const iconStyle = this.iconStyle;
-    return (iconStyle === 'old') ? `rainy-7` : (iconStyle === 'hybrid') ? `rainy-7` : `rainy-7`;
+    return `hail`;
   }
 
   get iconLightning(): string {
-    const iconStyle = this.iconStyle;
-    return (iconStyle === 'old') ? `thunder` : (iconStyle === 'hybrid') ? `thunder` : `thunder`;
+    return `isolated-thunderstorms-${this.dayOrNight}`;
   }
 
   get iconWindyVariant(): string {
-    const iconStyle = this.iconStyle;
-    return (iconStyle === 'old') ? `cloudy-${this.dayOrNight}-3` : (iconStyle === 'hybrid') ? `cloudy-${this.dayOrNight}-3` : `cloudy-${this.dayOrNight}-3`;
+    return `wind`;
   }
 
   get locale(): string | undefined {
