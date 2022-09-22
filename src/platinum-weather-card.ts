@@ -1865,7 +1865,7 @@ export class PlatinumWeatherCard extends LitElement {
   }
 
   get iconLightRain(): string {
-    return `rainy-2-${this.dayOrNight}`;
+    return `rainy-2`;
   }
 
   get iconWindy(): string {
@@ -1881,7 +1881,7 @@ export class PlatinumWeatherCard extends LitElement {
   }
 
   get iconRain(): string {
-    return `rainy-3-${this.dayOrNight}`;
+    return `rainy-3`;
   }
 
   get iconDust(): string {
@@ -1889,7 +1889,7 @@ export class PlatinumWeatherCard extends LitElement {
   }
 
   get iconSnow(): string {
-    return `snowy-3-${this.dayOrNight}`;
+    return `snowy-3`;
   }
 
   get iconSnowRain(): string {
