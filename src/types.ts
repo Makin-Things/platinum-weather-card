@@ -35,11 +35,11 @@ export interface WeatherCardConfig extends LovelaceCardConfig {
   text_update_time_prefix?: string;
   entity_temperature?: string;
   entity_apparent_temp?: string;
-  entity_current_conditions?: string;
-  entity_current_text?: string;
+  entity_forecast_icon?: string;
+  entity_summary?: string;
   show_decimals?: boolean;
   show_separator?: boolean;
-  entity_daily_summary?: string;
+  entity_extended?: string;
   extended_use_attr?: boolean;
   extended_name_attr?: string;
   slot_l1?: string;
@@ -77,7 +77,7 @@ export interface WeatherCardConfig extends LovelaceCardConfig {
   entity_fire_danger?: string;
   entity_fire_danger_summary?: string;
   entity_pop?: string;
-  entity_possible_today?: string;
+  entity_pos?: string;
   entity_sun?: string;
   entity_uv_alert_summary?: string;
   entity_rainfall?: string;
@@ -101,8 +101,8 @@ export interface WeatherCardConfig extends LovelaceCardConfig {
   entity_pop_1?: string;
   entity_pos_1?: string;
   entity_summary_1?: string;
-  entity_forecast_low_temp_1?: string;
-  entity_forecast_high_temp_1?: string;
+  entity_forecast_min_1?: string;
+  entity_forecast_max_1?: string;
   entity_extended_1?: string;
 
   daily_forecast_layout?: layoutOrientation;

@@ -119,7 +119,7 @@ export class PlatinumWeatherCard extends LitElement {
     // check if any of the calculated forecast entities have changed, but only if the daily slot is shown
     if (this._config.show_section_daily_forecast) {
       const days = this._config.daily_forecast_days || 5;
-      for (const entity of ['entity_forecast_icon_1', 'entity_summary_1', 'entity_forecast_low_temp_1', 'entity_forecast_high_temp_1', 'entity_pop_1', 'entity_pos_1']) {
+      for (const entity of ['entity_forecast_icon_1', 'entity_summary_1', 'entity_forecast_min_1', 'entity_forecast_max_1', 'entity_pop_1', 'entity_pos_1']) {
         if ((this._config[entity] !== undefined) && (this._config[entity].match('^weather.') === null)) {
           // check there is a number in the name
           const start = this._config[entity].match(/(\d+)(?!.*\d)/g);
@@ -182,7 +182,7 @@ export class PlatinumWeatherCard extends LitElement {
       }
     });
     const days = this._config.daily_forecast_days || 5;
-    for (const entityName of ['entity_forecast_icon_1', 'entity_summary_1', 'entity_forecast_low_temp_1', 'entity_forecast_high_temp_1', 'entity_pop_1', 'entity_pos_1']) {
+    for (const entityName of ['entity_forecast_icon_1', 'entity_summary_1', 'entity_forecast_min_1', 'entity_forecast_max_1', 'entity_pop_1', 'entity_pos_1']) {
       if (this._config[entityName] !== undefined) {
         const entity = this.hass.states[this._config[entityName]];
         // check if we have a weather domain as the entity
@@ -198,12 +198,12 @@ export class PlatinumWeatherCard extends LitElement {
                   this._error.push(`'${entityName} attribute forecast[${_i}].condition not found`);
                 }
                 break
-              case 'entity_forecast_low_temp_1':
+              case 'entity_forecast_min_1':
                 if (this._getForecastPropFromWeather(entity.attributes.forecast, forecastDate, 'templow') === undefined) {
                   this._error.push(`'${entityName} attribute forecast[${_i}].templow not found`);
                 }
                 break
-              case 'entity_forecast_high_temp_1':
+              case 'entity_forecast_max_1':
                 if (this._getForecastPropFromWeather(entity.attributes.forecast, forecastDate, 'temperature') === undefined) {
                   this._error.push(`'${entityName} attribute forecast[${_i}].temperature not found`);
                 }
@@ -278,10 +278,10 @@ export class PlatinumWeatherCard extends LitElement {
   private _renderCompleteOverviewSection(): TemplateResult {
     if (this._config?.show_section_overview === false) return html``;
 
-    const weatherIcon = this._weatherIcon(this.currentConditions);
+    const weatherIcon = this._weatherIcon(this.forecastIcon);
     const url = new URL((this._config.option_static_icons ? 's-' : 'a-') + weatherIcon + '.svg', import.meta.url);
-    const hoverText = weatherIcon !== 'unknown' ? '' : `Unknown condition\n${this.currentConditions}`;
-    const unknownDiv = weatherIcon !== 'unknown' ? html`` : html`<div class="unknown-condition">${this.currentConditions}</div>`;
+    const hoverText = weatherIcon !== 'unknown' ? '' : `Unknown condition\n${this.forecastIcon}`;
+    const unknownDiv = weatherIcon !== 'unknown' ? html`` : html`<div class="unknown-forecast">${this.forecastIcon}</div>`;
     const biggerIcon = html`<div class="big-icon"><img src="${url.href}" width="100%" height="100%" title="${hoverText}"></div>`;
 
     const currentTemp = html`
@@ -301,8 +301,8 @@ export class PlatinumWeatherCard extends LitElement {
 
     const separator = this._config.show_separator === true ? html`<hr class=line>` : ``;
 
-    const currentText = (this._config.entity_current_text) && (this.hass.states[this._config.entity_current_text]) ?
-      html`<div class="current-text">${entityComputeStateDisplay(this.hass.localize, this.hass.states[this._config.entity_current_text], getLocale(this.hass))}</div>` ?? html`<div class="current-text">---</div>` : html``;
+    const forecastText = (this._config.entity_summary) && (this.hass.states[this._config.entity_summary]) ?
+      html`<div class="forecast-text">${entityComputeStateDisplay(this.hass.localize, this.hass.states[this._config.entity_summary], getLocale(this.hass))}</div>` ?? html`<div class="forecast-text">---</div>` : html``;
 
     return html`
       <div class="overview-section section">
@@ -313,7 +313,7 @@ export class PlatinumWeatherCard extends LitElement {
           <div class="top-left">${biggerIcon}${unknownDiv}</div>
           <div class="currentTemps">${currentTemp}${apparentTemp}</div>
         </div>
-        ${currentText}
+        ${forecastText}
         ${separator}
       </div>
     `;
@@ -374,16 +374,16 @@ export class PlatinumWeatherCard extends LitElement {
   private _renderForecastOverviewSection(): TemplateResult {
     if (this._config?.show_section_overview === false) return html``;
 
-    const weatherIcon = this._weatherIcon(this.currentConditions);
+    const weatherIcon = this._weatherIcon(this.forecastIcon);
     const url = new URL((this._config.option_static_icons ? 's-' : 'a-') + weatherIcon + '.svg', import.meta.url);
-    const hoverText = weatherIcon !== 'unknown' ? '' : `Unknown condition\n${this.currentConditions}`;
-    const unknownDiv = weatherIcon !== 'unknown' ? html`` : html`<div class="unknown-condition">${this.currentConditions}</div>`;
+    const hoverText = weatherIcon !== 'unknown' ? '' : `Unknown condition\n${this.forecastIcon}`;
+    const unknownDiv = weatherIcon !== 'unknown' ? html`` : html`<div class="unknown-forecast">${this.forecastIcon}</div>`;
     const biggerIcon = html`<div class="big-icon"><img src="${url.href}" width="100%" height="100%" title="${hoverText}"></div>`;
 
     const separator = this._config.show_separator === true ? html`<hr class=line>` : ``;
 
-    const currentText = (this._config.entity_current_text) && (this.hass.states[this._config.entity_current_text]) ?
-      html`<div class="current-text-right">${entityComputeStateDisplay(this.hass.localize, this.hass.states[this._config.entity_current_text], getLocale(this.hass))}</div>` ?? html`<div class="current-text-right">---</div>` : html``;
+    const forecastText = (this._config.entity_summary) && (this.hass.states[this._config.entity_summary]) ?
+      html`<div class="forecast-text-right">${entityComputeStateDisplay(this.hass.localize, this.hass.states[this._config.entity_summary], getLocale(this.hass))}</div>` ?? html`<div class="forecast-text-right">---</div>` : html``;
 
     return html`
       <div class="overview-section section">
@@ -392,7 +392,7 @@ export class PlatinumWeatherCard extends LitElement {
         ${this._config.entity_update_time ? html`<div class="updated">${this._config.text_update_time_prefix ? this._config.text_update_time_prefix + ' ' : ''}${this._renderUpdateTime()}</div>` : html``}
         <div class="overview-top">
           <div class="top-left">${biggerIcon}${unknownDiv}</div>
-          ${currentText}
+          ${forecastText}
         </div>
         ${separator}
       </div>
@@ -411,7 +411,7 @@ export class PlatinumWeatherCard extends LitElement {
         sectionHeight += this._config.entity_update_time !== undefined ? 20 : 0;
       }
       if (this._config.overview_layout !== 'title only') {
-        sectionHeight += (this._config.overview_layout !== 'forecast') && (this._config.entity_current_text !== undefined) ? 145 : 120;
+        sectionHeight += (this._config.overview_layout !== 'forecast') && (this._config.entity_summary !== undefined) ? 145 : 120;
       }
     }
     return sectionHeight;
@@ -440,16 +440,16 @@ export class PlatinumWeatherCard extends LitElement {
       // Add the basic margins
       sectionHeight += 16;
       // this is a guess. assume 2 lines of text and add an extra 1 if uv or fire danger is added
-      sectionHeight += this._config.entity_daily_summary ? 40 : 0;
+      sectionHeight += this._config.entity_extended ? 40 : 0;
       sectionHeight += (this._config.entity_todays_uv_forecast !== undefined) || (this._config.entity_todays_fire_danger !== undefined) ? 20 : 0;
     }
     return sectionHeight;
   }
 
   private _renderExtendedSection(): TemplateResult {
-    if ((this._config?.show_section_extended === false) || (this._config.entity_daily_summary === undefined) && (this._config.entity_todays_uv_forecast === undefined) && (this._config.entity_todays_fire_danger === undefined)) return html``;
+    if ((this._config?.show_section_extended === false) || (this._config.entity_extended === undefined) && (this._config.entity_todays_uv_forecast === undefined) && (this._config.entity_todays_fire_danger === undefined)) return html``;
 
-    const extendedEntity = this._config.entity_daily_summary || '';
+    const extendedEntity = this._config.entity_extended || '';
     var extended: TemplateResult[] = [];
     if (this.hass.states[extendedEntity] !== undefined) {
       if (this._config.extended_use_attr === true) {
@@ -567,17 +567,17 @@ export class PlatinumWeatherCard extends LitElement {
         const url = new URL(((this._config.option_static_icons ? 's-' : 'a-') + (iconEntity && this.hass.states[iconEntity] ? this._weatherIcon(this.hass.states[iconEntity].state) : 'unknown') + '.svg').replace("-night", "-day"), import.meta.url);
         htmlIcon = html`<i class="icon" style="background: none, url(${url.href}) no-repeat; background-size: contain;"></i>`;
       }
-      if (this._config.entity_forecast_high_temp_1?.match('^weather.')) {
-        maxTemp = this._getForecastPropFromWeather(this.hass.states[this._config.entity_forecast_high_temp_1].attributes.forecast, forecastDate, 'temperature');
+      if (this._config.entity_forecast_max_1?.match('^weather.')) {
+        maxTemp = this._getForecastPropFromWeather(this.hass.states[this._config.entity_forecast_max_1].attributes.forecast, forecastDate, 'temperature');
       } else {
-        start = this._config.entity_forecast_high_temp_1 ? this._config.entity_forecast_high_temp_1.match(/(\d+)(?!.*\d)/g) : false;
-        maxTemp = start && this._config.entity_forecast_high_temp_1 ? this.hass.states[this._config.entity_forecast_high_temp_1.replace(/(\d+)(?!.*\d)/g, String(Number(start) + i))].state : undefined;
+        start = this._config.entity_forecast_max_1 ? this._config.entity_forecast_max_1.match(/(\d+)(?!.*\d)/g) : false;
+        maxTemp = start && this._config.entity_forecast_max_1 ? this.hass.states[this._config.entity_forecast_max_1.replace(/(\d+)(?!.*\d)/g, String(Number(start) + i))].state : undefined;
       }
-      if (this._config.entity_forecast_low_temp_1?.match('^weather.')) {
-        minTemp = this._getForecastPropFromWeather(this.hass.states[this._config.entity_forecast_low_temp_1].attributes.forecast, forecastDate, 'templow');
+      if (this._config.entity_forecast_min_1?.match('^weather.')) {
+        minTemp = this._getForecastPropFromWeather(this.hass.states[this._config.entity_forecast_min_1].attributes.forecast, forecastDate, 'templow');
       } else {
-        start = this._config.entity_forecast_low_temp_1 ? this._config.entity_forecast_low_temp_1.match(/(\d+)(?!.*\d)/g) : false;
-        minTemp = start && this._config.entity_forecast_low_temp_1 ? this.hass.states[this._config.entity_forecast_low_temp_1.replace(/(\d+)(?!.*\d)/g, String(Number(start) + i))].state : undefined;
+        start = this._config.entity_forecast_min_1 ? this._config.entity_forecast_min_1.match(/(\d+)(?!.*\d)/g) : false;
+        minTemp = start && this._config.entity_forecast_min_1 ? this.hass.states[this._config.entity_forecast_min_1.replace(/(\d+)(?!.*\d)/g, String(Number(start) + i))].state : undefined;
       }
       const tempUnit = html`<div class="unit-temp-small">${this.getUOM("temperature")}</div>`;
       const minMax = this._config.old_daily_format === true
@@ -708,17 +708,17 @@ export class PlatinumWeatherCard extends LitElement {
       const summary = start ? html`
         <div class="f-summary-vert">${summaryEntity && this.hass.states[summaryEntity] ? this.hass.states[summaryEntity].state : "---"}</div>` : ``;
 
-      if (this._config.entity_forecast_high_temp_1?.match('^weather.')) {
-        maxTemp = this._getForecastPropFromWeather(this.hass.states[this._config.entity_forecast_high_temp_1].attributes.forecast, forecastDate, 'temperature');
+      if (this._config.entity_forecast_max_1?.match('^weather.')) {
+        maxTemp = this._getForecastPropFromWeather(this.hass.states[this._config.entity_forecast_max_1].attributes.forecast, forecastDate, 'temperature');
       } else {
-        start = this._config.entity_forecast_high_temp_1 ? this._config.entity_forecast_high_temp_1.match(/(\d+)(?!.*\d)/g) : false;
-        maxTemp = start && this._config.entity_forecast_high_temp_1 ? this.hass.states[this._config.entity_forecast_high_temp_1.replace(/(\d+)(?!.*\d)/g, String(Number(start) + i))].state : undefined;
+        start = this._config.entity_forecast_max_1 ? this._config.entity_forecast_max_1.match(/(\d+)(?!.*\d)/g) : false;
+        maxTemp = start && this._config.entity_forecast_max_1 ? this.hass.states[this._config.entity_forecast_max_1.replace(/(\d+)(?!.*\d)/g, String(Number(start) + i))].state : undefined;
       }
-      if (this._config.entity_forecast_low_temp_1?.match('^weather.')) {
-        minTemp = this._getForecastPropFromWeather(this.hass.states[this._config.entity_forecast_low_temp_1].attributes.forecast, forecastDate, 'templow');
+      if (this._config.entity_forecast_min_1?.match('^weather.')) {
+        minTemp = this._getForecastPropFromWeather(this.hass.states[this._config.entity_forecast_min_1].attributes.forecast, forecastDate, 'templow');
       } else {
-        start = this._config.entity_forecast_low_temp_1 ? this._config.entity_forecast_low_temp_1.match(/(\d+)(?!.*\d)/g) : false;
-        minTemp = start && this._config.entity_forecast_low_temp_1 ? this.hass.states[this._config.entity_forecast_low_temp_1.replace(/(\d+)(?!.*\d)/g, String(Number(start) + i))].state : undefined;
+        start = this._config.entity_forecast_min_1 ? this._config.entity_forecast_min_1.match(/(\d+)(?!.*\d)/g) : false;
+        minTemp = start && this._config.entity_forecast_min_1 ? this.hass.states[this._config.entity_forecast_min_1.replace(/(\d+)(?!.*\d)/g, String(Number(start) + i))].state : undefined;
       }
       const tempUnit = html`<div class="unit-temp-small">${this.getUOM("temperature")}</div>`;
       const min = minTemp ? html`
@@ -963,7 +963,7 @@ export class PlatinumWeatherCard extends LitElement {
     switch (value) {
       case 'pop': return this.slotPop;
       case 'popforecast': return this.slotPopForecast;
-      case 'possible_today': return this.slotPossibleToday;
+      case 'possible_today': return this.slotPos;
       case 'possible_tomorrow': return this.slotPossibleTomorrow;
       case 'rainfall': return this.slotRainfall;
       case 'humidity': return this.slotHumidity;
@@ -1031,11 +1031,11 @@ export class PlatinumWeatherCard extends LitElement {
           : '---'
       : "---";
     const pop_units = pop !== "---" ? html`<div class="slot-text unit">%</div>` : html``;
-    const pos = this._config.entity_possible_today
-      ? this._config.entity_possible_today.match('^weather.') === null
-        ? this.hass.states[this._config.entity_possible_today].state
-        : this.hass.states[this._config.entity_possible_today] !== undefined && this.hass.states[this._config.entity_possible_today].attributes.forecast[0].precipitation !== undefined
-          ? this.hass.states[this._config.entity_possible_today].attributes.forecast[0].precipitation
+    const pos = this._config.entity_pos
+      ? this._config.entity_pos.match('^weather.') === null
+        ? this.hass.states[this._config.entity_pos].state
+        : this.hass.states[this._config.entity_pos] !== undefined && this.hass.states[this._config.entity_pos].attributes.forecast[0].precipitation !== undefined
+          ? this.hass.states[this._config.entity_posy].attributes.forecast[0].precipitation
           : '---'
       : "---";
     const pos_units = pos !== "---" ? html`<div class="slot-text unit">${this.getUOM('precipitation')}</div>` : html``;
@@ -1073,12 +1073,12 @@ export class PlatinumWeatherCard extends LitElement {
     `;
   }
 
-  get slotPossibleToday(): TemplateResult {
-    const pos = this._config.entity_possible_today
-      ? this._config.entity_possible_today.match('^weather.') === null
-        ? this.hass.states[this._config.entity_possible_today].state
-        : this.hass.states[this._config.entity_possible_today] !== undefined && this.hass.states[this._config.entity_possible_today].attributes.forecast[0].precipitation !== undefined
-          ? this.hass.states[this._config.entity_possible_today].attributes.forecast[0].precipitation
+  get slotPos(): TemplateResult {
+    const pos = this._config.entity_pos
+      ? this._config.entity_pos.match('^weather.') === null
+        ? this.hass.states[this._config.entity_pos].state
+        : this.hass.states[this._config.entity_pos] !== undefined && this.hass.states[this._config.entity_pos].attributes.forecast[0].precipitation !== undefined
+          ? this.hass.states[this._config.entity_pos].attributes.forecast[0].precipitation
           : '---'
       : "---";
     const units = pos !== "---" ? html`<div class="slot-text unit">${this.getUOM('precipitation')}</div>` : html``;
@@ -1460,8 +1460,8 @@ export class PlatinumWeatherCard extends LitElement {
   }
 
   // getters that return the value to be shown
-  get currentConditions(): string {
-    const entity = this._config.entity_current_conditions;
+  get forecastIcon(): string {
+    const entity = this._config.entity_forecast_icon;
     return entity && this.hass.states[entity]
       ? this.hass.states[entity].state
       : '---';
@@ -2164,11 +2164,11 @@ export class PlatinumWeatherCard extends LitElement {
     // var apparentTopMargin = this._config.apparent_top_margin || "45px";
     // var apparentRightPos =  this._config.apparent_right_pos || "1em";
     // var apparentRightMargin = this._config.apparent_right_margin || "1em";
-    // var currentTextTopMargin = this._config.current_text_top_margin || "4.5em";
-    // var currentTextLeftPos = this._config.current_text_left_pos || "0px";
-    const currentTextFontSize = this._config.current_text_font_size || "21px";
-    // var currentTextWidth = this._config.current_text_width || "100%";
-    const currentTextAlignment = this._config.current_text_alignment || "center";
+    // var forecastTextTopMargin = this._config.current_text_top_margin || "4.5em";
+    // var forecastTextLeftPos = this._config.current_text_left_pos || "0px";
+    const forecastTextFontSize = this._config.forecast_text_font_size || "21px";
+    // var forecastTextWidth = this._config.forecast_text_width || "100%";
+    const forecastTextAlignment = this._config.forecast_text_alignment || "center";
     // var largeIconTopMargin = this._config.large_icon_top_margin || "-3.2em";
     // var largeIconLeftPos = this._config.large_icon_left_pos || "0px";
     // var currentDataTopMargin = this._config.current_data_top_margin ? this._config.current_data_top_margin : this._config.show_separator ? "1em" : "10em"; //TODO - check if really needed, was using in variations
@@ -2220,7 +2220,7 @@ export class PlatinumWeatherCard extends LitElement {
         width: 140px;
         position: relative;
       }
-      .unknown-condition {
+      .unknown-forecast {
         position: relative;
         top: -30px;
         text-align: center;
@@ -2280,14 +2280,14 @@ export class PlatinumWeatherCard extends LitElement {
         margin-bottom: -9px;
         color: var(--primary-text-color);
       }
-      .current-text {
-        font-size: ${unsafeCSS(currentTextFontSize)};
-        text-align: ${unsafeCSS(currentTextAlignment)};
+      .forecast-text {
+        font-size: ${unsafeCSS(forecastTextFontSize)};
+        text-align: ${unsafeCSS(forecastTextAlignment)};
         line-height: 25px;
       }
-      .current-text-right {
-        font-size: ${unsafeCSS(currentTextFontSize)};
-        text-align: ${unsafeCSS(currentTextAlignment)};
+      .forecast-text-right {
+        font-size: ${unsafeCSS(forecastTextFontSize)};
+        text-align: ${unsafeCSS(forecastTextAlignment)};
         width: 100%;
         align-items: center;
         display: flex;

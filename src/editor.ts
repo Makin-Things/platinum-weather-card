@@ -25,7 +25,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
   @state() private _subElementEditor: string | undefined = undefined;
 
   private _initialized = false;
-  private _config_version = 5;
+  private _config_version = 6;
 
   static elementDefinitions = {
     "ha-card": customElements.get("ha-card"),  // This works because ha-card is ALWAYS loaded before custom cards (for now)
@@ -128,6 +128,36 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
       delete tmpConfig['entity_daytime_low'];
     }
 
+    if (tmpConfig.entity_current_conditions) {
+      tmpConfig['entity_forecast_icon'] = tmpConfig.entity_current_conditions;
+      delete tmpConfig['entity_current_conditions'];
+    }
+
+    if (tmpConfig.entity_current_text) {
+      tmpConfig['entity_summary'] = tmpConfig.entity_current_text;
+      delete tmpConfig['entity_current_text'];
+    }
+
+    if (tmpConfig.entity_daily_summary) {
+      tmpConfig['entity_extended'] = tmpConfig.entity_daily_summary;
+      delete tmpConfig['entity_daily_summary'];
+    }
+
+    if (tmpConfig.entity_forecast_high_temp_1) {
+      tmpConfig['entity_forecast_max_1'] = tmpConfig.entity_forecast_high_temp_1;
+      delete tmpConfig['entity_forecast_high_temp_1'];
+    }
+
+    if (tmpConfig.entity_forecast_low_temp_1) {
+      tmpConfig['entity_forecast_min_1'] = tmpConfig.entity_forecast_low_temp_1;
+      delete tmpConfig['entity_forecast_low_temp_1'];
+    }
+
+    if (tmpConfig.entity_possible_today) {
+      tmpConfig['entity_pos'] = tmpConfig.entity_possible_today;
+      delete tmpConfig['entity_possible_today'];
+    }
+
     // Remane slot entries
     for (const slot of ['slot_l1, slot_l2, slot_l3, slot_l4, slot_l5, slot_l6, slot_l7, slot_l8, slot_r1, slot_r2, slot_r3, slot_r4, slot_r5, slot_r6, slot_r7, slot_r8']) {
       if (tmpConfig[slot] === 'daytime_high') tmpConfig[slot] = 'forecast_max';
@@ -200,12 +230,12 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     return this._config?.entity_apparent_temp || '';
   }
 
-  get _entity_current_conditions(): string {
-    return this._config?.entity_current_conditions || '';
+  get _entity_forecast_icon(): string {
+    return this._config?.entity_forecast_icon || '';
   }
 
-  get _entity_current_text(): string {
-    return this._config?.entity_current_text || '';
+  get _entity_summary(): string {
+    return this._config?.entity_summary || '';
   }
 
   get _show_decimals(): boolean {
@@ -216,8 +246,8 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     return this._config?.show_separator === true; // default off
   }
 
-  get _entity_daily_summary(): string {
-    return this._config?.entity_daily_summary || '';
+  get _entity_extended(): string {
+    return this._config?.entity_extended || '';
   }
 
   get _extended_use_attr(): boolean {
@@ -364,8 +394,8 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     return this._config?.entity_pop || '';
   }
 
-  get _entity_possible_today(): string {
-    return this._config?.entity_possible_today || '';
+  get _entity_pos(): string {
+    return this._config?.entity_pos || '';
   }
 
   get _entity_possible_tomorrow(): string {
@@ -460,12 +490,12 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     return this._config?.entity_summary_1 || '';
   }
 
-  get _entity_forecast_low_temp_1(): string {
-    return this._config?.entity_forecast_low_temp_1 || '';
+  get _entity_forecast_min_1(): string {
+    return this._config?.entity_forecast_min_1 || '';
   }
 
-  get _entity_forecast_high_temp_1(): string {
-    return this._config?.entity_forecast_high_temp_1 || '';
+  get _entity_forecast_max_1(): string {
+    return this._config?.entity_forecast_max_1 || '';
   }
 
   get _entity_pop_1(): string {
@@ -585,7 +615,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
           entities.add('entity_pop');
           break;
         case 'popforecast':
-          entities.add('entity_pop').add('entity_possible_today');
+          entities.add('entity_pop').add('entity_pos');
           break;
         case 'humidity':
           entities.add('entity_humidity');
@@ -600,7 +630,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
           entities.add('entity_fire_danger_summary');
           break;
         case 'possible_today':
-          entities.add('entity_possible_today');
+          entities.add('entity_pos');
           break;
         case 'possible_tomorrow':
           entities.add('entity_possible_tomorrow');
@@ -735,10 +765,10 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
         </ha-entity-picker>
       ` : '';
 
-    const entity_possible_today = entities.has("entity_possible_today") ?
+    const entity_pos = entities.has("entity_pos") ?
       html`
-        <ha-entity-picker .hass=${this.hass} .configValue=${'entity_possible_today'} .value=${this._entity_possible_today} .includeDomains=${['sensor', 'weather']}
-          name="entity_possible_today" label="Possible Rain Today" allow-custom-entity @value-changed=${this._valueChangedPicker}>
+        <ha-entity-picker .hass=${this.hass} .configValue=${'entity_pos'} .value=${this._entity_pos} .includeDomains=${['sensor', 'weather']}
+          name="entity_pos" label="Possible Rain Today" allow-custom-entity @value-changed=${this._valueChangedPicker}>
         </ha-entity-picker>
       ` : '';
 
@@ -857,7 +887,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
       ${entity_visibility}
       ${entity_sun}
       ${entity_pop}
-      ${entity_possible_today}
+      ${entity_pos}
       ${entity_possible_tomorrow}
       ${entity_humidity}
       ${entity_pressure}
@@ -949,10 +979,10 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
 
   private _sectionOverviewEditor(): TemplateResult {
     return html`
-      <mwc-textfield label="Card Title Line 1" .value=${this._text_card_title} .configValue=${'text_card_title'}
+      <mwc-textfield label="Card Title Text Line 1" .value=${this._text_card_title} .configValue=${'text_card_title'}
         @input=${this._valueChanged}>
       </mwc-textfield>
-      <mwc-textfield label="Card Title Line 2" .value=${this._text_card_title_2} .configValue=${'text_card_title_2'}
+      <mwc-textfield label="Card Title Text Line 2" .value=${this._text_card_title_2} .configValue=${'text_card_title_2'}
         @input=${this._valueChanged}>
       </mwc-textfield>
       <ha-entity-picker .hass=${this.hass} .configValue=${'entity_update_time'} .value=${this._entity_update_time} .includeDomains=${['sensor']}
@@ -987,11 +1017,11 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
           @value-changed=${this._valueChangedPicker}>
       </ha-entity-picker>` : html``}
       ${this._overview_layout !== 'observations' ?
-        html`<ha-entity-picker .hass=${this.hass} .configValue=${'entity_current_conditions'} .value=${this._entity_current_conditions} .includeDomains=${['sensor', 'weather']}
-          name="entity_current_condition" label="Entity Current Conditions" allow-custom-entity @value-changed=${this._valueChangedPicker}>
+        html`<ha-entity-picker .hass=${this.hass} .configValue=${'entity_forecast_icon'} .value=${this._entity_forecast_icon} .includeDomains=${['sensor', 'weather']}
+          name="entity_forecast_icon" label="Entity Forecast Icon" allow-custom-entity @value-changed=${this._valueChangedPicker}>
           </ha-entity-picker>
-          <ha-entity-picker .hass=${this.hass} .configValue=${'entity_current_text'} .value=${this._entity_current_text} .includeDomains=${['sensor', 'weather']}
-            name="entity_current_text" label="Entity Current Text" allow-custom-entity @value-changed=${this._valueChangedPicker}>
+          <ha-entity-picker .hass=${this.hass} .configValue=${'entity_summary'} .value=${this._entity_summary} .includeDomains=${['sensor', 'weather']}
+            name="entity_summary" label="Entity Forecast Text" allow-custom-entity @value-changed=${this._valueChangedPicker}>
           </ha-entity-picker>` : html``}
     `;
   }
@@ -1031,18 +1061,18 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
   private _sectionExtendedEditor(): TemplateResult {
     const attr_names: TemplateResult[] = [];
     if (this._extended_use_attr === true) {
-      const attrs = this.hass !== undefined && this.hass.states[this._entity_daily_summary] !== undefined ? this.hass.states[this._entity_daily_summary].attributes : [];
+      const attrs = this.hass !== undefined && this.hass.states[this._entity_extended] !== undefined ? this.hass.states[this._entity_extended].attributes : [];
       for (const element in attrs) {
         attr_names.push(html`<mwc-list-item value="${element}">${element}</mwc-list-item>`);
       }
     }
 
     return html`
-      <ha-entity-picker .hass=${this.hass} .configValue=${'entity_daily_summary'} .value=${this._entity_daily_summary} .includeDomains=${['sensor']}
-        name="entity_daily_summary" label="Entity Daily Summary" allow-custom-entity
+      <ha-entity-picker .hass=${this.hass} .configValue=${'entity_extended'} .value=${this._entity_extended} .includeDomains=${['sensor']}
+        name="entity_extended" label="Entity Extended Forecast" allow-custom-entity
         @value-changed=${this._valueChangedPicker}>
       </ha-entity-picker>
-      ${this._entity_daily_summary !== '' ? html`
+      ${this._entity_extended !== '' ? html`
         <div class="side-by-side">
           <div>
             <mwc-formfield .label=${'Use Attribute'}>
@@ -1051,7 +1081,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
               </mwc-switch>
             </mwc-formfield>
           </div>
-          ${this._entity_daily_summary !== '' && this._extended_use_attr === true ? html`<ha-entity-attribute-picker .hass=${this.hass} .entityId=${this._entity_daily_summary}
+          ${this._entity_extended !== '' && this._extended_use_attr === true ? html`<ha-entity-attribute-picker .hass=${this.hass} .entityId=${this._entity_extended}
             .configValue=${'extended_name_attr'} .value=${this._extended_name_attr} name="extended_name_attr" label="Attribute"
             allow-custom-value
             @value-changed=${this._valueChangedPicker}>
@@ -1235,11 +1265,11 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
         name="entity_summary_1" label="Entity Forecast Summary 1" allow-custom-entity
         @value-changed=${this._valueChangedPicker}>
       </ha-entity-picker>
-      <ha-entity-picker .hass=${this.hass} .configValue=${'entity_forecast_low_temp_1'} .value=${this._entity_forecast_low_temp_1} .includeDomains=${['sensor', 'weather']}
-        name="entity_forecast_low_temp_1" label="Entity Forecast Low 1" allow-custom-entity @value-changed=${this._valueChangedPicker}>
+      <ha-entity-picker .hass=${this.hass} .configValue=${'entity_forecast_min_1'} .value=${this._entity_forecast_min_1} .includeDomains=${['sensor', 'weather']}
+        name="entity_forecast_min_1" label="Entity Forecast Low 1" allow-custom-entity @value-changed=${this._valueChangedPicker}>
       </ha-entity-picker>
-      <ha-entity-picker .hass=${this.hass} .configValue=${'entity_forecast_high_temp_1'} .value=${this._entity_forecast_high_temp_1} .includeDomains=${['sensor', 'weather']}
-        name="entity_forecast_high_temp_1" label="Entity Forecast High 1" allow-custom-entity @value-changed=${this._valueChangedPicker}>
+      <ha-entity-picker .hass=${this.hass} .configValue=${'entity_forecast_max_1'} .value=${this._entity_forecast_max_1} .includeDomains=${['sensor', 'weather']}
+        name="entity_forecast_max_1" label="Entity Forecast High 1" allow-custom-entity @value-changed=${this._valueChangedPicker}>
       </ha-entity-picker>
       <ha-entity-picker .hass=${this.hass} .configValue=${'entity_pop_1'} .value=${this._entity_pop_1}  .includeDomains=${['sensor', 'weather']}
         name="entity_pop_1" label="Entity Forecast Pop 1" allow-custom-entity @value-changed=${this._valueChangedPicker}>
@@ -1249,7 +1279,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
       </ha-entity-picker>
       ${this._daily_forecast_layout === 'vertical' ? html`
         <ha-entity-picker .hass=${this.hass} .configValue=${'entity_extended_1'} .value=${this._entity_extended_1} .includeDomains=${['sensor']}
-          name="entity_extended_1" label="Entity Forecast Extended 1" allow-custom-entity @value-changed=${this._valueChangedPicker}>
+          name="entity_extended_1" label="Entity Extended Forecast 1" allow-custom-entity @value-changed=${this._valueChangedPicker}>
         </ha-entity-picker>
         ${this._entity_extended_1 !== '' ? html`
           <div class="side-by-side">
