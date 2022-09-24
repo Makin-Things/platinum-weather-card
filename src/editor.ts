@@ -761,7 +761,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     const entity_pop = entities.has("entity_pop") ?
       html`
         <ha-entity-picker .hass=${this.hass} .configValue=${'entity_pop'} .value=${this._entity_pop} .includeDomains=${['sensor', 'weather']}
-          name="entity_pop" label="Chance or Rain" allow-custom-entity @value-changed=${this._valueChangedPicker}>
+          name="entity_pop" label="Chance of Rain" allow-custom-entity @value-changed=${this._valueChangedPicker}>
         </ha-entity-picker>
       ` : '';
 
@@ -1021,7 +1021,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
           name="entity_forecast_icon" label="Entity Forecast Icon" allow-custom-entity @value-changed=${this._valueChangedPicker}>
           </ha-entity-picker>
           <ha-entity-picker .hass=${this.hass} .configValue=${'entity_summary'} .value=${this._entity_summary} .includeDomains=${['sensor', 'weather']}
-            name="entity_summary" label="Entity Forecast Text" allow-custom-entity @value-changed=${this._valueChangedPicker}>
+            name="entity_summary" label="Entity Forecast Summary" allow-custom-entity @value-changed=${this._valueChangedPicker}>
           </ha-entity-picker>` : html``}
     `;
   }
@@ -1266,16 +1266,16 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
         @value-changed=${this._valueChangedPicker}>
       </ha-entity-picker>
       <ha-entity-picker .hass=${this.hass} .configValue=${'entity_forecast_min_1'} .value=${this._entity_forecast_min_1} .includeDomains=${['sensor', 'weather']}
-        name="entity_forecast_min_1" label="Entity Forecast Low 1" allow-custom-entity @value-changed=${this._valueChangedPicker}>
+        name="entity_forecast_min_1" label="Entity Forecast Min 1" allow-custom-entity @value-changed=${this._valueChangedPicker}>
       </ha-entity-picker>
       <ha-entity-picker .hass=${this.hass} .configValue=${'entity_forecast_max_1'} .value=${this._entity_forecast_max_1} .includeDomains=${['sensor', 'weather']}
-        name="entity_forecast_max_1" label="Entity Forecast High 1" allow-custom-entity @value-changed=${this._valueChangedPicker}>
+        name="entity_forecast_max_1" label="Entity Forecast Max 1" allow-custom-entity @value-changed=${this._valueChangedPicker}>
       </ha-entity-picker>
       <ha-entity-picker .hass=${this.hass} .configValue=${'entity_pop_1'} .value=${this._entity_pop_1}  .includeDomains=${['sensor', 'weather']}
-        name="entity_pop_1" label="Entity Forecast Pop 1" allow-custom-entity @value-changed=${this._valueChangedPicker}>
+        name="entity_pop_1" label="Entity Forecast Chance of Rain 1" allow-custom-entity @value-changed=${this._valueChangedPicker}>
       </ha-entity-picker>
       <ha-entity-picker .hass=${this.hass} .configValue=${'entity_pos_1'} .value=${this._entity_pos_1}  .includeDomains=${['sensor', 'weather']}
-        name="entity_pos_1" label="Entity Forecast Possible 1" allow-custom-entity @value-changed=${this._valueChangedPicker}>
+        name="entity_pos_1" label="Entity Forecast Possible Rain 1" allow-custom-entity @value-changed=${this._valueChangedPicker}>
       </ha-entity-picker>
       ${this._daily_forecast_layout === 'vertical' ? html`
         <ha-entity-picker .hass=${this.hass} .configValue=${'entity_extended_1'} .value=${this._entity_extended_1} .includeDomains=${['sensor']}
