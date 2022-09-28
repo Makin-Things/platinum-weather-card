@@ -897,7 +897,6 @@ export class PlatinumWeatherCard extends LitElement {
   }
 
   private _handleAction(ev: ActionHandlerEvent): void {
-    console.info(`_handleAction ${ev.detail.action}`);
     if (this.hass && this._config && ev.detail.action) {
       handleAction(this, this.hass, this._config, ev.detail.action);
     }
