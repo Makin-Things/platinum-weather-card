@@ -2,11 +2,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { LitElement, html, TemplateResult, css, PropertyValues, CSSResult, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators';
-import { HomeAssistant, LovelaceCardEditor, getLovelace, debounce } from 'custom-card-helpers';
+import { HomeAssistant, LovelaceCardEditor, getLovelace, debounce, hasAction, ActionHandlerEvent, handleAction } from 'custom-card-helpers';
 import ResizeObserver from 'resize-observer-polyfill';
 import { getLocale } from './helpers';
 import { entityComputeStateDisplay, stringComputeStateDisplay } from './compute_state_display';
 import type { timeFormat, WeatherCardConfig } from './types';
+import { actionHandler } from './action-handler-directive';
 import { CARD_VERSION } from './const';
 
 /* eslint no-console: 0 */
@@ -884,13 +885,22 @@ export class PlatinumWeatherCard extends LitElement {
       <style>
         ${this.styles}
       </style>
-      <ha-card class="card">
-        <div class="content">
+      <ha-card class="card"
+        @action=${this._handleAction}
+        .actionHandler=${actionHandler({ hasHold: hasAction(this._config.hold_action), })}
+        ><div class="content">
           ${sections}
         </div>
       </ha-card>
     `);
     return html`${htmlCode}`;
+  }
+
+  private _handleAction(ev: ActionHandlerEvent): void {
+    console.info(`_handleAction ${ev.detail.action}`);
+    if (this.hass && this._config && ev.detail.action) {
+      handleAction(this, this.hass, this._config, ev.detail.action);
+    }
   }
 
   // slots - returns the value to be displyed in a specific current condition slot
