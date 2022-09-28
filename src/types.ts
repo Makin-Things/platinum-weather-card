@@ -1,4 +1,4 @@
-import { LovelaceCard, LovelaceCardConfig, LovelaceCardEditor } from 'custom-card-helpers';
+import { LovelaceCard, LovelaceCardConfig, LovelaceCardEditor, ActionConfig } from 'custom-card-helpers';
 
 declare global {
   interface HTMLElementTagNameMap {
@@ -123,4 +123,8 @@ export interface WeatherCardConfig extends LovelaceCardConfig {
   option_tooltips?: boolean;
   old_daily_format?: boolean;
   option_show_beaufort?: boolean;
+
+  entity?: string;
+  tap_action?: ActionConfig;
+  hold_action?: ActionConfig;
 }
