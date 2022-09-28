@@ -127,4 +127,5 @@ export interface WeatherCardConfig extends LovelaceCardConfig {
   entity?: string;
   tap_action?: ActionConfig;
   hold_action?: ActionConfig;
+  style?: string;
 }
