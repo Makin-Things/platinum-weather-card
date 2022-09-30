@@ -1327,7 +1327,7 @@ export class PlatinumWeatherCard extends LitElement {
   }
 
   get slotUvSummary(): TemplateResult {
-    const uv = this._config.entity_uv_alert_summary ? this.hass.states[this._config.entity_uv_alert_summary].state !== "unknown" ? this.hass.states[this._config.entity_uv_alert_summary].state : "n/a" : "---";
+    const uv = this._config.entity_uv_alert_summary ? this.hass.states[this._config.entity_uv_alert_summary].state !== "unknown" ? this.hass.states[this._config.entity_uv_alert_summary].state : "Not Applicable" : "---";
     return html`
       <li>
         <div class="slot">
@@ -1341,16 +1341,33 @@ export class PlatinumWeatherCard extends LitElement {
   }
 
   get slotFireSummary(): TemplateResult {
-    const fire = this._config.entity_fire_danger_summary ? this.hass.states[this._config.entity_fire_danger_summary].state !== 'unknown' ? this.hass.states[this._config.entity_fire_danger_summary].state : "n/a" : "---";
-    return html`
+    const entity = this._config.entity_fire_danger_summary;
+    const fire = entity ? this.hass.states[entity].state !== 'unknown' ? this.hass.states[entity].state : "Not Applicable" : "---";
+    const fire_style = entity && this._config.option_color_fire_danger !== false && this.hass.states[entity].attributes.color_fill ? `background-color:${this.hass.states[entity].attributes.color_fill}; color:${this.hass.states[entity].attributes.color_text};` : "";
+    console.info(`fire_style=${fire_style}`);
+    if (fire_style === "") {
+      return html`
       <li>
         <div class="slot">
           <div class="slot-icon">
             <ha-icon icon="mdi:fire"></ha-icon>
           </div>
-          <div class="slot-text fire-danger-text">${this.localeTextFireDanger} ${fire}</div>
+          <div class="slot-text fire-danger-text" style="${fire_style}">${fire} </div>
         </div>
       </li>`;
+    } else {
+      return html`
+      <li>
+        <div class="slot">
+          <div class="slot-icon">
+            <ha-icon icon="mdi:fire"></ha-icon>
+          </div>
+          <div class="slot-text fire-danger-text">
+            <p class="fire-danger-text-color" style="${fire_style}">${fire.toUpperCase()}</p>
+          </div>
+        </div>
+      </li>`;
+    }
   }
 
   get slotWind(): TemplateResult {
@@ -2359,6 +2376,16 @@ export class PlatinumWeatherCard extends LitElement {
       .slot-text {
         display: table-cell;
         position: relative;
+      }
+      .fire-danger-text-color {
+        display: inline-block;
+        height: 18px;
+        line-height: 20px;
+        vertical-align: middle;
+        margin: 0;
+        padding-left: 4px;
+        font-weight: 600;
+        width: 108px;
       }
       .daily-forecast-horiz-section {
         display: flex;

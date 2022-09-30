@@ -534,6 +534,10 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     return this._config?.option_pressure_decimals || null;
   }
 
+  get _option_color_fire_danger(): boolean {
+    return this._config?.option_color_fire_danger !== false; // default on
+  }
+
   get _option_tooltips(): boolean {
     return this._config?.option_tooltips === true; // default off
   }
@@ -1237,6 +1241,17 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
         <div>
           <mwc-formfield .label=${'Todays Rainfall Decimals'}>
             <mwc-switch .checked=${this._option_today_rainfall_decimals !== false} .configValue=${'option_today_rainfall_decimals'}
+              @change=${this._valueChanged}>
+            </mwc-switch>
+          </mwc-formfield>
+        </div>
+        <div>
+        </div>
+      </div>
+      <div class="side-by-side">
+        <div>
+          <mwc-formfield .label=${'Colour Fire Danger'}>
+            <mwc-switch .checked=${this._option_color_fire_danger !== false} .configValue=${'option_color_fire_danger'}
               @change=${this._valueChanged}>
             </mwc-switch>
           </mwc-formfield>

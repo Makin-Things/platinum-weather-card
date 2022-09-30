@@ -114,6 +114,7 @@ export interface WeatherCardConfig extends LovelaceCardConfig {
   option_today_temperature_decimals?: boolean;
   option_today_rainfall_decimals?: boolean;
   option_pressure_decimals?: pressureDecimals;
+  option_color_fire_danger?: boolean;
 
   option_daily_show_extended?: boolean;
 
