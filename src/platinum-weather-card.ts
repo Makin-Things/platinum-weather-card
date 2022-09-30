@@ -778,7 +778,7 @@ export class PlatinumWeatherCard extends LitElement {
       start = this._config.entity_fire_danger_1 ? this._config.entity_fire_danger_1.match(/(\d+)(?!.*\d)/g) : false;
       var fireDanger: TemplateResult = html``;
       const fireDangerEntity = start && this._config.entity_fire_danger_1 ? this._config.entity_fire_danger_1.replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
-      if (start) {
+      if ((start) && (fireDangerEntity)) {
         var fireStyle = this._config.option_daily_color_fire_danger !== false && this.hass.states[fireDangerEntity].attributes.color_fill ? `background-color:${this.hass.states[fireDangerEntity].attributes.color_fill}; color:${this.hass.states[fireDangerEntity].attributes.color_text};` : "";
         if (this._config.option_daily_color_fire_danger === false) {
           fireDanger = start && this.hass.states[fireDangerEntity].state !== 'unknown' ? html`
@@ -1008,7 +1008,7 @@ export class PlatinumWeatherCard extends LitElement {
       case 'temp_maximums': return this.slotTempMaximums;
       case 'temp_minimums': return this.slotTempMinimums;
       case 'uv_summary': return this.slotUvSummary;
-      case 'fire_summary': return this.slotFireSummary;
+      case 'fire_danger': return this.slotFireDanger;
       case 'wind': return this.slotWind;
       case 'wind_kt': return this.slotWindKt;
       case 'visibility': return this.slotVisibility;
@@ -1035,7 +1035,7 @@ export class PlatinumWeatherCard extends LitElement {
       case 'r1': return this.slotPopForecast;
       case 'r2': return this.slotHumidity;
       case 'r3': return this.slotUvSummary;
-      case 'r4': return this.slotFireSummary;
+      case 'r4': return this.slotFireDanger;
       case 'r5': return this.slotSunFollowing;
       case 'r6': return this.slotRemove;
       case 'r7': return this.slotRemove;
@@ -1362,7 +1362,7 @@ export class PlatinumWeatherCard extends LitElement {
     `;
   }
 
-  get slotFireSummary(): TemplateResult {
+  get slotFireDanger(): TemplateResult {
     const entity = this._config.entity_fire_danger;
     const fire = entity ? this.hass.states[entity].state !== 'unknown' ? this._config.option_color_fire_danger === false ? this.hass.states[entity].state : this.hass.states[entity].state.toLocaleUpperCase() : "Not Applicable" : "---";
     var fireStyle = entity && this._config.option_color_fire_danger !== false && this.hass.states[entity].attributes.color_fill ? `background-color:${this.hass.states[entity].attributes.color_fill}; color:${this.hass.states[entity].attributes.color_text};` : "";

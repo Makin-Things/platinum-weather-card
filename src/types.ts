@@ -75,7 +75,6 @@ export interface WeatherCardConfig extends LovelaceCardConfig {
   entity_observed_max?: string;
   entity_observed_min?: string;
   entity_fire_danger?: string;
-  entity_fire_danger_summary?: string;
   entity_pop?: string;
   entity_pos?: string;
   entity_sun?: string;
@@ -104,6 +103,7 @@ export interface WeatherCardConfig extends LovelaceCardConfig {
   entity_forecast_min_1?: string;
   entity_forecast_max_1?: string;
   entity_extended_1?: string;
+  entity_fire_danger_1?: string;
 
   daily_forecast_layout?: layoutOrientation;
   daily_forecast_days?: layoutDays;
