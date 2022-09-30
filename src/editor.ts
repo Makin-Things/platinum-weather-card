@@ -25,7 +25,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
   @state() private _subElementEditor: string | undefined = undefined;
 
   private _initialized = false;
-  private _config_version = 6;
+  private _config_version = 7;
 
   static elementDefinitions = {
     "ha-card": customElements.get("ha-card"),  // This works because ha-card is ALWAYS loaded before custom cards (for now)
@@ -156,6 +156,11 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     if (tmpConfig.entity_possible_today) {
       tmpConfig['entity_pos'] = tmpConfig.entity_possible_today;
       delete tmpConfig['entity_possible_today'];
+    }
+
+    if (tmpConfig.entity_fire_danger_summary) {
+      tmpConfig['entity_fire_danger'] = tmpConfig.entity_fire_danger_summary;
+      delete tmpConfig['entity_fire_danger_summary'];
     }
 
     // Remane slot entries
@@ -414,8 +419,8 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     return this._config?.entity_uv_alert_summary || '';
   }
 
-  get _entity_fire_danger_summary(): string {
-    return this._config?.entity_fire_danger_summary || '';
+  get _entity_fire_danger(): string {
+    return this._config?.entity_fire_danger || '';
   }
 
   get _entity_rainfall(): string {
@@ -510,6 +515,10 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     return this._config?.entity_extended_1 || '';
   }
 
+  get _entity_fire_danger_1(): string {
+    return this._config?.entity_fire_danger_1 || '';
+  }
+
   get _daily_extended_use_attr(): boolean {
     return this._config?.daily_extended_use_attr === true; // default off
   }
@@ -536,6 +545,10 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
 
   get _option_color_fire_danger(): boolean {
     return this._config?.option_color_fire_danger !== false; // default on
+  }
+
+  get _option_daily_color_fire_danger(): boolean {
+    return this._config?.option_daily_color_fire_danger !== false; // default on
   }
 
   get _option_tooltips(): boolean {
@@ -569,7 +582,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
         this._config?.slot_r1 || 'popforecast' as string,
         this._config?.slot_r2 || 'humidity' as string,
         this._config?.slot_r3 || 'uv_summary' as string,
-        this._config?.slot_r4 || 'fire_summary' as string,
+        this._config?.slot_r4 || 'fire_danger' as string,
         this._config?.slot_r5 || 'sun_following' as string,
         this._config?.slot_r6 || 'remove' as string,
         this._config?.slot_r7 || 'remove' as string,
@@ -630,8 +643,8 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
         case 'uv_summary':
           entities.add('entity_uv_alert_summary');
           break;
-        case 'fire_summary':
-          entities.add('entity_fire_danger_summary');
+        case 'fire_danger':
+          entities.add('entity_fire_danger');
           break;
         case 'possible_today':
           entities.add('entity_pos');
@@ -804,10 +817,10 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
         </ha-entity-picker>
       ` : '';
 
-    const entity_fire_danger_summary = entities.has("entity_fire_danger_summary") ?
+    const entity_fire_danger = entities.has("entity_fire_danger") ?
       html`
-        <ha-entity-picker .hass=${this.hass} .configValue=${'entity_fire_danger_summary'} .value=${this._entity_fire_danger_summary} .includeDomains=${['sensor']}
-          name="entity_fire_danger_summary" label="Fire Danger Summary" allow-custom-entity @value-changed=${this._valueChangedPicker}>
+        <ha-entity-picker .hass=${this.hass} .configValue=${'entity_fire_danger'} .value=${this._entity_fire_danger} .includeDomains=${['sensor']}
+          name="entity_fire_danger" label="Fire Danger" allow-custom-entity @value-changed=${this._valueChangedPicker}>
         </ha-entity-picker>
       ` : '';
 
@@ -896,7 +909,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
       ${entity_humidity}
       ${entity_pressure}
       ${entity_uv_alert_summary}
-      ${entity_fire_danger_summary}
+      ${entity_fire_danger}
       ${entity_rainfall}
       ${entity_custom1}
       ${entity_custom2}
@@ -1125,7 +1138,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
       <mwc-list-item value="possible_today">Today's forecast rainfall</mwc-list-item>
       <mwc-list-item value="possible_tomorrow">Tomorrow's forecast rainfall</mwc-list-item>
       <mwc-list-item value="uv_summary">Today's UV forecast</mwc-list-item>
-      <mwc-list-item value="fire_summary">Today's fire danger</mwc-list-item>
+      <mwc-list-item value="fire_danger">Today's fire danger</mwc-list-item>
       <mwc-list-item value="custom1">Custom entity 1</mwc-list-item>
       <mwc-list-item value="custom2">Custom entity 2</mwc-list-item>
       <mwc-list-item value="custom3">Custom entity 3</mwc-list-item>
@@ -1169,7 +1182,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
           @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}>
           ${slotValues}
         </ha-select>
-        <ha-select label="Slot Right 4" .configValue=${'slot_r4'} .value=${this._slot_r4 || 'fire_summary'}
+        <ha-select label="Slot Right 4" .configValue=${'slot_r4'} .value=${this._slot_r4 || 'fire_danger'}
           @selected=${this._valueChanged} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()}>
           ${slotValues}
         </ha-select>
@@ -1310,6 +1323,9 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
                 name="daily_extended_name_attr" label="Attribute" allow-custom-value @value-changed=${this._valueChangedPicker}>
               </ha-entity-attribute-picker>` : html``}
           </div>` : html``}
+        <ha-entity-picker .hass=${this.hass} .configValue=${'entity_fire_danger_1'} .value=${this._entity_fire_danger_1} .includeDomains=${['sensor']}
+          name="entity_fire_danger_1" label="Entity Fire Danger 1" allow-custom-entity @value-changed=${this._valueChangedPicker}>
+        </ha-entity-picker>
       ` : ``}
     `;
   }
@@ -1368,6 +1384,17 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
           </div>
           <div></div>
         </div>
+        <div class="side-by-side">
+        <div>
+          <mwc-formfield .label=${'Colour Fire Danger'}>
+            <mwc-switch .checked=${this._option_daily_color_fire_danger !== false} .configValue=${'option_daily_color_fire_danger'}
+              @change=${this._valueChanged}>
+            </mwc-switch>
+          </mwc-formfield>
+        </div>
+        <div>
+        </div>
+      </div>
     `;
   }
 

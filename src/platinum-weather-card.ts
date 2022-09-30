@@ -683,6 +683,7 @@ export class PlatinumWeatherCard extends LitElement {
       var minTemp: string | undefined;
       var pop: TemplateResult;
       var pos: TemplateResult;
+      var fireDanger: TemplateResult;
       if (this._config.entity_forecast_icon_1?.match('^weather.')) {
         // using a weather domain entity
         const iconEntity = this._config.entity_forecast_icon_1;
@@ -774,12 +775,33 @@ export class PlatinumWeatherCard extends LitElement {
             "---"}</div>` : html``;
         }
       }
+      start = this._config.entity_fire_danger_1 ? this._config.entity_fire_danger_1.match(/(\d+)(?!.*\d)/g) : false;
+      var fireDanger: TemplateResult = html``;
+      const fireDangerEntity = start && this._config.entity_fire_danger_1 ? this._config.entity_fire_danger_1.replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
+      if (start) {
+        var fireStyle = this._config.option_daily_color_fire_danger !== false && this.hass.states[fireDangerEntity].attributes.color_fill ? `background-color:${this.hass.states[fireDangerEntity].attributes.color_fill}; color:${this.hass.states[fireDangerEntity].attributes.color_text};` : "";
+        if (this._config.option_daily_color_fire_danger === false) {
+          fireDanger = start && this.hass.states[fireDangerEntity].state !== 'unknown' ? html`
+          <div class="f-firedanger-vert">${fireDangerEntity && this.hass.states[fireDangerEntity] ? this.hass.states[fireDangerEntity].state : "---"}</div>` : html``;
+        } else {
+          if (fireStyle === '') {
+            fireStyle = "font-weight:300;";
+          }
+          fireDanger = start && this.hass.states[fireDangerEntity].state !== 'unknown' ? html`
+          <div class="f-firedanger-vert">
+            <p class="fire-danger-text-color" style="${fireStyle}">${fireDangerEntity && this.hass.states[fireDangerEntity] ? this.hass.states[fireDangerEntity].state.toUpperCase() : "---"}</p>
+          </div>` : html``;
+        }
+      }
 
       htmlDays.push(html`
         <div class="day-vert fcasttooltip">
           <div class="day-vert-top">
             <div class="dayname-vert">${forecastDate ? forecastDate.toLocaleDateString(this.locale, { weekday: 'short' }) : "---"}</div>
             ${summary}
+          </div>
+          <div>
+            ${fireDanger}
           </div>
           <div class="day-vert-middle">
             <div class="day-vert-dayicon">
@@ -1341,21 +1363,23 @@ export class PlatinumWeatherCard extends LitElement {
   }
 
   get slotFireSummary(): TemplateResult {
-    const entity = this._config.entity_fire_danger_summary;
-    const fire = entity ? this.hass.states[entity].state !== 'unknown' ? this.hass.states[entity].state : "Not Applicable" : "---";
-    const fire_style = entity && this._config.option_color_fire_danger !== false && this.hass.states[entity].attributes.color_fill ? `background-color:${this.hass.states[entity].attributes.color_fill}; color:${this.hass.states[entity].attributes.color_text};` : "";
-    console.info(`fire_style=${fire_style}`);
-    if (fire_style === "") {
+    const entity = this._config.entity_fire_danger;
+    const fire = entity ? this.hass.states[entity].state !== 'unknown' ? this._config.option_color_fire_danger === false ? this.hass.states[entity].state : this.hass.states[entity].state.toLocaleUpperCase() : "Not Applicable" : "---";
+    var fireStyle = entity && this._config.option_color_fire_danger !== false && this.hass.states[entity].attributes.color_fill ? `background-color:${this.hass.states[entity].attributes.color_fill}; color:${this.hass.states[entity].attributes.color_text};` : "";
+    if (this._config.option_color_fire_danger === false) {
       return html`
       <li>
         <div class="slot">
           <div class="slot-icon">
             <ha-icon icon="mdi:fire"></ha-icon>
           </div>
-          <div class="slot-text fire-danger-text" style="${fire_style}">${fire} </div>
+          <div class="slot-text fire-danger-text" style="${fireStyle}">${fire} </div>
         </div>
       </li>`;
     } else {
+      if (fireStyle === '') {
+        fireStyle = "font-weight:300; padding-left:0px;";
+      }
       return html`
       <li>
         <div class="slot">
@@ -1363,7 +1387,7 @@ export class PlatinumWeatherCard extends LitElement {
             <ha-icon icon="mdi:fire"></ha-icon>
           </div>
           <div class="slot-text fire-danger-text">
-            <p class="fire-danger-text-color" style="${fire_style}">${fire.toUpperCase()}</p>
+            <p class="fire-danger-text-color" style="${fireStyle}">${fire}</p>
           </div>
         </div>
       </li>`;
@@ -2381,6 +2405,7 @@ export class PlatinumWeatherCard extends LitElement {
         display: inline-block;
         height: 18px;
         line-height: 20px;
+        text-align: left;
         vertical-align: middle;
         margin: 0;
         padding-left: 4px;
@@ -2489,6 +2514,11 @@ export class PlatinumWeatherCard extends LitElement {
       .f-summary-vert {
         padding-left: 1em;
         font-weight: 400;
+      }
+      .f-firedanger-vert {
+        text-align: right;
+        font-weight: 300;
+        margin-top: -24px;
       }
       .f-slot-vert {
         display: table;
