@@ -2048,7 +2048,7 @@ export class PlatinumWeatherCard extends LitElement {
       case 'fr': return "Max aujourd'hui";
       case 'de': return "Max heute";
       case 'nl': return "Max vandaag";
-      case 'pl': return "Najwyższa dziś";
+      case 'pl': return "Maks Temperatura";
       case 'he': return "מקסימלי היום";
       case 'da': return "Højeste i dag";
       case 'ru': return "Макс сегодня";
@@ -2063,7 +2063,7 @@ export class PlatinumWeatherCard extends LitElement {
       case 'fr': return "Min aujourd'hui";
       case 'de': return "Min heute";
       case 'nl': return "Min vandaag";
-      case 'pl': return "Najniższa dziś";
+      case 'pl': return "Min Temperatura";
       case 'he': return "דקות היום";
       case 'da': return "Laveste i dag";
       case 'ru': return "мин сегодня";
