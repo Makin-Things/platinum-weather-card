@@ -25,7 +25,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
   @state() private _subElementEditor: string | undefined = undefined;
 
   private _initialized = false;
-  private _config_version = 7;
+  private _config_version = 8;
 
   static elementDefinitions = {
     "ha-card": customElements.get("ha-card"),  // This works because ha-card is ALWAYS loaded before custom cards (for now)
@@ -163,6 +163,16 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
       delete tmpConfig['entity_fire_danger_summary'];
     }
 
+    if (tmpConfig.show_decimals) {
+      tmpConfig['option_show_overview_decimals'] = tmpConfig.show_decimals;
+      delete tmpConfig['show_decimals'];
+    }
+
+    if (tmpConfig.show_separator) {
+      tmpConfig['option_show_overview_separator'] = tmpConfig.show_separator;
+      delete tmpConfig['show_separator'];
+    }
+
     // Remane slot entries
     for (const slot of ['slot_l1, slot_l2, slot_l3, slot_l4, slot_l5, slot_l6, slot_l7, slot_l8, slot_r1, slot_r2, slot_r3, slot_r4, slot_r5, slot_r6, slot_r7, slot_r8']) {
       if (tmpConfig[slot] === 'daytime_high') tmpConfig[slot] = 'forecast_max';
@@ -243,12 +253,12 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     return this._config?.entity_summary || '';
   }
 
-  get _show_decimals(): boolean {
-    return this._config?.show_decimals === true; // default off
+  get _option_show_overview_decimals(): boolean {
+    return this._config?.option_show_overview_decimals === true; // default off
   }
 
-  get _show_separator(): boolean {
-    return this._config?.show_separator === true; // default off
+  get _option_show_overview_separator(): boolean {
+    return this._config?.option_show_overview_separator === true; // default off
   }
 
   get _entity_extended(): string {
@@ -1059,14 +1069,14 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
       <div class="side-by-side">
         <div>
           <mwc-formfield .label=${'Show temperature decimals'}>
-            <mwc-switch .checked=${this._show_decimals !== false} .configValue=${'show_decimals'}
+            <mwc-switch .checked=${this._option_show_overview_decimals !== false} .configValue=${'option_show_overview_decimals'}
               @change=${this._valueChanged}>
             </mwc-switch>
           </mwc-formfield>
         </div>
         <div>
           <mwc-formfield .label=${'Show separator'}>
-            <mwc-switch .checked=${this._show_separator !== false} .configValue=${'show_separator'}
+            <mwc-switch .checked=${this._option_show_overview_separator !== false} .configValue=${'option_show_overview_separator'}
               @change=${this._valueChanged}>
             </mwc-switch>
           </mwc-formfield>

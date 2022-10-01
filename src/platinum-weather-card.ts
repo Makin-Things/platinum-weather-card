@@ -300,7 +300,7 @@ export class PlatinumWeatherCard extends LitElement {
       </div>
     ` : html``;
 
-    const separator = this._config.show_separator === true ? html`<hr class=line>` : ``;
+    const separator = this._config.option_show_overview_separator === true ? html`<hr class=line>` : ``;
 
     const forecastText = (this._config.entity_summary) && (this.hass.states[this._config.entity_summary]) ?
       html`<div class="forecast-text">${entityComputeStateDisplay(this.hass.localize, this.hass.states[this._config.entity_summary], getLocale(this.hass))}</div>` ?? html`<div class="forecast-text">---</div>` : html``;
@@ -340,7 +340,7 @@ export class PlatinumWeatherCard extends LitElement {
       </div>
     ` : html``;
 
-    const separator = this._config.show_separator === true ? html`<hr class=line>` : ``;
+    const separator = this._config.option_show_overview_separator === true ? html`<hr class=line>` : ``;
 
     return html`
       <div class="overview-section section${stack}">
@@ -361,7 +361,7 @@ export class PlatinumWeatherCard extends LitElement {
   private _renderTitleOnlyOverviewSection(): TemplateResult {
     if (this._config?.show_section_overview === false) return html``;
 
-    const separator = this._config.show_separator === true ? html`<hr class=line>` : ``;
+    const separator = this._config.option_show_overview_separator === true ? html`<hr class=line>` : ``;
 
     return html`
       <div class="overview-section section">
@@ -381,7 +381,7 @@ export class PlatinumWeatherCard extends LitElement {
     const unknownDiv = weatherIcon !== 'unknown' ? html`` : html`<div class="unknown-forecast">${this.forecastIcon}</div>`;
     const biggerIcon = html`<div class="big-icon"><img src="${url.href}" width="100%" height="100%" title="${hoverText}"></div>`;
 
-    const separator = this._config.show_separator === true ? html`<hr class=line>` : ``;
+    const separator = this._config.option_show_overview_separator === true ? html`<hr class=line>` : ``;
 
     const forecastText = (this._config.entity_summary) && (this.hass.states[this._config.entity_summary]) ?
       html`<div class="forecast-text-right">${entityComputeStateDisplay(this.hass.localize, this.hass.states[this._config.entity_summary], getLocale(this.hass))}</div>` ?? html`<div class="forecast-text-right">---</div>` : html``;
@@ -1519,7 +1519,7 @@ export class PlatinumWeatherCard extends LitElement {
 
   get currentTemperature(): string {
     const entity = this._config.entity_temperature;
-    const digits = this._config.show_decimals === true ? 1 : 0;
+    const digits = this._config.option_show_overview_decimals === true ? 1 : 0;
     return entity && this.hass.states[entity]
       ? entity.match('^weather.') === null
         ? (Number(this.hass.states[entity].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits })
@@ -1531,7 +1531,7 @@ export class PlatinumWeatherCard extends LitElement {
 
   get currentApparentTemperature(): string {
     const entity = this._config.entity_apparent_temp;
-    const digits = this._config.show_decimals === true ? 1 : 0;
+    const digits = this._config.option_show_overview_decimals === true ? 1 : 0;
     return entity && this.hass.states[entity]
       ? (Number(this.hass.states[entity].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits })
       : '';
@@ -2221,7 +2221,7 @@ export class PlatinumWeatherCard extends LitElement {
     const forecastTextAlignment = this._config.forecast_text_alignment || "center";
     // var largeIconTopMargin = this._config.large_icon_top_margin || "-3.2em";
     // var largeIconLeftPos = this._config.large_icon_left_pos || "0px";
-    // var currentDataTopMargin = this._config.current_data_top_margin ? this._config.current_data_top_margin : this._config.show_separator ? "1em" : "10em"; //TODO - check if really needed, was using in variations
+    // var currentDataTopMargin = this._config.current_data_top_margin ? this._config.current_data_top_margin : this._config.option_show_overview_separator ? "1em" : "10em"; //TODO - check if really needed, was using in variations
     // var separatorTopMargin = this._config.separator_top_margin || "6em";
     // var summaryTopPadding = this._config.summary_top_padding || "2em";
     // var summaryFontSize = this._config.summary_font_size || "0.8em";

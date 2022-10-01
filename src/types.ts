@@ -37,8 +37,8 @@ export interface WeatherCardConfig extends LovelaceCardConfig {
   entity_apparent_temp?: string;
   entity_forecast_icon?: string;
   entity_summary?: string;
-  show_decimals?: boolean;
-  show_separator?: boolean;
+  option_show_overview_decimals?: boolean;
+  option_show_overview_separator?: boolean;
   entity_extended?: string;
   extended_use_attr?: boolean;
   extended_name_attr?: string;

@@ -133,17 +133,43 @@ TODO [include image of section]
 
 TODO [need to write this]
 
-# YAML Editor Options
+# YAML Reference
 
-I think we need to make it clear that this should not be used, but just added for reference.
+This reference is here for completeness. All settings can be configured using the GUI so you should not need to refer to this. The options are split into global settings and a section for each of the sections in the card.
 
-TODO [Detail the options when in yaml mode]
+## Global Settings
 
-<picture>
-  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/Makin-Things/platinum-weather-card/master/images/pencil-black.svg">
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Makin-Things/platinum-weather-card/master/images/pencil-white.svg">
-  <img alt="Shows an illustrated sun in light color mode and a moon with stars in dark color mode."  width="24">
-</picture>
+| Variable                    | Type    | Default                                                         | Description                                                         |
+| --------------------------- | ------- | --------------------------------------------------------------- | ------------------------------------------------------------------- |
+| type                        | string  | null                                                            | Must be `custom:platinum-weather-card`                              |
+| section_order               | list    | `- overview`<br>`- extended`<br>`- slots`<br>`- daily_forecast` | Specifies the order in which the sections are displayed on the card |
+| show_section_overview       | boolean | true                                                            | Specifies if the overview section is visible                        |
+| show_section_extended       | boolean | true                                                            | Specifies if the extended section is visible                        |
+| show_section_slots          | boolean | true                                                            | Specifies if the slots section is visible                           |
+| show_section_daily_forecast | boolean | true                                                            | Specifies if the daily_forecast section is visible                  |
+| tap_action                  | action  | none                                                            | Specifies what action to perform when the card is tapped            |
+| hold_action                 | action  | none                                                            | Specifies what action to perform when the card is held              |
+| option_static_icons         | boolean | false                                                           | Set to true to use non-animated icons                               |
+| option_time_format          | string  | `system`                                                        | Can be one of `system`, `12hour` or `24hour`                        |
+| option_locale               | string  | none                                                            | The locale to use when formatting timestamps                        |
+| text_update_time_prefix     | string  | none                                                            | Specifies a string to prepend to the update time                    |
+
+## Overview Settings
+
+| Variable                       | Type    | Default    | Description                                                                                                             |
+| ------------------------------ | ------- | ---------- | ----------------------------------------------------------------------------------------------------------------------- |
+| overview_layout                | string  | `complete` | Can be one of `complete`, `observations`, `forecast` or `title only`. Sets the layout to use for the overview section   |
+| option_show_overview_decimals  | boolean | `false`    | Show one decimal place on current and apparent temperature                                                              |
+| option_show_overview_separator | boolean | `false`    | Show separator at bottom of overview section                                                                            |
+| text_card_title                | string  | none       | Line 1 of the cards title                                                                                               |
+| text_card_title_2              | string  | none       | Line 2 of the cards title                                                                                               |
+| entity_update_time             | string  | none       | The name of the entity that provides the update time. It uses the entity's state unless ``update_time_use_attr` is true |
+| update_time_use_attr           | boolean | `false`    | The name of the attribute that provides the update time                                                                 |
+| update_time_name_attr          | string  | none       | The name of the attribute to use for the update time                                                                    |
+| entity_temperature             | string  | none       | The name of the entity that provides the current temperature                                                            |
+| entity_apparent_temp           | string  | none       | The name of the entity that provides the apparent (feels like) temperature                                              |
+| entity_forecast_icon           | string  | none       | The name of the entity that provides todays forecast icon                                                               |
+| entity_summary                 | string  | none       | The name of the entity that provides the short forecast summary                                                         |
 
 [license-shield]: https://img.shields.io/github/license/makin-things/platinum-weather-card.svg?style=for-the-badge
 [releases-shield]: https://img.shields.io/github/release/makin-things/platinum-weather-card.svg?style=for-the-badge
