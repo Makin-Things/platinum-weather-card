@@ -13,13 +13,13 @@ Hey dude! Help me out for a couple of :beers: or a :coffee:!
 
 [![coffee](https://www.buymeacoffee.com/assets/img/custom_images/black_img.png)](https://www.buymeacoffee.com/theOzzieRat)
 
-# Current Status
+If you like this card and would like to see me continue development of it a small donation would be greatly appreciated. I have already spent hundreds of hours working on this.
 
-Currently this is in a beta stage, but feedback is welcome. Feel free to raise github issues. I am particularly keen to get feedback from people that are not from Australian or the USA (we have those covered pretty well in a private chat group, but still log issues). If anyone wants to help with documentation (expecially if it's a how to set things up using different weather integration please raise an issue so we can talk about how to include it).
+# Need Help?
 
----
+If you need help the best place to ask is in the Home Assistant Community. There is a thread that can be found [here](https://community.home-assistant.io/t/platinum-weather-card-support/449166).
 
-TODO [The above will be removed from the readme before the first release (or at least updated).]
+Alternativley create an issue on github, but note that only a couple of people will see that and may be busy doing other things.
 
 # Overview
 
