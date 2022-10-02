@@ -170,6 +170,16 @@ A section to show the daily forecast for a specified number of days in either a 
 
 ![Platinum Weather card](https://raw.githubusercontent.com/Makin-Things/platinum-weather-card/master/images/daily-forecast-section-highlighted.png)
 
+There are two posible layouts.
+
+<caption>Horizontal</caption>
+
+![Platinum Weather card](https://raw.githubusercontent.com/Makin-Things/platinum-weather-card/master/images/daily-forecast-section-horizontal.png 'Horizontal')
+
+<caption>Vertical</caption>
+
+![Platinum Weather card](https://raw.githubusercontent.com/Makin-Things/platinum-weather-card/master/images/daily-forecast-section-vertical.png 'Vertical')
+
 TODO [include image of section]
 
 ## Global options
