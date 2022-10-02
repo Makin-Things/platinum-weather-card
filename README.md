@@ -136,7 +136,7 @@ The following table describes what each slot value is intended to show. Note tha
 | Slot Value       | Description                                | Display Sample                                                                                                                             |
 | ---------------- | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
 | Current humidity | Shows the current humidity as a percentage | <img src="https://raw.githubusercontent.com/Makin-Things/platinum-weather-card/master/images/water-percent.svg" width="18" height="18">36% |
-| Current humidity | Shows the current humidity as a percentage | <img src="https://raw.githubusercontent.com/Makin-Things/platinum-weather-card/master/images/water-percent.png">36%                        |
+| Current humidity | Shows the current humidity as a percentage | <img src="https://raw.githubusercontent.com/Makin-Things/platinum-weather-card/master/images/water-percent.png"><p>36%</p>                 |
 | Current humidity | Shows the current humidity as a percentage | 36%                                                                                                                                        |
 
 TODO [include image of section]
