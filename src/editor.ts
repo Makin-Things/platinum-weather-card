@@ -1403,7 +1403,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     return html`
       <div class="side-by-side">
         <div>
-          <mwc-formfield .label=${'Show static Icons'}>
+          <mwc-formfield .label=${'Show Static Icons'}>
             <mwc-switch .checked=${this._option_static_icons !== false} .configValue=${'option_static_icons'} @change=${this._valueChanged}>
             </mwc-switch>
           </mwc-formfield>

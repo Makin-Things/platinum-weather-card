@@ -180,13 +180,36 @@ There are two posible layouts.
 
 ![Platinum Weather card](https://raw.githubusercontent.com/Makin-Things/platinum-weather-card/master/images/daily-forecast-section-vertical.png 'Vertical')
 
-TODO [include image of section]
+The following fields are available.
+
+| Option name                           | Type    | Description                                                                                                          |
+| ------------------------------------- | ------- | -------------------------------------------------------------------------------------------------------------------- |
+| Entity Forecast Icon 1                | String  | The entity that provides the description of which icon to use                                                        |
+| Entity Forecast Summary 1             | String  | The entity that provides the short summary text                                                                      |
+| Entity Forecast Min 1                 | String  | The entity that provides the forecast minimum temperature                                                            |
+| Entity Forecast Max 1                 | String  | The entity that provides the forecast maximum temperature                                                            |
+| Entity Forecast Chance of Rain 1      | String  | The entity that provides the percentage chance of rain                                                               |
+| Entity Forecast Possible Rain 1       | String  | The entity that provide the estimated amount of rain                                                                 |
+| Entity Extended Forecast 1            | String  | The name of the entity that contains the detailed forecast                                                           |
+| &nbsp;&nbsp;&nbsp;&nbsp;Use Attribute | Boolean | If this is enabled you will then be able to choose an attribute of the above entity to use for the detailed forecast |
+| &nbsp;&nbsp;&nbsp;&nbsp;Attribute     | String  | The attribute that contains the detailed forecast                                                                    |
+| Entity Fire Danger 1                  | String  | The entity that provides the fire danger forecast                                                                    |
+
+For these entities you can either specify a weather.\* sensor (except for extended forecasts and fire danger as they aren't included in weather integrations) in which case it will use the data from the attributes, or you can use individual sensors and provide the name of the sensor for tomorrow (these sensors must have an incrementing number in their name).
 
 ## Global options
 
-A page for things that don't neatly fit in other places (ie. they have an effect on multiple sections).
+This page contains options that don't neatly fit in other places (ie. they have an effect on multiple sections).
 
-TODO [include image of section]
+![Platinum Weather card](https://raw.githubusercontent.com/Makin-Things/platinum-weather-card/master/images/global-options.png)
+
+The following fields are available.
+
+| Option name      | Type    | Description                                                                        |
+| ---------------- | ------- | ---------------------------------------------------------------------------------- |
+| Show staic icons | Boolean | Turning this on disables the use of animated icons across the entire card          |
+| Time format      | String  | Selects whether to use the system time format or explicitly set 12 or 24 hour mode |
+| Locale           | String  | Specifies a locale to pass into any conversion functions                           |
 
 # Migration from the old card
 
