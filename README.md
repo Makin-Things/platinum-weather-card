@@ -65,9 +65,6 @@ As mentioned above this new card allows you to enable/disable/reorder the sectio
 
 On the cards main configuration dialog, use the switch to completely remove a section if it is not required. This will result in that section taking up absolutely no space on the card. Use the up/down buttons to reorder the sections as desired. The Global Options contains settings that have an effect on multiple sections.
 
-TODO [All of these bits will need better expanations re: details]
-TODO [In all of these sections add and explanation of individual settings]
-
 ## Overview Section
 
 This section as the name suggests, adds an overview section to the card.
