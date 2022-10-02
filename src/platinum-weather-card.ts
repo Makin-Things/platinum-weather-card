@@ -67,7 +67,7 @@ export class PlatinumWeatherCard extends LitElement {
     // Now calculate an estimated cardsize
     const cardSize = Math.ceil(cardHeight / 50);
 
-    console.info(`Card Size=${cardSize} Card Height=${cardHeight} Overview=${overiewSectionHeight} Extended=${extendedSectionHeight} Slots=${slotsSectionHeight} DailyForecast=${dailyForecastSectionHeight}`);
+    //    console.info(`Card Size=${cardSize} Card Height=${cardHeight} Overview=${overiewSectionHeight} Extended=${extendedSectionHeight} Slots=${slotsSectionHeight} DailyForecast=${dailyForecastSectionHeight}`);
 
     return cardSize;
   }
@@ -143,7 +143,7 @@ export class PlatinumWeatherCard extends LitElement {
   protected firstUpdated(): void {
     this._resize();
     this._attachObserver();
-    console.info(`Initial cardwdith = ${this._cardWidth}`);
+    // console.info(`Initial cardwdith = ${this._cardWidth}`);
   }
 
   private _attachObserver() {
@@ -170,7 +170,7 @@ export class PlatinumWeatherCard extends LitElement {
     const card = this.shadowRoot?.querySelector('ha-card');
     if (!card) return;
     this._cardWidth = card.getBoundingClientRect().width;
-    console.info(`Resize cardwdith = ${this._cardWidth}`);
+    // console.info(`Resize cardwdith = ${this._cardWidth}`);
   }
 
   private _checkForErrors(): boolean {
