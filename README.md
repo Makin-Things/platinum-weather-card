@@ -111,9 +111,19 @@ The various entity fields can either be a sensor that provides the value in its 
 
 ## Extended Section
 
-A section that shows todays detailed forecast
+A section that shows todays detailed forecast. To use this section you will need a weather integration that provides a more detailed weather forecast (this does not exist within the standard weather.\* sensor). If it is not available for your location the best thing to do is to disable the extended section.
 
-TODO [include image of section]
+![Platinum Weather card](https://raw.githubusercontent.com/Makin-Things/platinum-weather-card/master/images/extended-section-highlighted.png)
+
+The following fields are available.
+
+| Option name                           | Type    | Description                                                                                                          |
+| ------------------------------------- | ------- | -------------------------------------------------------------------------------------------------------------------- |
+| Entity Extended Forecast              | Entity  | The name of the entity that contains the detailed forecast                                                           |
+| &nbsp;&nbsp;&nbsp;&nbsp;Use Attribute | Boolean | If this is enabled you will then be able to choose an attribute of the above entity to use for the detailed forecast |
+| &nbsp;&nbsp;&nbsp;&nbsp;Attribute     | String  | The attribute that contains the detailed forecast                                                                    |
+| Entity Today's UV Forecast            | String  | If defined the text from this entity will be appended to the detailed forecast                                       |
+| Entity Today's Fire Danger            | String  | If defined the text from this entity will be appended to the detailed forecast                                       |
 
 ## Slots Section
 
@@ -149,105 +159,105 @@ This reference is here for completeness. All settings can be configured using th
 
 | Variable                    | Type    | Default                                                         | Description                                                         |
 | --------------------------- | ------- | --------------------------------------------------------------- | ------------------------------------------------------------------- |
-| type                        | string  | null                                                            | Must be `custom:platinum-weather-card`                              |
-| section_order               | list    | `- overview`<br>`- extended`<br>`- slots`<br>`- daily_forecast` | Specifies the order in which the sections are displayed on the card |
-| show_section_overview       | boolean | `true`                                                          | Specifies if the overview section is visible                        |
-| show_section_extended       | boolean | `true`                                                          | Specifies if the extended section is visible                        |
-| show_section_slots          | boolean | `true`                                                          | Specifies if the slots section is visible                           |
-| show_section_daily_forecast | boolean | `true`                                                          | Specifies if the daily_forecast section is visible                  |
-| tap_action                  | action  | none                                                            | Specifies what action to perform when the card is tapped            |
-| hold_action                 | action  | none                                                            | Specifies what action to perform when the card is held              |
-| option_static_icons         | boolean | false                                                           | Set to true to use non-animated icons                               |
-| option_time_format          | string  | `system`                                                        | Can be one of `system`, `12hour` or `24hour`                        |
-| option_locale               | string  | none                                                            | The locale to use when formatting timestamps                        |
-| text_update_time_prefix     | string  | none                                                            | Specifies a string to prepend to the update time                    |
+| type                        | String  | null                                                            | Must be `custom:platinum-weather-card`                              |
+| section_order               | List    | `- overview`<br>`- extended`<br>`- slots`<br>`- daily_forecast` | Specifies the order in which the sections are displayed on the card |
+| show_section_overview       | Boolean | `true`                                                          | Specifies if the overview section is visible                        |
+| show_section_extended       | Boolean | `true`                                                          | Specifies if the extended section is visible                        |
+| show_section_slots          | Boolean | `true`                                                          | Specifies if the slots section is visible                           |
+| show_section_daily_forecast | Boolean | `true`                                                          | Specifies if the daily_forecast section is visible                  |
+| tap_action                  | Action  | none                                                            | Specifies what action to perform when the card is tapped            |
+| hold_action                 | Action  | none                                                            | Specifies what action to perform when the card is held              |
+| option_static_icons         | Boolean | false                                                           | Set to true to use non-animated icons                               |
+| option_time_format          | String  | `system`                                                        | Can be one of `system`, `12hour` or `24hour`                        |
+| option_locale               | String  | none                                                            | The locale to use when formatting timestamps                        |
+| text_update_time_prefix     | String  | none                                                            | Specifies a string to prepend to the update time                    |
 
 ## Overview Settings
 
 | Variable                       | Type    | Default    | Description                                                                                                             |
 | ------------------------------ | ------- | ---------- | ----------------------------------------------------------------------------------------------------------------------- |
-| overview_layout                | string  | `complete` | Can be one of `complete`, `observations`, `forecast` or `title only`. Sets the layout to use for the overview section   |
-| option_show_overview_decimals  | boolean | `false`    | Show one decimal place on current and apparent temperature                                                              |
-| option_show_overview_separator | boolean | `false`    | Show separator at bottom of overview section                                                                            |
-| text_card_title                | string  | none       | Line 1 of the cards title                                                                                               |
-| text_card_title_2              | string  | none       | Line 2 of the cards title                                                                                               |
-| entity_update_time             | string  | none       | The name of the entity that provides the update time. It uses the entity's state unless ``update_time_use_attr` is true |
-| update_time_use_attr           | boolean | `false`    | The name of the attribute that provides the update time                                                                 |
-| update_time_name_attr          | string  | none       | The name of the attribute to use for the update time                                                                    |
-| entity_temperature             | string  | none       | The name of the entity that provides the current temperature                                                            |
-| entity_apparent_temp           | string  | none       | The name of the entity that provides the apparent (feels like) temperature                                              |
-| entity_forecast_icon           | string  | none       | The name of the entity that provides todays forecast icon                                                               |
-| entity_summary                 | string  | none       | The name of the entity that provides the short forecast summary                                                         |
+| overview_layout                | String  | `complete` | Can be one of `complete`, `observations`, `forecast` or `title only`. Sets the layout to use for the overview section   |
+| option_show_overview_decimals  | Boolean | `false`    | Show one decimal place on current and apparent temperature                                                              |
+| option_show_overview_separator | Boolean | `false`    | Show separator at bottom of overview section                                                                            |
+| text_card_title                | String  | none       | Line 1 of the cards title                                                                                               |
+| text_card_title_2              | String  | none       | Line 2 of the cards title                                                                                               |
+| entity_update_time             | String  | none       | The name of the entity that provides the update time. It uses the entity's state unless ``update_time_use_attr` is true |
+| update_time_use_attr           | Boolean | `false`    | The name of the attribute that provides the update time                                                                 |
+| update_time_name_attr          | String  | none       | The name of the attribute to use for the update time                                                                    |
+| entity_temperature             | String  | none       | The name of the entity that provides the current temperature                                                            |
+| entity_apparent_temp           | String  | none       | The name of the entity that provides the apparent (feels like) temperature                                              |
+| entity_forecast_icon           | String  | none       | The name of the entity that provides todays forecast icon                                                               |
+| entity_summary                 | String  | none       | The name of the entity that provides the short forecast summary                                                         |
 
 ## Extended Section
 
 | Variable                  | Type    | Default | Description                                                                                 |
 | ------------------------- | ------- | ------- | ------------------------------------------------------------------------------------------- |
-| entity_extended           | string  | none    | The name of the entity that provides today's extended forecast                              |
-| extended_use_attr         | boolean | `false` | The name of the attribute that provides the extended forecast                               |
-| extended_name_attr        | string  | none    | The name of the attribute to use for the extended forecast                                  |
-| entity_todays_uv_forecast | string  | none    | The name of the entity that provides today's uv forecast to append to the extended forecast |
-| entity_todays_fire_danger | string  | none    | The name of the entity that provides today's fire danger to append to the extended forecast |
+| entity_extended           | String  | none    | The name of the entity that provides today's extended forecast                              |
+| extended_use_attr         | Boolean | `false` | The name of the attribute that provides the extended forecast                               |
+| extended_name_attr        | String  | none    | The name of the attribute to use for the extended forecast                                  |
+| entity_todays_uv_forecast | String  | none    | The name of the entity that provides today's uv forecast to append to the extended forecast |
+| entity_todays_fire_danger | String  | none    | The name of the entity that provides today's fire danger to append to the extended forecast |
 
 ## Slots Section
 
 | Variable                          | Type    | Default         | Description                                                      |
 | --------------------------------- | ------- | --------------- | ---------------------------------------------------------------- |
-| slot_l1                           | slot    | `forecast_max`  | The value to show in slot l1. See table below for more detail    |
-| slot_l2                           | slot    | `forecast_min`  | The value to show in slot l2. See table below for more detail    |
-| slot_l3                           | slot    | `wind`          | The value to show in slot l3. See table below for more detail    |
-| slot_l4                           | slot    | `pressure`      | The value to show in slot l4. See table below for more detail    |
-| slot_l5                           | slot    | `sun_next`      | The value to show in slot l5. See table below for more detail    |
-| slot_l6                           | slot    | `remove`        | The value to show in slot l6. See table below for more detail    |
-| slot_l7                           | slot    | `remove`        | The value to show in slot l7. See table below for more detail    |
-| slot_l8                           | slot    | `remove`        | The value to show in slot l8. See table below for more detail    |
-| slot_r1                           | slot    | `popforecast`   | The value to show in slot r1. See table below for more detail    |
-| slot_r2                           | slot    | `humidity`      | The value to show in slot r2. See table below for more detail    |
-| slot_r3                           | slot    | `uv_summary`    | The value to show in slot r3. See table below for more detail    |
-| slot_r4                           | slot    | `fire_danger`   | The value to show in slot r4. See table below for more detail    |
-| slot_r5                           | slot    | `sun_following` | The value to show in slot r5. See table below for more detail    |
-| slot_r6                           | slot    | `remove`        | The value to show in slot r6. See table below for more detail    |
-| slot_r7                           | slot    | `remove`        | The value to show in slot r7. See table below for more detail    |
-| slot_r8                           | slot    | `remove`        | The value to show in slot r8. See table below for more detail    |
-| entity_pop                        | string  | none            | Entity required for `pop` and `popforecast`                      |
-| entity_pos                        | string  | none            | Entity required for `popforecast` and `possible_today`           |
-| entity_possible_tomorrow          | string  | none            | Entity required for `possible_tomorrow`                          |
-| entity_rainfall                   | string  | none            | Entity required for `rainfall`                                   |
-| entity_humidity                   | string  | none            | Entity required for `humidity`                                   |
-| entity_pressure                   | string  | none            | Entity required for `pressure`                                   |
-| entity_observed_max               | string  | none            | Entity required for `observed_max` and `temp_maximums`           |
-| entity_observed_min               | string  | none            | Entity required for `observed_min` and `temp_minimums`           |
-| entity_forecast_max               | string  | none            | Entity required for `forecast_max` and `temp_maximums`           |
-| entity_forecast_min               | string  | none            | Entity required for `forecast_min` and `temp_minimums`           |
-| entity_temp_next                  | string  | none            | Entity required for `temp_next`                                  |
-| entity_temp_next_label            | string  | none            | Entity required for `temp_next`                                  |
-| entity_temp_following             | string  | none            | Entity required for `temp_following`                             |
-| entity_temp_following_label       | string  | none            | Entity required for `temp_following`                             |
-| entity_uv_alert_summary           | string  | none            | Entity required for `uv_summary`                                 |
-| entity_fire_danger                | string  | none            | Entity required for `fire_danger`                                |
-| entity_wind_bearing               | string  | none            | Entity required for `wind` and `wind_kt`                         |
-| entity_wind_speed                 | string  | none            | Entity required for `wind`                                       |
-| entity_wind_gust                  | string  | none            | Entity required for `wind`                                       |
-| entity_wind_gust_kt               | string  | none            | Entity required for `wind_kt`                                    |
-| entity_wind_speed_kt              | string  | none            | Entity required for `wind_kt`                                    |
-| entity_visibility                 | string  | none            | Entity required for `visibility`                                 |
-| entity_sun                        | string  | none            | Entity required for `sun_next` and `sun_following`               |
-| custom1_value                     | string  | none            | Entity required for `custom1`                                    |
-| custom1_icon                      | icon    | none            | Name of mdi icon to use for `custom1`                            |
-| custom1_units                     | string  | none            | Units to display for `custom1`                                   |
-| custom2_value                     | string  | none            | Entity required for `custom2`                                    |
-| custom2_icon                      | icon    | none            | Name of mdi icon to use for `custom2`                            |
-| custom2_units                     | string  | none            | Units to display for `custom2`                                   |
-| custom3_value                     | string  | none            | Entity required for `custom3`                                    |
-| custom3_icon                      | icon    | none            | Name of mdi icon to use for `custom3`                            |
-| custom3_units                     | string  | none            | Units to display for `custom3`                                   |
-| custom4_value                     | string  | none            | Entity required for `custom4`                                    |
-| custom4_icon                      | icon    | none            | Name of mdi icon to use for `custom4`                            |
-| custom4_units                     | string  | none            | Units to display for `custom4`                                   |
-| option_today_temperature_decimals | boolean | `false`         | Show one decimal place for temperature slots                     |
-| option_today_rainfall_decimals    | boolean | `false`         | Show one decimal place for rainfall slots                        |
-| option_pressure_decimals          | number  | `0`             | Number of decimals to show for air pressure `0`, `1`, `2` or `3` |
-| option_color_fire_danger          | boolean | `true`          | Use color attributes from fire danger if set                     |
+| slot_l1                           | Slot    | `forecast_max`  | The value to show in slot l1. See table below for more detail    |
+| slot_l2                           | Slot    | `forecast_min`  | The value to show in slot l2. See table below for more detail    |
+| slot_l3                           | Slot    | `wind`          | The value to show in slot l3. See table below for more detail    |
+| slot_l4                           | Slot    | `pressure`      | The value to show in slot l4. See table below for more detail    |
+| slot_l5                           | Slot    | `sun_next`      | The value to show in slot l5. See table below for more detail    |
+| slot_l6                           | Slot    | `remove`        | The value to show in slot l6. See table below for more detail    |
+| slot_l7                           | Slot    | `remove`        | The value to show in slot l7. See table below for more detail    |
+| slot_l8                           | Slot    | `remove`        | The value to show in slot l8. See table below for more detail    |
+| slot_r1                           | Slot    | `popforecast`   | The value to show in slot r1. See table below for more detail    |
+| slot_r2                           | Slot    | `humidity`      | The value to show in slot r2. See table below for more detail    |
+| slot_r3                           | Slot    | `uv_summary`    | The value to show in slot r3. See table below for more detail    |
+| slot_r4                           | Slot    | `fire_danger`   | The value to show in slot r4. See table below for more detail    |
+| slot_r5                           | Slot    | `sun_following` | The value to show in slot r5. See table below for more detail    |
+| slot_r6                           | Slot    | `remove`        | The value to show in slot r6. See table below for more detail    |
+| slot_r7                           | Slot    | `remove`        | The value to show in slot r7. See table below for more detail    |
+| slot_r8                           | Slot    | `remove`        | The value to show in slot r8. See table below for more detail    |
+| entity_pop                        | String  | none            | Entity required for `pop` and `popforecast`                      |
+| entity_pos                        | String  | none            | Entity required for `popforecast` and `possible_today`           |
+| entity_possible_tomorrow          | String  | none            | Entity required for `possible_tomorrow`                          |
+| entity_rainfall                   | String  | none            | Entity required for `rainfall`                                   |
+| entity_humidity                   | String  | none            | Entity required for `humidity`                                   |
+| entity_pressure                   | String  | none            | Entity required for `pressure`                                   |
+| entity_observed_max               | String  | none            | Entity required for `observed_max` and `temp_maximums`           |
+| entity_observed_min               | String  | none            | Entity required for `observed_min` and `temp_minimums`           |
+| entity_forecast_max               | String  | none            | Entity required for `forecast_max` and `temp_maximums`           |
+| entity_forecast_min               | String  | none            | Entity required for `forecast_min` and `temp_minimums`           |
+| entity_temp_next                  | String  | none            | Entity required for `temp_next`                                  |
+| entity_temp_next_label            | String  | none            | Entity required for `temp_next`                                  |
+| entity_temp_following             | String  | none            | Entity required for `temp_following`                             |
+| entity_temp_following_label       | String  | none            | Entity required for `temp_following`                             |
+| entity_uv_alert_summary           | String  | none            | Entity required for `uv_summary`                                 |
+| entity_fire_danger                | String  | none            | Entity required for `fire_danger`                                |
+| entity_wind_bearing               | String  | none            | Entity required for `wind` and `wind_kt`                         |
+| entity_wind_speed                 | String  | none            | Entity required for `wind`                                       |
+| entity_wind_gust                  | String  | none            | Entity required for `wind`                                       |
+| entity_wind_gust_kt               | String  | none            | Entity required for `wind_kt`                                    |
+| entity_wind_speed_kt              | String  | none            | Entity required for `wind_kt`                                    |
+| entity_visibility                 | String  | none            | Entity required for `visibility`                                 |
+| entity_sun                        | String  | none            | Entity required for `sun_next` and `sun_following`               |
+| custom1_value                     | String  | none            | Entity required for `custom1`                                    |
+| custom1_icon                      | Icon    | none            | Name of mdi icon to use for `custom1`                            |
+| custom1_units                     | String  | none            | Units to display for `custom1`                                   |
+| custom2_value                     | String  | none            | Entity required for `custom2`                                    |
+| custom2_icon                      | Icon    | none            | Name of mdi icon to use for `custom2`                            |
+| custom2_units                     | String  | none            | Units to display for `custom2`                                   |
+| custom3_value                     | String  | none            | Entity required for `custom3`                                    |
+| custom3_icon                      | Icon    | none            | Name of mdi icon to use for `custom3`                            |
+| custom3_units                     | String  | none            | Units to display for `custom3`                                   |
+| custom4_value                     | String  | none            | Entity required for `custom4`                                    |
+| custom4_icon                      | Icon    | none            | Name of mdi icon to use for `custom4`                            |
+| custom4_units                     | String  | none            | Units to display for `custom4`                                   |
+| option_today_temperature_decimals | Boolean | `false`         | Show one decimal place for temperature slots                     |
+| option_today_rainfall_decimals    | Boolean | `false`         | Show one decimal place for rainfall slots                        |
+| option_pressure_decimals          | Number  | `0`             | Number of decimals to show for air pressure `0`, `1`, `2` or `3` |
+| option_color_fire_danger          | Boolean | `true`          | Use color attributes from fire danger if set                     |
 
 | Slot              | Description                                                            |
 | ----------------- | ---------------------------------------------------------------------- |
@@ -284,11 +294,11 @@ This reference is here for completeness. All settings can be configured using th
 
 | Variable                       | Type    | Default      | Description                                                                |
 | ------------------------------ | ------- | ------------ | -------------------------------------------------------------------------- |
-| daily_forecast_layout          | string  | `horizontal` | Format for layout `horizontal` or `vertical`                               |
-| daily_forecast_days            | number  | `5`          | Number of days to include in forecast. `horizontal (1-5)` `vertical (1-7)` |
-| option_tooltips                | boolean | `false`      | Show forecast tooltips on horizontal forecast                              |
-| daily_extended_forecast_days   | number  | `7`          | Show extended forecast. (only for vertical forecast `(1-7)`)               |
-| option_daily_color_fire_danger | boolean | `true`       | Use color attributes from fire danger if set (oly for vertical forecast)   |
+| daily_forecast_layout          | String  | `horizontal` | Format for layout `horizontal` or `vertical`                               |
+| daily_forecast_days            | Number  | `5`          | Number of days to include in forecast. `horizontal (1-5)` `vertical (1-7)` |
+| option_tooltips                | Boolean | `false`      | Show forecast tooltips on horizontal forecast                              |
+| daily_extended_forecast_days   | Number  | `7`          | Show extended forecast. (only for vertical forecast `(1-7)`)               |
+| option_daily_color_fire_danger | Boolean | `true`       | Use color attributes from fire danger if set (oly for vertical forecast)   |
 
 [license-shield]: https://img.shields.io/github/license/makin-things/platinum-weather-card.svg?style=for-the-badge
 [releases-shield]: https://img.shields.io/github/release/makin-things/platinum-weather-card.svg?style=for-the-badge
