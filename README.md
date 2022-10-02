@@ -166,7 +166,9 @@ The following table describes what each slot value is intended to show. Note tha
 
 ## Daily Forecast Section
 
-Shows the next x days of forecast info in either a horizontal or vertical layout
+A section to show the daily forecast for a specified number of days in either a horizontal or vertical layout.
+
+![Platinum Weather card](https://raw.githubusercontent.com/Makin-Things/platinum-weather-card/master/images/daily-forecast-section-highlighted.png)
 
 TODO [include image of section]
 
