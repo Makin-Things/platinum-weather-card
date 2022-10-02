@@ -1129,10 +1129,10 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
       <mwc-list-item value="wind">Current wind conditions</mwc-list-item>
       <mwc-list-item value="wind_kt">Current wind conditions kts</mwc-list-item>
       <mwc-list-item value="visibility">Current visibility</mwc-list-item>
-      <mwc-list-item value="observed_max">Today's Observed max</mwc-list-item>
-      <mwc-list-item value="observed_min">Today's Observed min</mwc-list-item>
-      <mwc-list-item value="forecast_max">Today's Forecast max</mwc-list-item>
-      <mwc-list-item value="forecast_min">Today's Forecast min</mwc-list-item>
+      <mwc-list-item value="observed_max">Today's observed max</mwc-list-item>
+      <mwc-list-item value="observed_min">Today's observed min</mwc-list-item>
+      <mwc-list-item value="forecast_max">Today's forecast max</mwc-list-item>
+      <mwc-list-item value="forecast_min">Today's forecast min</mwc-list-item>
       <mwc-list-item value="temp_next">Next temp min/max</mwc-list-item>
       <mwc-list-item value="temp_following">Following temp min/max</mwc-list-item>
       <mwc-list-item value="temp_maximums">Observed/forecast max</mwc-list-item>
@@ -1143,7 +1143,7 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
       <mwc-list-item value="popforecast">Rainfall forecast</mwc-list-item>
       <mwc-list-item value="possible_today">Today's forecast rainfall</mwc-list-item>
       <mwc-list-item value="possible_tomorrow">Tomorrow's forecast rainfall</mwc-list-item>
-      <mwc-list-item value="uv_summary">Today's UV forecast</mwc-list-item>
+      <mwc-list-item value="uv_summary">Today's uv forecast</mwc-list-item>
       <mwc-list-item value="fire_danger">Today's fire danger</mwc-list-item>
       <mwc-list-item value="custom1">Custom entity 1</mwc-list-item>
       <mwc-list-item value="custom2">Custom entity 2</mwc-list-item>

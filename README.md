@@ -133,11 +133,36 @@ A section to show a set of data in 2 columns (with up to 8 rows). This section i
 
 The following table describes what each slot value is intended to show. Note that what is available is very dependant on the weather integration in use.
 
-| Slot Value       | Description                                | Display Sample |
-| ---------------- | ------------------------------------------ | -------------- |
-| Current humidity | Shows the current humidity as a percentage | 36%            |
-
-TODO [include image of section]
+| Slot Value                   | Description                                                                                           | Display Sample           |
+| ---------------------------- | ----------------------------------------------------------------------------------------------------- | ------------------------ |
+| Current humidity             | Shows the current humidity as a percentage                                                            | 36%                      |
+| Today's recorded rainfall    | The amount of rain that has fallen today                                                              | 5mm                      |
+| Current air pressure         | The current atmopheric air pressure                                                                   | 1018hPa                  |
+| Current wind conditions      | The current direction, speed and gust speed. If any element is missing it is removed from the display | SSE 9km/h (Gust 13km/h)  |
+| Current wind conditions kts  | The current direction, speed and gust speed. If any element is missing it is removed from the display | SSE 5Kt (Gust 6Kt)       |
+| Current visibility           | The current visibility. Most likely only available for airports                                       | 70km                     |
+| Today's observed Max         | The maximum temperature recorded so far today                                                         | Observed Max 19°C        |
+| Today's observed Min         | The minimum temperature recorded so far today                                                         | Observed Min 4°C         |
+| Today's forecast Max         | The maximum temperature recorded so far today                                                         | Observed Max 19°C        |
+| Today's forecast Min         | The minimum temperature recorded so far today                                                         | Observed Min 4°C         |
+| Next temp min/max            | The next chronologically occuring minimum or maximum                                                  | Overnight Min 4°C        |
+| Following temp min/max       | The following chronologically occuring minimum or maximum                                             | Tomorrow's Max 20°C      |
+| Observed/forecast max        | Todays observer maximum and forecast maximums                                                         | Obs Max 19°C (Fore 19°C) |
+| Observed/forecast min        | Todays observer maximum and forecast minimums                                                         | Obs Min 4°C (Fore 5°C)   |
+| Next sun rise/set time       | The time of the next chronologically occuring sunrise or sunset                                       | 7:10pm                   |
+| Following sun rise/set time  | The time of the following chronologically occuring sunrise or sunset                                  | Mon 6:35am               |
+| Chance of rain               | The percentage chance of rain for today                                                               | 10%                      |
+| Rainfall forecast            | A comination of the percentage chance of rain and the estimated amount                                | 10% - 3 to 6mm           |
+| Today's forecast rainfall    | The estimated amount of rain today                                                                    | Forecast 3 to 6mm        |
+| Tomorrow's forecast rainfall | The estimated amount of rain tomorrow                                                                 | Fore Tom 1 to 3mm        |
+| Today's uv forecast          | The forecast maximum uv level for today                                                               | UV Extreme               |
+| Today's fire danger          | The forecast fire danger for today                                                                    | Moderate                 |
+| Custom entity 1              | Create a custom entity by specifying an icon, entity and unit                                         |                          |
+| Custom entity 2              | Create a custom entity by specifying an icon, entity and unit                                         |                          |
+| Custom entity 3              | Create a custom entity by specifying an icon, entity and unit                                         |                          |
+| Custom entity 4              | Create a custom entity by specifying an icon, entity and unit                                         |                          |
+| Blank slot                   | Show an empty slot                                                                                    |                          |
+| Remove slot                  | Remove the slot. Any slot below will move up                                                          |                          |
 
 ## Daily Forecast Section
 
