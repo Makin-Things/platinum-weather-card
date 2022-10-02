@@ -133,9 +133,9 @@ A section to show a set of data in 2 columns (with up to 8 rows). This section i
 
 The following table describes what each slot value is intended to show. Note that what is available is very dependant on the weather integration in use.
 
-| Slot Value       | Description                                | Display Sample                     |
-| ---------------- | ------------------------------------------ | ---------------------------------- |
-| Current humidity | Shows the current humidity as a percentage | ![water-percent][water-percent]36% |
+| Slot Value       | Description                                | Display Sample                                                                                                                             |
+| ---------------- | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| Current humidity | Shows the current humidity as a percentage | <img src="https://raw.githubusercontent.com/Makin-Things/platinum-weather-card/master/images/water-percent.svg" width="21" height="21">36% |
 
 TODO [include image of section]
 
@@ -311,4 +311,3 @@ This reference is here for completeness. All settings can be configured using th
 [license-shield]: https://img.shields.io/github/license/makin-things/platinum-weather-card.svg?style=for-the-badge
 [releases-shield]: https://img.shields.io/github/release/makin-things/platinum-weather-card.svg?style=for-the-badge
 [releases]: https://github.com/makin-things/platinum-weather-card/releases
-[water-percent]: https://raw.githubusercontent.com/Makin-Things/platinum-weather-card/master/images/water-percent.svg 'water-percent'
