@@ -760,7 +760,6 @@ export class PlatinumWeatherCard extends LitElement {
       }
       start = this._config.entity_extended_1 && i < (this._config.daily_extended_forecast_days !== 0 ? this._config.daily_extended_forecast_days || 7 : 0) ? this._config.entity_extended_1.match(/(\d+)(?!.*\d)/g) : false;
       var extended: TemplateResult = html``;
-      console.info(`ext_days=${(this._config.daily_extended_forecast_days ? this._config.daily_extended_forecast_days : 7)}`);
       if (i < (this._config.daily_extended_forecast_days ? this._config.daily_extended_forecast_days : 7)) {
         if (this._config.daily_extended_use_attr === true) {
           start = this._config.entity_extended_1 ? this._config.entity_extended_1.match(/(\d+)(?!.*\d)/g) : false;
