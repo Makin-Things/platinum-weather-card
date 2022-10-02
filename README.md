@@ -135,7 +135,11 @@ TODO [include image of section]
 
 # Migration from the old card
 
-TODO [need to write this]
+Migration from the older [Custom Animated Weather Card](https://github.com/DavidFW1960/bom-weather-card) is straight forward. It is recommended that you create a new card rather so that your current cards config is preserved until you are happy with the new cards configuration.
+
+Create a new Platinum Weather Card, switch to the Code Editor (YAML mode) and simply paste in the contents of your existing configuration, making sure to keep the new `type: custom:platinum-weather-card`. At this stage some elements may not appear correctly. Save the card and then edit it again (the editor updates the configuration when opened if it detects an older config and performs some update tasks) and then save it once more.
+
+If there are still items that don't look correct you will need to manually adjust those to suit.
 
 # YAML Reference
 
