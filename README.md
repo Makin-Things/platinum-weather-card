@@ -133,9 +133,14 @@ A section to show a set of data in 2 columns (with up to 8 rows). This section i
 
 The following table describes what each slot value is intended to show. Note that what is available is very dependant on the weather integration in use.
 
-| Slot Value       | Description                                | Display Sample                                                                                                                 |
-| ---------------- | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------ |
-| Current humidity | Shows the current humidity as a percentage | <img src="https://raw.githubusercontent.com/Makin-Things/platinum-weather-card/master/images/water-percent.svg" width="24">36% |
+| Slot Value       | Description                                | Display Sample |
+| ---------------- | ------------------------------------------ | -------------- |
+| Current humidity | Shows the current humidity as a percentage | <picture>      |
+
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/Makin-Things/platinum-weather-card/master/images/pencil-black.svg">
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Makin-Things/platinum-weather-card/master/images/pencil-white.svg">
+  <img alt="Shows an illustrated sun in light color mode and a moon with stars in dark color mode."  width="24">
+</picture>36% |
 
 TODO [include image of section]
 
