@@ -127,7 +127,9 @@ The following fields are available.
 
 ## Slots Section
 
-A section to show a bunch of data in 2 colums (up to 8 rows).
+A section to show a set of data in 2 columns (with up to 8 rows). This section is highly configurable. As you select different options for the slots the set of entities that are needed gets dynamically updated to indicate what options should be set.
+
+![Platinum Weather card](https://raw.githubusercontent.com/Makin-Things/platinum-weather-card/master/images/slots-section-highlighted.png)
 
 TODO [include image of section]
 
