@@ -274,11 +274,13 @@ This reference is here for completeness. All settings can be configured using th
 
 ## Daily Forecast Section
 
-| Variable                     | Type   | Default      | Description                                                                |
-| ---------------------------- | ------ | ------------ | -------------------------------------------------------------------------- |
-| daily_forecast_layout        | string | `horizontal` | Format for layout `horizontal` or `vertical`                               |
-| daily_forecast_days          | number | `5`          | Number of days to include in forecast. `horizontal (1-5)` `vertical (1-7)` |
-| daily_extended_forecast_days | number | `7`          | Only for vertical forecast `(1-7)`                                         |
+| Variable                       | Type    | Default      | Description                                                                |
+| ------------------------------ | ------- | ------------ | -------------------------------------------------------------------------- |
+| daily_forecast_layout          | string  | `horizontal` | Format for layout `horizontal` or `vertical`                               |
+| daily_forecast_days            | number  | `5`          | Number of days to include in forecast. `horizontal (1-5)` `vertical (1-7)` |
+| option_tooltips                | boolean | `false`      | Show forecast tooltips on horizontal forecast                              |
+| daily_extended_forecast_days   | number  | `7`          | Show extended forecast. (only for vertical forecast `(1-7)`)               |
+| option_daily_color_fire_danger | boolean | `true`       | Use color attributes from fire danger if set (oly for vertical forecast)   |
 
 [license-shield]: https://img.shields.io/github/license/makin-things/platinum-weather-card.svg?style=for-the-badge
 [releases-shield]: https://img.shields.io/github/release/makin-things/platinum-weather-card.svg?style=for-the-badge
