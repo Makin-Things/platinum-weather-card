@@ -74,7 +74,7 @@ This section as the name suggests, adds an overview section to the card.
 
 ![Platinum Weather card](https://raw.githubusercontent.com/Makin-Things/platinum-weather-card/master/images/overview-section-highlighted.png)
 
-There are 3 different layout options to choose from for the overview section. There are 'complete', 'observations' and 'forecast'.
+There are 4 different layout options to choose from for the overview section. There are 'complete', 'observations', 'forecast' and 'title only'.
 
 <caption>Complete</caption>
 
@@ -87,6 +87,10 @@ There are 3 different layout options to choose from for the overview section. Th
 <caption>Forecast</caption>
 
 ![Platinum Weather card](https://raw.githubusercontent.com/Makin-Things/platinum-weather-card/master/images/overview-section-forecast.png 'Forecast')
+
+<caption>Title Only</caption>
+
+![Platinum Weather card](https://raw.githubusercontent.com/Makin-Things/platinum-weather-card/master/images/overview-section-title-only.png 'Title Only')
 
 The fields available to fill in will be altered based on the layout chosen.
 
