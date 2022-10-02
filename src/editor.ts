@@ -537,10 +537,6 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     return this._config?.daily_extended_name_attr || '';
   }
 
-  get _option_daily_show_extended(): boolean {
-    return this._config?.option_daily_show_extended === true; // default off
-  }
-
   get _option_today_temperature_decimals(): boolean {
     return this._config?.option_today_temperature_decimals === true; // default off
   }
@@ -1385,23 +1381,18 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
               <mwc-formfield .label=${'Enable forecast tooltips'}>
                 <mwc-switch .checked = ${this._option_tooltips !== false} .configValue = ${'option_tooltips'} @change=${this._valueChanged}>
                 </mwc-switch>
-              </mwc-formfield>` : html`
-              <mwc-formfield .label=${'Show extended forecast'}>
-                <mwc-switch .checked = ${this._option_daily_show_extended !== false} .configValue = ${'option_daily_show_extended'} @change=${this._valueChanged}>
-                </mwc-switch>
-              </mwc-formfield>
-              `}
+              </mwc-formfield>` : html``}
           </div>
           <div></div>
         </div>
         <div class="side-by-side">
-        <div>
+        ${this._daily_forecast_layout === 'vertical' ? html`<div>
           <mwc-formfield .label=${'Colour Fire Danger'}>
             <mwc-switch .checked=${this._option_daily_color_fire_danger !== false} .configValue=${'option_daily_color_fire_danger'}
               @change=${this._valueChanged}>
             </mwc-switch>
           </mwc-formfield>
-        </div>
+        </div>` : html``}
         <div>
         </div>
       </div>

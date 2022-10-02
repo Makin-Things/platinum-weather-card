@@ -277,7 +277,7 @@ This reference is here for completeness. All settings can be configured using th
 | Variable                     | Type   | Default      | Description                                                                |
 | ---------------------------- | ------ | ------------ | -------------------------------------------------------------------------- |
 | daily_forecast_layout        | string | `horizontal` | Format for layout `horizontal` or `vertical`                               |
-| daily_forecast_days          | number | `5` or `7`   | Number of days to include in forecast. `horizontal (1-5)` `vertical (1-7)` |
+| daily_forecast_days          | number | `5`          | Number of days to include in forecast. `horizontal (1-5)` `vertical (1-7)` |
 | daily_extended_forecast_days | number | `7`          | Only for vertical forecast `(1-7)`                                         |
 
 [license-shield]: https://img.shields.io/github/license/makin-things/platinum-weather-card.svg?style=for-the-badge

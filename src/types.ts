@@ -116,8 +116,6 @@ export interface WeatherCardConfig extends LovelaceCardConfig {
   option_pressure_decimals?: pressureDecimals;
   option_color_fire_danger?: boolean;
 
-  option_daily_show_extended?: boolean;
-
   option_locale?: string;
   option_static_icons?: boolean;
   option_time_format?: timeFormat;
