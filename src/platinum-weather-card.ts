@@ -644,11 +644,15 @@ export class PlatinumWeatherCard extends LitElement {
       if (this._config.entity_summary_1?.match('^weather.')) {
         const tooltipEntity = this._config.entity_summary_1;
         const tooltipData = this._getForecastPropFromWeather(this.hass.states[tooltipEntity].attributes.forecast, forecastDate, 'detailed_description') ?? this._getForecastPropFromWeather(this.hass.states[tooltipEntity].attributes.forecast, forecastDate, 'condition');
-        tooltip = html`<div class="fcasttooltiptext" id="fcast-summary-${i}">${this.hass.states[tooltipEntity] && tooltipData !== undefined ? stringComputeStateDisplay(this.hass.localize, tooltipData) : "---"}</div>`;
+        tooltip = html`<div class="fcasttooltiptext" id="fcast-summary-${i}" style="width:${days * 100}%;left:-${i * 100}%;">${this.hass.states[tooltipEntity] && tooltipData !== undefined ? stringComputeStateDisplay(this.hass.localize, tooltipData) : "---"}
+            <span style="content:'';position:absolute;top:100%;left:${(100 / days / 2) + i * (100 / days)}%;margin-left:-5px;border-width:5px;border-style:solid;border-color:#FFA100 transparent transparent transparent;"></span>
+          </div>`;
       } else {
         start = this._config.entity_summary_1 ? this._config.entity_summary_1.match(/(\d+)(?!.*\d)/g) : false;
         const tooltipEntity = start && this._config.entity_summary_1 ? this._config.entity_summary_1.replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
-        tooltip = html`<div class="fcasttooltiptext" id="fcast-summary-${i}">${this._config.option_tooltips && tooltipEntity ? this.hass.states[tooltipEntity] ? this.hass.states[tooltipEntity].state : "---" : ""}</div>`;
+        tooltip = html`<div class="fcasttooltiptext" id="fcast-summary-${i}" style="width:${days * 100}%;left:-${i * 100}%;">${this._config.option_tooltips && tooltipEntity ? this.hass.states[tooltipEntity] ? this.hass.states[tooltipEntity].state : "---" : ""}
+            <span style="content:'';position:absolute;top:100%;left:${(100 / days / 2) + i * (100 / days)}%;margin-left:-5px;border-width:5px;border-style:solid;border-color:#FFA100 transparent transparent transparent;"></span>
+          </div>`;
       }
 
       htmlDays.push(html`
@@ -2197,34 +2201,11 @@ export class PlatinumWeatherCard extends LitElement {
   // https://lit.dev/docs/components/styles/
   get styles(): CSSResult {
     // Get config flags or set defaults if not configured
-    const tooltipBGColor = this._config.tooltip_bg_color || "rgb( 75,155,239)";
-    const tooltipFGColor = this._config.tooltip_fg_color || "#fff";
-    const tooltipBorderColor = this._config.tooltip_border_color || "rgb(255,161,0)";
-    const tooltipBorderWidth = this._config.tooltip_border_width || "1";
-    const tooltipCaretSize = this._config.tooltip_caret_size || "5";
-    const tooltipWidth = this._config.tooltip_width || "110";
-    // const tooltipLeftOffset = this._config.tooltip_left_offset || "-12";
     const tooltipVisible = this._config.option_tooltips ? "visible" : "hidden";
-    // const tempTopMargin = this._config.temp_top_margin || "0px";
     const tempFontWeight = this._config.temp_font_weight || "300";
     const tempFontSize = this._config.temp_font_size || "4em";
-    // const tempRightPos = this._config.temp_right_pos || "0.85em";
-    // const tempUOMTopMargin = this._config.temp_uom_top_margin || "-12px";
-    // const tempUOMRightMargin = this._config.temp_uom_right_margin || "4px";
-    // var apparentTopMargin = this._config.apparent_top_margin || "45px";
-    // var apparentRightPos =  this._config.apparent_right_pos || "1em";
-    // var apparentRightMargin = this._config.apparent_right_margin || "1em";
-    // var forecastTextTopMargin = this._config.current_text_top_margin || "4.5em";
-    // var forecastTextLeftPos = this._config.current_text_left_pos || "0px";
     const forecastTextFontSize = this._config.forecast_text_font_size || "21px";
-    // var forecastTextWidth = this._config.forecast_text_width || "100%";
     const forecastTextAlignment = this._config.forecast_text_alignment || "center";
-    // var largeIconTopMargin = this._config.large_icon_top_margin || "-3.2em";
-    // var largeIconLeftPos = this._config.large_icon_left_pos || "0px";
-    // var currentDataTopMargin = this._config.current_data_top_margin ? this._config.current_data_top_margin : this._config.option_show_overview_separator ? "1em" : "10em"; //TODO - check if really needed, was using in variations
-    // var separatorTopMargin = this._config.separator_top_margin || "6em";
-    // var summaryTopPadding = this._config.summary_top_padding || "2em";
-    // var summaryFontSize = this._config.summary_font_size || "0.8em";
 
     return css`
       .card {
@@ -2420,14 +2401,15 @@ export class PlatinumWeatherCard extends LitElement {
         clear: both;
       }
       .daily-forecast-horiz-section .day-horiz:nth-last-child(1) {
-        border-right: none;
+        border-right: transparent;
       }
       .day-horiz {
         flex: 1;
         float: left;
         text-align: center;
         color: var(--primary-text-color);
-        border-right: .1em solid #d9d9d9;
+        border-right: 1px solid #d9d9d9;
+        margin-right: -1px;
         box-sizing: border-box;
       }
       .daily-forecast-vert-section {
@@ -2590,32 +2572,17 @@ export class PlatinumWeatherCard extends LitElement {
       }
       .fcasttooltip .fcasttooltiptext {
         visibility: hidden;
-        width: ${unsafeCSS(tooltipWidth)}px;
-        background-color: ${unsafeCSS(tooltipBGColor)};
-        color: ${unsafeCSS(tooltipFGColor)};
+        background-color: #4B9BEF;
+        color: #FFFFFF;
         text-align: center;
         border-radius: 6px;
         border-style: solid;
-        border-color: ${unsafeCSS(tooltipBorderColor)};
-        border-width: ${unsafeCSS(tooltipBorderWidth)}px;
+        border-color: #FFA100;
+        border-width: 1px;
         padding: 5px 0;
-        /* Position the tooltip */
         position: absolute;
         z-index: 1;
-        bottom: 100%;
-        left: 50%;
-        -webkit-transform: translateX(-50%); /* Safari iOS */
-        transform: translateX(-50%);
-      }
-      .fcasttooltip .fcasttooltiptext:after {
-        content: "";
-        position: absolute;
-        top: 100%;
-        left: 50%;
-        margin-left: -${unsafeCSS(tooltipCaretSize)}px;
-        border-width: ${unsafeCSS(tooltipCaretSize)}px;
-        border-style: solid;
-        border-color: ${unsafeCSS(tooltipBorderColor)} transparent transparent transparent;
+        bottom: 105%;
       }
       .fcasttooltip:hover .fcasttooltiptext {
         visibility: ${unsafeCSS(tooltipVisible)};
