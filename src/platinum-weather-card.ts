@@ -1080,7 +1080,7 @@ export class PlatinumWeatherCard extends LitElement {
           <div class="slot-icon">
             <ha-icon icon="mdi:weather-rainy"></ha-icon>
           </div>
-          <div class="slot-text pop-text">${pop}</div>${pop_units}<div class="slot-text">&nbsp;-&nbsp;</div>
+          <div class="slot-text pop-text">${pop}</div>${pop_units}<div class="slot-text">&nbsp;</div>
           <div class="slot-text pop-text-today">${pos}</div>${pos_units}
         </div>
       </li>
