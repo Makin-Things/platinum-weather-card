@@ -644,14 +644,14 @@ export class PlatinumWeatherCard extends LitElement {
       if (this._config.entity_summary_1?.match('^weather.')) {
         const tooltipEntity = this._config.entity_summary_1;
         const tooltipData = this._getForecastPropFromWeather(this.hass.states[tooltipEntity].attributes.forecast, forecastDate, 'detailed_description') ?? this._getForecastPropFromWeather(this.hass.states[tooltipEntity].attributes.forecast, forecastDate, 'condition');
-        tooltip = html`<div class="fcasttooltiptext" id="fcast-summary-${i}" style="width:${days * 100}%;left:-${i * 100}%;">${this.hass.states[tooltipEntity] && tooltipData !== undefined ? stringComputeStateDisplay(this.hass.localize, tooltipData) : "---"}
-            <span style="content:'';position:absolute;top:100%;left:${(100 / days / 2) + i * (100 / days)}%;margin-left:-5px;border-width:5px;border-style:solid;border-color:#FFA100 transparent transparent transparent;"></span>
+        tooltip = html`<div class="fcasttooltipblock" id="fcast-summary-${i}" style="width:${days * 100}%;left:-${i * 100}%;"><div class="fcasttooltiptext">${this.hass.states[tooltipEntity] && tooltipData !== undefined ? stringComputeStateDisplay(this.hass.localize, tooltipData) : "---"}</div>
+            <span style="content:'';position:absolute;top:100%;left:${(100 / days / 2) + i * (100 / days)}%;margin-left:-7.5px;border-width:7.5px;border-style:solid;border-color:#FFA100 transparent transparent transparent;"></span>
           </div>`;
       } else {
         start = this._config.entity_summary_1 ? this._config.entity_summary_1.match(/(\d+)(?!.*\d)/g) : false;
         const tooltipEntity = start && this._config.entity_summary_1 ? this._config.entity_summary_1.replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
-        tooltip = html`<div class="fcasttooltiptext" id="fcast-summary-${i}" style="width:${days * 100}%;left:-${i * 100}%;">${this._config.option_tooltips && tooltipEntity ? this.hass.states[tooltipEntity] ? this.hass.states[tooltipEntity].state : "---" : ""}
-            <span style="content:'';position:absolute;top:100%;left:${(100 / days / 2) + i * (100 / days)}%;margin-left:-5px;border-width:5px;border-style:solid;border-color:#FFA100 transparent transparent transparent;"></span>
+        tooltip = html`<div class="fcasttooltipblock" id="fcast-summary-${i}" style="width:${days * 100}%;left:-${i * 100}%;"><div class="fcasttooltiptext">${this._config.option_tooltips && tooltipEntity ? this.hass.states[tooltipEntity] ? this.hass.states[tooltipEntity].state : "---" : ""}</div>
+            <span style="content:'';position:absolute;top:100%;left:${(100 / days / 2) + i * (100 / days)}%;margin-left:-7.5px;border-width:7.5px;border-style:solid;border-color:#FFA100 transparent transparent transparent;"></span>
           </div>`;
       }
 
@@ -663,8 +663,8 @@ export class PlatinumWeatherCard extends LitElement {
             ${minMax}
             ${pop}
             ${pos}
-            ${tooltip}
           </ul>
+          ${tooltip}
         </div>
       `);
     }
@@ -2397,7 +2397,7 @@ export class PlatinumWeatherCard extends LitElement {
         display: flex;
         flex-flow: row wrap;
         width: 100%;
-        margin: 0 auto;
+        margin: 0;
         clear: both;
       }
       .daily-forecast-horiz-section .day-horiz:nth-last-child(1) {
@@ -2570,7 +2570,7 @@ export class PlatinumWeatherCard extends LitElement {
         position: relative;
         display: inline-block;
       }
-      .fcasttooltip .fcasttooltiptext {
+      .fcasttooltip .fcasttooltipblock {
         visibility: hidden;
         background-color: #4B9BEF;
         color: #FFFFFF;
@@ -2582,10 +2582,15 @@ export class PlatinumWeatherCard extends LitElement {
         padding: 5px 0;
         position: absolute;
         z-index: 1;
-        bottom: 105%;
+        bottom: 107%;
+        margin-left: -2px;
       }
-      .fcasttooltip:hover .fcasttooltiptext {
+      .fcasttooltip:hover .fcasttooltipblock {
         visibility: ${unsafeCSS(tooltipVisible)};
+      }
+      .fcasttooltiptext {
+        padding-left: 8px;
+        padding-right: 8px;
       }
     `;
   }
