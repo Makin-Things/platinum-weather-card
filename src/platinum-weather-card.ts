@@ -2070,7 +2070,7 @@ export class PlatinumWeatherCard extends LitElement {
       case 'pl': return "Min Temperatura";
       case 'he': return "דקות היום";
       case 'da': return "Laveste i dag";
-      case 'ru': return "мин сегодня";
+      case 'ru': return "Мин сегодня";
       case 'ua': return "Мін сьогодні";
       default: return "Forecast Min";
     }
