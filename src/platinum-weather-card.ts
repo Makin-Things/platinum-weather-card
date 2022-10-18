@@ -835,8 +835,8 @@ export class PlatinumWeatherCard extends LitElement {
   }
 
   private _getForecastPropFromWeather(forecast: Array<any>, date: Date, propKey: string): string | undefined {
-    const day = date.toISOString().substring(0, 10);
-    const forecastForThisDay = forecast.filter(o => o.datetime?.substring(0, 10) === day);
+    const day = date.toDateString();
+    const forecastForThisDay = forecast.filter(o => new Date(o.datetime).toDateString() === day);
     if (forecastForThisDay.length === 1) {
       return forecastForThisDay[0][propKey] !== undefined ? String(forecastForThisDay[0][propKey]) : undefined;
     }
