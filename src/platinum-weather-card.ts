@@ -189,37 +189,35 @@ export class PlatinumWeatherCard extends LitElement {
         // check if we have a weather domain as the entity
         if (this._config[entityName].match('^weather.')) {
           // we are dealing with the weather domain
-          // check that attributes exist for all the days
-          for (var _i = 1; _i <= days; _i++) {
-            const forecastDate = new Date();
-            forecastDate.setDate(forecastDate.getDate() + _i);
-            switch (entityName) {
-              case 'entity_forecast_icon_1':
-                if (this._getForecastPropFromWeather(entity.attributes.forecast, forecastDate, 'condition') === undefined) {
-                  this._error.push(`'${entityName} attribute forecast[${_i}].condition not found`);
-                }
-                break
-              case 'entity_forecast_min_1':
-                if (this._getForecastPropFromWeather(entity.attributes.forecast, forecastDate, 'templow') === undefined) {
-                  this._error.push(`'${entityName} attribute forecast[${_i}].templow not found`);
-                }
-                break
-              case 'entity_forecast_max_1':
-                if (this._getForecastPropFromWeather(entity.attributes.forecast, forecastDate, 'temperature') === undefined) {
-                  this._error.push(`'${entityName} attribute forecast[${_i}].temperature not found`);
-                }
-                break;
-              case 'entity_pop_1':
-                if (this._getForecastPropFromWeather(entity.attributes.forecast, forecastDate, 'precipitation_probability') === undefined) {
-                  this._error.push(`'${entityName} attribute forecast[${_i}].precipitation_probability not found`);
-                }
-                break;
-              case 'entity_pos_1':
-                if (this._getForecastPropFromWeather(entity.attributes.forecast, forecastDate, 'precipitation') === undefined) {
-                  this._error.push(`'${entityName} attribute forecast[${_i}].precipitation not found`);
-                }
-                break;
-            }
+          // check that attributes exist for the first day
+          const forecastDate = new Date();
+          forecastDate.setDate(forecastDate.getDate() + 1);
+          switch (entityName) {
+            case 'entity_forecast_icon_1':
+              if (this._getForecastPropFromWeather(entity.attributes.forecast, forecastDate, 'condition') === undefined) {
+                this._error.push(`'${entityName} attribute forecast[1].condition not found`);
+              }
+              break
+            case 'entity_forecast_min_1':
+              if (this._getForecastPropFromWeather(entity.attributes.forecast, forecastDate, 'templow') === undefined) {
+                this._error.push(`'${entityName} attribute forecast[1].templow not found`);
+              }
+              break
+            case 'entity_forecast_max_1':
+              if (this._getForecastPropFromWeather(entity.attributes.forecast, forecastDate, 'temperature') === undefined) {
+                this._error.push(`'${entityName} attribute forecast[1].temperature not found`);
+              }
+              break;
+            case 'entity_pop_1':
+              if (this._getForecastPropFromWeather(entity.attributes.forecast, forecastDate, 'precipitation_probability') === undefined) {
+                this._error.push(`'${entityName} attribute forecast[1].precipitation_probability not found`);
+              }
+              break;
+            case 'entity_pos_1':
+              if (this._getForecastPropFromWeather(entity.attributes.forecast, forecastDate, 'precipitation') === undefined) {
+                this._error.push(`'${entityName} attribute forecast[1].precipitation not found`);
+              }
+              break;
           }
         } else {
           // we are dealing with the sensor domain
@@ -227,11 +225,9 @@ export class PlatinumWeatherCard extends LitElement {
           const start = this._config[entityName].match(/(\d+)(?!.*\d)/g);
           if (start) {
             // has a number so now check all the extra entities exist
-            for (var _i = 1; _i < days; _i++) {
-              const newEntity = this._config[entityName].replace(/(\d+)(?!.*\d)/g, Number(start) + _i);
-              if (this.hass.states[newEntity] === undefined) {
-                this._error.push(`'${entityName}'+${_i}=${newEntity}' not found`);
-              }
+            const newEntity = this._config[entityName].replace(/(\d+)(?!.*\d)/g, Number(start) + 1);
+            if (this.hass.states[newEntity] === undefined) {
+              this._error.push(`'${entityName}'+'1'=${newEntity}' not found`);
             }
           } else {
             this._error.push(`'${entityName}=${this._config[entityName]}' value needs to have a number`);
@@ -565,6 +561,9 @@ export class PlatinumWeatherCard extends LitElement {
         // using sensor domain entities
         var start = this._config.entity_forecast_icon_1 ? this._config.entity_forecast_icon_1.match(/(\d+)(?!.*\d)/g) : false;
         const iconEntity = this._config.entity_forecast_icon_1 ? this._config.entity_forecast_icon_1.replace(/(\d+)(?!.*\d)/g, String(Number(start) + i)) : undefined;
+        if ((iconEntity === undefined) || (this.hass.states[iconEntity] === undefined)) { // if there is no data then cut the forecast short
+          break;
+        }
         const url = new URL(((this._config.option_static_icons ? 's-' : 'a-') + (iconEntity && this.hass.states[iconEntity] ? this._weatherIcon(this.hass.states[iconEntity].state) : 'unknown') + '.svg').replace("-night", "-day"), import.meta.url);
         htmlIcon = html`<i class="icon" style="background: none, url(${url.href}) no-repeat; background-size: contain;"></i>`;
       }
