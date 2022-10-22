@@ -1069,7 +1069,7 @@ export class PlatinumWeatherCard extends LitElement {
       ? this._config.entity_pos.match('^weather.') === null
         ? this.hass.states[this._config.entity_pos].state
         : this.hass.states[this._config.entity_pos] !== undefined && this.hass.states[this._config.entity_pos].attributes.forecast[0].precipitation !== undefined
-          ? this.hass.states[this._config.entity_posy].attributes.forecast[0].precipitation
+          ? this.hass.states[this._config.entity_pos].attributes.forecast[0].precipitation
           : '---'
       : "---";
     const pos_units = pos !== "---" ? html`<div class="slot-text unit">${this.getUOM('precipitation')}</div>` : html``;
