@@ -972,7 +972,9 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     if (c_button) {
       if (!registry.get("ha-entity-picker")) {
         const haElement = window.customElements.get("ha-entity-picker");
-        registry.define("ha-entity-picker", haElement);
+        if (haElement !== undefined) { // this is a hack for 2022.11. haElement should never be undefined
+          registry.define("ha-entity-picker", haElement);
+        }
       }
       if (!registry.get("ha-select")) {
         const haElement = window.customElements.get("ha-select");
@@ -995,7 +997,9 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     if (c_entity) {
       if (!registry.get("ha-entity-attribute-picker")) {
         const haElement = window.customElements.get("ha-entity-attribute-picker");
-        registry.define("ha-entity-attribute-picker", haElement);
+        if (haElement !== undefined) { // this is a hack for 2022.11. haElement should never be undefined
+          registry.define("ha-entity-attribute-picker", haElement);
+        }
       }
     }
   }
