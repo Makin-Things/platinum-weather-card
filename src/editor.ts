@@ -6,8 +6,8 @@ import { keys } from 'ts-transformer-keys';
 
 import { mdiPencil, mdiArrowDown, mdiArrowUp, mdiApplicationEditOutline } from '@mdi/js';
 
-import { ScopedRegistryHost } from '@lit-labs/scoped-registry-mixin';
-import { WeatherCardConfig, layoutOverview, layoutOrientation, layoutDays, extendedDays, sectionType, timeFormat, sectionNames, pressureDecimals } from './types';
+//import { ScopedRegistryHost } from '@lit-labs/scoped-registry-mixin';
+import { WeatherCardConfig, layoutOverview, layoutOrientation, layoutDays, extendedDays, sectionType, timeFormat, sectionNames, pressureDecimals, HassCustomElement } from './types';
 import { customElement, property, state } from 'lit/decorators';
 import { formfieldDefinition } from '../elements/formfield';
 import { selectDefinition } from '../elements/select';
@@ -15,7 +15,7 @@ import { switchDefinition } from '../elements/switch';
 import { textfieldDefinition } from '../elements/textfield';
 
 @customElement('platinum-weather-card-editor')
-export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements LovelaceCardEditor {
+export class WeatherCardEditor extends LitElement implements LovelaceCardEditor {
   @property({ attribute: false }) public hass?: HomeAssistant;
 
   @state() private _config?: WeatherCardConfig;
@@ -846,8 +846,8 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
           <ha-icon-picker .configValue=${'custom1_icon'} .value=${this._custom1_icon} name="custom1_icon"
             label="Custom 1 Icon" @value-changed=${this._valueChanged}>
           </ha-icon-picker>
-          <mwc-textfield label="Custom 1 Units" .value=${this._custom1_units} .configValue=${'custom1_units'} @input=${this._valueChanged}>
-          </mwc-textfield>
+          <ha-textfield label="Custom 1 Units" .value=${this._custom1_units} .configValue=${'custom1_units'} @input=${this._valueChanged}>
+          </ha-textfield>
         </div>
       ` : '';
 
@@ -860,8 +860,8 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
           <ha-icon-picker .configValue=${'custom2_icon'} .value=${this._custom2_icon} name="custom2_icon"
             label="Custom 2 Icon" @value-changed=${this._valueChanged}>
           </ha-icon-picker>
-          <mwc-textfield label="Custom 2 Units" .value=${this._custom2_units} .configValue=${'custom2_units'} @input=${this._valueChanged}>
-          </mwc-textfield>
+          <ha-textfield label="Custom 2 Units" .value=${this._custom2_units} .configValue=${'custom2_units'} @input=${this._valueChanged}>
+          </ha-textfield>
         </div>
       ` : '';
 
@@ -874,8 +874,8 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
           <ha-icon-picker .configValue=${'custom3_icon'} .value=${this._custom3_icon} name="custom3_icon"
             label="Custom 3 Icon" @value-changed=${this._valueChanged}>
           </ha-icon-picker>
-          <mwc-textfield label="Custom 3 Units" .value=${this._custom3_units} .configValue=${'custom3_units'} @input=${this._valueChanged}>
-          </mwc-textfield>
+          <ha-textfield label="Custom 3 Units" .value=${this._custom3_units} .configValue=${'custom3_units'} @input=${this._valueChanged}>
+          </ha-textfield>
         </div>
       ` : '';
 
@@ -888,8 +888,8 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
           <ha-icon-picker .configValue=${'custom4_icon'} .value=${this._custom4_icon} name="custom4_icon"
             label="Custom 4 Icon" @value-changed=${this._valueChanged}>
           </ha-icon-picker>
-          <mwc-textfield label="Custom 4 Units" .value=${this._custom4_units} .configValue=${'custom4_units'} @input=${this._valueChanged}>
-          </mwc-textfield>
+          <ha-textfield label="Custom 4 Units" .value=${this._custom4_units} .configValue=${'custom4_units'} @input=${this._valueChanged}>
+          </ha-textfield>
         </div>
       ` : '';
 
@@ -938,80 +938,19 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
       }
     }
 
-    this.loadEditorElements();
-  }
-
-  async loadEditorElements() {
-    // Get the local customElement registry
-    const registry = (this.shadowRoot as any)?.customElements;
-    if (!registry) return;
-
-    let c_button: any = undefined;
-    // Check if the element we want is already defined in the local scope
-    if (!registry.get("ha-entity-picker") ||
-      !registry.get("ha-select") ||
-      !registry.get("ha-icon-picker") ||
-      !registry.get("ha-icon-button") ||
-      !registry.get("ha-icon")) {
-      // Load in a card that uses the elements needed
-      // This part will differ for every element you want
-      const ch = await (window as any).loadCardHelpers();
-      c_button = await ch.createCardElement({ type: "button", button: [] });
-      if (c_button) await c_button.constructor.getConfigElement();
-    }
-
-    let c_entity: any = undefined;
-    if (!registry.get("ha-entity-attribute-picker")) {
-      // Load in a card that uses the elements needed
-      // This part will differ for every element you want
-      const ch = await (window as any).loadCardHelpers();
-      c_entity = await ch.createCardElement({ type: "entity", entity: "sensor.time" });
-      await c_entity.constructor.getConfigElement();
-    }
-
-    if (c_button) {
-      if (!registry.get("ha-entity-picker")) {
-        const haElement = window.customElements.get("ha-entity-picker");
-        if (haElement !== undefined) { // this is a hack for 2022.11. haElement should never be undefined
-          registry.define("ha-entity-picker", haElement);
-        }
-      }
-      if (!registry.get("ha-select")) {
-        const haElement = window.customElements.get("ha-select");
-        registry.define("ha-select", haElement);
-      }
-      if (!registry.get("ha-icon-picker")) {
-        const haElement = window.customElements.get("ha-icon-picker");
-        registry.define("ha-icon-picker", haElement);
-      }
-      if (!registry.get("ha-icon-button")) {
-        const haElement = window.customElements.get("ha-icon-button");
-        registry.define("ha-icon-button", haElement);
-      }
-      if (!registry.get("ha-icon")) {
-        const haElement = window.customElements.get("ha-icon");
-        registry.define("ha-icon", haElement);
-      }
-    }
-
-    if (c_entity) {
-      if (!registry.get("ha-entity-attribute-picker")) {
-        const haElement = window.customElements.get("ha-entity-attribute-picker");
-        if (haElement !== undefined) { // this is a hack for 2022.11. haElement should never be undefined
-          registry.define("ha-entity-attribute-picker", haElement);
-        }
-      }
+    if (!customElements.get('ha-switch') || !customElements.get('ha-textfield') || !customElements.get('ha-entity-picker')) {
+      (customElements.get('hui-entities-card') as HassCustomElement)?.getConfigElement();
     }
   }
 
   private _sectionOverviewEditor(): TemplateResult {
     return html`
-      <mwc-textfield label="Card Title Text Line 1" .value=${this._text_card_title} .configValue=${'text_card_title'}
+      <ha-textfield label="Card Title Text Line 1" .value=${this._text_card_title} .configValue=${'text_card_title'}
         @input=${this._valueChanged}>
-      </mwc-textfield>
-      <mwc-textfield label="Card Title Text Line 2" .value=${this._text_card_title_2} .configValue=${'text_card_title_2'}
+      </ha-textfield>
+      <ha-textfield label="Card Title Text Line 2" .value=${this._text_card_title_2} .configValue=${'text_card_title_2'}
         @input=${this._valueChanged}>
-      </mwc-textfield>
+      </ha-textfield>
       <ha-entity-picker .hass=${this.hass} .configValue=${'entity_update_time'} .value=${this._entity_update_time} .includeDomains=${['sensor']}
         name="entity_update_time" label="Entity Update Time" allow-custom-entity
         @value-changed=${this._valueChangedPicker}>
@@ -1019,21 +958,22 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
       ${this._entity_update_time !== '' ? html`
       <div class="side-by-side">
         <div>
-          <mwc-formfield .label=${'Use Attribute'}>
-            <mwc-switch .checked=${this._update_time_use_attr !== false} .configValue=${'update_time_use_attr'}
+          <ha-formfield .label=${'Use Attribute'}>
+            <ha-switch .checked=${this._update_time_use_attr !== false} .configValue=${'update_time_use_attr'}
               @change=${this._valueChanged}>
-            </mwc-switch>
-          </mwc-formfield>
+            </ha-switch>
+          </ha-formfield>
         </div>
-        ${this._entity_update_time !== '' && this._update_time_use_attr === true ? html`<ha-entity-attribute-picker .hass=${this.hass} .entityId=${this._entity_update_time}
+        ${this._entity_update_time !== '' && this._update_time_use_attr === true ? html`<ha-selector .hass=${this.hass} .entityId=${this._entity_update_time}
+          .selector = ${{ attribute: { entity_id: this._entity_update_time } }} .required=${false}
           .configValue=${'update_time_name_attr'} .value=${this._update_time_name_attr} name="update_time_name_attr" label="Attribute"
           allow-custom-value
           @value-changed=${this._valueChangedPicker}>
-        </ha-entity-attribute-picker>` : html``}
+        </ha-selector>` : html``}
       </div>` : html``}
-      <mwc-textfield label="Update Time Prefix" .value=${this._text_update_time_prefix}
+      <ha-textfield label="Update Time Prefix" .value=${this._text_update_time_prefix}
         .configValue=${'text_update_time_prefix'} @input=${this._valueChanged}>
-      </mwc-textfield>
+      </ha-textfield>
       ${this._overview_layout !== 'forecast' ?
         html`<ha-entity-picker .hass=${this.hass} .configValue=${'entity_temperature'} .value=${this._entity_temperature} .includeDomains=${['sensor', 'weather']}
           name="entity_temperature" label="Entity Current Temperature" allow-custom-entity
@@ -1068,18 +1008,18 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
       </div>
       <div class="side-by-side">
         <div>
-          <mwc-formfield .label=${'Show temperature decimals'}>
-            <mwc-switch .checked=${this._option_show_overview_decimals !== false} .configValue=${'option_show_overview_decimals'}
+          <ha-formfield .label=${'Show temperature decimals'}>
+            <ha-switch .checked=${this._option_show_overview_decimals !== false} .configValue=${'option_show_overview_decimals'}
               @change=${this._valueChanged}>
-            </mwc-switch>
-          </mwc-formfield>
+            </ha-switch>
+          </ha-formfield>
         </div>
         <div>
-          <mwc-formfield .label=${'Show separator'}>
-            <mwc-switch .checked=${this._option_show_overview_separator !== false} .configValue=${'option_show_overview_separator'}
+          <ha-formfield .label=${'Show separator'}>
+            <ha-switch .checked=${this._option_show_overview_separator !== false} .configValue=${'option_show_overview_separator'}
               @change=${this._valueChanged}>
-            </mwc-switch>
-          </mwc-formfield>
+            </ha-switch>
+          </ha-formfield>
         </div>
       </div>
     `;
@@ -1102,17 +1042,18 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
       ${this._entity_extended !== '' ? html`
         <div class="side-by-side">
           <div>
-            <mwc-formfield .label=${'Use Attribute'}>
-              <mwc-switch .checked=${this._extended_use_attr !== false} .configValue=${'extended_use_attr'}
+            <ha-formfield .label=${'Use Attribute'}>
+              <ha-switch .checked=${this._extended_use_attr !== false} .configValue=${'extended_use_attr'}
                 @change=${this._valueChanged}>
-              </mwc-switch>
-            </mwc-formfield>
+              </ha-switch>
+            </ha-formfield>
           </div>
-          ${this._entity_extended !== '' && this._extended_use_attr === true ? html`<ha-entity-attribute-picker .hass=${this.hass} .entityId=${this._entity_extended}
+          ${this._entity_extended !== '' && this._extended_use_attr === true ? html`<ha-selector .hass=${this.hass} .entityId=${this._entity_extended}
+            .selector = ${{ attribute: { entity_id: this._entity_extended } }} .required=${false}
             .configValue=${'extended_name_attr'} .value=${this._extended_name_attr} name="extended_name_attr" label="Attribute"
             allow-custom-value
             @value-changed=${this._valueChangedPicker}>
-          </ha-entity-attribute-picker>` : html``}
+          </ha-selector>` : html``}
         </div>` : html``}
       <ha-entity-picker .hass=${this.hass} .configValue=${'entity_todays_uv_forecast'} .value=${this._entity_todays_uv_forecast} .includeDomains=${['sensor']}
         name="entity_todays_uv_forecast" label="Entity Today's UV Forecast" allow-custom-entity
@@ -1245,11 +1186,11 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     return html`
       <div class="side-by-side">
         <div>
-          <mwc-formfield .label=${'Todays Temperature Decimals'}>
-            <mwc-switch .checked=${this._option_today_temperature_decimals !== false} .configValue=${'option_today_temperature_decimals'}
+          <ha-formfield .label=${'Todays Temperature Decimals'}>
+            <ha-switch .checked=${this._option_today_temperature_decimals !== false} .configValue=${'option_today_temperature_decimals'}
               @change=${this._valueChanged}>
-            </mwc-switch>
-          </mwc-formfield>
+            </ha-switch>
+          </ha-formfield>
         </div>
         <ha-select label="Pressure Decimals" .configValue=${'option_pressure_decimals'}
           .value=${this._option_pressure_decimals ? this._option_pressure_decimals.toString() : null} @closed=${(ev: { stopPropagation: () => any; }) => ev.stopPropagation()} @selected=${this._valueChangedNumber}>
@@ -1262,22 +1203,22 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
       </div>
       <div class="side-by-side">
         <div>
-          <mwc-formfield .label=${'Todays Rainfall Decimals'}>
-            <mwc-switch .checked=${this._option_today_rainfall_decimals !== false} .configValue=${'option_today_rainfall_decimals'}
+          <ha-formfield .label=${'Todays Rainfall Decimals'}>
+            <ha-switch .checked=${this._option_today_rainfall_decimals !== false} .configValue=${'option_today_rainfall_decimals'}
               @change=${this._valueChanged}>
-            </mwc-switch>
-          </mwc-formfield>
+            </ha-switch>
+          </ha-formfield>
         </div>
         <div>
         </div>
       </div>
       <div class="side-by-side">
         <div>
-          <mwc-formfield .label=${'Colour Fire Danger'}>
-            <mwc-switch .checked=${this._option_color_fire_danger !== false} .configValue=${'option_color_fire_danger'}
+          <ha-formfield .label=${'Colour Fire Danger'}>
+            <ha-switch .checked=${this._option_color_fire_danger !== false} .configValue=${'option_color_fire_danger'}
               @change=${this._valueChanged}>
-            </mwc-switch>
-          </mwc-formfield>
+            </ha-switch>
+          </ha-formfield>
         </div>
         <div>
         </div>
@@ -1322,16 +1263,17 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
         ${this._entity_extended_1 !== '' ? html`
           <div class="side-by-side">
             <div>
-              <mwc-formfield .label=${'Use Attribute'}>
-                <mwc-switch .checked=${this._daily_extended_use_attr !== false} .configValue=${'daily_extended_use_attr'}
+              <ha-formfield .label=${'Use Attribute'}>
+                <ha-switch .checked=${this._daily_extended_use_attr !== false} .configValue=${'daily_extended_use_attr'}
                   @change=${this._valueChanged}>
-                </mwc-switch>
-              </mwc-formfield>
+                </ha-switch>
+              </ha-formfield>
             </div>
             ${this._entity_extended_1 !== '' && this._daily_extended_use_attr === true ? html`
-              <ha-entity-attribute-picker .hass=${this.hass} .entityId=${this._entity_extended_1} .configValue=${'daily_extended_name_attr'} .value=${this._daily_extended_name_attr} .includeDomains=${['sensor']}
+              <ha-selector .hass=${this.hass} .entityId=${this._entity_extended_1} .configValue=${'daily_extended_name_attr'} .value=${this._daily_extended_name_attr} .includeDomains=${['sensor']}
+                .selector = ${{ attribute: { entity_id: this._entity_extended_1 } }} .required=${false}
                 name="daily_extended_name_attr" label="Attribute" allow-custom-value @value-changed=${this._valueChangedPicker}>
-              </ha-entity-attribute-picker>` : html``}
+              </ha-selector>` : html``}
           </div>` : html``}
         <ha-entity-picker .hass=${this.hass} .configValue=${'entity_fire_danger_1'} .value=${this._entity_fire_danger_1} .includeDomains=${['sensor']}
           name="entity_fire_danger_1" label="Entity Fire Danger 1" allow-custom-entity @value-changed=${this._valueChangedPicker}>
@@ -1382,20 +1324,20 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
         <div class="side-by-side">
           <div>
             ${this._daily_forecast_layout !== 'vertical' ? html`
-              <mwc-formfield .label=${'Enable forecast tooltips'}>
-                <mwc-switch .checked = ${this._option_tooltips !== false} .configValue = ${'option_tooltips'} @change=${this._valueChanged}>
-                </mwc-switch>
-              </mwc-formfield>` : html``}
+              <ha-formfield .label=${'Enable forecast tooltips'}>
+                <ha-switch .checked = ${this._option_tooltips !== false} .configValue = ${'option_tooltips'} @change=${this._valueChanged}>
+                </ha-switch>
+              </ha-formfield>` : html``}
           </div>
           <div></div>
         </div>
         <div class="side-by-side">
         ${this._daily_forecast_layout === 'vertical' ? html`<div>
-          <mwc-formfield .label=${'Colour Fire Danger'}>
-            <mwc-switch .checked=${this._option_daily_color_fire_danger !== false} .configValue=${'option_daily_color_fire_danger'}
+          <ha-formfield .label=${'Colour Fire Danger'}>
+            <ha-switch .checked=${this._option_daily_color_fire_danger !== false} .configValue=${'option_daily_color_fire_danger'}
               @change=${this._valueChanged}>
-            </mwc-switch>
-          </mwc-formfield>
+            </ha-switch>
+          </ha-formfield>
         </div>` : html``}
         <div>
         </div>
@@ -1407,10 +1349,10 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     return html`
       <div class="side-by-side">
         <div>
-          <mwc-formfield .label=${'Show Static Icons'}>
-            <mwc-switch .checked=${this._option_static_icons !== false} .configValue=${'option_static_icons'} @change=${this._valueChanged}>
-            </mwc-switch>
-          </mwc-formfield>
+          <ha-formfield .label=${'Show Static Icons'}>
+            <ha-switch .checked=${this._option_static_icons !== false} .configValue=${'option_static_icons'} @change=${this._valueChanged}>
+            </ha-switch>
+          </ha-formfield>
         </div>
         <div></div>
       </div>
@@ -1421,8 +1363,8 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
           <mwc-list-item value="12hour">12 hour</mwc-list-item>
           <mwc-list-item value="24hour">24 hour</mwc-list-item>
         </ha-select>
-        <mwc-textfield label="Locale" .value=${this._option_locale} .configValue=${'option_locale'} @input=${this._valueChanged}>
-        </mwc-textfield>
+        <ha-textfield label="Locale" .value=${this._option_locale} .configValue=${'option_locale'} @input=${this._valueChanged}>
+        </ha-textfield>
       </div>
     `;
   }
@@ -1493,10 +1435,10 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
       case 'overview':
         return html`
           <div class="section-flex edit-overview-section">
-            <mwc-formfield .label=${`Overview Section`}>
-              <mwc-switch .checked = ${this._show_section_overview !== false} .configValue = ${'show_section_overview'} @change=${this._valueChanged}>
-              </mwc-switch>
-            </mwc-formfield>
+            <ha-formfield .label=${`Overview Section`}>
+              <ha-switch .checked = ${this._show_section_overview !== false} .configValue = ${'show_section_overview'} @change=${this._valueChanged}>
+              </ha-switch>
+            </ha-formfield>
             <div>
               <ha-icon-button class="down-icon" .value=${'overview'} .path=${mdiArrowDown} .disabled=${last} @click="${this._moveDown}">
               </ha-icon-button>
@@ -1512,10 +1454,10 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
       case 'extended':
         return html`
           <div class="section-flex edit-extended-section">
-            <mwc-formfield .label=${`Extended Section`}>
-              <mwc-switch .checked=${this._show_section_extended !== false} .configValue=${'show_section_extended'} @change=${this._valueChanged}>
-              </mwc-switch>
-            </mwc-formfield>
+            <ha-formfield .label=${`Extended Section`}>
+              <ha-switch .checked=${this._show_section_extended !== false} .configValue=${'show_section_extended'} @change=${this._valueChanged}>
+              </ha-switch>
+            </ha-formfield>
             <div>
               <ha-icon-button class="down-icon" .value=${'extended'} .path=${mdiArrowDown} .disabled=${last} @click="${this._moveDown}">
               </ha-icon-button>
@@ -1530,10 +1472,10 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
       case 'slots':
         return html`
           <div class="section-flex edit-slots-section">
-            <mwc-formfield .label=${`Slots Section`}>
-              <mwc-switch .checked = ${this._show_section_slots !== false} .configValue = ${'show_section_slots'} @change=${this._valueChanged}>
-              </mwc-switch>
-            </mwc-formfield>
+            <ha-formfield .label=${`Slots Section`}>
+              <ha-switch .checked = ${this._show_section_slots !== false} .configValue = ${'show_section_slots'} @change=${this._valueChanged}>
+              </ha-switch>
+            </ha-formfield>
             <div>
               <ha-icon-button class="down-icon" .value=${'slots'} .path=${mdiArrowDown} .disabled=${last} @click="${this._moveDown}">
               </ha-icon-button>
@@ -1549,10 +1491,10 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
       case 'daily_forecast':
         return html`
           <div class="section-flex edit-daily-forecast-section">
-            <mwc-formfield .label=${`Daily Forecast Section`}>
-              <mwc-switch .checked=${this._show_section_daily_forecast !== false} .configValue=${'show_section_daily_forecast'} @change=${this._valueChanged}>
-              </mwc-switch>
-            </mwc-formfield>
+            <ha-formfield .label=${`Daily Forecast Section`}>
+              <ha-switch .checked=${this._show_section_daily_forecast !== false} .configValue=${'show_section_daily_forecast'} @change=${this._valueChanged}>
+              </ha-switch>
+            </ha-formfield>
             <div>
               <ha-icon-button class="down-icon" .value=${'daily_forecast'} .path=${mdiArrowDown} .disabled=${last} @click="${this._moveDown}">
               </ha-icon-button>
@@ -1568,8 +1510,8 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
       case 'global_options':
         return html`
           <div class="section-flex">
-            <mwc-formfield class="no-switch" .label=${`Global Options`}>
-            </mwc-formfield>
+            <ha-formfield class="no-switch" .label=${`Global Options`}>
+            </ha-formfield>
             <div>
               <div class="no-icon"></div>
               <ha-icon-button class="edit-icon" .value=${'option_global_options'} .path=${mdiApplicationEditOutline} @click="${this._editSubmenu}">
@@ -1615,16 +1557,18 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
       return;
     }
     const target = ev.target;
-    if (this[`_${target.configValue}`] === target.value) {
+    const value = ev.detail.value;
+    if (this[`_${target.configValue}`] === value) {
       return;
     }
     if (target.configValue) {
-      if (target.value) {
+      if (value) {
         this._config = {
           ...this._config,
-          [target.configValue]: target.value,
+          [target.configValue]: value,
         };
       } else {
+        this._config = { ...this._config };
         delete this._config[target.configValue];
       }
     }
@@ -1646,7 +1590,13 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
       const target = ev.currentTarget;
       if (this._config.section_order) {
         const slot = this._config.section_order.findIndex(t => t === target.value);
-        [this._config.section_order[slot], this._config.section_order[slot - 1]] = [this._config.section_order[slot - 1], this._config.section_order[slot]];
+        const tmp_section_order = [...this._config.section_order];
+        [tmp_section_order[slot], tmp_section_order[slot - 1]] = [this._config.section_order[slot - 1], this._config.section_order[slot]];
+        this._config = {
+          ...this._config,
+          section_order: tmp_section_order,
+        }
+        //        [this._config.section_order[slot], this._config.section_order[slot - 1]] = [this._config.section_order[slot - 1], this._config.section_order[slot]];
       }
     }
     fireEvent(this, 'config-changed', { config: this.sortObjectByKeys(this._config) });
@@ -1660,7 +1610,13 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
       const target = ev.currentTarget;
       if (this._config.section_order) {
         const slot = this._config.section_order.findIndex(t => t === target.value);
-        [this._config.section_order[slot], this._config.section_order[slot + 1]] = [this._config.section_order[slot + 1], this._config.section_order[slot]];
+        const tmp_section_order = [...this._config.section_order];
+        [tmp_section_order[slot], tmp_section_order[slot + 1]] = [this._config.section_order[slot + 1], this._config.section_order[slot]]
+        this._config = {
+          ...this._config,
+          section_order: tmp_section_order,
+        }
+        //        [this._config.section_order[slot], this._config.section_order[slot + 1]] = [this._config.section_order[slot + 1], this._config.section_order[slot]];
       }
     }
     fireEvent(this, 'config-changed', { config: this.sortObjectByKeys(this._config) });
@@ -1720,13 +1676,13 @@ export class WeatherCardEditor extends ScopedRegistryHost(LitElement) implements
     mwc-select {
       display: block;
     }
-    mwc-textfield {
+    ha-textfield {
       display: block;
     }
-    mwc-switch {
+    ha-switch {
       --mdc-theme-secondary: var(--switch-checked-color);
     }
-    mwc-formfield {
+    ha-formfield {
       height: 56px;
     }
     .no-icon {

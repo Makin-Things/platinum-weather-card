@@ -6,6 +6,9 @@ declare global {
     'hui-error-card': LovelaceCard;
   }
 }
+export interface HassCustomElement extends CustomElementConstructor {
+  getConfigElement(): Promise<unknown>;
+}
 
 export const sectionNames = ['overview', 'extended', 'slots', 'daily_forecast'];
 export type sectionType = typeof sectionNames[number];
