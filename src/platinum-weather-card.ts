@@ -2108,7 +2108,7 @@ export class PlatinumWeatherCard extends LitElement {
       case 'da': return "Prog i morgen";
       case 'ru': return "Прогноз на завтра";
       case 'ua': return "Прогноз на завтра";
-      case 'bg': return "Прогноз за утре";
+      case 'bg': return "Прогноза за утре";
       default: return "Fore Tom";
     }
   }
