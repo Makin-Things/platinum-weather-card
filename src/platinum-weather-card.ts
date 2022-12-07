@@ -1400,7 +1400,7 @@ export class PlatinumWeatherCard extends LitElement {
   get slotWind(): TemplateResult {
     const beaufort = this._config.entity_wind_speed && this._config.option_show_beaufort ? html`<div class="slot-text"></div>BFT: ${this.currentBeaufort} -&nbsp;</div>` : "";
     const bearing = this._config.entity_wind_bearing ? html`<div class="slot-text">${this.currentWindBearing}&nbsp;</div>` : "";
-    const units = html`<div class="slot-text unit">${this.getUOM('length')}/h</div>`;
+    const units = html`<div class="slot-text unit">${this.currentWindSpeedUnit}</div>`;
     const speed = this._config.entity_wind_speed ? html`<div class="slot-text">${this.currentWindSpeed}</div>${units}&nbsp;` : "";
     const gust = this._config.entity_wind_gust ? html`<div class="slot-text">(Gust ${this.currentWindGust}</div>${units})` : "";
     return html`
@@ -1604,6 +1604,17 @@ export class PlatinumWeatherCard extends LitElement {
         : this.hass.states[entity].attributes.wind_speed !== undefined
           ? Math.round(Number(this.hass.states[entity].attributes.wind_speed)).toLocaleString(this.locale)
           : '---'
+      : '---';
+  }
+
+  get currentWindSpeedUnit(): string {
+    const entity = this._config.entity_wind_speed;
+    return entity && this.hass.states[entity]
+      ? entity.match('^weather.') === null
+        ? this.getUOM('length')}+'/h'
+        : this.hass.states[entity].attributes.wind_speed_unit !== undefined
+          ? this.hass.states[t].attributes.wind_speed_unit
+          : this.getUOM('length')}+'/h'
       : '---';
   }
 
