@@ -1057,18 +1057,18 @@ export class PlatinumWeatherCard extends LitElement {
   }
 
   get slotPopForecast(): TemplateResult {
-    const pop = this._config.entity_pop
+    const pop = this._config.entity_pop && this.hass.states[this._config.entity_pop] !== undefined
       ? this._config.entity_pop.match('^weather.') === null
         ? Math.round(Number(this.hass.states[this._config.entity_pop].state))
-        : this.hass.states[this._config.entity_pop] !== undefined && this.hass.states[this._config.entity_pop].attributes.forecast[0].precipitation_probability !== undefined
+        : this.hass.states[this._config.entity_pop].attributes.forecast[0].precipitation_probability !== undefined
           ? Math.round(Number(this.hass.states[this._config.entity_pop].attributes.forecast[0].precipitation_probability))
           : '---'
       : "---";
     const pop_units = pop !== "---" ? html`<div class="slot-text unit">%</div>` : html``;
-    const pos = this._config.entity_pos
+    const pos = this._config.entity_pos && this.hass.states[this._config.entity_pos] !== undefined
       ? this._config.entity_pos.match('^weather.') === null
         ? this.hass.states[this._config.entity_pos].state
-        : this.hass.states[this._config.entity_pos] !== undefined && this.hass.states[this._config.entity_pos].attributes.forecast[0].precipitation !== undefined
+        : this.hass.states[this._config.entity_pos].attributes.forecast[0].precipitation !== undefined
           ? this.hass.states[this._config.entity_pos].attributes.forecast[0].precipitation
           : '---'
       : "---";
@@ -1087,10 +1087,10 @@ export class PlatinumWeatherCard extends LitElement {
   }
 
   get slotPop(): TemplateResult {
-    const pop = this._config.entity_pop
+    const pop = this._config.entity_pop && this.hass.states[this._config.entity_pop] !== undefined
       ? this._config.entity_pop.match('^weather.') === null
         ? Math.round(Number(this.hass.states[this._config.entity_pop].state))
-        : this.hass.states[this._config.entity_pop] !== undefined && this.hass.states[this._config.entity_pop].attributes.forecast[0].precipitation_probability !== undefined
+        : this.hass.states[this._config.entity_pop].attributes.forecast[0].precipitation_probability !== undefined
           ? Math.round(Number(this.hass.states[this._config.entity_pop].attributes.forecast[0].precipitation_probability))
           : '---'
       : "---";
@@ -1108,10 +1108,10 @@ export class PlatinumWeatherCard extends LitElement {
   }
 
   get slotPos(): TemplateResult {
-    const pos = this._config.entity_pos
+    const pos = this._config.entity_pos && this.hass.states[this._config.entity_pos] !== undefined
       ? this._config.entity_pos.match('^weather.') === null
         ? this.hass.states[this._config.entity_pos].state
-        : this.hass.states[this._config.entity_pos] !== undefined && this.hass.states[this._config.entity_pos].attributes.forecast[0].precipitation !== undefined
+        : this.hass.states[this._config.entity_pos].attributes.forecast[0].precipitation !== undefined
           ? this.hass.states[this._config.entity_pos].attributes.forecast[0].precipitation
           : '---'
       : "---";
@@ -1128,10 +1128,10 @@ export class PlatinumWeatherCard extends LitElement {
   }
 
   get slotPossibleTomorrow(): TemplateResult {
-    const pos = this._config.entity_possible_tomorrow
+    const pos = this._config.entity_possible_tomorrow && this.hass.states[this._config.entity_possible_tomorrow] !== undefined
       ? this._config.entity_possible_tomorrow.match('^weather.') === null
         ? this.hass.states[this._config.entity_possible_tomorrow].state
-        : this.hass.states[this._config.entity_possible_tomorrow] !== undefined && this.hass.states[this._config.entity_possible_tomorrow].attributes.forecast[1].precipitation !== undefined
+        : this.hass.states[this._config.entity_possible_tomorrow].attributes.forecast[1].precipitation !== undefined
           ? this.hass.states[this._config.entity_possible_tomorrow].attributes.forecast[1].precipitation
           : '---'
       : "---";
@@ -1193,7 +1193,7 @@ export class PlatinumWeatherCard extends LitElement {
 
   get slotObservedMax(): TemplateResult {
     const digits = this._config.option_today_temperature_decimals === true ? 1 : 0;
-    const temp = this._config.entity_observed_max ? (Number(this.hass.states[this._config.entity_observed_max].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
+    const temp = this._config.entity_observed_max && this.hass.states[this._config.entity_observed_max] !== undefined ? (Number(this.hass.states[this._config.entity_observed_max].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
     const units = temp !== "---" ? html`<div class="unit-temp-small">${this.getUOM('temperature')}</div>` : html``;
     return html`
       <li>
@@ -1210,7 +1210,7 @@ export class PlatinumWeatherCard extends LitElement {
 
   get slotObservedMin(): TemplateResult {
     const digits = this._config.option_today_temperature_decimals === true ? 1 : 0;
-    const temp = this._config.entity_observed_min ? (Number(this.hass.states[this._config.entity_observed_min].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
+    const temp = this._config.entity_observed_min && this.hass.states[this._config.entity_observed_min] !== undefined ? (Number(this.hass.states[this._config.entity_observed_min].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
     const units = temp !== "---" ? html`<div class="unit-temp-small">${this.getUOM('temperature')}</div>` : html``;
     return html`
       <li>
@@ -1227,10 +1227,10 @@ export class PlatinumWeatherCard extends LitElement {
 
   get slotForecastMax(): TemplateResult {
     const digits = this._config.option_today_temperature_decimals === true ? 1 : 0;
-    const temp = this._config.entity_forecast_max
+    const temp = this._config.entity_forecast_max && this.hass.states[this._config.entity_forecast_max] !== undefined
       ? this._config.entity_forecast_max.match('^weather.') === null
         ? (Number(this.hass.states[this._config.entity_forecast_max].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits })
-        : this.hass.states[this._config.entity_forecast_max] !== undefined && this.hass.states[this._config.entity_forecast_max].attributes.forecast[0].temperature !== undefined
+        : this.hass.states[this._config.entity_forecast_max].attributes.forecast[0].temperature !== undefined
           ? (Number(this.hass.states[this._config.entity_forecast_max].attributes.forecast[0].temperature)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits })
           : '---'
       : "---";
@@ -1250,10 +1250,10 @@ export class PlatinumWeatherCard extends LitElement {
 
   get slotForecastMin(): TemplateResult {
     const digits = this._config.option_today_temperature_decimals === true ? 1 : 0;
-    const temp = this._config.entity_forecast_min
+    const temp = this._config.entity_forecast_min && this.hass.states[this._config.entity_forecast_min] !== undefined
       ? this._config.entity_forecast_min.match('^weather.') === null
         ? (Number(this.hass.states[this._config.entity_forecast_min].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits })
-        : this.hass.states[this._config.entity_forecast_min] !== undefined && this.hass.states[this._config.entity_forecast_min].attributes.forecast[0].templow !== undefined
+        : this.hass.states[this._config.entity_forecast_min].attributes.forecast[0].templow !== undefined
           ? (Number(this.hass.states[this._config.entity_forecast_min].attributes.forecast[0].templow)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits })
           : '---'
       : "---";
@@ -1273,9 +1273,9 @@ export class PlatinumWeatherCard extends LitElement {
 
   get slotTempNext(): TemplateResult {
     const digits = this._config.option_today_temperature_decimals === true ? 1 : 0;
-    const icon = this._config.entity_temp_next_label ? this.hass.states[this._config.entity_temp_next_label].state.toLowerCase().includes("min") || this.hass.states[this._config.entity_temp_next_label].state.toLowerCase().includes("low") ? "mdi:thermometer-low" : "mdi:thermometer-high" : "mdi:help-box";
-    const temp = this._config.entity_temp_next ? (Number(this.hass.states[this._config.entity_temp_next].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
-    const label = this._config.entity_temp_next_label ? this.hass.states[this._config.entity_temp_next_label].state : "";
+    const icon = this._config.entity_temp_next_label && this.hass.states[this._config.entity_temp_next_label] !== undefined ? this.hass.states[this._config.entity_temp_next_label].state.toLowerCase().includes("min") || this.hass.states[this._config.entity_temp_next_label].state.toLowerCase().includes("low") ? "mdi:thermometer-low" : "mdi:thermometer-high" : "mdi:help-box";
+    const temp = this._config.entity_temp_next && this.hass.states[this._config.entity_temp_next] !== undefined ? (Number(this.hass.states[this._config.entity_temp_next].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
+    const label = this._config.entity_temp_next_label && this.hass.states[this._config.entity_temp_next_label] !== undefined ? this.hass.states[this._config.entity_temp_next_label].state : "";
     const units = temp !== "---" ? html`<div class="slot-text unit-temp-small">${this.getUOM('temperature')}</div>` : html``;
     return html`
       <li>
@@ -1292,9 +1292,9 @@ export class PlatinumWeatherCard extends LitElement {
 
   get slotTempFollowing(): TemplateResult {
     const digits = this._config.option_today_temperature_decimals === true ? 1 : 0;
-    const icon = this._config.entity_temp_following_label ? this.hass.states[this._config.entity_temp_following_label].state.toLowerCase().includes("min") || this.hass.states[this._config.entity_temp_following_label].state.toLowerCase().includes("low") ? "mdi:thermometer-low" : "mdi:thermometer-high" : "mdi:help-box";
-    const temp = this._config.entity_temp_following ? (Number(this.hass.states[this._config.entity_temp_following].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
-    const label = this._config.entity_temp_following_label ? this.hass.states[this._config.entity_temp_following_label].state : "";
+    const icon = this._config.entity_temp_following_label && this.hass.states[this._config.entity_temp_following_label] !== undefined ? this.hass.states[this._config.entity_temp_following_label].state.toLowerCase().includes("min") || this.hass.states[this._config.entity_temp_following_label].state.toLowerCase().includes("low") ? "mdi:thermometer-low" : "mdi:thermometer-high" : "mdi:help-box";
+    const temp = this._config.entity_temp_following && this.hass.states[this._config.entity_temp_following] !== undefined ? (Number(this.hass.states[this._config.entity_temp_following].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
+    const label = this._config.entity_temp_following_label && this.hass.states[this._config.entity_temp_following_label] !== undefined ? this.hass.states[this._config.entity_temp_following_label].state : "";
     const units = temp !== "---" ? html`<div class="slot-text unit-temp-small">${this.getUOM('temperature')}</div>` : html``;
     return html`
       <li>
@@ -1311,8 +1311,8 @@ export class PlatinumWeatherCard extends LitElement {
 
   get slotTempMaximums(): TemplateResult {
     const digits = this._config.option_today_temperature_decimals === true ? 1 : 0;
-    const temp_obs = this._config.entity_observed_max ? (Number(this.hass.states[this._config.entity_observed_max].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
-    const temp_for = this._config.entity_forecast_max ? (Number(this.hass.states[this._config.entity_forecast_max].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
+    const temp_obs = this._config.entity_observed_max && this.hass.states[this._config.entity_observed_max] !== undefined ? (Number(this.hass.states[this._config.entity_observed_max].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
+    const temp_for = this._config.entity_forecast_max && this.hass.states[this._config.entity_forecast_max] !== undefined ? (Number(this.hass.states[this._config.entity_forecast_max].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
     const units = temp_obs !== "---" ? html`<div class="unit-temp-small">${this.getUOM('temperature')}</div>` : html``;
     return html`
       <li>
@@ -1332,8 +1332,8 @@ export class PlatinumWeatherCard extends LitElement {
 
   get slotTempMinimums(): TemplateResult {
     const digits = this._config.option_today_temperature_decimals === true ? 1 : 0;
-    const temp_obs = this._config.entity_observed_min ? (Number(this.hass.states[this._config.entity_observed_min].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
-    const temp_for = this._config.entity_forecast_min ? (Number(this.hass.states[this._config.entity_forecast_min].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
+    const temp_obs = this._config.entity_observed_min && this.hass.states[this._config.entity_observed_min] !== undefined ? (Number(this.hass.states[this._config.entity_observed_min].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
+    const temp_for = this._config.entity_forecast_min && this.hass.states[this._config.entity_forecast_min] !== undefined ? (Number(this.hass.states[this._config.entity_forecast_min].state)).toLocaleString(this.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "---";
     const units = temp_obs !== "---" ? html`<div class="unit-temp-small">${this.getUOM('temperature')}</div>` : html``;
     return html`
       <li>
@@ -1352,7 +1352,7 @@ export class PlatinumWeatherCard extends LitElement {
   }
 
   get slotUvSummary(): TemplateResult {
-    const uv = this._config.entity_uv_alert_summary ? this.hass.states[this._config.entity_uv_alert_summary].state !== "unknown" ? this.hass.states[this._config.entity_uv_alert_summary].state : "Not Applicable" : "---";
+    const uv = this._config.entity_uv_alert_summary && this.hass.states[this._config.entity_uv_alert_summary] !== undefined ? this.hass.states[this._config.entity_uv_alert_summary].state !== "unknown" ? this.hass.states[this._config.entity_uv_alert_summary].state : "Not Applicable" : "---";
     return html`
       <li>
         <div class="slot">
@@ -1367,7 +1367,7 @@ export class PlatinumWeatherCard extends LitElement {
 
   get slotFireDanger(): TemplateResult {
     const entity = this._config.entity_fire_danger;
-    const fire = entity ? this.hass.states[entity].state !== 'unknown' ? this._config.option_color_fire_danger === false ? this.hass.states[entity].state : this.hass.states[entity].state.toLocaleUpperCase() : "Not Applicable" : "---";
+    const fire = entity && this.hass.states[entity] !== undefined ? this.hass.states[entity].state !== 'unknown' ? this._config.option_color_fire_danger === false ? this.hass.states[entity].state : this.hass.states[entity].state.toLocaleUpperCase() : "Not Applicable" : "---";
     var fireStyle = entity && this._config.option_color_fire_danger !== false && this.hass.states[entity].attributes.color_fill ? `background-color:${this.hass.states[entity].attributes.color_fill}; color:${this.hass.states[entity].attributes.color_text};` : "";
     if (this._config.option_color_fire_danger === false) {
       return html`
@@ -1458,7 +1458,7 @@ export class PlatinumWeatherCard extends LitElement {
 
   get slotCustom1(): TemplateResult {
     var icon = this._config.custom1_icon ? this._config.custom1_icon : 'mdi:help-box';
-    var value = this._config.custom1_value ? this.hass.states[this._config.custom1_value].state : 'unknown';
+    var value = this._config.custom1_value && this.hass.states[this._config.custom1_value] !== undefined ? this.hass.states[this._config.custom1_value].state : 'unknown';
     var unit = this._config.custom1_units ? this._config.custom1_units : '';
     return html`
       <li>
@@ -1472,7 +1472,7 @@ export class PlatinumWeatherCard extends LitElement {
 
   get slotCustom2(): TemplateResult {
     var icon = this._config.custom2_icon ? this._config.custom2_icon : 'mdi:help-box';
-    var value = this._config.custom2_value ? this.hass.states[this._config.custom2_value].state : 'unknown';
+    var value = this._config.custom2_value && this.hass.states[this._config.custom2_value] !== undefined ? this.hass.states[this._config.custom2_value].state : 'unknown';
     var unit = this._config.custom2_units ? this._config.custom2_units : '';
     return html`
       <li>
@@ -1486,7 +1486,7 @@ export class PlatinumWeatherCard extends LitElement {
 
   get slotCustom3(): TemplateResult {
     var icon = this._config.custom3_icon ? this._config.custom3_icon : 'mdi:help-box';
-    var value = this._config.custom3_value ? this.hass.states[this._config.custom3_value].state : 'unknown';
+    var value = this._config.custom3_value && this.hass.states[this._config.custom3_value] !== undefined ? this.hass.states[this._config.custom3_value].state : 'unknown';
     var unit = this._config.custom3_units ? this._config.custom3_units : '';
     return html`
       <li>
@@ -1500,7 +1500,7 @@ export class PlatinumWeatherCard extends LitElement {
 
   get slotCustom4(): TemplateResult {
     var icon = this._config.custom4_icon ? this._config.custom4_icon : 'mdi:help-box';
-    var value = this._config.custom4_value ? this.hass.states[this._config.custom4_value].state : 'unknown';
+    var value = this._config.custom4_value && this.hass.states[this._config.custom4_value] !== undefined ? this.hass.states[this._config.custom4_value].state : 'unknown';
     var unit = this._config.custom4_units ? this._config.custom4_units : '';
     return html`
       <li>
