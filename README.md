@@ -1,4 +1,4 @@
-# Platinum Weather Card by [@makin-things](https://www.github.com/makin-things) Test
+# Platinum Weather Card by [@makin-things](https://www.github.com/makin-things)
 
 A highly configurable weather card with a graphical configuration.
 
