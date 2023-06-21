@@ -1402,7 +1402,7 @@ export class PlatinumWeatherCard extends LitElement {
     const bearing = this._config.entity_wind_bearing ? html`<div class="slot-text">${this.currentWindBearing}&nbsp;</div>` : "";
     const units = html`<div class="slot-text unit">${this.getUOM('length')}/h</div>`;
     const speed = this._config.entity_wind_speed ? html`<div class="slot-text">${this.currentWindSpeed}</div>${units}&nbsp;` : "";
-    const gust = this._config.entity_wind_gust ? html`<div class="slot-text">(Gust ${this.currentWindGust}</div>${units})` : "";
+    const gust = this._config.entity_wind_gust ? html`<div class="slot-text">(${this.localeTextGust} ${this.currentWindGust}</div>${units})` : "";
     return html`
       <li>
         <div class="slot">
@@ -1420,7 +1420,7 @@ export class PlatinumWeatherCard extends LitElement {
     const bearing = this._config.entity_wind_bearing ? html`<div class="slot-text">${this.currentWindBearing}&nbsp;</div>` : "";
     const units = html`<div class="slot-text unit">Kt</div>`;
     const speed = this._config.entity_wind_speed_kt ? html`<div class="slot-text">${this.currentWindSpeedKt}</div>${units}&nbsp;` : "";
-    const gust = this._config.entity_wind_gust_kt ? html`<div class="slot-text">(Gust ${this.currentWindGustKt}</div>${units})` : "";
+    const gust = this._config.entity_wind_gust_kt ? html`<div class="slot-text">(${this.localeTextGust} ${this.currentWindGustKt}</div>${units})` : "";
     return html`
       <li>
         <div class="slot">
@@ -2027,12 +2027,32 @@ export class PlatinumWeatherCard extends LitElement {
 
   get localeTextObservedMax(): string {
     switch (this.locale) {
+      case 'it': return "Osservata Max";
+      case 'fr': return "Observé Max";
+      case 'de': return "Beobachtet Max";
+      case 'nl': return "Opgemerkt Max";
+      case 'pl': return "Zauważony Max";
+      case 'he': return "נצפה מקסימום";
+      case 'da': return "Observeret Max";
+      case 'ru': return "Наблюдаемый Макс";
+      case 'ua': return "Спостерігається Макс";
+      case 'bg': return "Наблюдаван макс";
       default: return "Observed Max";
     }
   }
 
   get localeTextObservedMin(): string {
     switch (this.locale) {
+      case 'it': return "Osservata Min";
+      case 'fr': return "Observé Min";
+      case 'de': return "Beobachtet Min";
+      case 'nl': return "Opgemerkt Min";
+      case 'pl': return "Zauważony Min";
+      case 'he': return "נצפה דקות";
+      case 'da': return "Observeret Min";
+      case 'ru': return "Наблюдаемый мин.";
+      case 'ua': return "Дотримується Мін";
+      case 'bg': return "Спазва се Мин";
       default: return "Observed Min";
     }
   }
@@ -2158,6 +2178,22 @@ export class PlatinumWeatherCard extends LitElement {
       case 'ua': return "Вогонь";
       case 'bg': return "Пожар";
       default: return "Fire";
+    }
+  }
+
+  get localeTextGust(): string {
+    switch (this.locale) {
+      case 'it': return "Raffica";
+      case 'fr': return "Rafale";
+      case 'de': return "Böen";
+      case 'nl': return "Windvlaag";
+      case 'pl': return "Poryw";
+      case 'he': return "משב";
+      case 'da': return "Vindstød";
+      case 'ru': return "Порыв";
+      case 'ua': return "Порив";
+      case 'bg': return "Порив";
+      default: return "Gust";
     }
   }
 
