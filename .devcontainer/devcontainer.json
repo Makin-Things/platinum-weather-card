@@ -1,30 +1,35 @@
 // See https://aka.ms/vscode-remote/devcontainer.json for format details.
 {
   "name": "Platinum Weather Card Development",
-  "image": "ludeeus/container:monster",
-  "context": "..",
-  "appPort": ["5123:5000", "9123:8123"],
-  "postCreateCommand": "npm install",
-  "runArgs": [
-    "-v",
-    "${env:HOME}${env:USERPROFILE}/.ssh:/tmp/.ssh" // This is added so you can push from inside the container
-  ],
-  "extensions": [
-    "github.vscode-pull-request-github",
-    "eamodio.gitlens",
-    "dbaeumer.vscode-eslint",
-    "esbenp.prettier-vscode",
-    "bierner.lit-html",
-    "runem.lit-plugin",
-    "davidanson.vscode-markdownlint",
-    "redhat.vscode-yaml"
-  ],
-  "settings": {
-    "files.eol": "\n",
-    "editor.tabSize": 4,
-    "editor.formatOnPaste": false,
-    "editor.formatOnSave": true,
-    "editor.formatOnType": true,
-    "files.trimTrailingWhitespace": true
-  }
+  "image": "thomasloven/hass-custom-devcontainer",
+    "postCreateCommand": "sudo -E container run-dev && npm add",
+    "containerEnv": {
+      "DEVCONTAINER": "1"
+    },
+    "forwardPorts": [8123],
+    "mounts": [
+      "source=${localWorkspaceFolder},target=/config/www/workspace,type=bind",
+      "source=${localWorkspaceFolder}/test,target=/config/test,type=bind",
+      "source=${localWorkspaceFolder}/test/configuration.yaml,target=/config/configuration.yaml,type=bind"
+    ],
+    "runArgs": ["--env-file", "${localWorkspaceFolder}/test/.env"],
+    "extensions": [
+      "github.vscode-pull-request-github",
+      "esbenp.prettier-vscode",
+      "spmeesseman.vscode-taskexplorer"
+    ],
+    "settings": {
+      "files.eol": "\n",
+      "editor.tabSize": 2,
+      "editor.formatOnPaste": false,
+      "editor.formatOnSave": true,
+      "editor.formatOnType": true,
+      "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+      },
+      "[typescript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+      },
+      "files.trimTrailingWhitespace": true
+    }
 }

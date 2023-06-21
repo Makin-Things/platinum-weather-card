@@ -23,15 +23,19 @@ export default {
   },
   plugins: [
     resolve(),
-    typescript({ transformers: [service => ({
-      before: [ keysTransformer(service.getProgram()) ],
-      after: []
-    })] }),
+    typescript({
+      transformers: [
+        (service) => ({
+          before: [keysTransformer(service.getProgram())],
+          after: [],
+        }),
+      ],
+    }),
     json(),
     babel({
       exclude: 'node_modules/**',
     }),
-//    terser(),
+    terser(),
     serve({
       contentBase: './dist',
       host: '0.0.0.0',
