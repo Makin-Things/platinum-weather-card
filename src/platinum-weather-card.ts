@@ -1611,10 +1611,10 @@ export class PlatinumWeatherCard extends LitElement {
     const entity = this._config.entity_wind_speed;
     return entity && this.hass.states[entity]
       ? entity.match('^weather.') === null
-        ? this.getUOM('length')}+'/h'
+        ? this.getUOM('length')+'/h'
         : this.hass.states[entity].attributes.wind_speed_unit !== undefined
-          ? this.hass.states[t].attributes.wind_speed_unit
-          : this.getUOM('length')}+'/h'
+          ? this.hass.states[entity].attributes.wind_speed_unit
+          : this.getUOM('length')+'/h'
       : '---';
   }
 
