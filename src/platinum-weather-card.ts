@@ -1937,7 +1937,7 @@ export class PlatinumWeatherCard extends LitElement {
   }
 
   get iconRain(): string {
-    return `rainy-3`;
+    return `rainy-3-${this.dayOrNight}`;
   }
 
   get iconDust(): string {
@@ -1961,7 +1961,7 @@ export class PlatinumWeatherCard extends LitElement {
   }
 
   get iconHeavyShowers(): string {
-    return `rainy-2-${this.dayOrNight}`;
+    return `rainy-3`;
   }
 
   get iconCyclone(): string {
