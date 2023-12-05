@@ -1,7 +1,8 @@
 {
   "name": "platinum-weather-card",
-  "version": "1.0.5",
+  "version": "1.1.0",
   "description": "platinum-weather-card",
+  "homepage": "https://github.com/jayanezj/platinum-weather-card",
   "keywords": [
     "home-assistant",
     "homeassistant",
@@ -11,8 +12,11 @@
     "custom-cards"
   ],
   "module": "platinum-weather-card.js",
-  "repository": "git@github.com: /platinum-weather-card.git",
-  "author": "Simon <simon@makin-things.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jayanezj/platinum-weather-card.git"
+  },
+  "author": "jayanezj <github@codigojose.com>",
   "license": "MIT",
   "dependencies": {
     "@lit-labs/scoped-registry-mixin": "^1.0.1",
