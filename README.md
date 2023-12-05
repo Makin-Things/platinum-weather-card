@@ -1,13 +1,15 @@
-# Platinum Weather Card by [@makin-things](https://www.github.com/makin-things)
+# Platinum Weather Card by [@makin-things](https://www.github.com/makin-things) improved by [@jayanezj](https://www.github.com/jayanezj)
 
 A highly configurable weather card with a graphical configuration.
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg?style=for-the-badge)](https://github.com/hacs/integration)
 [![GitHub Release][releases-shield]][releases]
 [![License][license-shield]](LICENSE.md)
-![Maintenance](https://img.shields.io/maintenance/yes/2022?style=for-the-badge)
+![Maintenance](https://img.shields.io/maintenance/yes/2023?style=for-the-badge)
 
-# Support
+# Credits to original author
+
+[@makin-things](https://www.github.com/makin-things)
 
 Hey dude! Help me out for a couple of :beers: or a :coffee:!
 
