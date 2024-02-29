@@ -1937,7 +1937,7 @@ export class PlatinumWeatherCard extends LitElement {
   }
 
   get iconRain(): string {
-    return `rainy-3`;
+    return `rainy-1`;
   }
 
   get iconDust(): string {
@@ -1961,7 +1961,7 @@ export class PlatinumWeatherCard extends LitElement {
   }
 
   get iconHeavyShowers(): string {
-    return `rainy-2-${this.dayOrNight}`;
+    return `rainy-3`;
   }
 
   get iconCyclone(): string {
@@ -2011,7 +2011,7 @@ export class PlatinumWeatherCard extends LitElement {
 
   get localeTextFeelsLike(): string {
     switch (this.locale) {
-      case 'it': return "Percepito";
+      case 'it': return "Percepita";
       case 'fr': return "Ressenti";
       case 'de': return "Gefühlt";
       case 'nl': return "Voelt als";
