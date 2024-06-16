@@ -1640,11 +1640,11 @@ export class PlatinumWeatherCard extends LitElement {
     const windDirections_da = ['N', 'NNØ', 'NØ', 'ØNØ', 'Ø', 'ØSØ', 'SØ', 'SSØ', 'S', 'SSV', 'SV', 'VSV', 'V', 'VNV', 'NV', 'NNV', 'N'];
     const windDirections_ru = ['С', 'ССВ', 'СВ', 'ВСВ', 'В', 'ВЮВ', 'ЮВ', 'ЮЮВ', 'Ю', 'ЮЮЗ', 'ЮЗ', 'ЗЮЗ', 'З', 'ЗСЗ', 'СЗ', 'ССЗ', 'С'];
     const windDirections_bg = ['С', 'ССИ', 'СИ', 'ИСИ', 'И', 'ИЮИ', 'ЮИ', 'ЮЮИ', 'Ю', 'ЮЮЗ', 'ЮЗ', 'ЗЮЗ', 'З', 'ЗСЗ', 'СЗ', 'ССЗ', 'С'];
-    const windDirections_es = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSO', 'SO', 'OSO', 'O', 'ONO', 'NO', 'NNO', 'N'];
 
     switch (this.locale) {
       case "it":
       case "fr":
+      case "es":
         return windDirections_fr;
       case "de":
         return windDirections_de;
@@ -1658,8 +1658,6 @@ export class PlatinumWeatherCard extends LitElement {
         return windDirections_da;
       case "bg":
         return windDirections_bg;
-      case "es":
-        return windDirections_es;
       default:
         return windDirections_en;
     }
