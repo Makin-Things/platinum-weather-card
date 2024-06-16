@@ -2065,7 +2065,7 @@ export class PlatinumWeatherCard extends LitElement {
       case 'ru': return "Макс сегодня";
       case 'ua': return "Макс сьогодні";
       case 'bg': return "Макс днес";
-      case 'es': return "Max hoy";
+      case 'es': return "Máxima";
       default: return "Forecast Max";
     }
   }
@@ -2082,7 +2082,7 @@ export class PlatinumWeatherCard extends LitElement {
       case 'ru': return "Мин сегодня";
       case 'ua': return "Мін сьогодні";
       case 'bg': return "Мин днес";
-      case 'es': return "Min hoy";
+      case 'es': return "Mínima";
       default: return "Forecast Min";
     }
   }
