@@ -3,17 +3,17 @@ name: 'Build'
 on:
   push:
     branches:
-      - master
+      - dev
   pull_request:
     branches:
-      - master
+      - dev
 
 jobs:
   build:
-    name: Build Master
+    name: Build Dev
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Build
         run: |
           rm -rf /home/runner/work/platinum-weather-card/platinum-weather-card/node_modules

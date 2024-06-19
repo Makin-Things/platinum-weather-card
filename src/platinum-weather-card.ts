@@ -1644,6 +1644,7 @@ export class PlatinumWeatherCard extends LitElement {
     switch (this.locale) {
       case "it":
       case "fr":
+      case "es":
         return windDirections_fr;
       case "de":
         return windDirections_de;
@@ -2021,6 +2022,7 @@ export class PlatinumWeatherCard extends LitElement {
       case 'ru': return "Ощущается как";
       case 'ua': return "Відчувається як";
       case 'bg': return "Усеща се като";
+      case 'es': return "Sensación";
       default: return "Feels like";
     }
   }
@@ -2061,6 +2063,7 @@ export class PlatinumWeatherCard extends LitElement {
       case 'ru': return "Макс сегодня";
       case 'ua': return "Макс сьогодні";
       case 'bg': return "Макс днес";
+      case 'es': return "Máxima";
       default: return "Forecast Max";
     }
   }
@@ -2077,6 +2080,7 @@ export class PlatinumWeatherCard extends LitElement {
       case 'ru': return "Мин сегодня";
       case 'ua': return "Мін сьогодні";
       case 'bg': return "Мин днес";
+      case 'es': return "Mínima";
       default: return "Forecast Min";
     }
   }
@@ -2093,6 +2097,7 @@ export class PlatinumWeatherCard extends LitElement {
       case 'ru': return "Прогноз";
       case 'ua': return "Прогноз";
       case 'bg': return "Прогноза";
+      case 'es': return "Previsión";
       default: return "Forecast";
     }
   }
@@ -2109,6 +2114,7 @@ export class PlatinumWeatherCard extends LitElement {
       case 'ru': return "Прогноз на завтра";
       case 'ua': return "Прогноз на завтра";
       case 'bg': return "Прогноза за утре";
+      case 'es': return "Prev manaña";
       default: return "Fore Tom";
     }
   }
@@ -2125,6 +2131,7 @@ export class PlatinumWeatherCard extends LitElement {
       case 'ru': return "Прогноз";
       case 'ua': return "Прогноз";
       case 'bg': return "Прогноза";
+      case 'es': return "Prev";
       default: return "Fore";
     }
   }
@@ -2141,6 +2148,7 @@ export class PlatinumWeatherCard extends LitElement {
       case 'ru': return "УФ";
       case 'ua': return "УФ";
       case 'bg': return "UV";
+      case 'es': return "UV";
       default: return "UV";
     }
   }
@@ -2157,6 +2165,7 @@ export class PlatinumWeatherCard extends LitElement {
       case 'ru': return "Огонь";
       case 'ua': return "Вогонь";
       case 'bg': return "Пожар";
+      case 'es': return "Fuego";
       default: return "Fire";
     }
   }
