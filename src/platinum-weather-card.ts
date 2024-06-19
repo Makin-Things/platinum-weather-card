@@ -2614,4 +2614,3 @@ export class PlatinumWeatherCard extends LitElement {
     `;
   }
 }
-# End of code.
