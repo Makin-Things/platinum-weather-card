@@ -22,7 +22,7 @@ jobs:
         run: npm install
 
       - name: Convert TypeScript to JavaScript
-        run: npx tsc src/platinum-weather-card.ts --outDir dist --module commonjs --target es6
+        run: npx tsc --project tsconfig.json
 
       - name: List files in dist
         run: ls dist
