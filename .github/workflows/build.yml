@@ -13,7 +13,7 @@ jobs:
     name: Build Dev
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
       - name: Build
         run: |
           rm -rf /home/runner/work/platinum-weather-card/platinum-weather-card/node_modules
