@@ -8,8 +8,7 @@
       "dom",
       "dom.iterable"
     ],
-    "outDir": "./dist", // Añade esta línea para especificar el directorio de salida
-    "noEmit": false,    // Cambia esto a false para permitir la emisión de archivos
+    "noEmit": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
@@ -18,7 +17,5 @@
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "experimentalDecorators": true
-  },
-  "include": ["src/**/*.ts"], // Opcional: asegura que solo los archivos .ts en src/ sean compilados
-  "exclude": ["node_modules"] // Excluye node_modules de la compilación
+  }
 }
