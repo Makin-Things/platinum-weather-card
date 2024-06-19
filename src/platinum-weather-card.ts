@@ -1,3 +1,4 @@
+# This is a comment.
 /* eslint-disable no-var */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { LitElement, html, TemplateResult, css, PropertyValues, CSSResult, unsafeCSS } from 'lit';
