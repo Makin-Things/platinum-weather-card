@@ -1,28 +1,26 @@
-name: Build TypeScript
+name: 'Build'
 
 on:
   push:
     branches:
-      - dev
+      - master
+  pull_request:
+    branches:
+      - master
 
 jobs:
   build:
+    name: Build Master
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Setup Node.js environment
-        uses: actions/setup-node@v2
-        with:
-          node-version: '14' # O la versión que prefieras
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Convert TypeScript to JavaScript
-        run: npx tsc --project tsconfig.json
-
-      - name: List files in dist
-        run: ls dist
+      - uses: actions/checkout@v2
+      - name: Build
+        run: |
+          rm -rf /home/runner/work/platinum-weather-card/platinum-weather-card/node_modules
+          npm install
+          npm run lint && npm run rollup -c rollup.config.js
+          ls -R /home/runner/work/platinum-weather-card/platinum-weather-card/dist
+      # - name: HACS validation
+      #   uses: 'hacs/action@main'
+      #   with:
+      #     category: 'plugin'
