@@ -1,0 +1,28 @@
+name: Build TypeScript
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14' # O la versión que prefieras
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Convert TypeScript to JavaScript
+        run: npx tsc src/platinum-weather-card.ts --outDir dist --module commonjs --target es6
+
+      - name: List files in dist
+        run: ls dist
