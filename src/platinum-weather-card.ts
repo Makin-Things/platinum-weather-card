@@ -1,4 +1,4 @@
-// This is the starting point.
+// This is the starting point for the code.
 /* eslint-disable no-var */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { LitElement, html, TemplateResult, css, PropertyValues, CSSResult, unsafeCSS } from 'lit';
