@@ -5,7 +5,7 @@ A highly configurable weather card with a graphical configuration.
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg?style=for-the-badge)](https://github.com/hacs/integration)
 [![GitHub Release][releases-shield]][releases]
 [![License][license-shield]](LICENSE.md)
-![Maintenance](https://img.shields.io/maintenance/yes/2022?style=for-the-badge)
+![Maintenance](https://img.shields.io/maintenance/yes/2024?style=for-the-badge)
 
 # Support
 
