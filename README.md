@@ -1,3 +1,5 @@
+> **Milfeldt fork, v1.1.0:** forecasts from `weather.*` entities work again. Home Assistant removed the `forecast` state attribute in 2024.3; the card now subscribes to `weather/subscribe_forecast` (daily, falling back to twice-daily or hourly) and only uses the old attribute as a fallback.
+
 # Platinum Weather Card by [@makin-things](https://www.github.com/makin-things)
 
 A highly configurable weather card with a graphical configuration.
